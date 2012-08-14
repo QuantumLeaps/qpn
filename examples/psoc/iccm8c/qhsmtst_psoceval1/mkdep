@@ -1,0 +1,10 @@
+-a -f project.dep -p./lib/obj/ -o.o -- -IC:/tools/Cypress/PSOC_D~1/tools/include -I./lib -IC:/tools/Cypress/PSOC_D~1/tools/include/CY8C29~1 -- 
+lib/led_1.asm   
+lib/led_2.asm   
+lib/led_3.asm   
+lib/led_4.asm   
+lib/psocconfig.asm   
+lib/psocconfigtbl.asm   
+lib/uart_1.asm   
+lib/uart_1int.asm   
+lib/uart_1plus.asm 

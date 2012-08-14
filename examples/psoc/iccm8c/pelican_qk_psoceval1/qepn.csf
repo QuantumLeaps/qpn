@@ -1,0 +1,219 @@
+	cpu LMM
+	.module qepn.c
+	.area lit(rom, con, rel)
+L2:
+	.byte 49,46,53,46,48,55,0
+	.area text(rom, con, rel)
+	.dbfile ./qepn.c
+	.dbfunc e QP_getVersion _QP_getVersion fpc
+	.dbsym s version L2 A[7:7]c
+_QP_getVersion::
+	.dbline -1
+	.dbline 52
+; /*****************************************************************************
+; * Product: QEP-nano implemenation
+; * Last Updated for Version: 1.5.07
+; * Date of the Last Update:  Mar 06, 2007
+; *
+; *                    Q u a n t u m     L e a P s
+; *                    ---------------------------
+; *                    innovating embedded systems
+; *
+; * Copyright (C) 2002-2007 Quantum Leaps, LLC. All rights reserved.
+; *
+; * This software may be distributed and modified under the terms of the GNU
+; * General Public License version 2 (GPL) as published by the Free Software
+; * Foundation and appearing in the file GPL.TXT included in the packaging of
+; * this file. Please note that GPL Section 2[b] requires that all works based
+; * on this software must also be made publicly available under the terms of
+; * the GPL ("Copyleft").
+; *
+; * Alternatively, this software may be distributed and modified under the
+; * terms of Quantum Leaps commercial licenses, which expressly supersede
+; * the GPL and are specifically designed for licensees interested in
+; * retaining the proprietary status of their code.
+; *
+; * Contact information:
+; * Quantum Leaps Web site:  http://www.quantum-leaps.com
+; * e-mail:                  sales@quantum-leaps.com
+; *****************************************************************************/
+; #include "qpn_port.h"                                       /* QP-nano port */
+; #include "qassert.h"
+; 
+; #ifndef Q_NHSM
+; Q_DEFINE_THIS_MODULE(qepn)
+; #endif                                                            /* Q_NFSM */
+; 
+; /** \ingroup qepn qfn
+; * \file qepn.c
+; * QEP-nano implementation.
+; */
+; 
+; /** empty signal for internal use only */
+; #define QEP_EMPTY_SIG_       0
+; 
+; /** maximum depth of state nesting (including the top level), must be >= 2 */
+; #define QEP_MAX_NEST_DEPTH_  5
+; 
+; /** helper macro to trigger reserved event in an HSM */
+; #define QEP_TRIG_(state_, sig_) \
+;     (me->evt_.sig = (QSignal)(sig_), (QHsmState)(*(state_))(me))
+; 
+; /*..........................................................................*/
+; /*lint -e970 -e971 */      /* ignore MISRA rules 13 and 14 in this function */
+; char const Q_ROM * Q_ROM_VAR QP_getVersion(void) {
+	.dbline 54
+;     static char const Q_ROM Q_ROM_VAR version[] = "1.5.07";
+;     return version;
+	mov REG[0xd0],>__r0
+	mov [__r1],<L2
+	mov [__r0],>L2
+	.dbline -2
+L1:
+	.dbline 0 ; func end
+	ret
+	.dbend
+	.dbfunc e QFsm_dispatch _QFsm_dispatch fV
+;              s -> X+0
+;             me -> X-5
+_QFsm_dispatch::
+	.dbline -1
+	push X
+	mov X,SP
+	add SP,2
+	.dbline 59
+	.dbline 60
+	mov REG[0xd0],>__r0
+	mov A,[X-4]
+	add A,2
+	mov [__r1],A
+	mov A,[X-5]
+	adc A,0
+	mov REG[0xd4],A
+	mvi A,[__r1]
+	mov [X+0],A
+	mvi A,[__r1]
+	mov [X+1],A
+	.dbline 61
+	mov A,[X-5]
+	push A
+	mov A,[X-4]
+	push A
+	mov A,[X+1]
+	mov [__r1],A
+	mov A,[X+0]
+	push X
+	push A
+	mov X,[__r1]
+	romx
+	mov [__r0],A
+	pop A
+	inc X
+	adc A,0
+	romx
+	mov [__r1],A
+	pop X
+	xcall __icall
+	add SP,-2
+	.dbline 62
+	mov REG[0xd0],>__r0
+	mov A,[X-4]
+	mov [__r1],A
+	mov A,[X-5]
+	mov REG[0xd4],A
+	mvi A,[__r1]
+	cmp A,0
+	jnz L4
+	.dbline 62
+	.dbline 63
+	mov A,[X-4]
+	mov [__r1],A
+	mov A,[X-5]
+	mov REG[0xd5],A
+	mov A,2
+	mvi [__r1],A
+	.dbline 64
+	mov A,[X-5]
+	push A
+	mov A,[X-4]
+	push A
+	mov A,[X+1]
+	mov [__r1],A
+	mov A,[X+0]
+	push X
+	push A
+	mov X,[__r1]
+	romx
+	mov [__r0],A
+	pop A
+	inc X
+	adc A,0
+	romx
+	mov [__r1],A
+	pop X
+	xcall __icall
+	add SP,-2
+	.dbline 66
+	mov REG[0xd0],>__r0
+	mov A,[X-4]
+	mov [__r1],A
+	mov A,[X-5]
+	mov REG[0xd5],A
+	mov A,1
+	mvi [__r1],A
+	.dbline 67
+	mov A,[X-5]
+	push A
+	mov A,[X-4]
+	push A
+	mov A,[X-4]
+	add A,2
+	mov [__r1],A
+	mov A,[X-5]
+	adc A,0
+	mov REG[0xd4],A
+	mvi A,[__r1]
+	mov [__r0],A
+	mvi A,[__r1]
+	mov [__r1],A
+	mov A,[__r0]
+	push X
+	push A
+	mov X,[__r1]
+	romx
+	mov [__r0],A
+	pop A
+	inc X
+	adc A,0
+	romx
+	mov [__r1],A
+	pop X
+	xcall __icall
+	add SP,-2
+	.dbline 68
+L4:
+	.dbline -2
+	.dbline 69
+; }
+; 
+; #ifndef Q_NFSM
+; /*..........................................................................*/
+; void QFsm_dispatch(QFsm *me) Q_REENTRANT {
+;     QState s = me->state__;
+;     (*s)(me);             /* process the event in the current state handler */
+;     if (me->evt_.sig == (QSignal)0) {
+;         me->evt_.sig = (QSignal)Q_EXIT_SIG;
+;         (*s)(me);                                        /* exit the source */
+; 
+;         me->evt_.sig = (QSignal)Q_ENTRY_SIG;
+;         (*me->state__)(me);                             /* enter the target */
+;     }
+; }
+L3:
+	add SP,-2
+	pop X
+	.dbline 0 ; func end
+	ret
+	.dbsym l s 0 pfV
+	.dbsym l me -5 pX
+	.dbend

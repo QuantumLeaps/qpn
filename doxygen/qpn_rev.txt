@@ -1,0 +1,917 @@
+/**
+\page rev_page QP-nano Revision History
+
+\section qpn_4_5_02 Version 4.5.02 (Internal) Release date: Jun 27, 2012
+
+This release adds the variable QF_timerSet_ and bookkeeping
+around it, so that the state of all timeouts in the system can
+be determined quickly and efficiently. This feature is for power-
+sensitive applications, where the system clock tick interrupt
+needs to be turned off. One of the criteria to entering such a
+sleep mode is that all timeout events are disarmed, that is,
+when (QF_timerSet_ == (uint8_t)0).
+
+
+\section qpn_4_5_01 Version 4.5.01 (Product) Release date: Jun 14, 2012
+
+The main purpose of this minor release is providing improved
+MISRA-compliant state machine implementation. Specifically, a new
+macro Q_UNHANDLED() has been added for a situation when a guard
+condition evaluates to FALSE, but the state model does not prescribe
+the explicit [else] case for this guard. In this case, the state
+handler can return Q_UNHANDLED(), which will cause the QEP event
+processor to propagate the event to the superstate, which is what
+UML semantics prescribes.
+
+NOTE: These change to the QEP-nano event processor is completely
+backwards-compatible. All state hander functions coded the old
+way will continue to handle the guard conditions correctly and
+in accordance with the UML specification. The new Q_UNHANDLED()
+macro is necessary only for MISRA-compliant state handler coding,
+which will be applied in the upcoming release of the QM modeling
+and code generation tool.  
+
+Changes in detail:
+
+1. Added macro Q_UNHANDLED() and return value Q_RET_UNHANDLED in
+qepn.h.
+
+2. Modified qepn.c to handle the Q_RET_UNHANDLED return value.
+
+3. Updated the QP-nano MISRA-C:2004 compliance matrix to 
+include the new MISRA-compliant way of coding guard conditions.
+
+4. Updated the IAR ARM compiler used in the ARM Cortex-M examples
+to the latest version IAR EWARM 6.40.
+
+5. Modified the Qt port not to define the QPApp::onClockTick()
+slot, but instead to allow defining this slot in the BSP of the
+application.
+
+
+\section qpn_4_5_00 Version 4.5.00 (Product) Release date: May 30, 2012
+
+The main pupose of this relase is to improve host-based development of
+QP-nano applications, which is critical for Test-Driven Development (TDD).
+Among others, this release provides integration between QP-nano and the
+popular Qt GUI framework, which allows developers to easily build host-
+based simulations of the embedded systems with the realistic user
+interfaces.
+
+This realase also simplifies implementing transitions to history, which
+is a preparation to providing this feature in the QM modeling tool.
+
+Changes in detail:
+
+1. Renamed the event class from QEvent to QEvt to avoid a name conflict
+with the Qt framework.
+
+NOTE: To minimize impact of this change on the existing QP-nano ports
+and applications, the name QEvent is provided as well, but this can be
+suppressed by defining the configuration macro Q_NQEVENT in qep_port.h.
+
+2. Added return value to QF_run() to allow transfer of the exit
+status to the destop operating systems.
+
+NOTE: This modification haves impact on most QP-nano ports, because
+the QF_run() function must now return a int16_t value.
+
+3. Added member 'temp' to the QHsm and QFsm base classes to prevent
+clobbering the current state (the 'state' member) during transitons.
+This change allows keeping the current state unchanged during the
+entire transition chain, which in turn allows easy and generic access
+to the state information to store the state history in the exit
+actions from states. Additional bonus of this re-design is the 
+opportunity of testing for stable state configuration in assertions
+added to the qepn.c file.
+
+4. Added the QHsm_state() and QFsm_state() accessor macros.
+
+5. Modified the "Transition to History" pattern implementation to 
+use the simplified technique of obtaining the current state in the
+exit action from the superstate rather than all the exit actions from
+the substates. Modified the "State-Local Storage" (SLS) pattern as
+well, because it was using the transition to history constructs. 
+
+6. Modified the QP-nano port to Win32 (both the MinGW and VC2008).
+
+7. Modified the QP-nano port to POSIX.
+
+8. Added QP port to Qt (Qt with one thread) and two example
+applications (DPP and PELICAN crossing).
+
+9. Added GNU compiler option -pthread to QP ports for POSIX with
+P-threads, including QP ports and examples for Linux and Mac OS X. 
+
+\section qpn_4_4_00 Version 4.4.00 (Product) Release date: Mar 03, 2012
+
+The main pupose of this relase is MISRA-C:2004 compliance, strong-type
+checking compliance, update of PC-Lint option files and tests, and
+general cleanup.
+
+1. For commonality with the QP/C and QP/C++ frameworks renamed macros
+QF_INT_LOCK/QF_INT_UNLOCK to QF_INT_DISABLE/QF_INT_ENABLE, respectively.
+Also renamed macros QF_INT_KEY_TYPE/QF_ISR_LOCK/QF_ISR_UNLOCK to
+QF_ISR_STAT_TYPE/QF_ISR_DISABLE/QF_ISR_RESTORE, respectively.
+
+NOTE: This modifications have impact on most QP-nano ports. However,
+the qfn.h header file contains definitions of the new macros in terms
+of the old ones. This provies backwards comatibility of the existing
+QP-nano ports.
+
+2. Added the PC-Lint option files std.lnt and lib-qpn.lnt to the
+qcn/include/ directory.
+ 
+3. Cleaned the whole QP-nano code from lint comments. All PC-Lint options
+have been moved to PC-Lint option files.
+ 
+4. Modified QP-nano assertion macro Q_DEFINE_THIS_MODULE() to avoid
+using the # operator (MISRA rule 19.13). This macro now requires the
+argument enclosed in doble quotes "".
+
+NOTE: This modification has impact on some QP-nano ports. 
+
+4. Added typedefs for char_t, int_t, float32_t, and float64_t to
+event.h header file for compliance with MISRA-C:2004 rules 6.1 and 6.3.
+
+5. Added macros Q_STATE_CAST() and Q_ACTIVE_CAST() to qep.h to
+encapsulate deviation from MISRA-C rule 11.4.
+
+6. Added macro Q_UINT2PTR_CAST() to encapsulate casting unsigned
+integers to pointers, which deviates from MISRA-C rule 11.3. This
+macro has been added for *application-level* code.
+
+7. Updated ARM Cortex-M examples with the latest CMSIS v3.0, which
+complies with more MISRA-C:2004 rules.
+
+8. Added PELICAN examples for MISRA-C:2004 compliant applications (for
+IAR-ARM and GNU-ARM).
+
+9. Added testing of PC-Lint option files against the MISRA-C Exemplar
+Suite.
+
+10. Updated ARM-Cortex-M3 port with GNU to the latest Sourcery
+CodeBench 2011.09-60.
+
+11. Added documentation to QP-nano distribution in the directory
+qpn/doc/, with the following Application notes: "QP-nano MISRA-C:2004
+Compliance Matrix" and "Quantum Leaps Coding Standard",  
+
+
+\section qpn_4_3_00 Version 4.3.00 (Product) Release date: Oct 31, 2011
+
+1. This release changes the partitioning of the QK-nano scheduler.
+Specifically, the QK-nano scheduler is now divided between two
+functions QK_schedPrio_() and QK_sched_(), to calculate the highest-
+priority task ready to run and to perform scheduling, respectively.
+The function QK_schedPrio_() is useful to determine if scheduling
+is even necessary.
+
+2. Reduced the interrupt latency of the QK-nano kernel by breaking up
+the critical section in the QK_sched_() into two pieces, just after
+setting QK_currPrio_.
+
+3. Modified the ARM Cortex-M port qkn_port.s to take advantage of the
+new structure of the QK-nano scheduler. To reduce code duplications,
+the QK-nano port file qkn_port.s has been placed in the directories:
+qpn/ports/arm-cortex/qk/gnu/ for the GNU compiler and
+qpn/ports/arm-cortex/qk/iar/ for the IAR compiler, respectively.
+
+4. Moved the Win32 and POSIX emulation of QP-nano from the directory
+qpn/emulation/ to qpn/ports/win32/ and qpn/ports/posix/, respectively.
+
+5. Renamed the function QF_tick() to QF_tickISR() to clearly notify
+the user that this function is callable from ISR only. For backwards
+compatibility, the macro QF_tick() is defined to QF_tickISR().
+
+6. Modified QF_tickISR(), QActive_postISR(), QActive_post(), and
+QK_sched_() to use stack-based pointer to QActiveCB, which avoids
+re-computation of the pointer on-the-fly in the loop. According to the
+feature request #3403079, this significantly speeds up the code for
+8-bit PIC micros.
+
+7. Upgraded the examples for ARM Cortex with IAR EWARM to the
+latest IAR EWARM version 6.30.
+
+8. Upgraded the examples for ARM Cortex with GNU (CodeSourcery) to the
+latest Sourcery CodeBench 2011.07-60.
+
+
+\section qpn_4_2_04 Version 4.2.04 (Product) Release date: Sep 24, 2011
+
+The main pupose of this relase is to provide a bug fix for the QK port
+to ARM Cortex processors. The bug fix addresses a very rare and
+undocumented behavior of late-arrival of an interrupt while entering
+the PendSV exception. In this case the PENDSVSET bit in the NVIC-ICSR
+register is *not* cleared when finally PendSV is entered, so the
+PendSV exception is entered in a *different* state when it is entered
+via the late-arrival mechanism versus the normal activation of the
+exception through tail-chaining. The consequence of this undocumented
+and inconsistent hardware behavior, PendSV could be re-entered again
+before the SVCall exception cleans up the stack. The bug fix is
+implemented in the qk_port.s file (in QP-nano this file is replicated
+in every example for QK-nano) and consists of clearing the PENDSVSET
+bit programmatically inside PendSV_Handler.
+
+
+\section qpc_4_2_02 Version 4.2.02 (Product) Release date: Sep 08, 2011
+
+The main pupose of this relase is to repackage the default QP-nano
+distribution to contain the single root directory qpn/ in the
+archive. That way, unziping the archive will produce only one
+directory (qpn/), which can be then changed by the user.
+
+
+\section qpn_4_2_01 Version 4.2.01 (Product) Release date: Aug 13, 2011
+
+1. Modified file qassert.h to add assertion macros #Q_ASSERT_ID,
+#Q_REQUIRE_ID, #Q_ENSURE_ID, #Q_INVARIANT_ID, and #Q_ERROR_ID,
+which are better suited for unit testig, because they avoid the
+volatility of line numbers for indentifying assertions.
+
+2. Modified the make files and project files to use the environment
+variable QPN instead of relying on the relative path to the QP-nano
+framework.
+
+3. Added QP-nano examples for Mac OS X on 80x86.
+
+4. Upgraded the examples for ARM Cortex with IAR EWARM to the
+latest IAR EWARM version 6.20.
+
+5. Upgraded the examples for MSP430 with IAR EW430 to the
+latest IAR EW430 version 5.30.
+
+
+\section qpn_4_1_07 Version 4.1.07 (Product) Release date: Feb 28, 2011
+
+The goal of this release is to improve the ease of experimenting with
+QP-nano on the desktop. This release adds support for Windows (Win32)
+and Linux to the QP-nano baseline code. Two most popular compilers for
+Windows are supported: Microsoft Visual Studio and MinGW (GNU). The
+support for Linux includes pre-built examples and makefiles compatible
+with Eclipse.
+
+The changes in detail are:
+
+1. Added sub-directory qpn/emulation with emulation code for Windows
+(win32) and POSIX (Linux, Mac OS X, etc.). 
+
+2. Added Win32 examples for Visual C++ 2008 (examples/80x86/win32/
+vc2008/dpp and examples/80x86/win32/vc2008/qhsmtst). Visual Studio
+soultions are provides for all build configurations.
+
+3. Added Win32 examples for MinGW (examples/80x86/win32/mingw/dpp
+and examples/80x86/win32/mingw/qhsmtst). Eclipse-compatible makefiles
+are provided for all build configurations. NOTE: the Makefiles assume
+that the MinGW/bin directory is added to the PATH.
+
+4. Fixed a bug in file qfn.c, function QActive_postISR(). For special
+rare combination of configuration macros the assertion was checked 
+before declaring an automatic variable QF_ISR_KEY_TYPE key. This
+declaration has been moved to the top of the function.
+
+5. Upgraded the examples for ARM Cortex with CodeSourcery to the
+latest Sourcery G++ 2011.02-2.
+
+
+\section qpn_4_1_06 Version 4.1.06 (Product) Release date: Jan 07, 2011
+
+1. Made cosmetic improvements to the example QM model of the
+"Fly 'n' Shoot" game. 
+
+2. Made improvements in make.bat files for building the examples for
+DOS/Open Watcom to run better in DosBox on Linux.
+
+3. Upgraded the examples for ARM Cortex with IAR to the latest
+IAR EWARM version 6.10.
+
+4. Upgraded the examples for ARM Cortex with CodeSourcery to the
+latest Sourcery G++ 2010.09-66.
+
+
+\section qpn_4_1_05 Version 4.1.05 (Product) Release date: Nov 01, 2010
+
+This release is adds examples for the QM (QP Modeler) graphical modeling
+and code generation tool. The examples are based on the "Fly 'n' Shoot"
+game described in the QP-nano Tutorial and in Chapter 1 of the PSiCC2 book.
+
+Specifically, the directory qpn/examples/80x86/watcom/game-qm/
+contains the "Fly 'n' Shoot" game model file "game.qm". This model, when
+opened in the QM tool contains all state machine diagrams and generates
+code into the subdirectory qm_code/. This code can then be built and
+executed on any 80x86 machine (newer versions of Windows or Linux require
+the DOSbox application, see http://www.dosbox.com).
+
+The directory qpn/examples/arm-cortex/iar/game-ev-lm3s811-qm/
+contains the version of the game for the EV-LM3S811 ARM Cortex-M3 board.
+This directory contains the model file "game.qm", which is actually
+identical as the model in the DOS version. The LM3S811 version needs to
+be compiled with the IAR compiler and executed on the EV-LM3S811 board.
+
+Additionally, the QP-nano baseline code has been slighlty modified for
+better conformance to the MISRA C 2004 rules and the latest PC-Lint 9.x. 
+
+
+\section qpn_4_1_04 Version 4.1.04 (Product) Release date: Mar 16, 2010
+
+This release is adds compatibility of all examples for DOS with the DOSBox
+emulator (http://www.dosbox.com/) that recreates a MS-DOS compatible
+environment on all versions of Windows, including 64-bit Windows that don't
+run 16-bit DOS applications anymore.
+
+Also, this release includes QP ports and examples for EV-LM3S811 board with
+the GNU-based Code Sourcery G++ toolset. Support for Sourcery G++ provides
+a very cost-effective option for developing QP applications for ARM Cortex
+MCUs. 
+
+Finally, this release improves the Cortex Microcontroller Software Interface
+Standard (CMSIS) for the whole family of the Stellaris LM3Sxxx MCUs. The
+improvement extends the CMSIS from Sandstorm to Fury, DustDevil, and Tempest
+Stellaris families.  
+
+
+\section qpn_4_1_03 Version 4.1.03 (Product) Release date: Jan 21, 2010
+
+This release is concerned with the ARM Cortex ports and examples.
+Specifically, this release contains the following improvements:
+
+1. Unified source code for ARM Cortex-M3 and the new ARM Cortex-M0 cores,
+including the code for the preemptive QK kernel.
+
+2. Compliance with the Cortex Microcontroller Software Interface Standard
+(CMSIS) in all ARM Cortex examples.
+
+3. Backward-compatible support for the new LM3S811 EVAL Rev C board with
+different OLED display than previous revisions. (NOTE: The OSRAM 96x16x1 OLED
+used in REV A-B boards has been replaced RITEK 96x16x1 OLED used in Rev C.)
+
+In the process of making the examples CMSIS-compliant, the dependency on the
+Luminary Micro driver library (driverlib.a) has been completely removed.
+
+Additionally, the screen saver of the "Fly 'n' Shoot" game has been improved
+to periodically switch off the power of the OLED display, which better
+protects the display from burn-in. The affected file is tunnel.c.
+
+Finally, this release introduces the QP_VERSION macro, which identifies the QP
+version. Otherwise, this maintenance release does not change the QP/C API in
+any way, so the release has NO IMPACT on the QP/C applications except for the
+ARM Cortex ports and applications. 
+
+
+\section qpn_4_1_02 Version 4.1.02 (Product) Release date: Jan 14, 2010
+
+The purpose of this minor maintenance release is the change in the directory
+structure for the ARM Cortex ports and examples. As new ARM Cortex cores are
+becoming available, the old port name "cortex-m3" could be misleading, because
+it actually applies to wider range of ARM Cortex cores. Consequently, all ARM
+Cortex ports and examples are hosted in the directory tree called
+"arm-cortex".
+
+This maintenance release does not change the QP-nano API in any way, so the
+release has NO IMPACT on the QP-nano applications except for the ARM Cortex
+ports and applications. 
+
+
+\section qpn_4_1_01 Version 4.1.01 (Product) Release date: Nov 05, 2009
+
+The main purpose of this release is to replace the Turbo C++ 1.01 toolset
+with the Open Watcom C/C++ toolset, because Turbo C++ 1.01 is no longer
+available for a free download. In contrast, Open Watcom is distributed under
+an OSI-certified open source license, which permits free commercial and
+non-commercial use. Open Watcom can be downloaded from www.openwatcom.org.
+
+All 80x86 examples (vanilla and QK-nano) for Turbo C++ 1.01 have been replaced
+with examples for Open Watcom. The make.bat scripts are provided to build the
+examples. 
+
+In the process of converting the examples to Open Watcom a new SLS example
+have been added to the standard QP-nano distribution. The SLS example located
+in &lt;qpn&gt;/examples/80x86/watcom/sls/* shows the QP-nano implemenation of the
+new State-Local Storage state design pattern.
+
+
+\section qpn_4_1_00 Version 4.1.00 (Product) Release date: Oct 09, 2009
+
+The main purpose of this release is to fix a bug in event posting, which
+could cause corruption of the event signal. Such corruption could occur when
+an event was posted to an empty event queue, in which case it was written
+directly to the internal event stored in the state machine, bypassing the
+ring-buffer. However, the signal of the internal event could also be changed
+by the QEP-nano event processor during execution of transitions.
+
+The bug fix is to always pass events through the ring buffer and never
+overwrite the internal event during event posting (both from the task
+level and from the ISR level). The update of the ring buffer always
+occurs within a critical section and is safe from interruptions. 
+
+This bug fix also allows posting of events from the top-most initial
+transitions of active objects during the initialization phase. Previously,
+the execution of the top-most initial transition corrupted the signal of
+the internal event.
+
+The bug fix enables also self-posting of events from entry/exit actions
+and internal initial transitions. Again, the QEP event processor corrupted
+the internal signal.
+
+This release also replaces the static variables 'p' (priority) and 'a'
+(active object pointer) with automatic variables. This change results in
+more efficient code, because the frequently used variables can be kept in
+registers and do not need to be read/written from/to memory by each use.  
+
+Additionally, this release updates the QP-nano ARM Cortex-M3 examples for
+the EK-LM3S811 board to the latest IAR EWARM 5.40. Due to the acquisition
+of Liminary Micro by Texas Instruments the directory IAR structure for the
+examples and drivers has changed and the QP-nano examples had to be changed
+accordingly.
+
+Finally, this release fixes a bug in the "Fly 'n' Shoot" game example for
+QP-nano, which caused an assertion if the Ship was moved to the very top
+of the Tunnel. This was due to the y-coordinate of the ship explosion
+becomoming negative.   
+
+NOTE: This release does not change the QP-nano API, but all event queues
+are effectively shortened by one event. Also it is no longer possible to
+declare an active object without a ring buffer (zero-sized queue), because
+the internal event no longer counts towards the queue depth.
+
+The main changes in QP v4.1.00 with respect to the earlier versions are
+as follows:
+
+- modified functions QActive_post(), QActive_postISR(), and QF_run() in qfn.c
+to always use the ring buffer and not to count the internal event as part
+of the queue (in the assertions).   
+- modified qfn.c to replace static variables 'p' and 'a' with automatic
+variables.
+- modified function QK_schedule_() in qkn.c to always use the ring buffer,
+as described above.
+- modified module qkn.c to to replace static variables 'p' and 'l_act' with
+automatic variables.
+- modified various examples to eliminate zero-sized queues and extend event
+queues by one event.
+- modified the ARM Cortex-M3 examples for the new IAR EWARM 5.40.
+- modified the ship.c and tunnel.c files in the "Fly 'n' Shoot" game
+example to fix the aforementioned bug.
+
+
+\section qpn_4_0_04 Version 4.0.04 (Product) Release date: Apr 09, 2009
+
+The maintenance release provides a fix for the compile-time assertions,
+which did not work correctly for the GNU compiler family. Also, the ARM
+Cortex-M3 examples have been recompiled with the newer IAR EWARM v5.30.
+
+This maintenance release does not change the QP-nano API in any way, so the
+release has NO IMPACT on the QP-nano applications. 
+
+The main changes in QP v4.0.04 with respect to earlier version are as follows:
+
+- in qassert.h file the #Q_ASSERT_COMPILE macro has been modified to render
+a negative array dimension when the asserted condition is not TRUE.
+
+
+\section qpn_4_0_03 Version 4.0.03 (Product)
+Release date: August 06, 2008
+
+The main purpose of this release is to "future-proof" the QK-nano preemptive
+kernel. The release 4.0.03 strictly preserves the semantics of QK_currPrio_
+variable, which was violated by the previous QK mutex implementation.
+The mutex locking now uses a different variable QK_ceilingPrio_, which
+represents the ceiling-priority locked by the mutex. When the mutex is
+configured (the macro #QK_MUTEX is defined), the QK-nano scheduler
+performs an additional check to make sure that only tasks with priorities
+above the ceiling can run. This additional overhead is not present when
+#QK_MUTEX is not defined.
+
+This maintenance release does not change the QP-nano API in any way, so the
+release has NO IMPACT on the QP-nano applications. 
+
+The main changes in QP v4.0.03 with respect to earlier version are as follows:
+
+- in qkn.c file, changed priority-ceiling mutex implementation to use
+the QK_ceilingPrio_ instead of QK_currPrio_. Also added testing priority
+against the QK_ceilingPrio_, when the macro QK_MUTEX is defined.
+
+
+\section qpn_4_0_02 Version 4.0.02 (Product) Release date: August 06, 2008
+
+This maintenace release is made to allow posting events from any active object
+to any active object from the top-most initial transtions.
+
+This maintenance release does not change the QP-nano API in any way, so the
+release has NO IMPACT on the QP-nano applications. 
+
+The main changes in QP v4.0.02 with respect to earlier version are as follows:
+
+- modified function QF_run() in qfn.c to first loop over all active objects
+and initialize their priority attribute based on their location in the
+QF_active[] array. The second for-loop triggers only the initial transitions,
+but now all priorities are initialized, so active objects can post events to
+each others from the initial transitions.  
+- modified function QF_run() in qkn.c in identical way as in qfn.c described
+above.
+
+
+\section qpn_4_0_01 Version 4.0.01 (Product) Release date: June 08, 2008
+
+This maintenace release is made to allow compiling QP-nano with the GNU
+compiler for AVR (WinAVR). Specifically, some changes were necessary to
+accomodate the non-standard way of hanlding constant data objects allocated
+in ROM (PROGMEM) in the GNU compiler for AVR.
+
+This maintenance release does not change the QP-nano API in any way, so the
+release has NO IMPACT on the QP-nano applications. 
+
+The main changes in QP v4.0.01 with respect to earlier version are as follows:
+
+- eliminated QF_pCB_ variable from qfn.c and qkn.c. This variable was used to
+point to the constant active object control block (QActiveCB) in ROM. The GNU
+compliler for AVR could not handle such pointer correctly without
+contaminating the code with non-portable and non-standard extensions.
+
+- added Doxygen comments to the qep.h header file.
+
+- in qepn.c file, broken up expressions of the form if (t == path[iq]) ...
+into (s = path[iq]; if (t == s) ...). This was done to accommodate the
+ImageCraft ICCM8C compiler for PSoC.  
+
+
+\section qpn_4_0_00 Version 4.0.00 (Product)
+Release date: Apr 07, 2008
+
+This milestone release is made for the book /ref PSiCC2. The book describes in
+great detail this new release. The older "QP-nano Programmer's Manual" is now
+phased out and is replaced with this hyper-lirenked
+/ref main_page "QP-nano Reference Manual", which provides very detailed,
+easily searchable reference to the software. The book /ref PSiCC2 provies
+in-depth discussion of the relevant concepts as well as the design study of
+QP v4.0, including QP-nano v4.0 in Chapter 12.
+
+The main changes in QP v4.0 with respect to earlier versions are as follows:
+
+- the coding techniques for hierarchical state machines (HSMs) and the simpler
+finite state machines (FSMs) have changed. While the changes are quite simple,
+the backward compatibility with QEP-nano 3.x has been broken, meaning that
+some manual changes to the state machines implemented with earlier versions
+are necessary. Please refer to the "QP-nano Tutorial" Section /ref coding_hsm
+for more information about coding state machines with QEP 4.x.
+    - The main change is the signature of a state-handler function, which now
+    returns simply a byte. This return type (typedef'ed as QState) is the
+    status of the event-handling that the state handler conveys to the QEP
+    event processor.
+    - The macro #Q_TRAN() must now always follow the return statement.
+    - The new macro #Q_SUPER() designates the superstate of the given state.
+    Again, this macro must follow the return statement.
+    - Then two new macros #Q_HANDLED() and #Q_IGNORED() have been added to
+    return the status of event handled and event ignored, respectively.
+
+- all callback functions are now consistently called /c #XXX_onYYY():
+    - Q_assert_handler() is now Q_onAssert()
+    - QF_start() is now QF_onStartup()
+    - QF_cleanup() is now QF_onCleanup()
+
+- all callback functions are now consistently called /c XXX_onYYY():
+    - Q_assert_handler() is now Q_onAssert()
+    - QF_start() is now QF_onStartup()
+    - QF_cleanup() is now QF_onCleanup()
+- enumerating global active object priorities is no longer necessary.
+- the methods of posting events have changed:
+    - QF_post(prio, sig, par) is now void QActive_post(me, sig, par)    
+    - QF_postISR(prio, sig, par) is now void QActive_postISR(me, sig, par)
+- the global variable QF_activeNum has been eliminated
+    - instead the constant #QF_MAX_ACTIVE <STRONG>must</STRONG> correspond
+      to the exact number of active objects in the application.
+- the QEP-nano event processor now works identically as the full-version QEP.
+Specifically, the signal of the current event is not used to notify the event
+processor that a transition has taken place. This saves a few bytes of code
+for every usage of #Q_TRAN().
+- all QF-nano and QK-nano functions have been modified to use static variables
+instead of stack variables wherever possible. This saves a few bytes of stack
+for the "vanilla" kernel. In QK-nano the savings can be more substantial.
+- the QP-nano event queues now decrement the head and tail counters. This
+leads to wrap-around at zero, which is easier (faster) to test than any other
+wrap-around point.
+- all examples in the standard QP-nano distribution have been cleaned up and
+updated to the latest QP-nano API changes.
+
+  
+\section qpn_3_4_01 Version 3.4.01 (Product)
+Release date: Sep 25, 2007
+
+This product release adds the backward-compatibility layer so that previous
+QP-nano ports continue to work with the new version.
+
+This product release also comes with the updated "QP-nano Programmer's Manual"
+that now includes the QK-nano preemptive kernel.
+
+
+\section qpn_3_4_00 Version 3.4.00 (Beta)
+Release date: Sep 03, 2007
+
+This release brings several changes with the overall goal of simplifying and
+improving consistency across the whole QP family of frameworks (QP/C, QP/C++,
+and QP-nano).
+
+This release includes simplifying of the C naming conventions (see the
+updated Application Note
+<A HREF="http://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"> "QL
+C/C++ Coding Standard"</A>). The double-underscore suffix for private data
+members of structures is no longer used. Single underscore is used still only
+for internal QP-nano facilities that typically should not be used by the
+application programmer.
+
+The main changes are made to the QEP-nano component. The new functions
+QFsm_init() and QHsm_init() have been added for FSMs and HSMs, respectively.
+These APIs are for initializing a state machine by triggering the top-most
+initial transition. The application programmer now needs to provide the
+top-most initial *pseudostate* that defines the initial transition, just
+like it is done in QP/C and QP/C++.
+
+NOTE: the previous QP-nano technique of providing the whole top-most initial
+state handler will still work, but it takes more code and is not recommended
+in the future designs.
+
+The other big change in this release is including the QK-nano component
+in the distribution. Previously, the QK-nano component was available only
+under the commercial licensing. It is now open source, just as the rest
+of QP-nano.
+
+
+\section qpn_1_5_07 Version 1.5.07 (Product)
+Release date: Mar 08, 2007/n
+
+The only change in this release is removing the 'const' declaration
+of a temporary variable inside QHsm_dispatch() function. This was necessary
+to compile the code with the MPLAB C18 compiler for PIC18 devices.
+/n
+The changes in release 1.5.07 have NO impact on the existing QP-nano ports./n
+
+-# in file qepn.h, line 92 removed 'const' from the 'QHsmState src'
+declaration
+-# in file qepn.c changed the version number to "1.5.07".
+
+
+\section qpn_1_5_06 Version 1.5.06 (Product)
+Release date: Jan 28, 2007/n
+
+The main change in this release is adding the macro #Q_REENTRANT for all
+functions that might be called from various threads of control (when
+the preemptive QK-nano is used). The macro #Q_REENTRANT is used in the
+postfix syntax, which is how the Keil C51 compiler uses the extended keyword
+"reentrant" to indicate reentrant functions./n
+/n
+The changes in release 1.5.06 have NO impact on the existing QP-nano ports,
+because the empty default definition for the #Q_REENTRANT macro provided in
+"qeph.h" should be adequate for all these ports./n
+
+-# in file qepn.h added default empty definitions and Doxygen comments for
+macros #Q_REENTRANT.
+-# in file qepn.h added macro #Q_REENTRANT to the signature of functions that
+must be reentrant
+-# in file qfn.h added macro #Q_REENTRANT to the signature of functions that
+must be reentrant
+-# in file qkn.h added macro #Q_REENTRANT to the signature of functions that
+must be reentrant
+-# in file qepn.c added macro #Q_REENTRANT to the signature of functions that
+must be reentrant
+-# in file qfn.c added macro #Q_REENTRANT to the signature of functions that
+must be reentrant
+-# in file qkn.c added macro #Q_REENTRANT to the signature of functions that
+must be reentrant
+-# in file qepn.c changed the copyright notice and the version number
+to "1.5.06".
+
+
+\section qpn_1_5_05 Version 1.5.05 (Product)
+Release date: Dec 13, 2006/n
+
+The main change in this release is adding the macro #Q_ROM_VAR for all
+constant objects allocated in ROM. The #Q_ROM_VAR macro has been added
+for the compilers like Freescale HC(S)08, which require far pointers to
+access the objects in ROM. Please note that specifying the pointer size
+for accessing a ROM objects is syntactically different than specifying
+that the object is allocated in ROM (see macro #Q_ROM)./n
+
+The changes in release 1.5.05 have NO impact on the existing QP-nano ports,
+because the empty default definition for the #Q_ROM_VAR macro should be
+adequate for all these ports./n
+
+-# in file qassert.h added macro #Q_ROM_VAR for objects allocated in ROM
+and to signatures of functions accessing these objects.
+-# in file qepn.h added macro #Q_ROM_VAR for objects allocated in ROM
+and to signatures of functions accessing these objects.
+-# in file qepn.h added default empty definitions and Doxygen comments for
+macros #Q_ROM and #Q_ROM_VAR.
+-# in file qfn.h added macro #Q_ROM_VAR for objects allocated in ROM
+and to signatures of functions accessing these objects.
+-# in file qepn.c added macro #Q_ROM_VAR for objects allocated in ROM
+and to signatures of functions accessing these objects.
+-# in file qfn.c added macro #Q_ROM_VAR for objects allocated in ROM
+and to signatures of functions accessing these objects.
+-# in file qkn.c added macro #Q_ROM_VAR for objects allocated in ROM
+and to signatures of functions accessing these objects.
+-# in file qepn.c changed the copyright notice and the version number
+to "1.5.05".
+
+
+\section qpn_1_5_04 Version 1.5.04 (Product)
+Release date: Dec 11, 2006/n
+
+The main change in this release is removing "#include <stdint.h>" from the
+qepn.h header file. This has been done becasue vast majority of embedded
+compilers for small MCUs actually do not provide the C-99 Standard header
+file <stdint.h>. Worse, compilers such as Freescale HC(S)08 C/C++ compiler
+will not include <stdint.h> unless it's in the compilers's include directory,
+even though the stdint.h file might be in the compiler include path./n
+/n
+Removing the "#include <stdint.h>" from qep.h header file allows more
+flexibility in the way the standard exact-width integer types are defined.
+For compilers that do not provide the <stdint.h> file, you provide the
+typedef's in the qpn_port.h file before including qepn.h. For compilers
+that do provide the <stdint.h> header file, you simply include this file
+in the qpn_port.h header file before including qepn.h.
+/n
+The changes in release 1.5.04 have impact on all QP-nano ports, because
+you need to modify the qpn_port.h file in all these ports./n
+
+-# in file qepn.h removed "#include <stdint.h>".
+-# in file qepn.h fixed incorrect macros #QFsm_getState() and
+#QHsm_getState() to get the current state of the state machine.
+-# in file qfn.h changed the copyright notice.
+-# in file qkn.c changed the copyright notice.
+-# in file qepn.c changed the copyright notice and the version number
+to "1.5.04".
+
+
+\section qpn_1_5_03 Version 1.5.03 (Product)
+Release date: Nov 12, 2006/n
+
+This release adapts the QP-nano code to the shortcomings of the gcc compiler
+for handling data in program ROM for Harvard architecture CPUs, such as the
+Atmel's AVR or the 8051. In such machines, the data space (RAM) and program
+space (ROM) are accessed with different instructions. The gcc compiler
+does not automatically synthesize the correct code for accessing data placed
+in the program ROM, even though the __attribute__((__progmem__)) is used.
+The workaround for the gcc is to add special assembly instructions to
+transfer the data from the program space to the data space. This version of
+QP-nano adds macros for each data element allocated to the program space
+(delcared with the Q_ROM attribute)./n
+/n
+Please note that commercial compilers, such as IAR, handle data allocated
+in the program space (ROM) correctly and do not need any workarounds.
+
+-# in file qepn.c changed the version number to "1.5.03".
+-# in file qfn.c added the Q_ROM_BYTE() and Q_ROM_PTR() macros around each
+data element allocated to the program space (declared with Q_ROM attribute).
+-# in file qkn.c added the Q_ROM_BYTE() and Q_ROM_PTR() macros around each
+data element allocated to the program space (declared with Q_ROM attribute).
+
+
+\section qpn_1_5_02 Version 1.5.02 (Product)
+Release date: Nov 04, 2006/n
+
+This release corrects the initial transition processing in the QK-nano
+configuration. Also, a new interrupt locking policy inside interrups is
+introduced (inside the QF_postISR() function). This locking policy corresponds
+to "saving and restoring interrupt status", which is useful to unlock
+interrupts only to a certain level, but keep the interrupts locked below that
+level.
+
+-# in file qepn.c changed the version number to "1.5.02".
+-# in file qfn.h added doxygen comment to QF_readySet_.
+-# in file qkn.c moved the setting of QF_readySet_ before the call
+to QK_schedule.
+-# in file qfn.c introduced macros QF_ISR_KEY_TYPE and QF_ISR_LOCK()/
+QF_ISR_UNLOCK().
+-# updated the "QP-nano Programmer's Manual"
+
+
+\section qpn_1_5_01 Version 1.5.01 (Product)
+Release date: Oct 16, 2006/n
+
+This release makes no changes to the core QP-nano code, but corrects
+nested interrupt handling in the 80x86 example of PELICAN crossing
+with QK-nano. Additionally, alternative interrupt handling without
+allowing the interrupt nesting is demonstrated.
+
+-# in file qepn.c changed the version number to "1.5.01".
+-# in file examples/80x86/tcpp101/pelican-qk/bsp.c corrected the tick ISR
+and added another option for the case when interrupt nesting is not allowed.
+Also added note comments at the end of the file.
+-# in file examples/80x86/tcpp101/pelican/bsp.c added an optional
+implementation of the tick ISR for the case when interrupt nesting is allowed.
+Also added note comments at the end of the file.
+-# updated the "QP-nano Programmer's Manual"
+
+
+\section qpn_1_5_00 Version 1.5.00 (Product)
+Release date: Sep 17, 2006/n
+
+This release changes the licensing of QP-nano. The QEP-nano and QF-nano
+components are released under the dual-license (GPL and commercial).
+The QK-nano component is left as commercial only.
+
+To enable the separate use of QEP-nano, QF-nano, and QK-nano, the header
+file qpn.h has been split into three files qepn.h, qfn.h, and qkn.h.
+
+-# deleted header file qpn.h
+-# added header file qepn.h
+-# added header file qfn.h
+-# added header file qkn.h
+-# in file qkn.h added definition of the macro QK_PREEMPTIVE, so that
+including this qkn.h in qpn_port.h automatically configures QK-nano.
+-# in file qkn.c added compilation error to check that QK_PREEMTIVE is
+indeed defined (meaning that qkn.h has been included in qpn_port.h)
+-# consistently changed copyright notes in the QP-nano examples without
+QK-nano to relfect open-source (GPL) licensing.
+-# updated the "QP-nano Programmer's Manual"
+
+
+\section qpn_1_4_00 Version 1.4.00 (Product)
+Release date: Aug 20, 2006/n
+
+This release addresses the potential initialization problem, when active
+objects want to post events to each other or to self during the top-most
+initial transition.
+
+The initialization sequence now requires only calling the QActive_ctor()
+constructor, but you no longer need to explicitly call QHsm_init()
+(or QFsm_init() for the non-hierarchical state machine) to trigger the
+top-most initial transition. The top-most initial transition is now executed
+automatically by the framework.
+
+-# in file qpn.h added QFsm_ctor(), QHsm_ctor(), and QActive_ctor().
+-# in file qpn.h removed QFsm_init() and QHsm_init().
+-# in file qepn.c changed QP_getVersion() to allocate the version string
+in ROM (if possible) and incremented the version number to 1.4.00
+-# in file qfn.c modified QF_run() to initialize the QF_readySet_ to process
+the initialization event in all active objects.
+-# in file qkn.c modified QF_run() to initialize the QF_readySet_ to process
+the initialization event in all active objects. Also commented out the
+inclusion of qassert.h, which is currently not used in this module.
+-# updated all examples and QDKs-nano to use the new initialization sequence.
+-# updated the "QP-nano Programmer's Manual"
+
+
+removed unlocking interrupts before invoking the
+QF_onIdle() callback. This was done to prevent a race condition in
+determining the idle condition. The idle condition (no events in any
+event queues) can be changed at any time by an interrupt. If interrupts
+were unlocked before calling QF_onIdle(), and interrupt could post an
+event to a queue, but the QF_onIdle() would put the CPU to low-power mode,
+thus preventing the processing of the event until the next interrupt.<br>
+<br>
+The modification changes the semantics and responsibilities of QF_onIdle(),
+which now MUST at least unlock interrupts. A failure to unlock interrupts
+in QF_onIdle() will leave the interrupts locked all the time and would
+prevent the application from running.<br>
+-# in file qpn.h changed the comments for QF_onIdle()
+-# in file qpn.h added new idle callback QK_onIdle(), which in contrast
+to QF_onIdle() is invoked with interrupts unlocked.
+-# in file qk.c replaced the callback QF_onIdle() with the new one
+QK_onIdle().
+-# in file qepn.c changed the version number to 1.3.00
+
+
+\section qpn_1_3_00 Version 1.3.00 (Product)
+Release date: Jul 27, 2006/n
+
+-# in file qfn.c removed unlocking interrupts before invoking the
+QF_onIdle() callback. This was done to prevent a race condition in
+determining the idle condition. The idle condition (no events in any
+event queues) can be changed at any time by an interrupt. If interrupts
+were unlocked before calling QF_onIdle(), and interrupt could post an
+event to a queue, but the QF_onIdle() would put the CPU to low-power mode,
+thus preventing the processing of the event until the next interrupt.<br>
+<br>
+The modification changes the semantics and responsibilities of QF_onIdle(),
+which now MUST at least unlock interrupts. A failure to unlock interrupts
+in QF_onIdle() will leave the interrupts locked all the time and would
+prevent the application from running.<br>
+-# in file qpn.h changed the comments for QF_onIdle()
+-# in file qpn.h added new idle callback QK_onIdle(), which in contrast
+to QF_onIdle() is invoked with interrupts unlocked.
+-# in file qk.c replaced the callback QF_onIdle() with the new one
+QK_onIdle().
+-# in file qepn.c changed the version number to 1.3.00
+
+
+\section qpn_1_2_00 Version 1.2.00 (Product)
+Release date: May 31, 2006/n
+
+-# added QK-nano component for preemptive multitasking option
+-# used the eZ430-F2013 USB stick instead of 8051 SiLabs Toolstick in the
+   examples
+-# added QK-nano demonstration in the pelican-qk example for x86
+-# updated "QP-nano Programmer's Manual"
+
+
+\section qpn_1_1_00 Version 1.1.00 (Beta)
+Release date: May 20, 2006/n
+
+-# added "QP-nano Programmer's Manual"
+
+\section qpn_1_0_00 Version 1.0.00 (Initial)
+Release date: May 15, 2006/n
+
+-# created
+*/
+

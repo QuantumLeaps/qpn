@@ -1,0 +1,66 @@
+//////////////////////////////////////////////////////////////////////////////
+// Product: PC-Lint 9.x option file for linting QP-nano
+// Last Updated for Version: 4.5.00
+// Date of the Last Update:  May 18, 2012
+//
+//                    Q u a n t u m     L e a P s
+//                    ---------------------------
+//                    innovating embedded systems
+//
+// Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+//
+// This software may be distributed and modified under the terms of the GNU
+// General Public License version 2 (GPL) as published by the Free Software
+// Foundation and appearing in the file GPL.TXT included in the packaging of
+// this file. Please note that GPL Section 2[b] requires that all works based
+// on this software must also be made publicly available under the terms of
+// the GPL ("Copyleft").
+//
+// Alternatively, this software may be distributed and modified under the
+// terms of Quantum Leaps commercial licenses, which expressly supersede
+// the GPL and are specifically designed for licensees interested in
+// retaining the proprietary status of their code.
+//
+// Contact information:
+// Quantum Leaps Web site:  http://www.quantum-leaps.com
+// e-mail:                  info@quantum-leaps.com
+//////////////////////////////////////////////////////////////////////////////
+
+// library headers
++libclass()       // lint all header files, including "foreign"
+//-vf             // print names of all source files
+
++fdi              // start #include search in directory of the including file
+-i.               // QP-nano port includes
+-i../include      // QP-nano includes
+
+-si4              // sizeof(int) 
+-ss2              // sizeof(short)
+-spD4             // sizeof(void *)
+-spP4             // sizeof(function pointer)
+
+
+au-misra2.lnt     // MISRA-C:2004 options
+au-ds.lnt         // Dan Saks recommendations
+lib-qpn.lnt       // QP-nano options
+-strong(AXJ)      // Strong type checking
+
+
+// QEP-nano
+-estring(961,     // MISRA04-19.7(adv) function-like macro
+ QEP_TRIG_,
+ QEP_ENTER_,
+ QEP_EXIT_)
+-efunc(778, QP_getVersion)    // Constant expression evaluates to 0
+-efunc(835, QP_getVersion)    // 0 as left argument to operator '+'
+-efunc(632, QHsm_init)        // Assignment to strong type 'QStateHandler'
+
+// QF-nano
+-emacro(960, QF_ROM_QUEUE_AT_)  // MISRA04-17.4(req) pointer arithmetic
+-emacro(929,                  // MISRA04-11.4(adv) cast pointer to pointer
+ QF_ROM_ACTIVE_GET_,
+ QF_ROM_QUEUE_AT_)
+-efunc(527, QF_run)           // MISRA04-14.17(req) Unreachable code
+
+// QK-nano
+

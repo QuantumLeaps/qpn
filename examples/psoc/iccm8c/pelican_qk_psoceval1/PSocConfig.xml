@@ -1,0 +1,680 @@
+<PSOC_DEVICE_DB>
+    <PSOC_CONFIG_LIST>
+        <PSOC_CONFIG NAME="pelican_qk_psoceval1" BASE_DEVICE="CY8C29466" SOURCE_GEN_TIME="1213379546" CONFIG_SAVE_TIME="1213379546" CONFIG_SAVE_DATE="Fri Jun 13 13:52:26 2008
+" VERSION="4.0" DESCRIPTION="" PACKAGE_TYPE="PDIP" PACKAGE_SHAPE="2" LOOP_CONFIG_INIT="Enable" UM_INT_GEN_CONTROL="Disable" CONFIG_NAME_PREPEND="Enable" DESIGN_VERSION="" DOC_FILENAME="" DEVICE_DISPLAY_NAME="CY8C29466-24PXI" PSOC_EXPRESS_PROJECT="FALSE">
+            <DESIGN_FILE_LIST/>
+            <USER_MODULE_LIST>
+                <USER_MODULE NAME="LED" INSTANCE_NAME="LED_1" VERSION="1.2">
+                    <SHAPE SHAPE_TYPE="BLOCKLIST" COLOR_INDEX="11" NAME="LED">
+                        <RESOURCE_LIST/>
+                    </SHAPE>
+                    <PARAMETER_LIST>
+                        <PARAMETER NAME="Drive" VALUE="Active High"/>
+                        <PARAMETER NAME="Pin" VALUE="Port_0_0"/>
+                        <PARAMETER NAME="Port" VALUE="Port_0"/>
+                    </PARAMETER_LIST>
+                </USER_MODULE>
+                <USER_MODULE NAME="LED" INSTANCE_NAME="LED_2" VERSION="1.2">
+                    <SHAPE SHAPE_TYPE="BLOCKLIST" COLOR_INDEX="11" NAME="LED">
+                        <RESOURCE_LIST/>
+                    </SHAPE>
+                    <PARAMETER_LIST>
+                        <PARAMETER NAME="Drive" VALUE="Active High"/>
+                        <PARAMETER NAME="Pin" VALUE="Port_0_1"/>
+                        <PARAMETER NAME="Port" VALUE="Port_0"/>
+                    </PARAMETER_LIST>
+                </USER_MODULE>
+                <USER_MODULE NAME="LED" INSTANCE_NAME="LED_3" VERSION="1.2">
+                    <SHAPE SHAPE_TYPE="BLOCKLIST" COLOR_INDEX="11" NAME="LED">
+                        <RESOURCE_LIST/>
+                    </SHAPE>
+                    <PARAMETER_LIST>
+                        <PARAMETER NAME="Drive" VALUE="Active High"/>
+                        <PARAMETER NAME="Pin" VALUE="Port_0_2"/>
+                        <PARAMETER NAME="Port" VALUE="Port_0"/>
+                    </PARAMETER_LIST>
+                </USER_MODULE>
+                <USER_MODULE NAME="LED" INSTANCE_NAME="LED_4" VERSION="1.2">
+                    <SHAPE SHAPE_TYPE="BLOCKLIST" COLOR_INDEX="11" NAME="LED">
+                        <RESOURCE_LIST/>
+                    </SHAPE>
+                    <PARAMETER_LIST>
+                        <PARAMETER NAME="Drive" VALUE="Active High"/>
+                        <PARAMETER NAME="Pin" VALUE="Port_0_3"/>
+                        <PARAMETER NAME="Port" VALUE="Port_0"/>
+                    </PARAMETER_LIST>
+                </USER_MODULE>
+                <USER_MODULE NAME="SleepTimer" INSTANCE_NAME="SleepTimer_1" VERSION="1.0">
+                    <SHAPE SHAPE_TYPE="BLOCKLIST" COLOR_INDEX="0" NAME="SleepTimer27">
+                        <RESOURCE_LIST>
+                            <RESOURCE NAME="SLEEPINT" TYPE="SLEEP_INTERRUPT" DEVICE_RESOURCE_NAME="SleepInterrupt"/>
+                        </RESOURCE_LIST>
+                    </SHAPE>
+                    <PARAMETER_LIST>
+                        <PARAMETER NAME="IntDispatchMode" VALUE="ActiveStatus"/>
+                        <PARAMETER NAME="PSOC_TYPE" VALUE="27xxx"/>
+                        <PARAMETER NAME="TickCounterSize" VALUE="1 Byte"/>
+                    </PARAMETER_LIST>
+                </USER_MODULE>
+                <USER_MODULE NAME="UART" INSTANCE_NAME="UART_1" VERSION="5.2">
+                    <SHAPE SHAPE_TYPE="BLOCKLIST" COLOR_INDEX="1" NAME="UART27">
+                        <BLOCK_LIST>
+                            <BLOCK NAME="TX" TYPE="DIGITAL_COMM" LOCATION="2">
+                                <REGISTER_LIST>
+                                    <REGISTER NAME="CONTROL_0" ADDR="2b" VALUE="0" DATASHEET_NAME="DCB02CR0"/>
+                                    <REGISTER NAME="DATA_0" ADDR="28" VALUE="0" DATASHEET_NAME="DCB02DR0"/>
+                                    <REGISTER NAME="DATA_1" ADDR="29" VALUE="0" DATASHEET_NAME="DCB02DR1"/>
+                                    <REGISTER NAME="DATA_2" ADDR="2a" VALUE="0" DATASHEET_NAME="DCB02DR2"/>
+                                    <REGISTER NAME="DIG_BasicFunction" ADDR="128" VALUE="d" DATASHEET_NAME="DCB02FN"/>
+                                    <REGISTER NAME="DIG_Input" ADDR="129" VALUE="1" DATASHEET_NAME="DCB02IN"/>
+                                    <REGISTER NAME="DIG_Output" ADDR="12a" VALUE="47" DATASHEET_NAME="DCB02OU"/>
+                                </REGISTER_LIST>
+                                <INPUT_LIST/>
+                            </BLOCK>
+                        </BLOCK_LIST>
+                        <BLOCK_LIST>
+                            <BLOCK NAME="RX" TYPE="DIGITAL_COMM" LOCATION="3">
+                                <REGISTER_LIST>
+                                    <REGISTER NAME="CONTROL_0" ADDR="2f" VALUE="0" DATASHEET_NAME="DCB03CR0"/>
+                                    <REGISTER NAME="DATA_0" ADDR="2c" VALUE="0" DATASHEET_NAME="DCB03DR0"/>
+                                    <REGISTER NAME="DATA_1" ADDR="2d" VALUE="0" DATASHEET_NAME="DCB03DR1"/>
+                                    <REGISTER NAME="DATA_2" ADDR="2e" VALUE="0" DATASHEET_NAME="DCB03DR2"/>
+                                    <REGISTER NAME="DIG_BasicFunction" ADDR="12c" VALUE="5" DATASHEET_NAME="DCB03FN"/>
+                                    <REGISTER NAME="DIG_Input" ADDR="12d" VALUE="e1" DATASHEET_NAME="DCB03IN"/>
+                                    <REGISTER NAME="DIG_Output" ADDR="12e" VALUE="40" DATASHEET_NAME="DCB03OU"/>
+                                </REGISTER_LIST>
+                                <INPUT_LIST/>
+                            </BLOCK>
+                        </BLOCK_LIST>
+                        <RESOURCE_LIST/>
+                    </SHAPE>
+                    <PARAMETER_LIST>
+                        <PARAMETER NAME="Clock" VALUE="VC3"/>
+                        <PARAMETER NAME="ClockSync" VALUE="Sync to SysClk"/>
+                        <PARAMETER NAME="CommandTerminator" VALUE="13"/>
+                        <PARAMETER NAME="Enable_BackSpace" VALUE="Disable"/>
+                        <PARAMETER NAME="IgnoreCharsBelow" VALUE="32"/>
+                        <PARAMETER NAME="IntDispatchMode" VALUE="ActiveStatus"/>
+                        <PARAMETER NAME="InterruptAPI" VALUE="Enable"/>
+                        <PARAMETER NAME="InvertRX Input" VALUE="Normal"/>
+                        <PARAMETER NAME="Param_Delimiter" VALUE="32"/>
+                        <PARAMETER NAME="RX Clock Out" VALUE="None"/>
+                        <PARAMETER NAME="RX Input" VALUE="Row_0_Input_2"/>
+                        <PARAMETER NAME="RX Output" VALUE="None"/>
+                        <PARAMETER NAME="RxBufferSize" VALUE="16 Bytes"/>
+                        <PARAMETER NAME="RxCmdBuffer" VALUE="Disable"/>
+                        <PARAMETER NAME="TX Clock Out" VALUE="None"/>
+                        <PARAMETER NAME="TX Interrupt Mode" VALUE="TXRegEmpty"/>
+                        <PARAMETER NAME="TX Output" VALUE="Row_0_Output_3"/>
+                    </PARAMETER_LIST>
+                </USER_MODULE>
+            </USER_MODULE_LIST>
+            <DEVICE_DATA>
+                <GLOBAL_RESOURCE_LIST>
+                    <RESOURCE NAME="32K_Select" VALUE="Internal"/>
+                    <RESOURCE NAME="AGndBypass" VALUE="Disable"/>
+                    <RESOURCE NAME="A_Buff_Power" VALUE="Low"/>
+                    <RESOURCE NAME="Analog Power" VALUE="SC On/Ref Low"/>
+                    <RESOURCE NAME="CPU_Clock" VALUE="SysClk/8"/>
+                    <RESOURCE NAME="LVDThrottleBack" VALUE="Disable"/>
+                    <RESOURCE NAME="Op-Amp Bias" VALUE="Low"/>
+                    <RESOURCE NAME="PLL_Mode" VALUE="Disable"/>
+                    <RESOURCE NAME="Power Setting [ Vcc / SysClk freq ]" VALUE="5.0V / 24MHz"/>
+                    <RESOURCE NAME="Ref Mux" VALUE="(Vdd/2)+/-(Vdd/2)"/>
+                    <RESOURCE NAME="Sleep_Timer" VALUE="512_Hz"/>
+                    <RESOURCE NAME="SwitchModePump" VALUE="OFF"/>
+                    <RESOURCE NAME="SysClk Source" VALUE="Internal"/>
+                    <RESOURCE NAME="SysClk*2 Disable" VALUE="No"/>
+                    <RESOURCE NAME="Trip Voltage [LVD (SMP)]" VALUE="4.81V (5.00V)"/>
+                    <RESOURCE NAME="VC1= SysClk/N" VALUE="8"/>
+                    <RESOURCE NAME="VC2= VC1/N" VALUE="1"/>
+                    <RESOURCE NAME="VC3 Divider" VALUE="156"/>
+                    <RESOURCE NAME="VC3 Source" VALUE="SysClk/1"/>
+                    <RESOURCE NAME="Watchdog Enable" VALUE="Disable"/>
+                </GLOBAL_RESOURCE_LIST>
+                <RESERVED_RESOURCE_LIST>
+                    <RESOURCE NAME="" VALUE="" TYPE=""/>
+                    <RESOURCE NAME="24MHz_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="32KHz_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="ASD11-ASC10" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="ASD13-ASC12" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="ASD20-ASC21" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="ASD22-ASC23" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="AnalogClock_0_Select" VALUE="" TYPE="ANALOG_CLOCK_SELECT"/>
+                    <RESOURCE NAME="AnalogClock_1_Select" VALUE="" TYPE="ANALOG_CLOCK_SELECT"/>
+                    <RESOURCE NAME="AnalogColumn_Clock_0" VALUE="VC1" TYPE="ANALOG_COLUMN_CLOCK_MUX"/>
+                    <RESOURCE NAME="AnalogColumn_Clock_1" VALUE="VC1" TYPE="ANALOG_COLUMN_CLOCK_MUX"/>
+                    <RESOURCE NAME="AnalogColumn_Clock_2" VALUE="VC1" TYPE="ANALOG_COLUMN_CLOCK_MUX"/>
+                    <RESOURCE NAME="AnalogColumn_Clock_3" VALUE="VC1" TYPE="ANALOG_COLUMN_CLOCK_MUX"/>
+                    <RESOURCE NAME="AnalogColumn_InputMUX_0" VALUE="Port_0_1" TYPE="COLUMN_INPUT"/>
+                    <RESOURCE NAME="AnalogColumn_InputMUX_1" VALUE="Port_0_4" TYPE="COLUMN_INPUT"/>
+                    <RESOURCE NAME="AnalogColumn_InputMUX_2" VALUE="Port_0_5" TYPE="COLUMN_INPUT"/>
+                    <RESOURCE NAME="AnalogColumn_InputMUX_3" VALUE="Port_0_0" TYPE="COLUMN_INPUT"/>
+                    <RESOURCE NAME="AnalogColumn_InputSelect_1" VALUE="AnalogColumn_InputMUX_0" TYPE="COLUMN_INPUT_SELECT"/>
+                    <RESOURCE NAME="AnalogColumn_InputSelect_2" VALUE="AnalogColumn_InputMUX_2" TYPE="COLUMN_INPUT_SELECT"/>
+                    <RESOURCE NAME="AnalogColumn_Modulator_0" VALUE="None" TYPE="ANALOG_MODULATOR"/>
+                    <RESOURCE NAME="AnalogColumn_Modulator_1" VALUE="None" TYPE="ANALOG_MODULATOR"/>
+                    <RESOURCE NAME="AnalogColumn_Modulator_2" VALUE="None" TYPE="ANALOG_MODULATOR"/>
+                    <RESOURCE NAME="AnalogColumn_Modulator_3" VALUE="None" TYPE="ANALOG_MODULATOR"/>
+                    <RESOURCE NAME="AnalogComparatorControl_0" VALUE="" TYPE="ANALOG_COMPARATOR_CONTROL"/>
+                    <RESOURCE NAME="AnalogComparatorControl_1" VALUE="" TYPE="ANALOG_COMPARATOR_CONTROL"/>
+                    <RESOURCE NAME="AnalogComparatorControl_2" VALUE="" TYPE="ANALOG_COMPARATOR_CONTROL"/>
+                    <RESOURCE NAME="AnalogComparatorControl_3" VALUE="" TYPE="ANALOG_COMPARATOR_CONTROL"/>
+                    <RESOURCE NAME="AnalogInterruptSource_Col_0" VALUE="" TYPE="ANALOG_INTERRUPT_SOURCE"/>
+                    <RESOURCE NAME="AnalogInterruptSource_Col_1" VALUE="" TYPE="ANALOG_INTERRUPT_SOURCE"/>
+                    <RESOURCE NAME="AnalogInterruptSource_Col_2" VALUE="" TYPE="ANALOG_INTERRUPT_SOURCE"/>
+                    <RESOURCE NAME="AnalogInterruptSource_Col_3" VALUE="" TYPE="ANALOG_INTERRUPT_SOURCE"/>
+                    <RESOURCE NAME="AnalogLUT_0" VALUE="A" TYPE="ANALOG_LUT"/>
+                    <RESOURCE NAME="AnalogLUT_1" VALUE="A" TYPE="ANALOG_LUT"/>
+                    <RESOURCE NAME="AnalogLUT_2" VALUE="A" TYPE="ANALOG_LUT"/>
+                    <RESOURCE NAME="AnalogLUT_3" VALUE="A" TYPE="ANALOG_LUT"/>
+                    <RESOURCE NAME="AnalogOutBuf_0" VALUE="OFF" TYPE="ANALOG_DRIVER"/>
+                    <RESOURCE NAME="AnalogOutBuf_1" VALUE="OFF" TYPE="ANALOG_DRIVER"/>
+                    <RESOURCE NAME="AnalogOutBuf_2" VALUE="OFF" TYPE="ANALOG_DRIVER"/>
+                    <RESOURCE NAME="AnalogOutBuf_3" VALUE="OFF" TYPE="ANALOG_DRIVER"/>
+                    <RESOURCE NAME="AnalogOutBus_0" VALUE="" TYPE="ANALOG_COLUMN_OUTPUT"/>
+                    <RESOURCE NAME="AnalogOutBus_1" VALUE="" TYPE="ANALOG_COLUMN_OUTPUT"/>
+                    <RESOURCE NAME="AnalogOutBus_2" VALUE="" TYPE="ANALOG_COLUMN_OUTPUT"/>
+                    <RESOURCE NAME="AnalogOutBus_3" VALUE="" TYPE="ANALOG_COLUMN_OUTPUT"/>
+                    <RESOURCE NAME="AnalogPhiClock_Col_0" VALUE="" TYPE="ANALOG_PHI_CLOCK"/>
+                    <RESOURCE NAME="AnalogPhiClock_Col_1" VALUE="" TYPE="ANALOG_PHI_CLOCK"/>
+                    <RESOURCE NAME="AnalogPhiClock_Col_2" VALUE="" TYPE="ANALOG_PHI_CLOCK"/>
+                    <RESOURCE NAME="AnalogPhiClock_Col_3" VALUE="" TYPE="ANALOG_PHI_CLOCK"/>
+                    <RESOURCE NAME="ComparatorBus_0" VALUE="ASC10" TYPE="ANALOG_COMPARATOR_OUTPUT"/>
+                    <RESOURCE NAME="ComparatorBus_1" VALUE="" TYPE="ANALOG_COMPARATOR_OUTPUT"/>
+                    <RESOURCE NAME="ComparatorBus_2" VALUE="" TYPE="ANALOG_COMPARATOR_OUTPUT"/>
+                    <RESOURCE NAME="ComparatorBus_3" VALUE="" TYPE="ANALOG_COMPARATOR_OUTPUT"/>
+                    <RESOURCE NAME="ComparatorClock" VALUE="DCB02" TYPE="COMPARATOR_CLOCK"/>
+                    <RESOURCE NAME="ComparatorGate_0" VALUE="None" TYPE="COMPARATOR_ENABLE"/>
+                    <RESOURCE NAME="ComparatorGate_1" VALUE="None" TYPE="COMPARATOR_ENABLE"/>
+                    <RESOURCE NAME="ComparatorGate_2" VALUE="None" TYPE="COMPARATOR_ENABLE"/>
+                    <RESOURCE NAME="ComparatorGate_3" VALUE="None" TYPE="COMPARATOR_ENABLE"/>
+                    <RESOURCE NAME="DBB00-DBB01" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB01-DCB02" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB10-DBB11" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB11-DCB12" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB20-DBB21" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB21-DCB22" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB30-DBB31" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DBB31-DCB32" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB02-DCB03" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB03-DBB10" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB12-DCB13" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB13-DBB20" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB22-DCB23" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB23-DBB30" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DCB32-DCB33" VALUE="" TYPE="DIRECT_INPUT"/>
+                    <RESOURCE NAME="DecimatorClock" VALUE="DCB02" TYPE="DECIMATOR_CLOCK"/>
+                    <RESOURCE NAME="DecimatorColumn" VALUE="" TYPE="DECIMATOR_COLUMN"/>
+                    <RESOURCE NAME="GlobalEven_0_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_1_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_2_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_3_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_4_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_5_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_6_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalEven_7_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalInEven_0" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_1" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_2" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_3" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_4" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_5" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_6" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInEven_7" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_0" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_1" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_2" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_3" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_4" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_5" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_6" VALUE="Port_1_6" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalInOdd_7" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOdd_0_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_1_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_2_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_3_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_4_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_5_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_6_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOdd_7_Interconnect" VALUE="" TYPE="GLOBAL_BUS_SHORT"/>
+                    <RESOURCE NAME="GlobalOutEven_0" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_1" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_2" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_3" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_4" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_5" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_6" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutEven_7" VALUE="Row_1_Output_3_Drive_1" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_0" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_1" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_2" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_3" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_4" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_5" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_6" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="GlobalOutOdd_7" VALUE="" TYPE="GLOBAL_BUS"/>
+                    <RESOURCE NAME="I2CController" VALUE="" TYPE="I2C_CONTROLLER"/>
+                    <RESOURCE NAME="Port_0_0" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_0_Drive" VALUE="Strong" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_0_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_1" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_1_Drive" VALUE="Strong" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_1_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_2" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_2_Drive" VALUE="Strong" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_2_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_3" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_3_Drive" VALUE="Strong" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_3_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_4" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_4_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_4_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_5" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_5_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_5_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_6" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_6_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_6_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_7" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_7_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_0_7_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_0" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_0_Drive" VALUE="Pull Down" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_0_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_1" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_1_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_1_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_2" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_2_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_2_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_3" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_3_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_3_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_4" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_4_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_4_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_5" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_5_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_5_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_6" VALUE="GlobalInOdd_6" TYPE="PIN">
+                        <PIN_VALUE_LIST>
+                            <PIN_VALUE NAME="GlobalInOdd_6"/>
+                        </PIN_VALUE_LIST>
+                    </RESOURCE>
+                    <RESOURCE NAME="Port_1_6_Drive" VALUE="High Z" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_6_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_7" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_7_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_1_7_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_0" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_0_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_0_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_1" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_1_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_1_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_2" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_2_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_2_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_3" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_3_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_3_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_4" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_4_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_4_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_5" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_5_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_5_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_6" VALUE="StdCPU" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_6_Drive" VALUE="High Z Analog" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_6_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_7" VALUE="GlobalOutEven_7" TYPE="PIN">
+                        <PIN_VALUE_LIST>
+                            <PIN_VALUE NAME="GlobalOutEven_7"/>
+                        </PIN_VALUE_LIST>
+                    </RESOURCE>
+                    <RESOURCE NAME="Port_2_7_Drive" VALUE="Strong" TYPE="PIN"/>
+                    <RESOURCE NAME="Port_2_7_Interrupt" VALUE="DisableInt" TYPE="PIN"/>
+                    <RESOURCE NAME="RegisterFlag0_0" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_1" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_2" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_3" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_4" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_5" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_6" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag0_7" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_0" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_1" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_2" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_3" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_4" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_5" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_6" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag1_7" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_0" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_1" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_2" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_3" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_4" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_5" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_6" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag2_7" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_0" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_1" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_2" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_3" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_4" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_5" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_6" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="RegisterFlag3_7" VALUE="Clear" TYPE="REGISTER_FLAG"/>
+                    <RESOURCE NAME="Row_0_Broadcast" VALUE="None" TYPE="ROW_BROADCAST"/>
+                    <RESOURCE NAME="Row_0_Input_0" VALUE="GlobalInEven_0" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Input_0_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_0_Input_1" VALUE="GlobalInEven_1" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Input_1_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_0_Input_2" VALUE="GlobalInOdd_6" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Input_2_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_0_Input_3" VALUE="GlobalInEven_3" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Input_3_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Input_0" VALUE="Row_0_Output_0" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Input_1" VALUE="Row_0_Output_1" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Input_2" VALUE="Row_0_Output_2" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Input_3" VALUE="Row_0_Output_3" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Select_0" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Select_1" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Select_2" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_0_LogicTable_Select_3" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_0_Output_0" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Output_0_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_0_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_0_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_0_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_1" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Output_1_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_1_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_1_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_1_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_2" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Output_2_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_2_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_2_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_2_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_3" VALUE="DCB02" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_0_Output_3_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_3_Drive_1" VALUE="GlobalOutEven_7" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_3_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_0_Output_3_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Broadcast" VALUE="None" TYPE="ROW_BROADCAST"/>
+                    <RESOURCE NAME="Row_1_Input_0" VALUE="GlobalInEven_4" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Input_0_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_1_Input_1" VALUE="GlobalInEven_5" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Input_1_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_1_Input_2" VALUE="GlobalInEven_6" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Input_2_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_1_Input_3" VALUE="GlobalInEven_7" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Input_3_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Input_0" VALUE="Row_1_Output_0" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Input_1" VALUE="Row_1_Output_1" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Input_2" VALUE="Row_1_Output_2" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Input_3" VALUE="Row_1_Output_3" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Select_0" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Select_1" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Select_2" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_1_LogicTable_Select_3" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_1_Output_0" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Output_0_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_0_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_0_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_0_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_1" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Output_1_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_1_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_1_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_1_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_2" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Output_2_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_2_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_2_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_2_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_3" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_1_Output_3_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_3_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_3_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_1_Output_3_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Broadcast" VALUE="None" TYPE="ROW_BROADCAST"/>
+                    <RESOURCE NAME="Row_2_Input_0" VALUE="GlobalInEven_0" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Input_0_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_2_Input_1" VALUE="GlobalInEven_1" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Input_1_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_2_Input_2" VALUE="GlobalInEven_2" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Input_2_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_2_Input_3" VALUE="GlobalInEven_3" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Input_3_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Input_0" VALUE="Row_2_Output_0" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Input_1" VALUE="Row_2_Output_1" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Input_2" VALUE="Row_2_Output_2" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Input_3" VALUE="Row_2_Output_3" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Select_0" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Select_1" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Select_2" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_2_LogicTable_Select_3" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_2_Output_0" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Output_0_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_0_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_0_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_0_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_1" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Output_1_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_1_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_1_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_1_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_2" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Output_2_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_2_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_2_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_2_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_3" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_2_Output_3_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_3_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_3_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_2_Output_3_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Broadcast" VALUE="None" TYPE="ROW_BROADCAST"/>
+                    <RESOURCE NAME="Row_3_Input_0" VALUE="GlobalInEven_4" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Input_0_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_3_Input_1" VALUE="GlobalInEven_5" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Input_1_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_3_Input_2" VALUE="GlobalInEven_6" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Input_2_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_3_Input_3" VALUE="GlobalInEven_7" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Input_3_Sync" VALUE="SysClk_Sync" TYPE="ROW_INPUT_SYNC"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Input_0" VALUE="Row_3_Output_0" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Input_1" VALUE="Row_3_Output_1" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Input_2" VALUE="Row_3_Output_2" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Input_3" VALUE="Row_3_Output_3" TYPE="ROW_LOGIC_TABLE_INPUT_MUX"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Select_0" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Select_1" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Select_2" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_3_LogicTable_Select_3" VALUE="A" TYPE="ROW_LOGIC_TABLE_SELECT"/>
+                    <RESOURCE NAME="Row_3_Output_0" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Output_0_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_0_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_0_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_0_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_1" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Output_1_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_1_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_1_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_1_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_2" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Output_2_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_2_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_2_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_2_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_3" VALUE="" TYPE="ROW_BUS"/>
+                    <RESOURCE NAME="Row_3_Output_3_Drive_0" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_3_Drive_1" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_3_Drive_2" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="Row_3_Output_3_Drive_3" VALUE="Off" TYPE="ROW_OUTPUT_DRIVE"/>
+                    <RESOURCE NAME="SampleAndHoldCtl" VALUE="Enable" TYPE="ANALOG_SAMPLE_AND_HOLD"/>
+                    <RESOURCE NAME="SleepInt_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="SleepInterrupt" VALUE="" TYPE="SLEEP_INTERRUPT"/>
+                    <RESOURCE NAME="SysClk*2_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="SysClk_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="VC1_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="VC2_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="VC3Interrupt" VALUE="" TYPE="DIVIDER_INTERRUPT"/>
+                    <RESOURCE NAME="VC3_Global_Drive" VALUE="DriveOff" TYPE="GLOBAL_BUS_OSCILLATOR_DRIVE"/>
+                    <RESOURCE NAME="VT" VALUE="" TYPE="TEMPERATURE_VOLTAGE"/>
+                </RESERVED_RESOURCE_LIST>
+                <GLOBAL_REGISTER_LIST>
+                    <REGISTER NAME="AnalogClockSelect1" VALUE="0" ADDR="161" DATASHEET_NAME="CLK_CR1"/>
+                    <REGISTER NAME="AnalogClockSelect2" VALUE="0" ADDR="169" DATASHEET_NAME="CLK_CR2"/>
+                    <REGISTER NAME="AnalogColumnClockSelect" VALUE="0" ADDR="160" DATASHEET_NAME="CLK_CR0"/>
+                    <REGISTER NAME="AnalogColumnInputSelect" VALUE="28" ADDR="60" DATASHEET_NAME="AMX_IN"/>
+                    <REGISTER NAME="AnalogComparatorControl1" VALUE="0" ADDR="66" DATASHEET_NAME="CMP_CR1"/>
+                    <REGISTER NAME="AnalogIOControl_0" VALUE="80" ADDR="162" DATASHEET_NAME="ABF_CR0"/>
+                    <REGISTER NAME="AnalogLUTControl0" VALUE="33" ADDR="167" DATASHEET_NAME="ALT_CR0"/>
+                    <REGISTER NAME="AnalogLUTControl1" VALUE="33" ADDR="168" DATASHEET_NAME="ALT_CR1"/>
+                    <REGISTER NAME="AnalogModulatorControl_0" VALUE="0" ADDR="163" DATASHEET_NAME="AMD_CR0"/>
+                    <REGISTER NAME="AnalogModulatorControl_1" VALUE="0" ADDR="166" DATASHEET_NAME="AMD_CR1"/>
+                    <REGISTER NAME="AnalogReferenceControl" VALUE="15" ADDR="63" DATASHEET_NAME="ARF_CR"/>
+                    <REGISTER NAME="AnalogSyncControl" VALUE="0" ADDR="65" DATASHEET_NAME="ASY_CR"/>
+                    <REGISTER NAME="DecimatorControl_0" VALUE="0" ADDR="e6" DATASHEET_NAME="DEC_CR0"/>
+                    <REGISTER NAME="DecimatorControl_1" VALUE="0" ADDR="e7" DATASHEET_NAME="DEC_CR1"/>
+                    <REGISTER NAME="GlobalDigitalInterconnect_Drive_Even_Input" VALUE="0" ADDR="1d1" DATASHEET_NAME="GDI_E_IN"/>
+                    <REGISTER NAME="GlobalDigitalInterconnect_Drive_Even_Output" VALUE="0" ADDR="1d3" DATASHEET_NAME="GDI_E_OU"/>
+                    <REGISTER NAME="GlobalDigitalInterconnect_Drive_Odd_Input" VALUE="0" ADDR="1d0" DATASHEET_NAME="GDI_O_IN"/>
+                    <REGISTER NAME="GlobalDigitalInterconnect_Drive_Odd_Output" VALUE="0" ADDR="1d2" DATASHEET_NAME="GDI_O_OU"/>
+                    <REGISTER NAME="I2CConfig" VALUE="0" ADDR="d6" DATASHEET_NAME="I2CCFG"/>
+                    <REGISTER NAME="OscillatorControl_1" VALUE="70" ADDR="1e1" DATASHEET_NAME="OSC_CR1"/>
+                    <REGISTER NAME="OscillatorControl_2" VALUE="0" ADDR="1e2" DATASHEET_NAME="OSC_CR2"/>
+                    <REGISTER NAME="OscillatorControl_3" VALUE="9b" ADDR="1df" DATASHEET_NAME="OSC_CR3"/>
+                    <REGISTER NAME="OscillatorControl_4" VALUE="0" ADDR="1de" DATASHEET_NAME="OSC_CR4"/>
+                    <REGISTER NAME="OscillatorGlobalBusEnableControl" VALUE="0" ADDR="1dd" DATASHEET_NAME="OSC_GO_EN"/>
+                    <REGISTER NAME="Port_0_DriveMode_0" VALUE="f" ADDR="100" DATASHEET_NAME="PRT0DM0"/>
+                    <REGISTER NAME="Port_0_DriveMode_1" VALUE="f0" ADDR="101" DATASHEET_NAME="PRT0DM1"/>
+                    <REGISTER NAME="Port_0_DriveMode_2" VALUE="f0" ADDR="3" DATASHEET_NAME="PRT0DM2"/>
+                    <REGISTER NAME="Port_0_GlobalSelect" VALUE="0" ADDR="2" DATASHEET_NAME="PRT0GS"/>
+                    <REGISTER NAME="Port_0_IntCtrl_0" VALUE="0" ADDR="102" DATASHEET_NAME="PRT0IC0"/>
+                    <REGISTER NAME="Port_0_IntCtrl_1" VALUE="0" ADDR="103" DATASHEET_NAME="PRT0IC1"/>
+                    <REGISTER NAME="Port_0_IntEn" VALUE="0" ADDR="1" DATASHEET_NAME="PRT0IE"/>
+                    <REGISTER NAME="Port_1_DriveMode_0" VALUE="0" ADDR="104" DATASHEET_NAME="PRT1DM0"/>
+                    <REGISTER NAME="Port_1_DriveMode_1" VALUE="fe" ADDR="105" DATASHEET_NAME="PRT1DM1"/>
+                    <REGISTER NAME="Port_1_DriveMode_2" VALUE="be" ADDR="7" DATASHEET_NAME="PRT1DM2"/>
+                    <REGISTER NAME="Port_1_GlobalSelect" VALUE="40" ADDR="6" DATASHEET_NAME="PRT1GS"/>
+                    <REGISTER NAME="Port_1_IntCtrl_0" VALUE="0" ADDR="106" DATASHEET_NAME="PRT1IC0"/>
+                    <REGISTER NAME="Port_1_IntCtrl_1" VALUE="0" ADDR="107" DATASHEET_NAME="PRT1IC1"/>
+                    <REGISTER NAME="Port_1_IntEn" VALUE="0" ADDR="5" DATASHEET_NAME="PRT1IE"/>
+                    <REGISTER NAME="Port_2_DriveMode_0" VALUE="80" ADDR="108" DATASHEET_NAME="PRT2DM0"/>
+                    <REGISTER NAME="Port_2_DriveMode_1" VALUE="7f" ADDR="109" DATASHEET_NAME="PRT2DM1"/>
+                    <REGISTER NAME="Port_2_DriveMode_2" VALUE="7f" ADDR="b" DATASHEET_NAME="PRT2DM2"/>
+                    <REGISTER NAME="Port_2_GlobalSelect" VALUE="80" ADDR="a" DATASHEET_NAME="PRT2GS"/>
+                    <REGISTER NAME="Port_2_IntCtrl_0" VALUE="0" ADDR="10a" DATASHEET_NAME="PRT2IC0"/>
+                    <REGISTER NAME="Port_2_IntCtrl_1" VALUE="0" ADDR="10b" DATASHEET_NAME="PRT2IC1"/>
+                    <REGISTER NAME="Port_2_IntEn" VALUE="0" ADDR="9" DATASHEET_NAME="PRT2IE"/>
+                    <REGISTER NAME="Port_3_DriveMode_0" VALUE="0" ADDR="10c" DATASHEET_NAME="PRT3DM0"/>
+                    <REGISTER NAME="Port_3_DriveMode_1" VALUE="0" ADDR="10d" DATASHEET_NAME="PRT3DM1"/>
+                    <REGISTER NAME="Port_3_DriveMode_2" VALUE="0" ADDR="f" DATASHEET_NAME="PRT3DM2"/>
+                    <REGISTER NAME="Port_3_GlobalSelect" VALUE="0" ADDR="e" DATASHEET_NAME="PRT3GS"/>
+                    <REGISTER NAME="Port_3_IntCtrl_0" VALUE="0" ADDR="10e" DATASHEET_NAME="PRT3IC0"/>
+                    <REGISTER NAME="Port_3_IntCtrl_1" VALUE="0" ADDR="10f" DATASHEET_NAME="PRT3IC1"/>
+                    <REGISTER NAME="Port_3_IntEn" VALUE="0" ADDR="d" DATASHEET_NAME="PRT3IE"/>
+                    <REGISTER NAME="Port_4_DriveMode_0" VALUE="0" ADDR="110" DATASHEET_NAME="PRT4DM0"/>
+                    <REGISTER NAME="Port_4_DriveMode_1" VALUE="0" ADDR="111" DATASHEET_NAME="PRT4DM1"/>
+                    <REGISTER NAME="Port_4_DriveMode_2" VALUE="0" ADDR="13" DATASHEET_NAME="PRT4DM2"/>
+                    <REGISTER NAME="Port_4_GlobalSelect" VALUE="0" ADDR="12" DATASHEET_NAME="PRT4GS"/>
+                    <REGISTER NAME="Port_4_IntCtrl_0" VALUE="0" ADDR="112" DATASHEET_NAME="PRT4IC0"/>
+                    <REGISTER NAME="Port_4_IntCtrl_1" VALUE="0" ADDR="113" DATASHEET_NAME="PRT4IC1"/>
+                    <REGISTER NAME="Port_4_IntEn" VALUE="0" ADDR="11" DATASHEET_NAME="PRT4IE"/>
+                    <REGISTER NAME="Port_5_DriveMode_0" VALUE="0" ADDR="114" DATASHEET_NAME="PRT5DM0"/>
+                    <REGISTER NAME="Port_5_DriveMode_1" VALUE="0" ADDR="115" DATASHEET_NAME="PRT5DM1"/>
+                    <REGISTER NAME="Port_5_DriveMode_2" VALUE="0" ADDR="17" DATASHEET_NAME="PRT5DM2"/>
+                    <REGISTER NAME="Port_5_GlobalSelect" VALUE="0" ADDR="16" DATASHEET_NAME="PRT5GS"/>
+                    <REGISTER NAME="Port_5_IntCtrl_0" VALUE="0" ADDR="116" DATASHEET_NAME="PRT5IC0"/>
+                    <REGISTER NAME="Port_5_IntCtrl_1" VALUE="0" ADDR="117" DATASHEET_NAME="PRT5IC1"/>
+                    <REGISTER NAME="Port_5_IntEn" VALUE="0" ADDR="15" DATASHEET_NAME="PRT5IE"/>
+                    <REGISTER NAME="Port_6_DriveMode_0" VALUE="0" ADDR="118" DATASHEET_NAME="PRT6DM0"/>
+                    <REGISTER NAME="Port_6_DriveMode_1" VALUE="0" ADDR="119" DATASHEET_NAME="PRT6DM1"/>
+                    <REGISTER NAME="Port_6_DriveMode_2" VALUE="0" ADDR="1b" DATASHEET_NAME="PRT6DM2"/>
+                    <REGISTER NAME="Port_6_GlobalSelect" VALUE="0" ADDR="1a" DATASHEET_NAME="PRT6GS"/>
+                    <REGISTER NAME="Port_6_IntCtrl_0" VALUE="0" ADDR="11a" DATASHEET_NAME="PRT6IC0"/>
+                    <REGISTER NAME="Port_6_IntCtrl_1" VALUE="0" ADDR="11b" DATASHEET_NAME="PRT6IC1"/>
+                    <REGISTER NAME="Port_6_IntEn" VALUE="0" ADDR="19" DATASHEET_NAME="PRT6IE"/>
+                    <REGISTER NAME="Port_7_DriveMode_0" VALUE="0" ADDR="11c" DATASHEET_NAME="PRT7DM0"/>
+                    <REGISTER NAME="Port_7_DriveMode_1" VALUE="0" ADDR="11d" DATASHEET_NAME="PRT7DM1"/>
+                    <REGISTER NAME="Port_7_DriveMode_2" VALUE="0" ADDR="1f" DATASHEET_NAME="PRT7DM2"/>
+                    <REGISTER NAME="Port_7_GlobalSelect" VALUE="0" ADDR="1e" DATASHEET_NAME="PRT7GS"/>
+                    <REGISTER NAME="Port_7_IntCtrl_0" VALUE="0" ADDR="11e" DATASHEET_NAME="PRT7IC0"/>
+                    <REGISTER NAME="Port_7_IntCtrl_1" VALUE="0" ADDR="11f" DATASHEET_NAME="PRT7IC1"/>
+                    <REGISTER NAME="Port_7_IntEn" VALUE="0" ADDR="1d" DATASHEET_NAME="PRT7IE"/>
+                    <REGISTER NAME="Row_0_InputMux" VALUE="30" ADDR="b0" DATASHEET_NAME="RDI0RI"/>
+                    <REGISTER NAME="Row_0_InputSync" VALUE="0" ADDR="b1" DATASHEET_NAME="RDI0SYN"/>
+                    <REGISTER NAME="Row_0_LogicInputAMux" VALUE="0" ADDR="b2" DATASHEET_NAME="RDI0IS"/>
+                    <REGISTER NAME="Row_0_LogicSelect_0" VALUE="33" ADDR="b3" DATASHEET_NAME="RDI0LT0"/>
+                    <REGISTER NAME="Row_0_LogicSelect_1" VALUE="33" ADDR="b4" DATASHEET_NAME="RDI0LT1"/>
+                    <REGISTER NAME="Row_0_OutputDrive_0" VALUE="0" ADDR="b5" DATASHEET_NAME="RDI0SRO0"/>
+                    <REGISTER NAME="Row_0_OutputDrive_1" VALUE="20" ADDR="b6" DATASHEET_NAME="RDI0SRO1"/>
+                    <REGISTER NAME="Row_1_InputMux" VALUE="55" ADDR="b8" DATASHEET_NAME="RDI1RI"/>
+                    <REGISTER NAME="Row_1_InputSync" VALUE="0" ADDR="b9" DATASHEET_NAME="RDI1SYN"/>
+                    <REGISTER NAME="Row_1_LogicInputAMux" VALUE="10" ADDR="ba" DATASHEET_NAME="RDI1IS"/>
+                    <REGISTER NAME="Row_1_LogicSelect_0" VALUE="33" ADDR="bb" DATASHEET_NAME="RDI1LT0"/>
+                    <REGISTER NAME="Row_1_LogicSelect_1" VALUE="33" ADDR="bc" DATASHEET_NAME="RDI1LT1"/>
+                    <REGISTER NAME="Row_1_OutputDrive_0" VALUE="0" ADDR="bd" DATASHEET_NAME="RDI1SRO0"/>
+                    <REGISTER NAME="Row_1_OutputDrive_1" VALUE="0" ADDR="be" DATASHEET_NAME="RDI1SRO1"/>
+                    <REGISTER NAME="Row_2_InputMux" VALUE="0" ADDR="c0" DATASHEET_NAME="RDI2RI"/>
+                    <REGISTER NAME="Row_2_InputSync" VALUE="0" ADDR="c1" DATASHEET_NAME="RDI2SYN"/>
+                    <REGISTER NAME="Row_2_LogicInputAMux" VALUE="20" ADDR="c2" DATASHEET_NAME="RDI2IS"/>
+                    <REGISTER NAME="Row_2_LogicSelect_0" VALUE="33" ADDR="c3" DATASHEET_NAME="RDI2LT0"/>
+                    <REGISTER NAME="Row_2_LogicSelect_1" VALUE="33" ADDR="c4" DATASHEET_NAME="RDI3LT1"/>
+                    <REGISTER NAME="Row_2_OutputDrive_0" VALUE="0" ADDR="c5" DATASHEET_NAME="RDI2SRO0"/>
+                    <REGISTER NAME="Row_2_OutputDrive_1" VALUE="0" ADDR="c6" DATASHEET_NAME="RDI2SRO1"/>
+                    <REGISTER NAME="Row_3_InputMux" VALUE="55" ADDR="c8" DATASHEET_NAME="RDI3RI"/>
+                    <REGISTER NAME="Row_3_InputSync" VALUE="0" ADDR="c9" DATASHEET_NAME="RDI3SYN"/>
+                    <REGISTER NAME="Row_3_LogicInputAMux" VALUE="30" ADDR="ca" DATASHEET_NAME="RDI3IS"/>
+                    <REGISTER NAME="Row_3_LogicSelect_0" VALUE="33" ADDR="cb" DATASHEET_NAME="RDI3LT0"/>
+                    <REGISTER NAME="Row_3_LogicSelect_1" VALUE="33" ADDR="cc" DATASHEET_NAME="RDI3LT1"/>
+                    <REGISTER NAME="Row_3_OutputDrive_0" VALUE="0" ADDR="cd" DATASHEET_NAME="RDI3SRO0"/>
+                    <REGISTER NAME="Row_3_OutputDrive_1" VALUE="0" ADDR="ce" DATASHEET_NAME="RDI3SRO1"/>
+                    <REGISTER NAME="TMP_DR0" VALUE="0" ADDR="6c" DATASHEET_NAME="TMP_DR0"/>
+                    <REGISTER NAME="TMP_DR1" VALUE="0" ADDR="6d" DATASHEET_NAME="TMP_DR1"/>
+                    <REGISTER NAME="TMP_DR2" VALUE="0" ADDR="6e" DATASHEET_NAME="TMP_DR2"/>
+                    <REGISTER NAME="TMP_DR3" VALUE="0" ADDR="6f" DATASHEET_NAME="TMP_DR3"/>
+                    <REGISTER NAME="Type2Decimator_Control" VALUE="0" ADDR="1e7" DATASHEET_NAME="DEC_CR2"/>
+                </GLOBAL_REGISTER_LIST>
+                <PIN_DESC_LIST>
+                    <PIN_DESC PIN_NUMBER="1" PIN_LABEL="P0[7]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_0_7" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="2" PIN_LABEL="P0[5]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_0_5" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="3" PIN_LABEL="P0[3]" PIN_SELECT="StdCPU" PIN_DRIVE="Strong" PIN_DATA="" PIN_CUSTOM_NAME="LED_4Pin" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="4" PIN_LABEL="P0[1]" PIN_SELECT="StdCPU" PIN_DRIVE="Strong" PIN_DATA="" PIN_CUSTOM_NAME="LED_2Pin" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="5" PIN_LABEL="P2[7]" PIN_SELECT="GlobalOutEven_7" PIN_DRIVE="Strong" PIN_DATA="" PIN_CUSTOM_NAME="TX" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="6" PIN_LABEL="P2[5]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_5" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="7" PIN_LABEL="P2[3]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_3" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="8" PIN_LABEL="P2[1]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_1" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="9" PIN_LABEL="SMP" PIN_SELECT="" PIN_DRIVE="" PIN_DATA="" PIN_CUSTOM_NAME="" PIN_INTERRUPT=""/>
+                    <PIN_DESC PIN_NUMBER="10" PIN_LABEL="P1[7]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_1_7" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="11" PIN_LABEL="P1[5]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_1_5" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="12" PIN_LABEL="P1[3]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_1_3" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="13" PIN_LABEL="P1[1]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_1_1" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="14" PIN_LABEL="VSS" PIN_SELECT="" PIN_DRIVE="" PIN_DATA="" PIN_CUSTOM_NAME="" PIN_INTERRUPT=""/>
+                    <PIN_DESC PIN_NUMBER="15" PIN_LABEL="P1[0]" PIN_SELECT="StdCPU" PIN_DRIVE="Pull Down" PIN_DATA="" PIN_CUSTOM_NAME="SW" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="16" PIN_LABEL="P1[2]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_1_2" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="17" PIN_LABEL="P1[4]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_1_4" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="18" PIN_LABEL="P1[6]" PIN_SELECT="GlobalInOdd_6" PIN_DRIVE="High Z" PIN_DATA="" PIN_CUSTOM_NAME="RX" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="19" PIN_LABEL="XRES" PIN_SELECT="" PIN_DRIVE="" PIN_DATA="" PIN_CUSTOM_NAME="" PIN_INTERRUPT=""/>
+                    <PIN_DESC PIN_NUMBER="20" PIN_LABEL="P2[0]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_0" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="21" PIN_LABEL="P2[2]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_2" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="22" PIN_LABEL="P2[4]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_4" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="23" PIN_LABEL="P2[6]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_2_6" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="24" PIN_LABEL="P0[0]" PIN_SELECT="StdCPU" PIN_DRIVE="Strong" PIN_DATA="" PIN_CUSTOM_NAME="LED_1Pin" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="25" PIN_LABEL="P0[2]" PIN_SELECT="StdCPU" PIN_DRIVE="Strong" PIN_DATA="" PIN_CUSTOM_NAME="LED_3Pin" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="26" PIN_LABEL="P0[4]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_0_4" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="27" PIN_LABEL="P0[6]" PIN_SELECT="StdCPU" PIN_DRIVE="High Z Analog" PIN_DATA="" PIN_CUSTOM_NAME="Port_0_6" PIN_INTERRUPT="DisableInt"/>
+                    <PIN_DESC PIN_NUMBER="28" PIN_LABEL="VDD" PIN_SELECT="" PIN_DRIVE="" PIN_DATA="" PIN_CUSTOM_NAME="" PIN_INTERRUPT=""/>
+                </PIN_DESC_LIST>
+            </DEVICE_DATA>
+            <CONFIG_PREFERENCES>
+                <SELECTED_USER_MODULE_LIST/>
+            </CONFIG_PREFERENCES>
+        </PSOC_CONFIG>
+    </PSOC_CONFIG_LIST>
+</PSOC_DEVICE_DB>

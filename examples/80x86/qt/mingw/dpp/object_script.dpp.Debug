@@ -1,0 +1,12 @@
+INPUT(
+./debug\qepn.o
+./debug\qpn_app.o
+./debug\main.o
+./debug\gui.o
+./debug\bsp.o
+./debug\table.o
+./debug\philo.o
+./debug\moc_qpn_app.o
+./debug\moc_gui.o
+./debug\qrc_gui.o
+);

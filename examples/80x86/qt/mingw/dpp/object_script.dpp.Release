@@ -1,0 +1,12 @@
+INPUT(
+./release\qepn.o
+./release\qpn_app.o
+./release\main.o
+./release\gui.o
+./release\bsp.o
+./release\table.o
+./release\philo.o
+./release\moc_qpn_app.o
+./release\moc_gui.o
+./release\qrc_gui.o
+);

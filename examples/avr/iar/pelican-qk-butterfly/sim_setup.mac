@@ -1,0 +1,4 @@
+execUserSetup()	{
+    __orderInterrupt( "TIMER0 COMP", 500000, 500000, 0, 0, 100 );
+    __message "Set interrupt: TIMER0 COMP";
+}

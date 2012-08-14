@@ -1,0 +1,21 @@
+/* This is a linker parameter file for the QG8 */
+
+NAMES END /* CodeWarrior will pass all the needed files to the linker by command line. But here you may add your own files too. */
+
+SEGMENTS /* Here all RAM/ROM areas of the device are listed. Used in PLACEMENT below. */
+    ROM                      =  READ_ONLY    0xE000 TO 0xFFAD;
+    Z_RAM                    =  READ_WRITE   0x0060 TO 0x00FF;
+    RAM                      =  READ_WRITE   0x0100 TO 0x025F;
+    ROM1                     =  READ_ONLY    0xFFC0 TO 0xFFCF;
+END
+
+PLACEMENT /* Here all predefined and user segments are placed into the SEGMENTS defined above. */
+    DEFAULT_RAM                         INTO  RAM;
+    DEFAULT_ROM, ROM_VAR, STRINGS       INTO  ROM; /* ROM1 In case you want to use ROM1 as well, be sure the option -OnB=b is passed to the compiler. */
+    _DATA_ZEROPAGE, MY_ZEROPAGE         INTO  Z_RAM;
+END
+
+
+STACKSIZE 0x50
+
+VECTOR 0 _Startup /* Reset vector: this is the default entry point for an application. */
