@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, EV-LM3S6965 board
-* Last Updated for Version: 4.4.00
-* Date of the Last Update:  Feb 29, 2012
+* Last Updated for Version: 4.5.02
+* Date of the Last Update:  Aug 16, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -53,33 +53,7 @@ void SysTick_Handler(void) {
 }
 /*..........................................................................*/
 void GPIOPortA_IRQHandler(void) {
-    QActive_postISR((QActive *)&AO_Ped, PEDS_WAITING_SIG, 0);
-}
-/*..........................................................................*/
-void BSP_init(void) {
-
-    SystemInit();                         /* initialize the system clocking */
-
-                      /* enable the peripherals used by this application... */
-    SYSCTL->RCGC2 |= (1 << 5);                    /* enable clock to GPIOF  */
-    __NOP();
-    __NOP();
-                                       /* configure the User LED (PortF)... */
-    GPIOF->DIR   |= USER_LED;                      /* set direction: output */
-    GPIOF->DEN   |= USER_LED;                             /* digital enable */
-    GPIOF->AMSEL &= ~USER_LED;
-    GPIOF->DATA_Bits[USER_LED] = 0;                     /* turn the LED off */
-
-                              /* configure the pin connected to the Buttons */
-    GPIOF->DIR   &= ~USER_BTN;                      /* set direction: input */
-    GPIOF->DR2R  |=  USER_BTN;
-    GPIOF->ODR   &= ~USER_BTN;
-    GPIOF->PUR   |=  USER_BTN;
-    GPIOF->PDR   &= ~USER_BTN;
-    GPIOF->DEN   |=  USER_BTN;
-    GPIOF->AMSEL &= ~USER_BTN;
-
-    RIT128x96x4Init(1000000);                /* initialize the OLED display */
+    QActive_postISR((QActive *)&AO_Pelican, PEDS_WAITING_SIG, 0U);
 }
 /*..........................................................................*/
 void QF_onStartup(void) {
@@ -114,6 +88,43 @@ void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
     }
 }
 /*..........................................................................*/
+/* error routine that is called if the CMSIS library encounters an error    */
+void assert_failed(char_t const *file, int_t line);            /* prototype */
+void assert_failed(char_t const *file, int_t line) {
+    Q_onAssert(file, line);
+}
+
+/*..........................................................................*/
+void BSP_init(void) {
+
+    SystemInit();                         /* initialize the system clocking */
+
+                      /* enable the peripherals used by this application... */
+    SYSCTL->RCGC2 |= (1 << 5);                    /* enable clock to GPIOF  */
+    __NOP();
+    __NOP();
+                                       /* configure the User LED (PortF)... */
+    GPIOF->DIR   |= USER_LED;                      /* set direction: output */
+    GPIOF->DEN   |= USER_LED;                             /* digital enable */
+    GPIOF->AMSEL &= ~USER_LED;
+    GPIOF->DATA_Bits[USER_LED] = 0;                     /* turn the LED off */
+
+                              /* configure the pin connected to the Buttons */
+    GPIOF->DIR   &= ~USER_BTN;                      /* set direction: input */
+    GPIOF->DR2R  |=  USER_BTN;
+    GPIOF->ODR   &= ~USER_BTN;
+    GPIOF->PUR   |=  USER_BTN;
+    GPIOF->PDR   &= ~USER_BTN;
+    GPIOF->DEN   |=  USER_BTN;
+    GPIOF->AMSEL &= ~USER_BTN;
+
+    RIT128x96x4Init(1000000);                /* initialize the OLED display */
+}
+/*..........................................................................*/
+void BSP_terminate(int16_t result) {
+    (void)result;
+}
+/*..........................................................................*/
 void BSP_signalCars(enum BSP_CarsSignal sig) {
     switch (sig) {
         case CARS_RED: {
@@ -128,7 +139,7 @@ void BSP_signalCars(enum BSP_CarsSignal sig) {
             RIT128x96x4StringDraw("GRN", 78, 10, 5);
             break;
         }
-        case CARS_OFF: {
+        case CARS_BLANK: {
             RIT128x96x4StringDraw("   ", 78, 10, 5);
             break;
         }
@@ -152,10 +163,8 @@ void BSP_signalPeds(enum BSP_PedsSignal sig) {
     }
 }
 /*..........................................................................*/
-void BSP_showState(uint8_t prio, char const *state) {
-    if (QF_active[prio].act == (QActive *)&AO_Pelican) {
-        RIT128x96x4StringDraw(state, 0, 0, 5);
-    }
+void BSP_showState(char_t const *state) {
+    RIT128x96x4StringDraw(state, 0, 0, 5);
 }
 
 /*****************************************************************************

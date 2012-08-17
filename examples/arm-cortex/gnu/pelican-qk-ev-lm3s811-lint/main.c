@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: PELICAN crossing example
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 24, 2012
+* Last Updated for Version: 4.5.02
+* Date of the Last Update:  Aug 16, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -37,25 +37,22 @@
 #include "pelican.h"                               /* application interface */
 
 /*..........................................................................*/
-static QEvt  l_pelicanQ[3];
-static QEvt  l_pedQ[2];
+static QEvt l_pelicanQ[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
 QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
     { QF_ACTIVE_CAST(0),           (QEvt *)0,   (uint8_t)0                 },
-    { QF_ACTIVE_CAST(&AO_Pelican), l_pelicanQ,  (uint8_t)Q_DIM(l_pelicanQ) },
-    { QF_ACTIVE_CAST(&AO_Ped),     l_pedQ,      (uint8_t)Q_DIM(l_pedQ)     }
+    { QF_ACTIVE_CAST(&AO_Pelican), l_pelicanQ,  (uint8_t)Q_DIM(l_pelicanQ) }
 };
 
 /* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */
 Q_ASSERT_COMPILE((uint8_t)QF_MAX_ACTIVE == (Q_DIM(QF_active) - 1U));
 
 /*..........................................................................*/
-int main (void) {
+int_t main (void) {
     Pelican_ctor();                          /* instantiate the  Pelican AO */
-    Ped_ctor();                              /* instantiate the  Ped     AO */
 
     BSP_init();                                     /* initialize the board */
 
-    return QF_run();                         /* transfer control to QF-nano */
+    return (int_t)QF_run();                  /* transfer control to QF-nano */
 }

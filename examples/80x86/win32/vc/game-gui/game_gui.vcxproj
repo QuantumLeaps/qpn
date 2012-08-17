@@ -223,6 +223,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\ports\win32\win32_gui.c" />
     <ClCompile Include="bsp.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -246,9 +247,9 @@
     <ClCompile Include="tunnel.c" />
     <ClCompile Include="$(QPN)\source\qepn.c" />
     <ClCompile Include="$(QPN)\ports\win32\qfn_win32.c" />
-    <ClCompile Include="$(QPN)\ports\win32\win32_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\ports\win32\win32_gui.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="bsp.h" />
     <ClInclude Include="resource.h" />

@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: QP-nano Qt Application (Qt-1T port single thread)
-// Last Updated for Version: 4.5.01
-// Date of the Last Update:  Jun 14, 2012
+// Last Updated for Version: 4.5.02
+// Date of the Last Update:  Aug 16, 2012
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
@@ -49,7 +49,7 @@ Q_DEFINE_THIS_MODULE("qpn_app")
 */
 
 static QEvent::Type qp_event_type = QEvent::MaxUser;
-static QTimer       qp_tick_timer;
+static QTimer       *qp_tick_timer;
 
 //////////////////////////////////////////////////////////////////////////////
 class QP_Event : public QEvent {
@@ -75,8 +75,6 @@ QPnApp::QPnApp(int &argc, char **argv)
 {
     qp_event_type =
         static_cast<QEvent::Type>(QEvent::registerEventType(QEvent::MaxUser));
-    connect(&qp_tick_timer, SIGNAL(timeout()),
-            this,      SLOT(onClockTick()));
 }
 //............................................................................
 bool QPnApp::event(QEvent *e) {
@@ -133,19 +131,23 @@ int16_t QF_run(void) {
 
     QF_onStartup();                             // invoke the startup callback
 
-    qp_tick_timer.setSingleShot(false);                      // periodic timer
-    qp_tick_timer.setInterval(qp_tick_interval_ms);   // set system clock tick
-    qp_tick_timer.start();
+    qp_tick_timer = new QTimer(qApp);
+    QObject::connect(qp_tick_timer, SIGNAL(timeout()),
+                     qApp,          SLOT(onClockTick()));
+    qp_tick_timer->setSingleShot(false);                      // periodic timer
+    qp_tick_timer->setInterval(qp_tick_interval_ms);   // set system clock tick
+    qp_tick_timer->start();
 
     return static_cast<int16_t>(qApp->exec());        // run the Qt event loop
 }
 //............................................................................
 void QF_stop(void) {
-    qp_tick_timer.stop();
+    qp_tick_timer->stop();
+    delete qp_tick_timer;
 }
 //............................................................................
-void QF_setClockTick(int ticks_per_sec) {
-    qp_tick_interval_ms = 1000 / ticks_per_sec;         // tick interval in ms
+void QF_setTickRate(uint32_t ticksPerSec) {
+    qp_tick_interval_ms = 1000 / ticksPerSec;           // tick interval in ms
 }
 
 //............................................................................

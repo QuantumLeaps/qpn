@@ -1,118 +1,136 @@
 
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c (C)
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 175 1 Info 793: ANSI/ISO limit of 511 'external identifiers' exceeded -- processing is unaffected
+--- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c (C)
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 96 59 Note 929: cast from pointer to pointer [MISRA 2004 Rule 11.4, advisory]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 96 59 Info 740: Unusual pointer cast (incompatible indirect types) [MISRA 2004 Rule 1.2, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 97 53 Note 960: Violates MISRA 2004 Required Rule 10.1, Implicit conversion changes signedness
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 97 53 Warning 641: Converting enum 'PelicanSignals' to 'int'
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 104 5 Info 744: switch statement has no default [MISRA 2004 Rule 15.3, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 104 5 Note 960: Violates MISRA 2004 Required Rule 15.3, default missing from switch statement
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 106 17 Note 923: cast from unsigned int to pointer [Encompasses MISRA 2004 Rule 11.1, required], [MISRA 2004 Rule 11.3, advisory]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 111 43 Note 929: cast from pointer to pointer [MISRA 2004 Rule 11.4, advisory]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 111 43 Info 740: Unusual pointer cast (incompatible indirect types) [MISRA 2004 Rule 1.2, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 111 61 Note 960: Violates MISRA 2004 Required Rule 10.1, Implicit conversion changes signedness
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 111 61 Warning 641: Converting enum 'PelicanSignals' to 'int'
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 111 64 Note 960: Violates MISRA 2004 Required Rule 10.1, Implicit conversion changes signedness
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 112 17 Note 923: cast from unsigned int to pointer [Encompasses MISRA 2004 Rule 11.1, required], [MISRA 2004 Rule 11.3, advisory]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 236 1 Info 793: ANSI/ISO limit of 511 'external identifiers' exceeded -- processing is unaffected
 
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c (C)
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 54 1 Note 970: Use of modifier or type 'int' outside of a typedef [MISRA 2004 Rule 6.3, advisory]
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 60 20 Note 960: Violates MISRA 2004 Required Rule 10.1, Prohibited Implicit Conversion: Non-constant return expression
+--- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c (C)
 
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\ped.c (C)
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\ped.c" 51 59 Info 717: do ... while(0);
-
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c (C)
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 64 67 Info 717: do ... while(0);
+--- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c (C)
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 57 67 Info 717: do ... while(0);
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 88 29 Warning 522: Highest operation, function 'BSP_terminate', lacks side-effects [MISRA 2004 Rule 14.2, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 324 34 Note 960: Violates MISRA 2004 Required Rule 10.1, Implicit conversion changes signedness
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 394 29 Warning 522: Highest operation, function 'BSP_terminate', lacks side-effects [MISRA 2004 Rule 14.2, required]
  Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: SystemFrequency
 
 /// Start of Pass 2 ///
 
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c (C)
+--- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c (C)
 
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c (C)
+--- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c (C)
 
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\ped.c (C)
-
---- Module:   D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c (C)
+--- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c (C)
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 88 29 Warning 522: Highest operation, function 'BSP_terminate', lacks side-effects [MISRA 2004 Rule 14.2, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 394 29 Warning 522: Highest operation, function 'BSP_terminate', lacks side-effects [MISRA 2004 Rule 14.2, required]
 
 --- Global Wrap-up
 
-"D:\software\qpn\include\qepn.h" 441 1 Info 756: global typedef 'QEvent' (line 441, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 125 1 Info 756: global typedef 'float32_t' (line 125, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 128 1 Info 756: global typedef 'float64_t' (line 128, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 48 1 Info 765: external 'SysTick_Handler(void)' (line 48, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 48 1 Info 714: Symbol 'SysTick_Handler(void)' (line 48, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
-"D:\software\qpn\include\qkn.h" 64 1 Warning 526: Symbol 'QK_init(void)' (line 64, file D:\software\qpn\include\qkn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qkn.h" 101 1 Info 757: global declarator 'QK_intNest_' (line 101, file D:\software\qpn\include\qkn.h) not referenced
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 85 1 Info 759: header declaration for symbol 'QF_onStartup(void)' defined at (line 85, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be moved from header to module
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 85 1 Info 765: external 'QF_onStartup(void)' (line 85, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 85 1 Info 714: Symbol 'QF_onStartup(void)' (line 85, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
-"D:\software\qpn\include\qfn.h" 369 1 Info 757: global declarator 'QF_onIdle(void)' (line 369, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 44 1 Info 759: header declaration for symbol 'QF_active' defined at (line 44, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c) could be moved from header to module
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 44 1 Info 765: external 'QF_active' (line 44, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c) could be made static [MISRA 2004 Rule 8.10, required]
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 44 1 Warning 552: Symbol 'QF_active' (line 44, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c) not accessed
-"D:\software\qpn\include\qepn.h" 279 1 Info 757: global declarator 'QFsm_init(QFsm *)' (line 279, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 289 1 Info 757: global declarator 'QFsm_dispatch(QFsm *)' (line 289, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 147 1 Info 757: global declarator 'QP_getVersion(void)' (line 147, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qfn.h" 345 1 Warning 526: Symbol 'QF_run(void)' (line 345, file D:\software\qpn\include\qfn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qfn.h" 402 1 Info 757: global declarator 'QF_readySet_' (line 402, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 276 1 Warning 526: Symbol 'QActive_arm(QActive *, QTimeEvtCtr)' (line 276, file D:\software\qpn\include\qfn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qfn.h" 288 1 Info 757: global declarator 'QActive_disarm(QActive *)' (line 288, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 222 1 Warning 526: Symbol 'QActive_post(QActive *, QSignal, QParam)' (line 222, file D:\software\qpn\include\qfn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qfn.h" 235 1 Warning 526: Symbol 'QActive_postISR(QActive *, QSignal, QParam)' (line 235, file D:\software\qpn\include\qfn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qfn.h" 316 1 Info 757: global declarator 'QF_stop(void)' (line 316, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qepn.h" 418 1 Info 757: global declarator 'QHsm_dispatch(QHsm *)' (line 418, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 408 1 Info 757: global declarator 'QHsm_init(QHsm *)' (line 408, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 433 1 Warning 526: Symbol 'QHsm_top(const void *)' (line 433, file D:\software\qpn\include\qepn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qfn.h" 252 1 Warning 526: Symbol 'QF_tickISR(void)' (line 252, file D:\software\qpn\include\qfn.h, module D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
-"D:\software\qpn\include\qfn.h" 422 1 Info 757: global declarator 'QF_timerSet_' (line 422, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 96 1 Info 759: header declaration for symbol 'QK_onIdle(void)' defined at (line 96, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be moved from header to module
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 96 1 Info 765: external 'QK_onIdle(void)' (line 96, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 96 1 Info 714: Symbol 'QK_onIdle(void)' (line 96, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 110 1 Info 759: header declaration for symbol 'Q_onAssert(const char_t *, int_t)' defined at (line 110, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be moved from header to module
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 110 1 Info 765: external 'Q_onAssert(const char_t *, int_t)' (line 110, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
-"D:\software\qpn\include\qkn.h" 81 1 Info 757: global declarator 'QK_currPrio_' (line 81, file D:\software\qpn\include\qkn.h) not referenced
-"D:\software\qpn\include\qkn.h" 71 1 Info 757: global declarator 'QK_schedPrio_(void)' (line 71, file D:\software\qpn\include\qkn.h) not referenced
-"D:\software\qpn\include\qkn.h" 79 1 Info 757: global declarator 'QK_sched_(uint8_t)' (line 79, file D:\software\qpn\include\qkn.h) not referenced
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 49 1 Info 765: external 'GPIOPortA_IRQHandler(void)' (line 49, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
-"D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 49 1 Info 714: Symbol 'GPIOPortA_IRQHandler(void)' (line 49, file D:\software\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
-"D:\software\qpn\include\qfn.h" 307 1 Info 757: global declarator 'QF_init(void)' (line 307, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qepn.h" 321 1 Info 755: global macro 'Q_IGNORED' (line 321, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 254 1 Info 755: global macro 'Q_PAR' (line 254, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qassert.h" 195 1 Info 755: global macro 'Q_ENSURE' (line 195, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 202 1 Info 755: global macro 'Q_ENSURE_ID' (line 202, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qepn.h" 359 1 Info 755: global macro 'Q_UNHANDLED' (line 359, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qassert.h" 116 1 Info 755: global macro 'Q_ASSERT' (line 116, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 129 1 Info 755: global macro 'Q_ASSERT_ID' (line 129, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qepn.h" 55 1 Info 755: global macro 'QP_VERSION' (line 55, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 269 1 Info 755: global macro 'QFsm_ctor' (line 269, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qassert.h" 171 1 Info 755: global macro 'Q_ERROR_ID' (line 171, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 209 1 Info 755: global macro 'Q_INVARIANT' (line 209, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 216 1 Info 755: global macro 'Q_INVARIANT_ID' (line 216, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 181 1 Info 755: global macro 'Q_REQUIRE' (line 181, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 188 1 Info 755: global macro 'Q_REQUIRE_ID' (line 188, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qepn.h" 312 1 Info 755: global macro 'Q_RET_IGNORED' (line 312, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qepn.h" 351 1 Info 755: global macro 'Q_RET_UNHANDLED' (line 351, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qfn.h" 435 1 Info 755: global macro 'QF_ROM_ACTIVE_GET_' (line 435, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 429 1 Info 755: global macro 'QF_ROM_QUEUE_AT_' (line 429, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qepn.h" 398 1 Info 755: global macro 'QHsm_state' (line 398, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qassert.h" 106 1 Info 755: global macro 'Q_DEFINE_THIS_MODULE' (line 106, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qfn.h" 468 1 Info 755: global macro 'QF_tick' (line 468, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qassert.h" 140 1 Info 755: global macro 'Q_ALLEGE' (line 140, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qassert.h" 153 1 Info 755: global macro 'Q_ALLEGE_ID' (line 153, file D:\software\qpn\include\qassert.h) not referenced
-"D:\software\qpn\include\qkn.h" 99 1 Info 755: global macro 'QK_SCHEDULE_' (line 99, file D:\software\qpn\include\qkn.h) not referenced
-"D:\software\qpn\include\qepn.h" 190 1 Info 768: global struct member 'QEvtTag::par' (line 190, file D:\software\qpn\include\qepn.h) not referenced
-"D:\software\qpn\include\qfn.h" 159 1 Info 768: global struct member 'QActiveTag::tickCtr' (line 159, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 164 1 Info 768: global struct member 'QActiveTag::prio' (line 164, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 168 1 Info 768: global struct member 'QActiveTag::head' (line 168, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 172 1 Info 768: global struct member 'QActiveTag::tail' (line 172, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 177 1 Info 768: global struct member 'QActiveTag::nUsed' (line 177, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 384 1 Info 768: global struct member 'QActiveCBTag::act' (line 384, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 385 1 Info 768: global struct member 'QActiveCBTag::queue' (line 385, file D:\software\qpn\include\qfn.h) not referenced
-"D:\software\qpn\include\qfn.h" 386 1 Info 768: global struct member 'QActiveCBTag::end' (line 386, file D:\software\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 441 1 Info 756: global typedef 'QEvent' (line 441, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 125 1 Info 756: global typedef 'float32_t' (line 125, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 128 1 Info 756: global typedef 'float64_t' (line 128, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 55 1 Info 765: external 'SysTick_Handler(void)' (line 55, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 55 1 Info 714: Symbol 'SysTick_Handler(void)' (line 55, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
+"D:\qp\qpn\include\qkn.h" 64 1 Warning 526: Symbol 'QK_init(void)' (line 64, file D:\qp\qpn\include\qkn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\include\qkn.h" 101 1 Info 757: global declarator 'QK_intNest_' (line 101, file D:\qp\qpn\include\qkn.h) not referenced
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 116 1 Info 759: header declaration for symbol 'QF_onStartup(void)' defined at (line 116, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be moved from header to module
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 116 1 Info 765: external 'QF_onStartup(void)' (line 116, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 116 1 Info 714: Symbol 'QF_onStartup(void)' (line 116, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
+"D:\qp\qpn\include\qfn.h" 369 1 Info 757: global declarator 'QF_onIdle(void)' (line 369, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 43 1 Info 759: header declaration for symbol 'QF_active' defined at (line 43, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c) could be moved from header to module
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 43 1 Info 765: external 'QF_active' (line 43, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c" 43 1 Warning 552: Symbol 'QF_active' (line 43, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\main.c) not accessed
+"D:\qp\qpn\include\qepn.h" 279 1 Info 757: global declarator 'QFsm_init(QFsm *)' (line 279, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 289 1 Info 757: global declarator 'QFsm_dispatch(QFsm *)' (line 289, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 147 1 Info 757: global declarator 'QP_getVersion(void)' (line 147, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 345 1 Warning 526: Symbol 'QF_run(void)' (line 345, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\include\qfn.h" 402 1 Info 757: global declarator 'QF_readySet_' (line 402, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 276 1 Warning 526: Symbol 'QActive_arm(QActive *, QTimeEvtCtr)' (line 276, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\include\qfn.h" 288 1 Warning 526: Symbol 'QActive_disarm(QActive *)' (line 288, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\include\qfn.h" 222 1 Info 757: global declarator 'QActive_post(QActive *, QSignal, QParam)' (line 222, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 235 1 Warning 526: Symbol 'QActive_postISR(QActive *, QSignal, QParam)' (line 235, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\include\qfn.h" 316 1 Info 757: global declarator 'QF_stop(void)' (line 316, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 418 1 Info 757: global declarator 'QHsm_dispatch(QHsm *)' (line 418, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 408 1 Info 757: global declarator 'QHsm_init(QHsm *)' (line 408, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 433 1 Warning 526: Symbol 'QHsm_top(const void *)' (line 433, file D:\qp\qpn\include\qepn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\include\qfn.h" 252 1 Warning 526: Symbol 'QF_tickISR(void)' (line 252, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not defined
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 127 1 Info 759: header declaration for symbol 'QK_onIdle(void)' defined at (line 127, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be moved from header to module
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 127 1 Info 765: external 'QK_onIdle(void)' (line 127, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 127 1 Info 714: Symbol 'QK_onIdle(void)' (line 127, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 150 1 Info 765: external 'assert_failed(const char_t *, int_t)' (line 150, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 150 1 Info 714: Symbol 'assert_failed(const char_t *, int_t)' (line 150, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 141 1 Info 759: header declaration for symbol 'Q_onAssert(const char_t *, int_t)' defined at (line 141, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be moved from header to module
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 141 1 Info 765: external 'Q_onAssert(const char_t *, int_t)' (line 141, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\include\qkn.h" 81 1 Info 757: global declarator 'QK_currPrio_' (line 81, file D:\qp\qpn\include\qkn.h) not referenced
+"D:\qp\qpn\include\qkn.h" 71 1 Info 757: global declarator 'QK_schedPrio_(void)' (line 71, file D:\qp\qpn\include\qkn.h) not referenced
+"D:\qp\qpn\include\qkn.h" 79 1 Info 757: global declarator 'QK_sched_(uint8_t)' (line 79, file D:\qp\qpn\include\qkn.h) not referenced
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 56 1 Info 765: external 'GPIOPortA_IRQHandler(void)' (line 56, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c" 56 1 Info 714: Symbol 'GPIOPortA_IRQHandler(void)' (line 56, file D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\bsp.c) not referenced
+"D:\qp\qpn\include\qfn.h" 307 1 Info 757: global declarator 'QF_init(void)' (line 307, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 321 1 Info 755: global macro 'Q_IGNORED' (line 321, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 254 1 Info 755: global macro 'Q_PAR' (line 254, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 195 1 Info 755: global macro 'Q_ENSURE' (line 195, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 202 1 Info 755: global macro 'Q_ENSURE_ID' (line 202, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 359 1 Info 755: global macro 'Q_UNHANDLED' (line 359, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 116 1 Info 755: global macro 'Q_ASSERT' (line 116, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 129 1 Info 755: global macro 'Q_ASSERT_ID' (line 129, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 55 1 Info 755: global macro 'QP_VERSION' (line 55, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 269 1 Info 755: global macro 'QFsm_ctor' (line 269, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 171 1 Info 755: global macro 'Q_ERROR_ID' (line 171, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 209 1 Info 755: global macro 'Q_INVARIANT' (line 209, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 216 1 Info 755: global macro 'Q_INVARIANT_ID' (line 216, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 181 1 Info 755: global macro 'Q_REQUIRE' (line 181, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 188 1 Info 755: global macro 'Q_REQUIRE_ID' (line 188, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 312 1 Info 755: global macro 'Q_RET_IGNORED' (line 312, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 351 1 Info 755: global macro 'Q_RET_UNHANDLED' (line 351, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 440 1 Info 755: global macro 'QF_ROM_ACTIVE_GET_' (line 440, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 434 1 Info 755: global macro 'QF_ROM_QUEUE_AT_' (line 434, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 398 1 Info 755: global macro 'QHsm_state' (line 398, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 106 1 Info 755: global macro 'Q_DEFINE_THIS_MODULE' (line 106, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qfn.h" 473 1 Info 755: global macro 'QF_tick' (line 473, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 140 1 Info 755: global macro 'Q_ALLEGE' (line 140, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 153 1 Info 755: global macro 'Q_ALLEGE_ID' (line 153, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 138 1 Info 755: global macro 'Q_UINT2PTR_CAST' (line 138, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qkn.h" 99 1 Info 755: global macro 'QK_SCHEDULE_' (line 99, file D:\qp\qpn\include\qkn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 190 1 Info 768: global struct member 'QEvtTag::par' (line 190, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 159 1 Info 768: global struct member 'QActiveTag::tickCtr' (line 159, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 164 1 Info 768: global struct member 'QActiveTag::prio' (line 164, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 168 1 Info 768: global struct member 'QActiveTag::head' (line 168, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 172 1 Info 768: global struct member 'QActiveTag::tail' (line 172, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 177 1 Info 768: global struct member 'QActiveTag::nUsed' (line 177, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 384 1 Info 768: global struct member 'QActiveCBTag::act' (line 384, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 385 1 Info 768: global struct member 'QActiveCBTag::queue' (line 385, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 386 1 Info 768: global struct member 'QActiveCBTag::end' (line 386, file D:\qp\qpn\include\qfn.h) not referenced
  Note 974: Worst case function for stack usage: 'Pelican_carsEnabled' is finite, requires 73 bytes total stack in calling 'BSP_signalCars'. See +stack for a full report. [MISRA 2004 Rule 16.2, required]
 
 Count   Type    Number  Text
 
+4       Warning 522     Highest operation, ___ '___', lacks side-effects
 7       Warning 526     Symbol '___' (___) not defined
 1       Warning 552     Symbol '___' (___) not accessed
-4       Info    714     Symbol '___' (___) not referenced
-2       Info    717     do ... while(0);
-24      Info    755     global macro '___' (___) not referenced
+2       Warning 641     Converting enum '___' to '___'
+5       Info    714     Symbol '___' (___) not referenced
+1       Info    717     do ... while(0);
+2       Info    740     Unusual pointer cast (incompatible indirect types)
+1       Info    744     switch statement has no default
+25      Info    755     global macro '___' (___) not referenced
 3       Info    756     global typedef '___' (___) not referenced
-15      Info    757     global declarator '___' (___) not referenced
+14      Info    757     global declarator '___' (___) not referenced
 4       Info    759     header declaration for symbol '___' defined at (___) could be moved from header to module
-6       Info    765     external '___' (___) could be made static
+7       Info    765     external '___' (___) could be made static
 9       Info    768     global struct member '___' (___) not referenced
 1       Info    793     ANSI/ISO limit of ___ '___' exceeded -- processing is unaffected
-2       Note    960     Violates MISRA 2004 Required Rule ___, ___
-1       Note    970     Use of modifier or type '___' outside of a typedef
+2       Note    923     cast from ___ to ___
+2       Note    929     cast from ___ to ___
+6       Note    960     Violates MISRA 2004 Required Rule ___, ___
 1       Note    974     Worst case function for stack usage: ___ See +stack for a full report.

@@ -44,7 +44,7 @@
 
                                   /* QK-nano ISR entry and exit, see NOTE02 */
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04) = 0x10000000U)
+#define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04U) = 0x10000000U)
 
 #include <intrinsics.h>                              /* intrinsic functions */
 #include <stdint.h>       /* IAR provides C99-standard exact-width integers */

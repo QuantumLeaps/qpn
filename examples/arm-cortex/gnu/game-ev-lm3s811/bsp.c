@@ -1,28 +1,35 @@
 /*****************************************************************************
-* Product: "Fly 'n' Shoot" game example with cooperative "Vanilla" kernel
-* Last Updated for Version: 4.3.00
-* Date of the Last Update:  Oct 31, 2011
+* Product: "Fly 'n' Shoot" game example
+* Last Updated for Version: 4.5.02
+* Date of the Last Update:  Aug 16, 2010
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2011 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2010 Quantum Leaps, LLC. All rights reserved.
 *
-* This software may be distributed and modified under the terms of the GNU
-* General Public License version 2 (GPL) as published by the Free Software
-* Foundation and appearing in the file GPL.TXT included in the packaging of
-* this file. Please note that GPL Section 2[b] requires that all works based
-* on this software must also be made publicly available under the terms of
-* the GPL ("Copyleft").
+* This program is open source software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as published
+* by the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
 *
-* Alternatively, this software may be distributed and modified under the
+* Alternatively, this program may be distributed and modified under the
 * terms of Quantum Leaps commercial licenses, which expressly supersede
-* the GPL and are specifically designed for licensees interested in
-* retaining the proprietary status of their code.
+* the GNU General Public License and are specifically designed for
+* licensees interested in retaining the proprietary status of their code.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web site:  http://www.quantum-leaps.com
+* Quantum Leaps Web sites: http://www.quantum-leaps.com
+*                          http://www.state-machine.com
 * e-mail:                  info@quantum-leaps.com
 *****************************************************************************/
 #include "qpn_port.h"
@@ -41,12 +48,17 @@ enum ISR_Priorities {   /* ISR priorities starting from the highest urgency */
     /* ... */
 };
 
-#define ADC_TRIGGER_TIMER       0x00000005
-#define ADC_CTL_IE              0x00000040
-#define ADC_CTL_END             0x00000020
-#define ADC_CTL_CH0             0x00000000
-#define ADC_SSFSTAT0_EMPTY      0x00000100
-#define UART_FR_TXFE            0x00000080
+#define ADC_TRIGGER_TIMER       0x00000005U
+#define ADC_CTL_IE              0x00000040U
+#define ADC_CTL_END             0x00000020U
+#define ADC_CTL_CH0             0x00000000U
+#define ADC_SSFSTAT0_EMPTY      0x00000100U
+#define UART_FR_TXFE            0x00000080U
+
+/* ISR prototypes */
+void SysTick_Handler(void);
+void ADCSeq3_IRQHandler(void);
+void GPIOPortA_IRQHandler(void);
 
 
 /* Local-scope objects -----------------------------------------------------*/
@@ -54,29 +66,27 @@ enum ISR_Priorities {   /* ISR priorities starting from the highest urgency */
 #define USER_LED                (1U << 5)
 
 /*..........................................................................*/
-void SysTick_Handler(void) __attribute__((__interrupt__));
 void SysTick_Handler(void) {
-    QF_tickISR();                          /* process all armed time events */
+    QF_tickISR();                             /* process all armed time events */
 
                /* post TIME_TICK events to all interested active objects... */
-    QActive_postISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0);
-    QActive_postISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0);
-    QActive_postISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0);
+    QActive_postISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0U);
+    QActive_postISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0U);
+    QActive_postISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0U);
 }
 /*..........................................................................*/
-void ADCSeq3_IRQHandler(void) __attribute__((__interrupt__));
 void ADCSeq3_IRQHandler(void) {
-    static uint32_t adcLPS = 0;            /* Low-Pass-Filtered ADC reading */
-    static uint32_t wheel = 0;                   /* the last wheel position */
+    static uint32_t adcLPS = 0U;           /* Low-Pass-Filtered ADC reading */
+    static uint32_t wheel = 0U;                  /* the last wheel position */
 
-    static uint32_t btn_debounced  = 0;
-    static uint8_t  debounce_state = 0;
+    static uint32_t btn_debounced  = 0U;
+    static uint8_t  debounce_state = 0U;
 
     uint32_t tmp;
 
-    ADC->ISC = (1 << 3);                     /* clear the ADCSeq3 interrupt */
+    ADC->ISC = (1U << 3);                    /* clear the ADCSeq3 interrupt */
                               /* the ADC Sequence 3 FIFO must have a sample */
-    Q_ASSERT((ADC->SSFSTAT3 & ADC_SSFSTAT0_EMPTY) == 0);
+    Q_ASSERT((ADC->SSFSTAT3 & ADC_SSFSTAT0_EMPTY) == 0U);
     tmp = ADC->SSFIFO3;                       /* read the data from the ADC */
 
     /* 1st order low-pass filter: time constant ~= 2^n samples
@@ -86,7 +96,7 @@ void ADCSeq3_IRQHandler(void) {
     adcLPS += (((int)tmp - (int)adcLPS + 4) >> 3);       /* Low-Pass-Filter */
 
     /* compute the next position of the wheel */
-    tmp = (((1 << 10) - adcLPS)*(BSP_SCREEN_HEIGHT - 2)) >> 10;
+    tmp = (((1U << 10) - adcLPS)*(BSP_SCREEN_HEIGHT - 2)) >> 10;
 
     if (tmp != wheel) {                   /* did the wheel position change? */
         QActive_postISR((QActive *)&AO_Ship, PLAYER_SHIP_MOVE_SIG,
@@ -133,7 +143,6 @@ void ADCSeq3_IRQHandler(void) {
     }
 }
 /*..........................................................................*/
-void GPIOPortA_IRQHandler(void) __attribute__((__interrupt__));
 void GPIOPortA_IRQHandler(void) {
     QActive_postISR((QActive *)&AO_Tunnel, TAKE_OFF_SIG, 0); /* for testing */
 }
@@ -183,8 +192,9 @@ void BSP_init(void) {
     Display96x16x1Init(1);                   /* initialize the OLED display */
 }
 /*..........................................................................*/
-void BSP_drawBitmap(uint8_t const *bitmap, uint8_t width, uint8_t height) {
-    Display96x16x1ImageDraw(bitmap, 0, 0, width, (height >> 3));
+void BSP_drawBitmap(uint8_t const *bitmap) {
+    Display96x16x1ImageDraw(bitmap, 0U, 0U,
+                            BSP_SCREEN_WIDTH, (BSP_SCREEN_HEIGHT >> 3));
 }
 /*..........................................................................*/
 void BSP_drawNString(uint8_t x, uint8_t y, char const *str) {
@@ -252,6 +262,7 @@ void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
 }
 /*..........................................................................*/
 /* error routine that is called if the CMSIS library encounters an error    */
+void assert_failed(char const *file, int line);              /* prototype */
 void assert_failed(char const *file, int line) {
     Q_onAssert(file, line);
 }
@@ -266,7 +277,7 @@ void assert_failed(char const *file, int line) {
 * NOTE02:
 * The User LED is used to visualize the idle loop activity. The brightness
 * of the LED is proportional to the frequency of invcations of the idle loop.
-* Please note that the LED is toggled with interrupts disabled, so no interrupt
+* Please note that the LED is toggled with interrupts locked, so no interrupt
 * execution time contributes to the brightness of the User LED.
 *
 */

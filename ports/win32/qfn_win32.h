@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32
 * Last Updated for Version: 4.5.02
-* Date of the Last Update:  Jun 29, 2012
+* Date of the Last Update:  Aug 15, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -46,47 +46,6 @@
 void QF_enterCriticalSection(void);
 void QF_leaveCriticalSection(void);
 void QF_onCleanup(void);       /* "big" OS, such as Win32, requires cleanup */
-
-/*****************************************************************************
-* helper functions for drawing embedded front panels...
-*/
-
-void SetDlgItemBitmap(void *hWnd, uint16_t itemId, void *hBitmap);
-
-enum DrawButtonAction {
-    BTN_NOACTION,
-    BTN_PAINTED,
-    BTN_DEPRESSED,
-    BTN_RELEASED
-};
-
-enum DrawButtonAction DrawButton(void const *pdis,
-                void const *hBitmapUp, void const *hBitmapDwn);
-void DrawBitmap(void const *hdc, void const *hBitmap,
-                int xStart, int yStart);
-
-       /* DIB24 "class" is for drawing graphic LCDs with up to 24-bit color */
-typedef struct DIB24Tag {
-    uint16_t width;
-    uint16_t xScale;
-    uint16_t height;
-    uint16_t yScale;
-    void    *hBitmap;
-    void    *hItem;
-    uint8_t *bits;
-    uint8_t  bgColor[3];
-} DIB24;
-
-void DIB24_ctor(DIB24 * const me,
-                uint16_t width,  uint16_t xScale,
-                uint16_t height, uint16_t yScale,
-                void *hItem, uint8_t const bgColor[3]);
-void DIB24_xtor(DIB24 * const me);
-void DIB24_clear(DIB24 * const me);
-void DIB24_setAt(DIB24 * const me, uint16_t x, uint16_t y,
-                 uint8_t const color[3]);
-void DIB24_clearAt(DIB24 * const me, uint16_t x, uint16_t y);
-void DIB24_redraw(DIB24 * const me);
 
 /* NOTES: ********************************************************************
 *

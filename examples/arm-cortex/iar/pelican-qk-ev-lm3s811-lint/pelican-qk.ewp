@@ -1887,9 +1887,6 @@
       <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\ped.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\pelican.c</name>
     </file>
   </group>

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
-* Last Updated for Version: 4.1.03
-* Date of the Last Update:  Feb 18, 2010
+* Last Updated for Version: 4.5.02
+* Date of the Last Update:  Aug 16, 2010
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -9,34 +9,39 @@
 *
 * Copyright (C) 2002-2010 Quantum Leaps, LLC. All rights reserved.
 *
-* This software may be distributed and modified under the terms of the GNU
-* General Public License version 2 (GPL) as published by the Free Software
-* Foundation and appearing in the file GPL.TXT included in the packaging of
-* this file. Please note that GPL Section 2[b] requires that all works based
-* on this software must also be made publicly available under the terms of
-* the GPL ("Copyleft").
+* This program is open source software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as published
+* by the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
 *
-* Alternatively, this software may be distributed and modified under the
+* Alternatively, this program may be distributed and modified under the
 * terms of Quantum Leaps commercial licenses, which expressly supersede
-* the GPL and are specifically designed for licensees interested in
-* retaining the proprietary status of their code.
+* the GNU General Public License and are specifically designed for
+* licensees interested in retaining the proprietary status of their code.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web site:  http://www.quantum-leaps.com
+* Quantum Leaps Web sites: http://www.quantum-leaps.com
+*                          http://www.state-machine.com
 * e-mail:                  info@quantum-leaps.com
 *****************************************************************************/
 #ifndef bsp_h
 #define bsp_h
 
-#define BSP_TICKS_PER_SEC    30
-#define BSP_SCREEN_WIDTH     96
-#define BSP_SCREEN_HEIGHT    16
+#define BSP_TICKS_PER_SEC    33U
+#define BSP_SCREEN_WIDTH     96U
+#define BSP_SCREEN_HEIGHT    16U
 
 void BSP_init(void);
 
-void BSP_drawBitmap(uint8_t const *bitmap,
-                    uint8_t width,                             /* in pixels */
-                    uint8_t height);  /* in bytes of pixels (8-pixesl/byte) */
+void BSP_drawBitmap(uint8_t const *bitmap);
 void BSP_drawNString(uint8_t x,                              /* x in pixels */
                      uint8_t y,                      /* y position in chars */
                      char const *str);
@@ -44,5 +49,11 @@ void BSP_updateScore(uint16_t score);     /* update the score on the margin */
 
 void BSP_displayOn(void);
 void BSP_displayOff(void);
+
+void BSP_playerTrigger(void);
+void BSP_moveShipUp(void);
+void BSP_moveShipDown(void);
+
+void BSP_terminate(int16_t result);
 
 #endif                                                             /* bsp_h */

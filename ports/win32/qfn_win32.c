@@ -70,7 +70,6 @@ static uint8_t const Q_ROM Q_ROM_VAR l_invPow2Lkup[] = {
     (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
     (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
 };
-static uint8_t l_running;
 
 /*..........................................................................*/
 void QF_enterCriticalSection(void) {

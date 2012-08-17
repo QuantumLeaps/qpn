@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano port for DPP example, Win32 emulation
 * Last Updated for Version: 4.5.02
-* Date of the Last Update:  Jun 24, 2012
+* Date of the Last Update:  Jun 30, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------

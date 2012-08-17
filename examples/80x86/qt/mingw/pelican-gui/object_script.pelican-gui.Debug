@@ -1,0 +1,13 @@
+INPUT(
+./debug\qepn.o
+./debug\qpn_app.o
+./debug\pixellabel.o
+./debug\main.o
+./debug\gui.o
+./debug\bsp.o
+./debug\pelican.o
+./debug\moc_qpn_app.o
+./debug\moc_pixellabel.o
+./debug\moc_gui.o
+./debug\qrc_gui.o
+);

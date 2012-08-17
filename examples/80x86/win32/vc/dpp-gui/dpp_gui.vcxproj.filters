@@ -5,13 +5,13 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="philo.c" />
     <ClCompile Include="table.c" />
-    <ClCompile Include="$(QPN)\ports\win32\win32_utils.c">
-      <Filter>QP-nano</Filter>
-    </ClCompile>
     <ClCompile Include="$(QPN)\ports\win32\qfn_win32.c">
       <Filter>QP-nano</Filter>
     </ClCompile>
     <ClCompile Include="$(QPN)\source\qepn.c">
+      <Filter>QP-nano</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\ports\win32\win32_gui.c">
       <Filter>QP-nano</Filter>
     </ClCompile>
   </ItemGroup>
@@ -22,9 +22,9 @@
     <ClInclude Include="$(QPN)\ports\win32\qfn_win32.h">
       <Filter>QP-nano</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="dpp.rc" />
+    <ClInclude Include="..\..\..\..\..\ports\win32\win32_gui.h">
+      <Filter>QP-nano</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\BTN_DWN.bmp">
@@ -56,5 +56,8 @@
     <Filter Include="Res">
       <UniqueIdentifier>{1ddbe21a-63d1-4125-be3a-e0761314b6a7}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dpp_gui.rc" />
   </ItemGroup>
 </Project>

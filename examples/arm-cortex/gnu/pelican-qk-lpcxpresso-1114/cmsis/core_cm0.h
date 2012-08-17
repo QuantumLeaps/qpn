@@ -1,11 +1,11 @@
 /**************************************************************************//**
  * @file     core_cm0.h
  * @brief    CMSIS Cortex-M0 Core Peripheral Access Layer Header File
- * @version  V3.00
- * @date     09. December 2011
+ * @version  V3.01
+ * @date     13. March 2012
  *
  * @note
- * Copyright (C) 2009-2011 ARM Limited. All rights reserved.
+ * Copyright (C) 2009-2012 ARM Limited. All rights reserved.
  *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Cortex-M
@@ -54,7 +54,7 @@
 
 /*  CMSIS CM0 definitions */
 #define __CM0_CMSIS_VERSION_MAIN  (0x03)                                   /*!< [31:16] CMSIS HAL main version   */
-#define __CM0_CMSIS_VERSION_SUB   (0x00)                                   /*!< [15:0]  CMSIS HAL sub version    */
+#define __CM0_CMSIS_VERSION_SUB   (0x01)                                   /*!< [15:0]  CMSIS HAL sub version    */
 #define __CM0_CMSIS_VERSION       ((__CM0_CMSIS_VERSION_MAIN << 16) | \
                                     __CM0_CMSIS_VERSION_SUB          )     /*!< CMSIS HAL version number         */
 
@@ -64,18 +64,22 @@
 #if   defined ( __CC_ARM )
   #define __ASM            __asm                                      /*!< asm keyword for ARM Compiler          */
   #define __INLINE         __inline                                   /*!< inline keyword for ARM Compiler       */
+  #define __STATIC_INLINE  static __inline
 
 #elif defined ( __ICCARM__ )
-  #define __ASM           __asm                                       /*!< asm keyword for IAR Compiler          */
-  #define __INLINE        inline                                      /*!< inline keyword for IAR Compiler. Only available in High optimization mode! */
+  #define __ASM            __asm                                      /*!< asm keyword for IAR Compiler          */
+  #define __INLINE         inline                                     /*!< inline keyword for IAR Compiler. Only available in High optimization mode! */
+  #define __STATIC_INLINE  static inline
 
 #elif defined ( __GNUC__ )
   #define __ASM            __asm                                      /*!< asm keyword for GNU Compiler          */
   #define __INLINE         inline                                     /*!< inline keyword for GNU Compiler       */
+  #define __STATIC_INLINE  static inline
 
 #elif defined ( __TASKING__ )
   #define __ASM            __asm                                      /*!< asm keyword for TASKING Compiler      */
   #define __INLINE         inline                                     /*!< inline keyword for TASKING Compiler   */
+  #define __STATIC_INLINE  static inline
 
 #endif
 
@@ -99,7 +103,9 @@
   #endif
 
 #elif defined ( __TASKING__ )
-    /* add preprocessor checks */
+  #if defined __FPU_VFP__
+    #error "Compiler generates FPU instructions for a device without an FPU (check __FPU_PRESENT)"
+  #endif
 #endif
 
 #include <stdint.h>                      /* standard types definitions                      */
@@ -491,7 +497,7 @@ typedef struct
 
     \param [in]      IRQn  External interrupt number. Value cannot be negative.
  */
-static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
+__STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
   NVIC->ISER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }
@@ -503,7 +509,7 @@ static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 
     \param [in]      IRQn  External interrupt number. Value cannot be negative.
  */
-static __INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
+__STATIC_INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
 {
   NVIC->ICER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }
@@ -519,7 +525,7 @@ static __INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
     \return             0  Interrupt status is not pending.
     \return             1  Interrupt status is pending.
  */
-static __INLINE uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
+__STATIC_INLINE uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
 {
   return((uint32_t) ((NVIC->ISPR[0] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));
 }
@@ -531,7 +537,7 @@ static __INLINE uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
 
     \param [in]      IRQn  Interrupt number. Value cannot be negative.
  */
-static __INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
+__STATIC_INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
 {
   NVIC->ISPR[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }
@@ -543,7 +549,7 @@ static __INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
 
     \param [in]      IRQn  External interrupt number. Value cannot be negative.
  */
-static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
+__STATIC_INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
 {
   NVIC->ICPR[0] = (1 << ((uint32_t)(IRQn) & 0x1F)); /* Clear pending interrupt */
 }
@@ -558,7 +564,7 @@ static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
     \param [in]      IRQn  Interrupt number.
     \param [in]  priority  Priority to set.
  */
-static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
+__STATIC_INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 {
   if(IRQn < 0) {
     SCB->SHP[_SHP_IDX(IRQn)] = (SCB->SHP[_SHP_IDX(IRQn)] & ~(0xFF << _BIT_SHIFT(IRQn))) |
@@ -580,7 +586,7 @@ static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
     \return             Interrupt Priority. Value is aligned automatically to the implemented
                         priority bits of the microcontroller.
  */
-static __INLINE uint32_t NVIC_GetPriority(IRQn_Type IRQn)
+__STATIC_INLINE uint32_t NVIC_GetPriority(IRQn_Type IRQn)
 {
 
   if(IRQn < 0) {
@@ -594,7 +600,7 @@ static __INLINE uint32_t NVIC_GetPriority(IRQn_Type IRQn)
 
     The function initiates a system reset request to reset the MCU.
  */
-static __INLINE void NVIC_SystemReset(void)
+__STATIC_INLINE void NVIC_SystemReset(void)
 {
   __DSB();                                                     /* Ensure all outstanding memory accesses included
                                                                   buffered write are completed before reset */
@@ -632,7 +638,7 @@ static __INLINE void NVIC_SystemReset(void)
     must contain a vendor-specific implementation of this function.
 
  */
-static __INLINE uint32_t SysTick_Config(uint32_t ticks)
+__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 {
   if (ticks > SysTick_LOAD_RELOAD_Msk)  return (1);            /* Reload value impossible */
 

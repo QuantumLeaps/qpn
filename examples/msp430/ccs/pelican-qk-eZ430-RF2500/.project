@@ -84,12 +84,12 @@
 		<link>
 			<name>qepn.c</name>
 			<type>1</type>
-			<location>D:/software/qpn/source/qepn.c</location>
+			<location>D:/qp/qpn/source/qepn.c</location>
 		</link>
 		<link>
 			<name>qfn.c</name>
 			<type>1</type>
-			<location>D:/software/qpn/source/qfn.c</location>
+			<location>D:/qp/qpn/source/qfn.c</location>
 		</link>
 		<link>
 			<name>qkn.c</name>

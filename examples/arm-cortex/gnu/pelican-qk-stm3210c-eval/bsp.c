@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, STM3210C-EVAL board, QK-nano, GNU
-* Last Updated for Version: 4.4.00
-* Date of the Last Update:  Feb 29, 2012
+* Last Updated for Version: 4.5.02
+* Date of the Last Update:  Aug 16, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -9,20 +9,27 @@
 *
 * Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
 *
-* This software may be distributed and modified under the terms of the GNU
-* General Public License version 2 (GPL) as published by the Free Software
-* Foundation and appearing in the file GPL.TXT included in the packaging of
-* this file. Please note that GPL Section 2[b] requires that all works based
-* on this software must also be made publicly available under the terms of
-* the GPL ("Copyleft").
+* This program is open source software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as published
+* by the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
 *
-* Alternatively, this software may be distributed and modified under the
+* Alternatively, this program may be distributed and modified under the
 * terms of Quantum Leaps commercial licenses, which expressly supersede
-* the GPL and are specifically designed for licensees interested in
-* retaining the proprietary status of their code.
+* the GNU General Public License and are specifically designed for
+* licensees interested in retaining the proprietary status of their code.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web site:  http://www.quantum-leaps.com
+* Quantum Leaps Web sites: http://www.quantum-leaps.com
+*                          http://www.state-machine.com
 * e-mail:                  info@quantum-leaps.com
 *****************************************************************************/
 #include "qpn_port.h"
@@ -51,8 +58,57 @@ void EXTI0_IRQHandler(void) __attribute__((__interrupt__));
 void EXTI0_IRQHandler(void) {
     QK_ISR_ENTRY();                       /* inform QK-nano about ISR entry */
     EXTI->PR = 0x1;   /* set the EXTI->PR[0] to clear the EXTI_SWIER[0] bit */
-    QActive_postISR((QActive *)&AO_Ped, PEDS_WAITING_SIG, 0);
+    QActive_postISR((QActive *)&AO_Pelican, PEDS_WAITING_SIG, 0);
     QK_ISR_EXIT();                         /* inform QK-nano about ISR exit */
+}
+
+/*..........................................................................*/
+void QF_onStartup(void) {
+    NVIC_InitTypeDef nvic_init;
+
+    /* Set up and enable the SysTick timer.  It will be used as a reference
+    * for delay loops in the interrupt handlers.  The SysTick timer period
+    * will be set up for BSP_TICKS_PER_SEC.
+    */
+    SysTick_Config(SystemFrequency_SysClk / BSP_TICKS_PER_SEC);
+
+    /* Enable the EXTI0 Interrupt used for testing preemptions */
+    nvic_init.NVIC_IRQChannel                   = EXTI0_IRQn;
+    nvic_init.NVIC_IRQChannelPreemptionPriority = 0;
+    nvic_init.NVIC_IRQChannelSubPriority        = 0;
+    nvic_init.NVIC_IRQChannelCmd                = ENABLE;
+    NVIC_Init(&nvic_init);/* enables the device and sets interrupt priority */
+
+                       /* set priorities of all interrupts in the system... */
+    NVIC_SetPriority(SysTick_IRQn, SYSTICK_PRIO);
+    NVIC_SetPriority(EXTI0_IRQn,   EXTI0_PRIO);
+    /* ... */
+}
+/*..........................................................................*/
+void QK_onIdle(void) {
+                         /* toggle the blue LED on and then off, see NOTE01 */
+    QF_INT_DISABLE();
+    STM_EVAL_LEDOn (LED4);                                  /* blue LED on  */
+    STM_EVAL_LEDOff(LED4);                                  /* blue LED off */
+    QF_INT_ENABLE();
+
+#ifdef NDEBUG
+    __WFI();
+#endif
+}
+/*..........................................................................*/
+void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+    (void)file;                                   /* avoid compiler warning */
+    (void)line;                                   /* avoid compiler warning */
+    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
+    for (;;) {       /* NOTE: replace the loop with reset for final version */
+    }
+}
+/*..........................................................................*/
+/* error routine that is called if the STM32 library encounters an error    */
+void assert_failed(char_t const *file, int_t line);            /* prototype */
+void assert_failed(char_t const *file, int_t line) {
+    Q_onAssert(file, line);
 }
 
 /*..........................................................................*/
@@ -97,57 +153,12 @@ void BSP_init(void) {
     LCD_DisplayString(Line6, 4*16, "                ");
 }
 /*..........................................................................*/
-void QF_onStartup(void) {
-    NVIC_InitTypeDef nvic_init;
-
-    /* Set up and enable the SysTick timer.  It will be used as a reference
-    * for delay loops in the interrupt handlers.  The SysTick timer period
-    * will be set up for BSP_TICKS_PER_SEC.
-    */
-    SysTick_Config(SystemFrequency_SysClk / BSP_TICKS_PER_SEC);
-
-    /* Enable the EXTI0 Interrupt used for testing preemptions */
-    nvic_init.NVIC_IRQChannel                   = EXTI0_IRQn;
-    nvic_init.NVIC_IRQChannelPreemptionPriority = 0;
-    nvic_init.NVIC_IRQChannelSubPriority        = 0;
-    nvic_init.NVIC_IRQChannelCmd                = ENABLE;
-    NVIC_Init(&nvic_init);/* enables the device and sets interrupt priority */
-
-                       /* set priorities of all interrupts in the system... */
-    NVIC_SetPriority(SysTick_IRQn, SYSTICK_PRIO);
-    NVIC_SetPriority(EXTI0_IRQn,   EXTI0_PRIO);
-    /* ... */
+void BSP_terminate(int16_t result) {
+    (void)result;
 }
 /*..........................................................................*/
-void QK_onIdle(void) {
-                         /* toggle the blue LED on and then off, see NOTE01 */
-    QF_INT_DISABLE();
-    STM_EVAL_LEDOn (LED4);                                  /* blue LED on  */
-    STM_EVAL_LEDOff(LED4);                                  /* blue LED off */
-    QF_INT_ENABLE();
-
-#ifdef NDEBUG
-    __WFI();
-#endif
-}
-/*..........................................................................*/
-/* error routine that is called if the STM32 library encounters an error    */
-void assert_failed(char const *file, int line) {
-    Q_onAssert(file, line);
-}
-/*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
-    (void)file;                                   /* avoid compiler warning */
-    (void)line;                                   /* avoid compiler warning */
-    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
-    for (;;) {       /* NOTE: replace the loop with reset for final version */
-    }
-}
-/*..........................................................................*/
-void BSP_showState(uint8_t prio, char const *state) {
-    if (QF_active[prio].act == (QActive *)&AO_Pelican) {
-        LCD_DisplayString(Line4, 4*16, state);
-    }
+void BSP_showState(char_t const *state) {
+    LCD_DisplayString(Line4, 4*16, state);
 }
 /*..........................................................................*/
 void BSP_signalCars(enum BSP_CarsSignal sig) {
@@ -173,7 +184,7 @@ void BSP_signalCars(enum BSP_CarsSignal sig) {
             STM_EVAL_LEDOn (LED1);
             break;
         }
-        case CARS_OFF: {
+        case CARS_BLANK: {
             LCD_DisplayString(Line5, 4*16, "      ");
             STM_EVAL_LEDOff(LED3);
             STM_EVAL_LEDOff(LED2);

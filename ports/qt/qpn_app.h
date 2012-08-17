@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: QP-nano Qt Application (Qt-1T port single thread)
-// Last Updated for Version: 4.5.00
-// Date of the Last Update:  Jun 11, 2012
+// Last Updated for Version: 4.5.02
+// Date of the Last Update:  Aug 16, 2012
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
