@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="2.2.01">
+<model version="2.2.03">
  <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing example</documentation>
  <framework name="qpn"/>
  <package name="components" stereotype="0x02">
@@ -307,14 +307,14 @@ extern struct PedTag     AO_Ped;
 #include &quot;pelican.h&quot;    /* application interface */
 
 /*..........................................................................*/
-static QEvent l_pelicanQueue[3];
-static QEvent l_pedQueue[2];
+static QEvt l_pelicanQueue[3];
+static QEvt l_pedQueue[2];
 
 /* QF_active[] array defines all active object control blocks --------------*/
 QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
-    { (QActive *)0,           (QEvent *)0,    0                     },
+    { (QActive *)0,           (QEvt *)0,    0                       },
     { (QActive *)&amp;AO_Pelican, l_pelicanQueue, Q_DIM(l_pelicanQueue) },
-    { (QActive *)&amp;AO_Ped,     l_pedQueue,     Q_DIM(l_pedQueue) }
+    { (QActive *)&amp;AO_Ped,     l_pedQueue,     Q_DIM(l_pedQueue)     }
 };
 
 /* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */

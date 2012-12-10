@@ -1,6 +1,14 @@
 /**
 \page rev_page QP-nano Revision History
 
+\section qpn_4_5_03 Version 4.5.03 (Product) Release date: Nov 29, 2012
+
+This release changes the directory structure of QP-nano examples
+for  various operating systems, such as POSIX (Linux, BSD, etc.),
+Win32 (Windows), Qt, etc. The OS examples are moved from the
+exampels\80x86\ directory one level up to examples\.
+
+
 \section qpn_4_5_02 Version 4.5.02 (Product) Release date: Aug 17, 2012
 
 The main purpose of this release is providing QM models in most

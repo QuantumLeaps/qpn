@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, Vainlla kernel, GNU compiler
 * Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2012
+* Date of the Last Update:  Nov 07, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -39,7 +39,7 @@
 #define QF_TIMEEVT_CTR_SIZE     4
 
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
-#define QF_MAX_ACTIVE           1
+#define QF_MAX_ACTIVE           2
 
                                /* interrupt locking policy for GNU compiler */
 #define QF_INT_DISABLE()        __asm volatile ("cpsid i")

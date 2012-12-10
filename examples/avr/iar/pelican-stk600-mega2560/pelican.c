@@ -35,282 +35,361 @@ typedef struct PelicanTag {
     uint8_t flashCtr;
 } Pelican;
 
-/* public: */
-/** 
-* constructor
-*/
-void Pelican_ctor(void);
-
 /* protected: */
-QState Pelican_initial(Pelican *me);
-QState Pelican_operational(Pelican *me);
-QState Pelican_carsEnabled(Pelican *me);
-QState Pelican_carsGreen(Pelican *me);
-QState Pelican_carsGreenNoPed(Pelican *me);
-QState Pelican_carsGreenInt(Pelican *me);
-QState Pelican_carsGreenPedWait(Pelican *me);
-QState Pelican_carsYellow(Pelican *me);
-QState Pelican_pedsEnabled(Pelican *me);
-QState Pelican_pedsWalk(Pelican *me);
-QState Pelican_pedsFlash(Pelican *me);
-QState Pelican_offline(Pelican *me);
+static QState Pelican_initial(Pelican * const me);
+static QState Pelican_operational(Pelican * const me);
+static QState Pelican_carsEnabled(Pelican * const me);
+static QState Pelican_carsGreen(Pelican * const me);
+static QState Pelican_carsGreenNoPed(Pelican * const me);
+static QState Pelican_carsGreenInt(Pelican * const me);
+static QState Pelican_carsGreenPedWait(Pelican * const me);
+static QState Pelican_carsYellow(Pelican * const me);
+static QState Pelican_pedsEnabled(Pelican * const me);
+static QState Pelican_pedsWalk(Pelican * const me);
+static QState Pelican_pedsFlash(Pelican * const me);
+static QState Pelican_offline(Pelican * const me);
 
 
 /* Global objects ----------------------------------------------------------*/
 Pelican AO_Pelican;     /* the single instance of the Pelican active object */
 
 /* Pelican class definition ------------------------------------------------*/
+/* @(/1/3) .................................................................*/
+void Pelican_ctor(void) {
+    QActive_ctor(&AO_Pelican.super, Q_STATE_CAST(&Pelican_initial));
+}
 /* @(/1/0) .................................................................*/
 /* @(/1/0/1) ...............................................................*/
-void Pelican_ctor(void) {
-    QActive_ctor((QActive *)&AO_Pelican, (QStateHandler)&Pelican_initial);
-}
-/* @(/1/0/2) ...............................................................*/
-/* @(/1/0/2/0) */
-QState Pelican_initial(Pelican *me) {
+/* @(/1/0/1/0) */
+static QState Pelican_initial(Pelican * const me) {
     return Q_TRAN(&Pelican_operational);
 }
-/* @(/1/0/2/1) .............................................................*/
-QState Pelican_operational(Pelican *me) {
+/* @(/1/0/1/1) .............................................................*/
+static QState Pelican_operational(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1) */
+        /* @(/1/0/1/1) */
         case Q_ENTRY_SIG: {
             BSP_signalCars(CARS_RED);
             BSP_signalPeds(PEDS_DONT_WALK);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/0) */
+        /* @(/1/0/1/1/0) */
         case Q_INIT_SIG: {
-            return Q_TRAN(&Pelican_carsEnabled);
+            status = Q_TRAN(&Pelican_carsEnabled);
+            break;
         }
-        /* @(/1/0/2/1/1) */
+        /* @(/1/0/1/1/1) */
         case OFF_SIG: {
-            return Q_TRAN(&Pelican_offline);
+            status = Q_TRAN(&Pelican_offline);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&QHsm_top);
+            break;
         }
     }
-    return Q_SUPER(&QHsm_top);
+    return status;
 }
-/* @(/1/0/2/1/2) ...........................................................*/
-QState Pelican_carsEnabled(Pelican *me) {
+/* @(/1/0/1/1/2) ...........................................................*/
+static QState Pelican_carsEnabled(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/2) */
+        /* @(/1/0/1/1/2) */
         case Q_EXIT_SIG: {
             BSP_signalCars(CARS_RED);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/0) */
+        /* @(/1/0/1/1/2/0) */
         case Q_INIT_SIG: {
-            return Q_TRAN(&Pelican_carsGreen);
+            status = Q_TRAN(&Pelican_carsGreen);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_operational);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_operational);
+    return status;
 }
-/* @(/1/0/2/1/2/1) .........................................................*/
-QState Pelican_carsGreen(Pelican *me) {
+/* @(/1/0/1/1/2/1) .........................................................*/
+static QState Pelican_carsGreen(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/2/1) */
+        /* @(/1/0/1/1/2/1) */
         case Q_ENTRY_SIG: {
             BSP_signalCars(CARS_GREEN);
             QActive_arm((QActive *)me, CARS_GREEN_MIN_TOUT);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/1) */
+        /* @(/1/0/1/1/2/1) */
         case Q_EXIT_SIG: {
             QActive_disarm((QActive *)me);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/1/0) */
+        /* @(/1/0/1/1/2/1/0) */
         case Q_INIT_SIG: {
-            return Q_TRAN(&Pelican_carsGreenNoPed);
+            status = Q_TRAN(&Pelican_carsGreenNoPed);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_carsEnabled);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsEnabled);
+    return status;
 }
-/* @(/1/0/2/1/2/1/1) .......................................................*/
-QState Pelican_carsGreenNoPed(Pelican *me) {
+/* @(/1/0/1/1/2/1/1) .......................................................*/
+static QState Pelican_carsGreenNoPed(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/2/1/1) */
+        /* @(/1/0/1/1/2/1/1) */
         case Q_ENTRY_SIG: {
             BSP_showState("carsGreenNoPed");
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/1/1/0) */
+        /* @(/1/0/1/1/2/1/1/0) */
         case PEDS_WAITING_SIG: {
-            return Q_TRAN(&Pelican_carsGreenPedWait);
+            status = Q_TRAN(&Pelican_carsGreenPedWait);
+            break;
         }
-        /* @(/1/0/2/1/2/1/1/1) */
+        /* @(/1/0/1/1/2/1/1/1) */
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&Pelican_carsGreenInt);
+            status = Q_TRAN(&Pelican_carsGreenInt);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_carsGreen);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsGreen);
+    return status;
 }
-/* @(/1/0/2/1/2/1/2) .......................................................*/
-QState Pelican_carsGreenInt(Pelican *me) {
+/* @(/1/0/1/1/2/1/2) .......................................................*/
+static QState Pelican_carsGreenInt(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/2/1/2) */
+        /* @(/1/0/1/1/2/1/2) */
         case Q_ENTRY_SIG: {
             BSP_showState("carsGreenInt");
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/1/2/0) */
+        /* @(/1/0/1/1/2/1/2/0) */
         case PEDS_WAITING_SIG: {
-            return Q_TRAN(&Pelican_carsYellow);
+            status = Q_TRAN(&Pelican_carsYellow);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_carsGreen);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsGreen);
+    return status;
 }
-/* @(/1/0/2/1/2/1/3) .......................................................*/
-QState Pelican_carsGreenPedWait(Pelican *me) {
+/* @(/1/0/1/1/2/1/3) .......................................................*/
+static QState Pelican_carsGreenPedWait(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/2/1/3) */
+        /* @(/1/0/1/1/2/1/3) */
         case Q_ENTRY_SIG: {
             BSP_showState("carsGreenPedWait");
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/1/3/0) */
+        /* @(/1/0/1/1/2/1/3/0) */
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&Pelican_carsYellow);
+            status = Q_TRAN(&Pelican_carsYellow);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_carsGreen);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsGreen);
+    return status;
 }
-/* @(/1/0/2/1/2/2) .........................................................*/
-QState Pelican_carsYellow(Pelican *me) {
+/* @(/1/0/1/1/2/2) .........................................................*/
+static QState Pelican_carsYellow(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/2/2) */
+        /* @(/1/0/1/1/2/2) */
         case Q_ENTRY_SIG: {
             BSP_showState("carsYellow");
             BSP_signalCars(CARS_YELLOW);
             QActive_arm((QActive *)me, CARS_YELLOW_TOUT);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/2) */
+        /* @(/1/0/1/1/2/2) */
         case Q_EXIT_SIG: {
             QActive_disarm((QActive *)me);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/2/2/0) */
+        /* @(/1/0/1/1/2/2/0) */
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&Pelican_pedsEnabled);
+            status = Q_TRAN(&Pelican_pedsEnabled);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_carsEnabled);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsEnabled);
+    return status;
 }
-/* @(/1/0/2/1/3) ...........................................................*/
-QState Pelican_pedsEnabled(Pelican *me) {
+/* @(/1/0/1/1/3) ...........................................................*/
+static QState Pelican_pedsEnabled(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/3) */
+        /* @(/1/0/1/1/3) */
         case Q_EXIT_SIG: {
             BSP_signalPeds(PEDS_DONT_WALK);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/3/0) */
+        /* @(/1/0/1/1/3/0) */
         case Q_INIT_SIG: {
-            return Q_TRAN(&Pelican_pedsWalk);
+            status = Q_TRAN(&Pelican_pedsWalk);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_operational);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_operational);
+    return status;
 }
-/* @(/1/0/2/1/3/1) .........................................................*/
-QState Pelican_pedsWalk(Pelican *me) {
+/* @(/1/0/1/1/3/1) .........................................................*/
+static QState Pelican_pedsWalk(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/3/1) */
+        /* @(/1/0/1/1/3/1) */
         case Q_ENTRY_SIG: {
             BSP_showState("pedsWalk");
             BSP_signalPeds(PEDS_WALK);
             QActive_arm((QActive *)me, PEDS_WALK_TOUT);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/3/1) */
+        /* @(/1/0/1/1/3/1) */
         case Q_EXIT_SIG: {
             QActive_disarm((QActive *)me);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/3/1/0) */
+        /* @(/1/0/1/1/3/1/0) */
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&Pelican_pedsFlash);
+            status = Q_TRAN(&Pelican_pedsFlash);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_pedsEnabled);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_pedsEnabled);
+    return status;
 }
-/* @(/1/0/2/1/3/2) .........................................................*/
-QState Pelican_pedsFlash(Pelican *me) {
+/* @(/1/0/1/1/3/2) .........................................................*/
+static QState Pelican_pedsFlash(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/1/3/2) */
+        /* @(/1/0/1/1/3/2) */
         case Q_ENTRY_SIG: {
             BSP_showState("pedsFlash");
             QActive_arm((QActive *)me, PEDS_FLASH_TOUT);
             me->flashCtr = PEDS_FLASH_NUM*2 + 1;
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/3/2) */
+        /* @(/1/0/1/1/3/2) */
         case Q_EXIT_SIG: {
             QActive_disarm((QActive *)me);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/1/3/2/0) */
+        /* @(/1/0/1/1/3/2/0) */
         case Q_TIMEOUT_SIG: {
-            /* @(/1/0/2/1/3/2/0/0) */
+            /* @(/1/0/1/1/3/2/0/0) */
             if (me->flashCtr != 0) {
                 --me->flashCtr;
                 QActive_arm((QActive *)me, PEDS_FLASH_TOUT);
-                /* @(/1/0/2/1/3/2/0/0/0) */
+                /* @(/1/0/1/1/3/2/0/0/0) */
                 if ((me->flashCtr & 1) == 0) {
                     BSP_signalPeds(PEDS_DONT_WALK);
-                    return Q_HANDLED();
+                    status = Q_HANDLED();
                 }
-                /* @(/1/0/2/1/3/2/0/0/1) */
+                /* @(/1/0/1/1/3/2/0/0/1) */
                 else {
                     BSP_signalPeds(PEDS_BLANK);
-                    return Q_HANDLED();
+                    status = Q_HANDLED();
                 }
             }
-            /* @(/1/0/2/1/3/2/0/1) */
+            /* @(/1/0/1/1/3/2/0/1) */
             else {
-                return Q_TRAN(&Pelican_carsEnabled);
+                status = Q_TRAN(&Pelican_carsEnabled);
             }
+            break;
+        }
+        default: {
+            status = Q_SUPER(&Pelican_pedsEnabled);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_pedsEnabled);
+    return status;
 }
-/* @(/1/0/2/2) .............................................................*/
-QState Pelican_offline(Pelican *me) {
+/* @(/1/0/1/2) .............................................................*/
+static QState Pelican_offline(Pelican * const me) {
+    QState status;
     switch (Q_SIG(me)) {
-        /* @(/1/0/2/2) */
+        /* @(/1/0/1/2) */
         case Q_ENTRY_SIG: {
             BSP_showState("offline");
             QActive_arm((QActive *)me, OFF_FLASH_TOUT);
             me->flashCtr = 0;
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/2) */
+        /* @(/1/0/1/2) */
         case Q_EXIT_SIG: {
             QActive_disarm((QActive *)me);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
-        /* @(/1/0/2/2/0) */
+        /* @(/1/0/1/2/0) */
         case Q_TIMEOUT_SIG: {
             QActive_arm((QActive *)me, OFF_FLASH_TOUT);
             me->flashCtr ^= 1;
-            /* @(/1/0/2/2/0/0) */
+            /* @(/1/0/1/2/0/0) */
             if ((me->flashCtr & 1) == 0) {
                 BSP_signalCars(CARS_RED);
                 BSP_signalPeds(PEDS_DONT_WALK);
-                return Q_HANDLED();
+                status = Q_HANDLED();
             }
-            /* @(/1/0/2/2/0/1) */
+            /* @(/1/0/1/2/0/1) */
             else {
                 BSP_signalCars(CARS_BLANK);
                 BSP_signalPeds(PEDS_BLANK);
-                return Q_HANDLED();
+                status = Q_HANDLED();
             }
+            break;
         }
-        /* @(/1/0/2/2/1) */
+        /* @(/1/0/1/2/1) */
         case ON_SIG: {
-            return Q_TRAN(&Pelican_operational);
+            status = Q_TRAN(&Pelican_operational);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&QHsm_top);
+            break;
         }
     }
-    return Q_SUPER(&QHsm_top);
+    return status;
 }
 

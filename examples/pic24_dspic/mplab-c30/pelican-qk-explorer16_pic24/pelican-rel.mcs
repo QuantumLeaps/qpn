@@ -2,7 +2,7 @@
 MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
 Version=1.0
 [File000]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\pelican.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\pelican.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -15,7 +15,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File001]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\bsp.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\bsp.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -28,7 +28,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File002]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\main.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\main.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -41,7 +41,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File003]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\ped.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\ped.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -54,7 +54,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File004]
-Location=D:\software\qpn\source\rel\qkn.o
+Location=D:\qp\qpn\source\rel\qkn.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -67,7 +67,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File005]
-Location=D:\software\qpn\source\rel\qepn.o
+Location=D:\qp\qpn\source\rel\qepn.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -80,7 +80,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File006]
-Location=D:\software\qpn\source\rel\qfn.o
+Location=D:\qp\qpn\source\rel\qfn.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -93,7 +93,7 @@ ToolArgsString=-Wall -DNDEBUG -Os
 TraceCmdString=
 DebugOptions=
 [File007]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\pelican-rel.cof
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\pelican-rel.cof
 Folder=Output
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -106,7 +106,7 @@ ToolArgsString=--heap=0 --stack=0x100 -Map="$(BINDIR_)$(TARGETBASE).map" --repor
 TraceCmdString=
 DebugOptions=
 [File008]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\pelican-rel.hex
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_pic24\rel\pelican-rel.hex
 Folder=Output
 DeviceName=PIC24FJ128GA010
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}

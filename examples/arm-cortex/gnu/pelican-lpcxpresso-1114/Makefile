@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: Makefile for QP-nano application, Vanilla, GNU/CodeRed tools
+# Product: Makefile for QP-nano application, LPCExpresso-1114, Vanilla, GNU
 # Last Updated for Version: 4.5.02
-# Date of the Last Update:  Aug 16, 2012
+# Date of the Last Update:  Nov 07, 2012
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -70,11 +70,11 @@ MKDIR := mkdir
 CMSIS_DIR := cmsis
 APP_DIR   := .
 LIB_DIR   :=
-QPN_DIR   := $(subst \,/,$(QPN))
 
 # source directories
-VPATH = $(QPN_DIR)/source \
-	$(APP_DIR) \
+VPATH = $(APP_DIR) \
+	$(QPN)/source \
+	$(QPN)/ports/arm-cortex/qk/gnu \
 	$(CMSIS_DIR) \
 	lpc11xx_lib/src
 
@@ -82,14 +82,13 @@ VPATH = $(QPN_DIR)/source \
 OUTPUT    := pelican
 
 # include directories
-INCLUDES  = -I$(QPN_DIR)/include	\
+INCLUDES  = -I$(QPN)/include	\
 	-I. \
 	-I$(CMSIS_DIR) \
 	-Ilpc11xx_lib/inc
 
 # defines
-DEFINES = -D__REDLIB__ \
-	-D__USE_CMSIS=CMSISv1p30_LPC11xx
+DEFINES = -D__REDLIB__
 
 #-----------------------------------------------------------------------------
 # files
@@ -99,7 +98,7 @@ DEFINES = -D__REDLIB__ \
 ASM_SRCS :=
 
 # C source files
-C_SRCS := startup_LPC11.c \
+C_SRCS := startup_LPC11xx.c \
 	$(wildcard *.c) \
 	qepn.c qfn.c \
 	system_LPC11xx.c \
@@ -118,7 +117,7 @@ LD_SCRIPT := lpc1114.ld
 # build options for various configurations
 #
 
-ARM_CORE = cortex-m0
+ARM_CORE = cortex-m3
 
 ifeq (rel, $(CONF))       # Release configuration ............................
 

@@ -20,7 +20,6 @@
 --- Module:   D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c (C)
 "D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 57 67 Info 717: do ... while(0);
 "D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 88 29 Warning 522: Highest operation, function 'BSP_terminate', lacks side-effects [MISRA 2004 Rule 14.2, required]
-"D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 324 34 Note 960: Violates MISRA 2004 Required Rule 10.1, Implicit conversion changes signedness
 "D:\qp\qpn\examples\arm-cortex\iar\pelican-qk-ev-lm3s811-lint\pelican.c" 394 29 Warning 522: Highest operation, function 'BSP_terminate', lacks side-effects [MISRA 2004 Rule 14.2, required]
  Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: SystemFrequency
 
@@ -79,27 +78,27 @@
 "D:\qp\qpn\include\qfn.h" 307 1 Info 757: global declarator 'QF_init(void)' (line 307, file D:\qp\qpn\include\qfn.h) not referenced
 "D:\qp\qpn\include\qepn.h" 321 1 Info 755: global macro 'Q_IGNORED' (line 321, file D:\qp\qpn\include\qepn.h) not referenced
 "D:\qp\qpn\include\qepn.h" 254 1 Info 755: global macro 'Q_PAR' (line 254, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qassert.h" 195 1 Info 755: global macro 'Q_ENSURE' (line 195, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 202 1 Info 755: global macro 'Q_ENSURE_ID' (line 202, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 192 1 Info 755: global macro 'Q_ENSURE' (line 192, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 199 1 Info 755: global macro 'Q_ENSURE_ID' (line 199, file D:\qp\qpn\include\qassert.h) not referenced
 "D:\qp\qpn\include\qepn.h" 359 1 Info 755: global macro 'Q_UNHANDLED' (line 359, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qassert.h" 116 1 Info 755: global macro 'Q_ASSERT' (line 116, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 129 1 Info 755: global macro 'Q_ASSERT_ID' (line 129, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 90 1 Info 755: global macro 'Q_ASSERT' (line 90, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 103 1 Info 755: global macro 'Q_ASSERT_ID' (line 103, file D:\qp\qpn\include\qassert.h) not referenced
 "D:\qp\qpn\include\qepn.h" 55 1 Info 755: global macro 'QP_VERSION' (line 55, file D:\qp\qpn\include\qepn.h) not referenced
 "D:\qp\qpn\include\qepn.h" 269 1 Info 755: global macro 'QFsm_ctor' (line 269, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qassert.h" 171 1 Info 755: global macro 'Q_ERROR_ID' (line 171, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 209 1 Info 755: global macro 'Q_INVARIANT' (line 209, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 216 1 Info 755: global macro 'Q_INVARIANT_ID' (line 216, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 181 1 Info 755: global macro 'Q_REQUIRE' (line 181, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 188 1 Info 755: global macro 'Q_REQUIRE_ID' (line 188, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 145 1 Info 755: global macro 'Q_ERROR_ID' (line 145, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 206 1 Info 755: global macro 'Q_INVARIANT' (line 206, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 213 1 Info 755: global macro 'Q_INVARIANT_ID' (line 213, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 178 1 Info 755: global macro 'Q_REQUIRE' (line 178, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 185 1 Info 755: global macro 'Q_REQUIRE_ID' (line 185, file D:\qp\qpn\include\qassert.h) not referenced
 "D:\qp\qpn\include\qepn.h" 312 1 Info 755: global macro 'Q_RET_IGNORED' (line 312, file D:\qp\qpn\include\qepn.h) not referenced
 "D:\qp\qpn\include\qepn.h" 351 1 Info 755: global macro 'Q_RET_UNHANDLED' (line 351, file D:\qp\qpn\include\qepn.h) not referenced
 "D:\qp\qpn\include\qfn.h" 440 1 Info 755: global macro 'QF_ROM_ACTIVE_GET_' (line 440, file D:\qp\qpn\include\qfn.h) not referenced
 "D:\qp\qpn\include\qfn.h" 434 1 Info 755: global macro 'QF_ROM_QUEUE_AT_' (line 434, file D:\qp\qpn\include\qfn.h) not referenced
 "D:\qp\qpn\include\qepn.h" 398 1 Info 755: global macro 'QHsm_state' (line 398, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qassert.h" 106 1 Info 755: global macro 'Q_DEFINE_THIS_MODULE' (line 106, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 80 1 Info 755: global macro 'Q_DEFINE_THIS_MODULE' (line 80, file D:\qp\qpn\include\qassert.h) not referenced
 "D:\qp\qpn\include\qfn.h" 473 1 Info 755: global macro 'QF_tick' (line 473, file D:\qp\qpn\include\qfn.h) not referenced
-"D:\qp\qpn\include\qassert.h" 140 1 Info 755: global macro 'Q_ALLEGE' (line 140, file D:\qp\qpn\include\qassert.h) not referenced
-"D:\qp\qpn\include\qassert.h" 153 1 Info 755: global macro 'Q_ALLEGE_ID' (line 153, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 114 1 Info 755: global macro 'Q_ALLEGE' (line 114, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 127 1 Info 755: global macro 'Q_ALLEGE_ID' (line 127, file D:\qp\qpn\include\qassert.h) not referenced
 "D:\qp\qpn\include\qepn.h" 138 1 Info 755: global macro 'Q_UINT2PTR_CAST' (line 138, file D:\qp\qpn\include\qepn.h) not referenced
 "D:\qp\qpn\include\qkn.h" 99 1 Info 755: global macro 'QK_SCHEDULE_' (line 99, file D:\qp\qpn\include\qkn.h) not referenced
 "D:\qp\qpn\include\qepn.h" 190 1 Info 768: global struct member 'QEvtTag::par' (line 190, file D:\qp\qpn\include\qepn.h) not referenced
@@ -132,5 +131,5 @@ Count   Type    Number  Text
 1       Info    793     ANSI/ISO limit of ___ '___' exceeded -- processing is unaffected
 2       Note    923     cast from ___ to ___
 2       Note    929     cast from ___ to ___
-6       Note    960     Violates MISRA 2004 Required Rule ___, ___
+5       Note    960     Violates MISRA 2004 Required Rule ___, ___
 1       Note    974     Worst case function for stack usage: ___ See +stack for a full report.

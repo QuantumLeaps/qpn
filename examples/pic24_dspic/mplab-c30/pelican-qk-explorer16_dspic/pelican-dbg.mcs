@@ -2,7 +2,7 @@
 MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
 Version=1.0
 [File000]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\bsp.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\bsp.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -15,7 +15,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File001]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\main.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\main.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -28,7 +28,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File002]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\ped.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\ped.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -41,7 +41,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File003]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\pelican.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\pelican.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -54,7 +54,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File004]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\qfn.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\qfn.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -67,7 +67,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File005]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\qepn.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\qepn.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -80,7 +80,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File006]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\qkn.o
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\qkn.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -93,7 +93,7 @@ ToolArgsString=-g -Wall -O1
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD2=1
 [File007]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\pelican-dbg.cof
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\pelican-dbg.cof
 Folder=Output
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -106,7 +106,7 @@ ToolArgsString=--heap=0 --stack=0x100 -Map="$(BINDIR_)$(TARGETBASE).map" --repor
 TraceCmdString=
 DebugOptions=--defsym=__MPLAB_DEBUG=1 --defsym=__MPLAB_DEBUGGER_ICD2=1 --defsym=__ICD2RAM=1
 [File008]
-Location=D:\software\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\pelican-dbg.hex
+Location=D:\qp\qpn\examples\pic24_dspic\mplab-c30\pelican-qk-explorer16_dspic\dbg\pelican-dbg.hex
 Folder=Output
 DeviceName=dsPIC33FJ256GP710
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}

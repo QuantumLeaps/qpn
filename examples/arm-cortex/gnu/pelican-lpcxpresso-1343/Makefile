@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: Makefile for QP-nano application, LPCExpresso-1343, Vanilla, GNU
 # Last Updated for Version: 4.5.02
-# Date of the Last Update:  Aug 16, 2012
+# Date of the Last Update:  Nov 07, 2012
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -99,7 +99,7 @@ DEFINES = -D__REDLIB__ \
 ASM_SRCS :=
 
 # C source files
-C_SRCS := startup_LPC13.c \
+C_SRCS := startup_LPC13xx.c \
 	$(wildcard *.c) \
 	qepn.c qfn.c \
 	system_LPC13xx.c \

@@ -37,22 +37,22 @@
 #include "pelican.h"                               /* application interface */
 
 /*..........................................................................*/
-static QEvt l_pelicanQ[3];
+static QEvt  l_pelicanQueue[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
 QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
-    { QF_ACTIVE_CAST(0),           (QEvt *)0,   (uint8_t)0                 },
-    { QF_ACTIVE_CAST(&AO_Pelican), l_pelicanQ,  (uint8_t)Q_DIM(l_pelicanQ) }
+    { (QActive *)0,           (QEvt *)0,      0U                    },
+    { (QActive *)&AO_Pelican, l_pelicanQueue, Q_DIM(l_pelicanQueue) }
 };
 
 /* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */
-Q_ASSERT_COMPILE((uint8_t)QF_MAX_ACTIVE == (Q_DIM(QF_active) - 1U));
+Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
-int_t main (void) {
+int main (void) {
     Pelican_ctor();                          /* instantiate the  Pelican AO */
 
     BSP_init();                                     /* initialize the board */
 
-    return (int_t)QF_run();                  /* transfer control to QF-nano */
+    return QF_run();                         /* transfer control to QF-nano */
 }

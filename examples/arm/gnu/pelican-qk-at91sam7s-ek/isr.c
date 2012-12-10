@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QDK-nano_ARM-GNU_AT91SAM7S-EK with QK
-* Last Updated for Version: 4.4.00
-* Date of the Last Update:  Mar 01, 2012
+* Last Updated for Version: 4.5.02
+* Date of the Last Update:  Aug 16, 2012
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -9,20 +9,27 @@
 *
 * Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
 *
-* This software may be distributed and modified under the terms of the GNU
-* General Public License version 2 (GPL) as published by the Free Software
-* Foundation and appearing in the file GPL.TXT included in the packaging of
-* this file. Please note that GPL Section 2[b] requires that all works based
-* on this software must also be made publicly available under the terms of
-* the GPL ("Copyleft").
+* This program is open source software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as published
+* by the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
 *
-* Alternatively, this software may be distributed and modified under the
+* Alternatively, this program may be distributed and modified under the
 * terms of Quantum Leaps commercial licenses, which expressly supersede
-* the GPL and are specifically designed for licensees interested in
-* retaining the proprietary status of their code.
+* the GNU General Public License and are specifically designed for
+* licensees interested in retaining the proprietary status of their code.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web site:  http://www.quantum-leaps.com
+* Quantum Leaps Web sites: http://www.quantum-leaps.com
+*                          http://www.state-machine.com
 * e-mail:                  info@quantum-leaps.com
 *****************************************************************************/
 #include "qpn_port.h"
@@ -34,9 +41,49 @@ typedef void (*IntVector)(void);           /* IntVector pointer-to-function */
 /*..........................................................................*/
 __attribute__ ((section (".text.fastcode")))
 static void ISR_tick(void) {
-    uint32_t volatile dummy = AT91C_BASE_PITC->PITC_PIVR;/*clear int source */
-    (void)dummy;         /* avoid compiler warning "dummy" set but not used */
-    QF_tick();                             /* process the system clock tick */
+    static uint32_t btn_debounced  = 0U;
+    static uint8_t  debounce_state = 0U;
+    uint32_t tmp;
+
+    tmp = AT91C_BASE_PITC->PITC_PIVR;             /* clear interrupt source */
+    QF_tickISR();                        /* process all QF-nano time events */
+
+    tmp = AT91C_BASE_PIOA->PIO_PDSR & BSP_pb[0];     /* read the push btn 0 */
+    switch (debounce_state) {
+        case 0:
+            if (tmp != btn_debounced) {
+                debounce_state = 1U;        /* transition to the next state */
+            }
+            break;
+        case 1:
+            if (tmp != btn_debounced) {
+                debounce_state = 2U;        /* transition to the next state */
+            }
+            else {
+                debounce_state = 0U;          /* transition back to state 0 */
+            }
+            break;
+        case 2:
+            if (tmp != btn_debounced) {
+                debounce_state = 3U;        /* transition to the next state */
+            }
+            else {
+                debounce_state = 0U;          /* transition back to state 0 */
+            }
+            break;
+        case 3:
+            if (tmp != btn_debounced) {
+                btn_debounced = tmp;     /* save the debounced button value */
+
+                if (tmp == 0U) {                /* is the button depressed? */
+                    QActive_post((QActive *)&AO_Pelican, PEDS_WAITING_SIG, 0U);
+                }
+                else {
+                }
+            }
+            debounce_state = 0U;              /* transition back to state 0 */
+            break;
+    }
 }
 /*..........................................................................*/
 static void ISR_spur(void) {

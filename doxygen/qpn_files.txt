@@ -2,179 +2,148 @@
 \page files_page Directories and Files in the QP-nano Distribution
 
 The following annotated directory tree lists the most important directories
-and files provided in the standard QP-nano distribution. The explanation
-section immediately following the directory tree explains the structure in
-more detail.
-
+and files provided in the standard QP-nano distribution.
 \code
- (1) qpn\                 - QP-nano root directory
-       |
- (2)   +-qpn.chm          - "QP-nano Reference Manual" in CHM Help format
-       |
- (3)   +-doxygen\         - QP documentation generated with Doxygen
-       | +-html\          - "QP-nano Reference Manual" in HTML format
- (4)   | | +-index.html   - The HTML index page for the "QP-nano Reference Manual"
-       | | +- . . .
-       | +-Doxyfile       - Doxygen configuration file to generate the Manual
-       | +- . . .
-       |
- (5)   +-examples\        - QP-nano examples
- (6)   | +-80x86\         - Examples for the 80x86 processor
- (7)   | | +-watcom\      - Examples with the Open Watcom compiler
- (8)   | | | +-dpp\       - Dining Philosopher Problem (DPP) example (non-preemptive)
- (9)   | | | | +-dbg\     - Debug build
-       | | | | | +-dpp.exe    - Debug executable
-(10)   | | | | +-make.bat     - batch script to build the application
-(11)   | | | | +-qpn_port.h   - QP-nano port for this specific application  
-       | | | | +- . . .
-       | | | |
-(12)   | | | +-dpp-qk\     - DPP example with the preemptive QK-nano kernel
-       | | | | | +-dpp-qk.exe - Debug executable
-(13)   | | | | +-make.bat     - batch script to build the Debug   version
-       | | | | +-qpn_port.h   - QP-nano port for this specific application  
-       | | | | +- . . .
-       | | | |
-       | | | +-game\       - "Fly 'n' Shoot" game example (non-preemptive kernel)
-       | | | | +-dbg\      - Debug build
-       | | | | | +-GAME.EXE   - Debug executable
-       | | | | +-make.bat  - batch script to build the Debug version
-       | | | | +-game.h    - The application header file
-       | | | | +-bsp.c     - BSP for the application
-       | | | | +-main.c    - main() function
-       | | | | +-qpn_port.h   - QP-nano port for this specific application  
-       | | | | +- . . .
-       | | | |
-       | | | +-game-qk\    - "Fly 'n' Shoot" game with the preemptive QK-nano kernel
-       | | | | +- . . .
-       | | | |
-       | | | +-pelican\    - PELICAN crossing example (non-preemptive kernel)
-       | | | | +- . . .
-       | | | |
-       | | | +-pelican-qk\ - PELICAN crossing with the preemptive QK-nano kernel
-       | | | | +- . . .
-       | | | |
-(14)   | | | +-comp\       - "Orthogonal Component" pattern (PSiCC2 Chapter 5)
-       | | | +-defer\      - "Deferred Event" pattern (PSiCC2 Chapter 5)
-       | | | +-history\    - "Transition to History" pattern (PSiCC2 Chapter 5)
-       | | | +-hook\       - "Ultimate Hook" pattern (Chapter 5)
-       | | | +-reminder\   - "Reminder" pattern (PSiCC2 Chapter 5)
-       | | |
-       | |
-(15)   | +-arm-cortex\     - Examples for ARM Cortex processor
-       | | +-iar\          - Examples with the IAR compiler
-       | | | +-game-ev-lm3s811\       - "Fly 'n' Shoot" example for EV-LM3S811 board
-       | | | +-game-qk-ev-lm3s811\    - "Fly 'n' Shoot" example with QK-nano
-       | | | +-pelican-ev-lm3s811\    - PELICAN example for EV-LM3S811 board
-       | | | +-pelican-qk-ev-lm3s811\ - PELICAN example with QK-nano
-       | | | +-. . .       - Other examples for ARM Cortex
-       | | |
-       | | +-gnu\          - Examples with the GNU compiler (Code Sourcery G++)
-       | | | +-game-ev-lm3s811\       - "Fly 'n' Shoot" example for EV-LM3S811 board
-       | | | +-game-qk-ev-lm3s811\    - "Fly 'n' Shoot" example with QK-nano
-       | | | +-pelican-ev-lm3s811\    - PELICAN example for EV-LM3S811 board
-       | | | +-pelican-qk-ev-lm3s811\ - PELICAN example with QK-nano
-       | | | +-. . .       - Other examples for ARM Cortex
-       | |
-(16)   | +-msp430\         - Examples for MSP430 processor
-       | | +-iar\          - Examples with the IAR compiler
-       | | | +-bomb-eZ430\       - Time Bomb example for eZ430 board
-       | | | +-bomb-qk-eZ430\    - Time Bomb example with QK-nano
-       | | | +-game-eZ430\       - "Fly 'n' Shoot" example for eZ430 board
-       | | | +-game-qk-eZ430\    - "Fly 'n' Shoot" example with QK-nano
-       | | | +-pelican-eZ430\    - PELICAN example for eZ430 board
-       | | | +-pelican-qk-eZ430\ - PELICAN example with QK-nano
-       | | | +-. . .      - Other examples for MSP430
-       | |
-       | +-. . .          - Examples for other CPUs and compilers
-       |
-(17)   +-include\         - QP-nano platform-independent header files
-       | +-qassert.h      - QP-nano assertions
-       | +-qepn.h         - QEP-nano platform-independent interface
-       | +-qfn.h          - QF-nano platform-independent interface
-       | +-qkn.h          - QK-nano platform-independent interface
-       |
-(18)   +-source\          - QP-nano platform-independent source code (*.c files)
-       | +-qepn.c         - QEP-nano platform-independent source code
-       | +-qfn.c          - QF-nano  platform-independent source code
-       | +-qkn.c          - QK-nano  platform-independent source code
-       | | +- . . .
-       |
+qpn\                 - QP-nano root directory
+  |
+  +-qpn.chm          - "QP-nano Reference Manual" in CHM Help format
+  |
+  +-doxygen\         - QP documentation generated with Doxygen
+  | +-html\          - "QP-nano Reference Manual" in HTML format
+  | | +-index.html   - The HTML index page for the "QP-nano Reference Manual"
+  | | +- . . .
+  | +-Doxyfile       - Doxygen configuration file to generate the Manual
+  | +- . . .
+  |
+  +-examples\        - QP-nano examples
+  | | +-posix\       - Examples for POSIX (Linux, BSD, etc.)
+  | | | +-gnu\       - Examples with the GNU compiler
+  | | | | +-dpp\     - Dining Philosopher Problem (DPP) example for Linux
+  | | | | | +-dbg\   - Debug build
+  | | | | | +-rel\     - Release build
+  | | | | | +-spy\     - Spy build (with software instrumentation)
+  | | | | | +-dpp.qm   - QM model file for this project
+  | | | | | +-Makefile - GNU Makefile to build the DPP application
+  | | | | | +-. . .
+  | | |
+  | | +-win32\       - Examples for Win32 (Windows)
+  | | | +-mingw\     - Examples for the MinGW (GNU) compiler
+  | | | | +-dpp\     - Dining Philosopher Problem (DPP) example for Linux
+  | | | | | +-dbg\   - Debug build
+  | | | | | | +-dpp.exe - DPP executable (Debug configuration)
+  | | | | | +-rel\      - Release build
+  | | | | | +-spy\      - Spy build (with software tracing)
+  | | | | | +-dpp.qm    - QM model file for this project
+  | | | | | +-Makefile  - GNU Makefile to build the DPP application
+  | | | | | +-. . .
+  | | | | +-game-gui\   - "Fly 'n' Shoot" game example (GUI)
+  | | | |
+  | | | +-vc\        - Examples for the Visual C++ compiler
+  | | | | +-dpp\     - Dining Philosopher Problem (DPP) example (console)
+  | | | | | +-Debug\    - Debug build
+  | | | | | | +-dpp.exe - DPP executable (Debug configuration)
+  | | | | | +-Release\  - Release build
+  | | | | | +-Spy\      - Spy build (with software instrumentation)
+  | | | | | +-dpp.qm    - QM model file for this project
+  | | | | | +-dpp.sln     - Visual Studio solution file
+  | | | | | +-dpp.vcxproj - Visual Studio project file
+  | | | | | +-. . .
+  | | | | +-dpp-gui\    - Dining Philosopher Problem (DPP) example (GUI)
+  | | | | +-game-gui\   - "Fly 'n' Shoot" game example (GUI)
+  | |
+  | +-80x86\         - Examples for the 80x86 processor
+  | | +-watcom\      - Examples with the Open Watcom compiler
+  | | | +-dpp\       - Dining Philosopher Problem (DPP) example (non-preemptive)
+  | | | | +-dbg\     - Debug build
+  | | | | | +-dpp.exe    - Debug executable
+  | | | | +-make.bat     - batch script to build the application
+  | | | | +-qpn_port.h   - QP-nano port for this specific application  
+  | | | | +- . . .
+  | | | |
+  | | | +-dpp-qk\     - DPP example with the preemptive QK-nano kernel
+  | | | | | +-dpp-qk.exe - Debug executable
+  | | | | +-make.bat     - batch script to build the Debug   version
+  | | | | +-qpn_port.h   - QP-nano port for this specific application  
+  | | | | +- . . .
+  | | | |
+  | | | +-game\       - "Fly 'n' Shoot" game example (non-preemptive kernel)
+  | | | | +-dbg\      - Debug build
+  | | | | | +-GAME.EXE   - Debug executable
+  | | | | +-make.bat  - batch script to build the Debug version
+  | | | | +-game.h    - The application header file
+  | | | | +-bsp.c     - BSP for the application
+  | | | | +-main.c    - main() function
+  | | | | +-qpn_port.h   - QP-nano port for this specific application  
+  | | | | +- . . .
+  | | | |
+  | | | +-game-qk\    - "Fly 'n' Shoot" game with the preemptive QK-nano kernel
+  | | | | +- . . .
+  | | | |
+  | | | +-pelican\    - PELICAN crossing example (non-preemptive kernel)
+  | | | | +- . . .
+  | | | |
+  | | | +-pelican-qk\ - PELICAN crossing with the preemptive QK-nano kernel
+  | | | | +- . . .
+  | | | |
+  | | | +-comp\       - "Orthogonal Component" pattern (PSiCC2 Chapter 5)
+  | | | +-defer\      - "Deferred Event" pattern (PSiCC2 Chapter 5)
+  | | | +-history\    - "Transition to History" pattern (PSiCC2 Chapter 5)
+  | | | +-hook\       - "Ultimate Hook" pattern (Chapter 5)
+  | | | +-reminder\   - "Reminder" pattern (PSiCC2 Chapter 5)
+  | | |
+  | |
+  | +-arm-cortex\     - Examples for ARM Cortex processor
+  | | +-iar\          - Examples with the IAR compiler
+  | | | +-game-ev-lm3s811\       - "Fly 'n' Shoot" example for EV-LM3S811 board
+  | | | +-game-qk-ev-lm3s811\    - "Fly 'n' Shoot" example with QK-nano
+  | | | +-pelican-ev-lm3s811\    - PELICAN example for EV-LM3S811 board
+  | | | +-pelican-qk-ev-lm3s811\ - PELICAN example with QK-nano
+  | | | +-. . .       - Other examples for ARM Cortex
+  | | |
+  | | +-gnu\          - Examples with the GNU compiler (Code Sourcery G++)
+  | | | +-game-ev-lm3s811\       - "Fly 'n' Shoot" example for EV-LM3S811 board
+  | | | +-game-qk-ev-lm3s811\    - "Fly 'n' Shoot" example with QK-nano
+  | | | +-pelican-ev-lm3s811\    - PELICAN example for EV-LM3S811 board
+  | | | +-pelican-qk-ev-lm3s811\ - PELICAN example with QK-nano
+  | | | +-. . .       - Other examples for ARM Cortex
+  | |
+  | +-msp430\         - Examples for MSP430 processor
+  | | +-iar\          - Examples with the IAR compiler
+  | | | +-bomb-eZ430\       - Time Bomb example for eZ430 board
+  | | | +-bomb-qk-eZ430\    - Time Bomb example with QK-nano
+  | | | +-game-eZ430\       - "Fly 'n' Shoot" example for eZ430 board
+  | | | +-game-qk-eZ430\    - "Fly 'n' Shoot" example with QK-nano
+  | | | +-pelican-eZ430\    - PELICAN example for eZ430 board
+  | | | +-pelican-qk-eZ430\ - PELICAN example with QK-nano
+  | | | +-. . .      - Other examples for MSP430
+  | |
+  | +-. . .          - Examples for other CPUs and compilers
+  |
+  +-include\         - QP-nano platform-independent header files
+  | +-qassert.h      - QP-nano assertions
+  | +-qepn.h         - QEP-nano platform-independent interface
+  | +-qfn.h          - QF-nano platform-independent interface
+  | +-qkn.h          - QK-nano platform-independent interface
+  |
+  +-source\          - QP-nano platform-independent source code (*.c files)
+  | +-qepn.c         - QEP-nano platform-independent source code
+  | +-qfn.c          - QF-nano  platform-independent source code
+  | +-qkn.c          - QK-nano  platform-independent source code
+  | | +- . . .
+  |
+  +-ports\           - Platform-specific QP-nano ports and emulations
+  | +-posix\         - Ports to the POSIX operating systems (Linux, BSD, etc.)
+  | | +-gnu\         - Ports with the GNU compiler
+  | | | +-. . .
+  | |
+  | +-win32\         - Ports to the POSIX operating systems (Linux, BSD, etc.)
+  | | +-mingw\       - Port with the MinGW (GNU) compiler
+  | | | +-. . .
+  | | |
+  | | +-vc\          - Port with the Visual C++ compiler
+  | |
 \endcode
 
-\li (1) QP-nano resides in the separate directory branch, called henceforth
-QP-nano Root Directory. The essential element of the design is that the QP
-Root Directory can be "plugged into" any branch of a hierarchical file system
-and you can move the QP-nano Root Directory around, or even have multiple
-versions of the QP-nano Root Directories. The ability to relocate the QP-nano
-Root Directory means that only relative paths should be used in the Makefiles,
-build scripts, workspaces, or project files.
-
-\li (2) The file qpc.chm contains the "QP-nano Reference Manual" in CHM
-format.
-
-\li (3) The \c doxygen\\ directory contains this "QP-nano Reference Manual"
-generated with the Doxygen utility.
-
-\li (4) The \c html\\ subdirectory contains this HTML verions of the "QP-nano
-Reference Manual". In particular, the file index.html is the index page of the
-Manual.
-
-\li (5) The \c examples\\ directory contains the application examples that are
-included in the standard QP-nano distribution. The structure of the \c
-examples\\ is the most complicated because of the large number of choices
-available, such as CPU architectures, compilers, and two choices of kernels
-(non-preemptive and preemptive).
-
-\li (6) The CPU architecture is placed as the first level of nesting within the
-\c examples\\ directory. Examples of CPU architectures are: 80x86, ARM, ARM
-Cortex, AVR, MSP430, M16C, etc. Please note that a separate directory is needed
-whenever the CPU architecture is significantly different. For example, even
-though the traditional ARM and the new ARM Cortex are related, the
-differences are significant enough to require a separate directory branch for
-ARM and ARM Cortex.
-
-\li (7) The second level of nesting, under the CPU architecture is the
-compiler used. For example, the 80x86 port can be compiled with the Open Watcom
-or perhaps with Borland C++. Similarly, the port to ARM Cortex with QK
-kernel can be compiled with the IAR, RealView, or GNU compilers.
-
-\li (8) Finally, the example application is located in its own directory. For
-instance, the \c dpp\\ directory contains the "Dining Philosopher Problem"
-application example for this particular CPU/Compiler combination.
-
-\li (9) The \c dpp\\dbg\\ subdirectory contains the object files and the
-executable for the Debug configuration.
-
-\li (10) \c make.bat is the batch script for building the application.
-
-\li (11) THe \c qpn_port.h header file contains platform-specific adaptation
-(QP-nano) port for this application. 
-
-\note Every QP-nano application must provide its own specific \c qpn_port.h
-header file.
-
-\li (12) The \c dpp-qk directory contains the of the application with the
-QK-nano preemptive kernel
-
-\li (13) \c make.bat is the batch script for building the application with
-QK-nano.
-
-\li (14) All five state designed patterns described in Chapter 5 of
-\ref PSiCC2 (PSiCC2) are provided.
-
-\li (15) The directory \c arm-cortex\\ contains QP examples for ARM Cortex.
-
-\li (16) The directory \c msp430\\ contains QP examples for Texas Instruments
-MSP430.
-
-\li (17) The directory \c include\\ contains platform-independent header files
-for all QP-nano components. You need to point your C compiler to include files
-from this directory.
-
-\li (18) The directory \c source\\ contains platform-independent source files
-for all QP-nano components.
-
-
 \image html logo_ql_TM.jpg
-Copyright &copy; 2002-2011 Quantum Leaps, LLC. All Rights Reserved.
+Copyright &copy; 2002-2012 Quantum Leaps, LLC. All Rights Reserved.
 */
