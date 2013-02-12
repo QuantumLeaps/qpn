@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 18, 2012
+* Last Updated for Version: 4.5.03
+* Date of the Last Update:  Jan 16, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -105,7 +105,7 @@ extern uint8_t volatile QK_currPrio_;              /**< current QK priority */
 
 /** \brief QK idle callback (customized in BSPs for QK)
 *
-* QK_onIdle() is called continously by the QK-nano idle loop. This callback
+* QK_onIdle() is called continuously by the QK-nano idle loop. This callback
 * gives the application an opportunity to enter a power-saving CPU mode,
 * or perform some other idle processing.
 *

@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, QK-nano kernel
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 05, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -50,7 +50,11 @@
                                   /* QK-nano ISR entry and exit, see NOTE02 */
 #define QK_ISR_ENTRY()   ((void)0)
 #define QK_ISR_EXIT()    \
-    (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000) \
+    (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U) \
+
+#ifndef ARM_ARCH_V6M                                     /* not Cortex-M0 ? */
+    #define QF_LOG2(n_) ((uint8_t)(32U - __builtin_clz(n_)))
+#endif
 
 #include <stdint.h>       /* GNU provides C99-standard exact-width integers */
 

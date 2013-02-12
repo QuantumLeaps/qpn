@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 18, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 04, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -58,6 +58,8 @@ uint8_t volatile QK_intNest_;              /* start with nesting level of 0 */
 uint8_t volatile QK_ceilingPrio_;            /* ceiling priority of a mutex */
 #endif
 
+static void initialize(void);                /* prototype required by MISRA */
+
 /*..........................................................................*/
 static void initialize(void) {
     uint8_t p;
@@ -96,13 +98,6 @@ int16_t QF_run(void) {
     }
     return (int16_t)0; /* this unreachable return is to make compiler happy */
 }
-/* Local-scope objects -----------------------------------------------------*/
-static uint8_t const Q_ROM Q_ROM_VAR l_log2Lkup[] = {
-    (uint8_t)0, (uint8_t)1, (uint8_t)2, (uint8_t)2,
-    (uint8_t)3, (uint8_t)3, (uint8_t)3, (uint8_t)3,
-    (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
-    (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4
-};
 
 /*..........................................................................*/
 /* NOTE: QK schePrio_() is entered and exited with interrupts LOCKED */
@@ -110,15 +105,7 @@ uint8_t QK_schedPrio_(void) Q_REENTRANT {
     uint8_t p;               /* highest-priority active object ready to run */
 
           /* determine the priority of the highest-priority AO ready to run */
-#if (QF_MAX_ACTIVE > 4)
-    if ((QF_readySet_ & (uint8_t)0xF0) != (uint8_t)0) { /*upper nibble used?*/
-        p = (uint8_t)(Q_ROM_BYTE(l_log2Lkup[QF_readySet_ >> 4]) + (uint8_t)4);
-    }
-    else                            /* upper nibble of QF_readySet_ is zero */
-#endif
-    {
-        p = Q_ROM_BYTE(l_log2Lkup[QF_readySet_]);
-    }
+    p = QF_LOG2(QF_readySet_);
 
 #ifdef QK_MUTEX                     /* QK priority-ceiling mutexes allowed? */
     if ((p <= QK_currPrio_) || (p <= QK_ceilingPrio_)) {
@@ -175,16 +162,7 @@ void QK_sched_(uint8_t p) Q_REENTRANT {
         QF_INT_DISABLE();
 
                           /* determine the highest-priority AO ready to run */
-#if (QF_MAX_ACTIVE > 4)
-        if ((QF_readySet_ & (uint8_t)0xF0) != (uint8_t)0) { /* nibble used? */
-            p = (uint8_t)(Q_ROM_BYTE(l_log2Lkup[QF_readySet_ >> 4])
-                          + (uint8_t)4);
-        }
-        else                        /* upper nibble of QF_readySet_ is zero */
-#endif
-        {
-            p = Q_ROM_BYTE(l_log2Lkup[QF_readySet_]);
-        }
+        p = QF_LOG2(QF_readySet_);
 
 #ifdef QK_MUTEX                     /* QK priority-ceiling mutexes allowed? */
     } while ((p > pin) && (p > QK_ceilingPrio_));

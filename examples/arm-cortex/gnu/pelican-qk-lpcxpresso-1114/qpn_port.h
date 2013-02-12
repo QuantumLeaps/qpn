@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, QK-nano kernel, GNU compiler
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Nov 07, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 05, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -41,21 +41,23 @@
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
 #define QF_MAX_ACTIVE           2
 
-                               /* interrupt locking policy for GNU compiler */
+                                 /* interrupt locking policy for task level */
 #define QF_INT_DISABLE()        __asm volatile ("cpsid i")
 #define QF_INT_ENABLE()         __asm volatile ("cpsie i")
 
-                      /* interrupt locking policy for ISR level, see NOTE01 */
+                                  /* interrupt locking policy for ISR level */
 #define QF_ISR_NEST
                                   /* QK-nano ISR entry and exit, see NOTE02 */
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04U) = 0x10000000U)
+#define QK_ISR_EXIT()    \
+    (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U) \
 
-#include <stdint.h>  /* standard exact-width integer types supported by GNU */
+#include <stdint.h>       /* GNU provides C99-standard exact-width integers */
 
 #include "qepn.h"         /* QEP-nano platform-independent public interface */
 #include "qfn.h"           /* QF-nano platform-independent public interface */
 #include "qkn.h"           /* QK-nano platform-independent public interface */
+
 
 /*****************************************************************************
 * NOTE01:

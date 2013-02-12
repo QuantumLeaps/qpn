@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="2.2.01">
+<model version="2.2.03">
  <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing example</documentation>
  <framework name="qpn"/>
  <package name="components" stereotype="0x02">
@@ -261,12 +261,12 @@ extern struct PelicanTag AO_Pelican;
 
 /*Q_DEFINE_THIS_FILE*/
 
-#define CARS_GREEN_MIN_TOUT (QTimeEvtCtr)(BSP_TICKS_PER_SEC * 8U)
-#define CARS_YELLOW_TOUT    (QTimeEvtCtr)(BSP_TICKS_PER_SEC * 3U)
-#define PEDS_WALK_TOUT      (QTimeEvtCtr)(BSP_TICKS_PER_SEC * 3U)
-#define PEDS_FLASH_TOUT     (QTimeEvtCtr)(BSP_TICKS_PER_SEC / 5U)
-#define PEDS_FLASH_NUM      (uint8_t)(5U * 2U)
-#define OFF_FLASH_TOUT      (QTimeEvtCtr)(BSP_TICKS_PER_SEC / 2U)
+#define CARS_GREEN_MIN_TOUT ((QTimeEvtCtr)(BSP_TICKS_PER_SEC * 8U))
+#define CARS_YELLOW_TOUT    ((QTimeEvtCtr)(BSP_TICKS_PER_SEC * 3U))
+#define PEDS_WALK_TOUT      ((QTimeEvtCtr)(BSP_TICKS_PER_SEC * 3U))
+#define PEDS_FLASH_TOUT     ((QTimeEvtCtr)(BSP_TICKS_PER_SEC / 5U))
+#define PEDS_FLASH_NUM      ((uint8_t)(5U * 2U))
+#define OFF_FLASH_TOUT      ((QTimeEvtCtr)(BSP_TICKS_PER_SEC / 2U))
 
 /* Pelican class declaration -----------------------------------------------*/
 $declare(components::Pelican)

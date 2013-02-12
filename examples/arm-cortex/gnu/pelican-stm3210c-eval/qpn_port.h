@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, Vainlla kernel, GNU compiler
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 05, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -47,6 +47,10 @@
 
                       /* interrupt locking policy for ISR level, see NOTE01 */
 #define QF_ISR_NEST
+
+#ifndef ARM_ARCH_V6M                                     /* not Cortex-M0 ? */
+    #define QF_LOG2(n_) ((uint8_t)(32U - __builtin_clz(n_)))
+#endif
 
 #include <stdint.h>  /* standard exact-width integer types supported by GNU */
 

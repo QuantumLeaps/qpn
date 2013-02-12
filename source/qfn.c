@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Jun 28, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 04, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -49,6 +49,76 @@ uint8_t volatile QF_readySet_;                      /* ready-set of QF-nano */
 uint8_t volatile QF_timerSet_;                      /* timer-set of QF-nano */
 #endif
 
+#ifdef QF_LOG2LKUP
+uint8_t const Q_ROM Q_ROM_VAR QF_log2Lkup[256] = {
+    (uint8_t)0, (uint8_t)1, (uint8_t)2, (uint8_t)2,
+    (uint8_t)3, (uint8_t)3, (uint8_t)3, (uint8_t)3,
+    (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
+    (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
+    (uint8_t)5, (uint8_t)5, (uint8_t)5, (uint8_t)5,
+    (uint8_t)5, (uint8_t)5, (uint8_t)5, (uint8_t)5,
+    (uint8_t)5, (uint8_t)5, (uint8_t)5, (uint8_t)5,
+    (uint8_t)5, (uint8_t)5, (uint8_t)5, (uint8_t)5,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)6, (uint8_t)6, (uint8_t)6, (uint8_t)6,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)7, (uint8_t)7, (uint8_t)7, (uint8_t)7,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8,
+    (uint8_t)8, (uint8_t)8, (uint8_t)8, (uint8_t)8
+};
+#endif                                                           /* QF_LOG2 */
+
+
 /* local objects -----------------------------------------------------------*/
 static uint8_t const Q_ROM Q_ROM_VAR l_pow2Lkup[] = {
     (uint8_t)0x00,
@@ -56,11 +126,13 @@ static uint8_t const Q_ROM Q_ROM_VAR l_pow2Lkup[] = {
     (uint8_t)0x10, (uint8_t)0x20, (uint8_t)0x40, (uint8_t)0x80
 };
 
+#if (defined Q_TIMERSET) || (!(defined QK_PREEMPTIVE))
 static uint8_t const Q_ROM Q_ROM_VAR l_invPow2Lkup[] = {
     (uint8_t)0xFF,
     (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
     (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
 };
+#endif                  /* (defined Q_TIMERSET) && !(defined QK_PREEMPTIVE) */
 
 /*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
@@ -169,9 +241,9 @@ void QF_tickISR(void) {
     } while (p != (uint8_t)0);
 }
 /*..........................................................................*/
-void QActive_arm(QActive * const me, QTimeEvtCtr const tout) {
+void QActive_arm(QActive * const me, QTimeEvtCtr const ticks) {
     QF_INT_DISABLE();
-    me->tickCtr = tout;
+    me->tickCtr = ticks;
 #ifdef Q_TIMERSET
     QF_timerSet_ |= Q_ROM_BYTE(l_pow2Lkup[me->prio]);        /* set the bit */
 #endif
@@ -192,15 +264,8 @@ void QActive_disarm(QActive * const me) {
 #ifndef QK_PREEMPTIVE
 
 int16_t QF_run(void) {
-    static uint8_t const Q_ROM Q_ROM_VAR log2Lkup[] = {
-        (uint8_t)0, (uint8_t)1, (uint8_t)2, (uint8_t)2,
-        (uint8_t)3, (uint8_t)3, (uint8_t)3, (uint8_t)3,
-        (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
-        (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4
-    };
     uint8_t p;
     QActive *a;
-
                          /* set priorities all registered active objects... */
     for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
@@ -224,16 +289,7 @@ int16_t QF_run(void) {
         if (QF_readySet_ != (uint8_t)0) {
             QActiveCB const Q_ROM *acb;
 
-#if (QF_MAX_ACTIVE > 4)
-            if ((QF_readySet_ & 0xF0) != 0U) {        /* upper nibble used? */
-                p = (uint8_t)(Q_ROM_BYTE(log2Lkup[QF_readySet_ >> 4])
-                              + (uint8_t)4);
-            }
-            else                    /* upper nibble of QF_readySet_ is zero */
-#endif
-            {
-                p = Q_ROM_BYTE(log2Lkup[QF_readySet_]);
-            }
+            p = QF_LOG2(QF_readySet_);
             acb = &QF_active[p];
             a = QF_ROM_ACTIVE_GET_(p);
             Q_ASSERT(a->nUsed > (uint8_t)0);/*some events must be available */
@@ -270,6 +326,6 @@ int16_t QF_run(void) {
 * NOTE01:
 * QF_onIdle() must be called with interrupts disabled, because the
 * determination of the idle condition (no events in the queues) can be
-* changed by any interrupt. The QF_onIdle() MUST enable interrups internally,
+* changed by any interrupt. The QF_onIdle() MUST enable interrupts internally,
 * ideally atomically with putting the CPU into a low-power mode.
 */

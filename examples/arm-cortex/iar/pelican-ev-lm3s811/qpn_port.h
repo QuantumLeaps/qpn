@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: PELICAN crossing example
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 05, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -47,6 +47,10 @@
 
                                   /* interrupt locking policy for ISR level */
 #define QF_ISR_NEST
+
+#if (__CORE__ != __ARM6M__)                       /* not Cortex-M0/M0+/M1 ? */
+    #define QF_LOG2(n_) ((uint8_t)(32U - __CLZ(n_)))
+#endif
 
 #include <intrinsics.h>                              /* intrinsic functions */
 #include <stdint.h>       /* IAR provides C99-standard exact-width integers */

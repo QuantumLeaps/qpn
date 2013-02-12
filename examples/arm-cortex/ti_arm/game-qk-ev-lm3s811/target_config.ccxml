@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configurations XML_version="1.2" id="configurations_0">
+    <configuration XML_version="1.2" id="Stellaris In-Circuit Debug Interface_0">
+    <instance XML_version="1.2" desc="Stellaris In-Circuit Debug Interface_0" href="connections\Stellaris_ICDI_Connection.xml" id="Stellaris In-Circuit Debug Interface_0" xml="Stellaris_ICDI_Connection.xml" xmlpath="connections"/>
+    <connection XML_version="1.2" id="Stellaris In-Circuit Debug Interface_0">
+      <instance XML_version="1.2" href="drivers\stellaris_cs_dap.xml" id="drivers" xml="stellaris_cs_dap.xml" xmlpath="drivers"/>
+      <instance XML_version="1.2" href="drivers\stellaris_cortex_m3.xml" id="drivers" xml="stellaris_cortex_m3.xml" xmlpath="drivers"/>
+      <platform XML_version="1.2" id="platform_0">
+        <instance XML_version="1.2" desc="Stellaris LM3S811_0" href="Devices\lm3s811.xml" id="Stellaris LM3S811_0" xml="lm3s811.xml" xmlpath="Devices"/>
+        <device HW_revision="1" XML_version="1.2" description="" id="Stellaris LM3S811_0" partnum="LM3S811">
+          <router HW_revision="1.0" XML_version="1.2" description="CS_DAP Router" id="CS_DAP_0" isa="CS_DAP">
+            <subpath id="subpath_0">
+              <cpu HW_revision="1.0" XML_version="1.2" description="Cortex M3 CPU" id="CORTEX_M3_0" isa="CORTEX_M3">
+                <property Type="choicelist" Value="1" id="Slave Processor"/>
+                <property Type="stringfield" Value="600000" id="JTAG Frequency (Hz)"/>
+              </cpu>
+            </subpath>
+          </router>
+        </device>
+      </platform>
+    </connection>
+  </configuration>
+</configurations>

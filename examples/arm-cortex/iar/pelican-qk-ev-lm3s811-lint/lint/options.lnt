@@ -27,7 +27,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // the location of the IAR ARM includes (need to adjust!!!)
--iC:\tools\IAR\ARM_KS_6.40\arm\inc\c
+-iC:\tools\IAR\ARM_6.5\arm\inc\c
 
 // the location of the QTools lint directory (need to adjust!!!)
 -iC:\tools\qtools\lint

@@ -1,13 +1,13 @@
 ##############################################################################
 # Product: Makefile for QP-nano application, QK-nano, GNU/CodeRed tools
-# Last Updated for Version: 4.5.02
-# Date of the Last Update:  Nov 07, 2012
+# Last Updated for Version: 4.5.04
+# Date of the Last Update:  Feb 04, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
 #                    innovating embedded systems
 #
-# Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+# Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 #
 # This program is open source software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
@@ -34,12 +34,12 @@
 ##############################################################################
 # examples of invoking this Makefile:
 # building configurations: Debug (default), Release, and Spy
-# mingw32-make
-# mingw32-make CONF=rel
+# make
+# make CONF=rel
 #
 # cleaning configurations: Debug (default), Release, and Spy
-# mingw32-make clean
-# mingw32-make CONF=rel clean
+# make clean
+# make CONF=rel clean
 
 #-----------------------------------------------------------------------------
 # NOTE: the Makefile expects that the QPN environment variable is defined

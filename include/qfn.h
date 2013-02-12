@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Jun 29, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 04, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -64,7 +64,7 @@
     *
     * Some compilers for Harvard-architecture MCUs, such as gcc for AVR, do
     * not generate correct code for accessing data allocated in the program
-    * space (ROM). The workaround for such compilers is to explictly add
+    * space (ROM). The workaround for such compilers is to explicitly add
     * assembly code to access each data element allocated in the program
     * space. The macro Q_ROM_BYTE() retrieves a byte from the given ROM
     * address.
@@ -82,7 +82,7 @@
     *
     * Some compilers for Harvard-architecture MCUs, such as gcc for AVR, do
     * not generate correct code for accessing data allocated in the program
-    * space (ROM). The workaround for such compilers is to explictly add
+    * space (ROM). The workaround for such compilers is to explicitly add
     * assembly code to access each data element allocated in the program
     * space. The macro Q_ROM_PTR() retrieves an object-pointer from the given
     * ROM address. Please note that the pointer can be pointing to the object
@@ -188,9 +188,9 @@ typedef struct QActiveTag {
 * in the application before calling QF_run().
 */
 #ifndef QF_FSM_ACTIVE
-    #define QActive_ctor(me_, initial_)  QHsm_ctor(&(me_)->super, initial_)
+    #define QActive_ctor(me_, initial_) QHsm_ctor(&(me_)->super, (initial_))
 #else
-    #define QActive_ctor(me_, initial_)  QFsm_ctor(&(me_)->super, initial_)
+    #define QActive_ctor(me_, initial_) QFsm_ctor(&(me_)->super, (initial_))
 #endif
 
 
@@ -225,7 +225,7 @@ typedef struct QActiveTag {
     * object \a prio using the First-In-First-Out (FIFO) policy. This
     * function does NOT lock/unlock interrupts when nesting of interrupts
     * is not allowed. Also, this function never calls the QK-nano scheduler,
-    * because synchronous task preemptions are never necessary inside ISRs.
+    * because synchronous task preemption is never necessary inside ISRs.
     *
     * \note This function is intended only to be used inside ISRs and you
     * should never use at the task level.
@@ -242,7 +242,7 @@ typedef struct QActiveTag {
 
     /** \brief Processes all armed time events at every clock tick.
     *
-    * \note This function can be only calle from the ISR-level. You must also
+    * \note This function can be only called from the ISR-level. You must also
     * guarantee that QF_tickISR() runs to completion before it is called
     * again.
     *
@@ -250,8 +250,6 @@ typedef struct QActiveTag {
     * \include qfn_tick.c
     */
     void QF_tickISR(void);
-
-
 
     /** \brief Arm the QP-nano one-shot time event. Since the tick counter
     * is a multi-byte variable in this case, the operation must be
@@ -264,7 +262,7 @@ typedef struct QActiveTag {
     *
     * After posting, the time event gets automatically disarmed.
     *
-    * The time event can be disarmed (stoped) at any time by calling the
+    * The time event can be disarmed (stopped) at any time by calling the
     * QActive_disarm() function. Also, a one-shot time event can be re-armed
     * to fire in a different number of clock ticks by calling
     * QActive_arm() again.
@@ -273,7 +271,7 @@ typedef struct QActiveTag {
     * a state machine of an active object:
     * \include qfn_arm.c
     */
-    void QActive_arm(QActive * const me, QTimeEvtCtr const tout);
+    void QActive_arm(QActive * const me, QTimeEvtCtr const ticks);
 
     /** \brief Disarm a time event. Since the tick counter
     * is a multi-byte variable in this case, the operation must be
@@ -282,7 +280,7 @@ typedef struct QActiveTag {
     * The time event of the active object \a me gets disarmed (stopped).
     *
     * \note You should not assume that the Q_TIMEOUT_SIG event will not
-    * arrive after you disarm the time event. The timeout evetn could be
+    * arrive after you disarm the time event. The timeout event could be
     * already in the event queue.
     */
     void QActive_disarm(QActive * const me);
@@ -295,7 +293,7 @@ typedef struct QActiveTag {
 *
 * This function initializes the internal QF variables as well as all
 * registered active objects to zero. In the C startup code compliant with
-* the C Standard this clearing of internal valiables is unnecessary, because
+* the C Standard this clearing of internal variables is unnecessary, because
 * all static variables are supposed to be cleared in the startup code.
 * However in non-compliant implementations calling QF_init() can be very
 * handy.
@@ -317,7 +315,7 @@ void QF_stop(void);
 
 /** \brief Startup QF-nano callback.
 *
-* The timeline for calling QF_onStartup() depends on the particular
+* The time line for calling QF_onStartup() depends on the particular
 * QF port. In most cases, QF_onStartup() is called from QF_run(), right
 * before starting any multitasking kernel or the background loop.
 *
@@ -327,7 +325,7 @@ void QF_onStartup(void);
 
 /** \brief Transfers control to QF to run the application.
 *
-* QF_run() implemetns the simple non-preemptive scheduler. QF_run() must be
+* QF_run() implements the simple non-preemptive scheduler. QF_run() must be
 * called from main() after you initialize the QF and define at least one
 * active object control block in QF_active[]. QF_run() typically never
 * returns to the caller (except in QP-nano emulations), but when it does,
@@ -335,12 +333,12 @@ void QF_onStartup(void);
 *
 *
 * \note When the preemptive QK-nano is used as the underlying real-time
-* kernel for the QF, all platfrom dependencies are handled in the QK, so
+* kernel for the QF, all platform dependencies are handled in the QK, so
 * no porting of QF is necessary. In other words, you only need to recompile
 * the QF platform-independent code with the compiler for your platform, but
 * you don't need to provide any platform-specific implementation (so, no
 * qf_port.c file is necessary). Moreover, QK implements the function QF_run()
-* in a platform-independent way, in the modile qk.c.
+* in a platform-independent way, in the module qk.c.
 */
 int16_t QF_run(void);
 
@@ -358,7 +356,7 @@ int16_t QF_run(void);
     * QF_onIdle() MUST unlock the interrupts internally, but not before
     * putting the CPU into the low-power mode. (Ideally, unlocking interrupts
     * and low-power mode should happen atomically). At the very least, the
-    * function MUST unlock interrupts, otherwise interrups will be locked
+    * function MUST unlock interrupts, otherwise interrupts will be locked
     * permanently.
     *
     * \note QF_onIdle() is not used in the PREEMPTIVE configuration. When
@@ -387,7 +385,7 @@ typedef struct QActiveCBTag {
 } QActiveCB;
 
                                            /** active object control blocks */
-extern QActiveCB const Q_ROM Q_ROM_VAR QF_active[];
+extern QActiveCB const Q_ROM Q_ROM_VAR QF_active[QF_MAX_ACTIVE + 1];
 
 /** \brief Ready set of QF-nano.
 *
@@ -400,6 +398,31 @@ extern QActiveCB const Q_ROM Q_ROM_VAR QF_active[];
 * objects maximum.
 */
 extern uint8_t volatile QF_readySet_;
+
+#ifndef QF_LOG2
+
+    /** \brief Macro to return (log2(n) + 1), where n = 0..255.
+    *
+    * This macro delivers the 1-based number of the most significant 1-bit
+    * of a byte. This macro can be re-implemented in the QP-nano ports,
+    * if the processor supports special instructions, such as CLZ (count
+    * leading zeros).
+    *
+    * If the macro is not defined in the port, the default implementation
+    * uses a lookup table.
+    */
+    #define QF_LOG2(n_) (Q_ROM_BYTE(QF_log2Lkup[(n_)]))
+
+    /** \brief Lookup table for (log2(n) + 1), where n is the index
+    * into the table.
+    *
+    * This lookup delivers the 1-based number of the most significant 1-bit
+    * of a byte.
+    */
+    extern uint8_t const Q_ROM Q_ROM_VAR QF_log2Lkup[256];
+
+    #define QF_LOG2LKUP 1
+#endif
 
 
 #ifdef Q_TIMERSET
@@ -415,7 +438,7 @@ extern uint8_t volatile QF_readySet_;
     * active objects maximum.
     *
     * The main use of the QF_timerSet_ is to quickly determine that all time
-    * events are diarmed by testing (QF_timerSet_ == (uint8_t)0). If so,
+    * events are disarmed by testing (QF_timerSet_ == (uint8_t)0). If so,
     * the CPU can go to longer sleep mode, in which the system clock tick ISR
     * is turned off.
     *
@@ -431,13 +454,13 @@ extern uint8_t volatile QF_readySet_;
 * index, which violates MISRA-C 2004 rules 17.4(req) and 11.4(adv). This
 * macro helps to localize this deviation.
 */
-#define QF_ROM_QUEUE_AT_(ao_, i_) (((QEvt *)Q_ROM_PTR((ao_)->queue))[i_])
+#define QF_ROM_QUEUE_AT_(ao_, i_) (((QEvt *)Q_ROM_PTR((ao_)->queue))[(i_)])
 
 /* This macro encapsulates accessing the active object control block,
 * which violates MISRA-C 2004 rule 11.4(adv). This macro helps to localize
 * this deviation.
 */
-#define QF_ROM_ACTIVE_GET_(p_)  ((QActive *)Q_ROM_PTR(QF_active[p_].act))
+#define QF_ROM_ACTIVE_GET_(p_)  ((QActive *)Q_ROM_PTR(QF_active[(p_)].act))
 
 /** \brief cast to QActive *.
 *
@@ -448,13 +471,13 @@ extern uint8_t volatile QF_readySet_;
 #define QF_ACTIVE_CAST(a_)            ((QActive *)(a_))
 
 /****************************************************************************/
-/* definitions provided for backwards compatiblity */
+/* definitions provided for backwards compatibility */
 #ifdef QF_INT_LOCK
     #define QF_INT_DISABLE()  QF_INT_LOCK()
 #endif
 
 #ifdef QF_INT_UNLOCK
-    #define QF_INT_ENABLE()  QF_INT_UNLOCK()
+    #define QF_INT_ENABLE()   QF_INT_UNLOCK()
 #endif
 
 #ifdef QF_ISR_NEST
@@ -470,7 +493,7 @@ extern uint8_t volatile QF_readySet_;
 #endif                                                       /* QF_ISR_NEST */
 
 #if (QF_TIMEEVT_CTR_SIZE != 0)
-    #define QF_tick()    QF_tickISR()
+    #define QF_tick()    (QF_tickISR())
 #endif
 
 #endif                                                             /* qfn_h */
