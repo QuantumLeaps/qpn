@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="62">
   <projectmakefile>Makefile</projectmakefile>
-  <defaultConf>1</defaultConf>
+  <defaultConf>0</defaultConf>
   <confs>
     <conf name="default" type="2">
       <platformToolSN>:=MPLABCommUSB:=04D8:=8107:=0002:=Microchip Technology Incorporated:=Microstick II SK:=BUR123045184:=x:=en</platformToolSN>

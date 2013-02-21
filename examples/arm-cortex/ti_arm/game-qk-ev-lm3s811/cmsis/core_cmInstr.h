@@ -273,7 +273,7 @@ __attribute__((section(".revsh_text"))) __STATIC_INLINE __ASM int32_t __REVSH(in
 #elif defined ( __TMS470__ ) /*---------------- TI CCS Compiler ------------------*/
 /* TI CCS specific functions */
 
-//???#include <cmsis_ccs.h>
+#include <cmsis_ccs.h>
 
 
 #elif defined ( __GNUC__ ) /*------------------ GNU Compiler ---------------------*/

@@ -1,13 +1,13 @@
 /*****************************************************************************
 * QP-nano port, PIC24/dsPIC, MPLABX-XC16 compiler, QK-nano kernel
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Oct 15, 2012
+* Last Updated for Version: 4.5.04
+* Date of the Last Update:  Feb 20, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -44,8 +44,8 @@
 #define QF_MAX_ACTIVE           2U
 
                          /* task-level interrupt nesting policy, see NOTE01 */
-#define QF_INT_DISABLE()        __asm__ volatile ("disi #0x3FFF")
-#define QF_INT_ENABLE()         __asm__ volatile ("disi #0x0000")
+#define QF_INT_DISABLE()        __builtin_disi(0x3FFFU)
+#define QF_INT_ENABLE()         __builtin_disi(0x0000U)
 
           /* ISR-level interrupt locking policy for PIC24/dsPIC, see NOTE02 */
 #define QF_ISR_NEST
@@ -85,6 +85,9 @@ void  __attribute__((__interrupt__(__preprologue__( \
     __asm__ volatile ("disi #0x0000"); \
 } while (0);
 
+                           /* fast log-base-2 with FBCL instruction, NOTE03 */
+#define QF_LOG2(n_) ((uint8_t)(15 + __builtin_fbcl(n_)))
+
              /* Exact-width types. WG14/N843 C99 Standard, Section 7.18.1.1 */
 #include <stdint.h>
 
@@ -115,7 +118,6 @@ void  __attribute__((__interrupt__(__preprologue__( \
 * of reset. If you don't change this level for any interrupt the nesting of
 * interrupt will not occur.
 *
-*
 * NOTE02:
 * The ISR-level interrupt policy allows interrupt nesting. The QF_ISR_KEY_TYPE
 * is _not_ defined, which means that the ISRs will use the task-level
@@ -127,6 +129,13 @@ void  __attribute__((__interrupt__(__preprologue__( \
 * CAUTION: This _preemptive_ QK-nano port requires writing ISRs in assembly,
 * as shown in the file isr.s. Unfortunately, the ISRs that the C30 compiler
 * is capable of generating are not adequate for the QK-nano kernel.
+*
+* NOTE03:
+* The FBCL instruction (Find First Bit Change Left) determines the exponent
+* of a value by detecting the first bit change starting from the value’s sign
+* bit and working towards the LSB. Since the PIC24/dsPIC’s barrel shifter
+* uses negative values to specify a left shift, the FBCL instruction returns
+* the negated exponent of a value. This value added to 15 gives the log-2.
 */
 
 #endif                                                        /* qpn_port_h */

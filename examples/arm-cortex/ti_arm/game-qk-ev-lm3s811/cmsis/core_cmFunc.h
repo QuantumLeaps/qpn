@@ -301,7 +301,7 @@ __STATIC_INLINE void __set_FPSCR(uint32_t fpscr)
 #elif defined ( __TMS470__ ) /*---------------- TI CCS Compiler ------------------*/
 /* TI CCS specific functions */
 
-//???#include <cmsis_ccs.h>
+#include <cmsis_ccs.h>
 
 
 #elif defined ( __GNUC__ ) /*------------------ GNU Compiler ---------------------*/

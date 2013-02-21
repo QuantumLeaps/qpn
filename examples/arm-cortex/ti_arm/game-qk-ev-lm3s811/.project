@@ -43,7 +43,7 @@
 		<link>
 			<name>qkn_port.s</name>
 			<type>1</type>
-			<locationURI>QPN/ports/arm-cortex/qk/ccs5/qkn_port.s</locationURI>
+			<locationURI>QPN/ports/arm-cortex/qk/ti_arm/qkn_port.s</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

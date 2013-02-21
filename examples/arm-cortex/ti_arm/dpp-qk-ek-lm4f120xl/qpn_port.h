@@ -1,7 +1,7 @@
 /*****************************************************************************
-* Product: QP-nano port for DPP example, QK-nano, TI CCS compiler
+* Product: DPP example, QK-nano, TI_ARM compiler
 * Last Updated for Version: 4.5.04
-* Date of the Last Update:  Jan 27, 2013
+* Date of the Last Update:  Feb 15, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -35,24 +35,30 @@
 #ifndef qpn_port_h
 #define qpn_port_h
 
-#define Q_NFSM
 #define Q_PARAM_SIZE            4
-#define QF_TIMEEVT_CTR_SIZE     2
+#define QF_TIMEEVT_CTR_SIZE     4
 
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
 #define QF_MAX_ACTIVE           6
 
-                         /* interrupt locking policy for task level, NOTE01 */
+                                 /* interrupt locking policy for task level */
 #define QF_INT_DISABLE()        asm(" CPSID I")
 #define QF_INT_ENABLE()         asm(" CPSIE I")
 
-                                  /* interrupt locking policy for ISR level */
+                    /* interrupt disablgin policy for ISR level, see NOTE01 */
 #define QF_ISR_NEST
+
                                   /* QK-nano ISR entry and exit, see NOTE02 */
 #define QK_ISR_ENTRY()   ((void)0)
 #define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04U) = 0x10000000U)
 
-#include <stdint.h>       /* CCS provides C99-standard exact-width integers */
+                   /* is the target M3 or M4? (M0/M0+/M1 don't support CLZ) */
+#if (defined __TI_TMS470_V7M3__) || (defined __TI_TMS470_V7M4__)
+            /* the intrinsic function _norm() generates the CLZ instruction */
+    #define QF_LOG2(n_) ((uint8_t)(32U - _norm(n_)))
+#endif
+
+#include <stdint.h>    /* TI_ARM provides C99-standard exact-width integers */
 
 #include "qepn.h"         /* QEP-nano platform-independent public interface */
 #include "qfn.h"           /* QF-nano platform-independent public interface */
@@ -60,10 +66,19 @@
 
 /*****************************************************************************
 * NOTE01:
-* ARM Cortex-M does not disable interrupts upon the interrupt entry, so
-* interrupts can nest by default. You can prevent interrupts from nesting by
-* setting the priorities of all interrupts to the same level. In any case,
-* you should not call any QP-nano services with interrupts disabled.
+* Cortex-M does not lock interrupts upon the interrupt entry, so interrupts
+* can nest. You can prevent interrupts from nesting by setting the priorities
+* of all interrupts to the same level. In this case, you could undefine
+* the QF_ISR_NEST macro. Either way, you don't need to change the macros
+* QK_ISR_ENTRY()/QK_ISR_EXIT().
+*
+* NOTE02:
+* The QK_ISR_EXIT() macro triggers the Cortex-M PendSV exception, which
+* in turn causes QK_schedule_() to run. The PendSV exception is prioritized
+* lower than all interrupts in the system, so the NVIC performs tail-chaining
+* to PendSV only after all nested interrupts are handled. This means that
+* in Cortex-M you don't need to increment and decrement the nesting level
+* QK_intNest_, because it doesn't matter for the tail-chaining mechanism.
 */
 
 #endif                                                        /* qpn_port_h */
