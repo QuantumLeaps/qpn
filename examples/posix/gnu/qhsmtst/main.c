@@ -1,17 +1,17 @@
 /*****************************************************************************
 * QHsmTst example
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 18, 2012
+* Last Updated for Version: 5.0.0
+* Date of the Last Update:  Aug 09, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
                "QP-nano: %s.\nPress ESC to quit...\n",
                __DATE__, __TIME__, QP_getVersion());
 
-        QHsm_init(the_hsm);                 /* take the initial transitioin */
+        QMSM_INIT(the_hsm);                 /* take the initial transitioin */
 
         for (;;) {                                            /* event loop */
             int c;
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
                 Q_SIG(the_hsm) = IGNORE_SIG;
             }
 
-            QHsm_dispatch(the_hsm);                   /* dispatch the event */
+            QMSM_DISPATCH(the_hsm);                   /* dispatch the event */
         }
     }
     else {                                                 /* batch version */
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
         fprintf(l_outFile, "QHsmTst example, QP-nano %s\n",
                 QP_getVersion());
 
-        QHsm_init(the_hsm);                 /* take the initial transitioin */
+        QMSM_INIT(the_hsm);                 /* take the initial transitioin */
 
                                      /* testing all kinds of transitions... */
         dispatch(A_SIG);
@@ -151,5 +151,5 @@ void BSP_exit(void) {
 static void dispatch(QSignal sig) {
     fprintf(l_outFile, "\n%c:", 'A' + sig - A_SIG);
     Q_SIG(the_hsm) = sig;
-    QHsm_dispatch(the_hsm);                            /* dispatch the event */
+    QMSM_DISPATCH(the_hsm);                            /* dispatch the event */
 }

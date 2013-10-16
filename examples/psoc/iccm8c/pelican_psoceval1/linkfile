@@ -1,6 +1,0 @@
--F0x30 -g -blit:0x1a0.0x7fff 
- -bdata:0.0x6ff -bSSCParmBlk:0x00F7.0x00FF -BInterruptRAM:0 -Bvirtual_registers -elim:UserModules 
- -Bpelican_psoceval1_RAM 
- -o"output/pelican_psoceval1" 
- ./obj/bsp.o ./obj/main.o ./obj/oper.o ./obj/pelican.o ./obj/qepn.o ./obj/qfn.o   
- C:/software/qpn/examples/psoc/iccm8c/PELICA~1/lib/libPSoc.a -LC:/tools/Cypress/PSOC_D~1/tools/lib/LMM/eightpages C:/tools/Cypress/PSOC_D~1/tools/lib/CY8C29000/cms.a C:/tools/Cypress/PSOC_D~1/tools/lib/LMM/UASW/MAC/arith.a 

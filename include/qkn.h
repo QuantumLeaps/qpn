@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.03
-* Date of the Last Update:  Jan 16, 2013
+* Last Updated for Version: 5.1.1
+* Date of the Last Update:  Oct 11, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -11,7 +11,7 @@
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -81,8 +81,6 @@ void QK_sched_(uint8_t p) Q_REENTRANT;
 extern uint8_t volatile QK_currPrio_;              /**< current QK priority */
 
 #ifndef QF_ISR_NEST
-    /** \brief The macro to invoke the QK scheduler in the QK_ISR_EXIT()
-    */
     #define QK_SCHEDULE_() do { \
         uint8_t p = QK_schedPrio_(); \
         if (p != (uint8_t)0) { \
@@ -90,6 +88,8 @@ extern uint8_t volatile QK_currPrio_;              /**< current QK priority */
         } \
     } while(0)
 #else
+    /** \brief The macro to invoke the QK scheduler in the QK_ISR_EXIT()
+    */
     #define QK_SCHEDULE_() \
         if (QK_intNest_ == (uint8_t)0) { \
             uint8_t p = QK_schedPrio_(); \
@@ -115,7 +115,7 @@ extern uint8_t volatile QK_currPrio_;              /**< current QK priority */
 */
 void QK_onIdle(void);
 
-#ifdef QK_MUTEX
+#ifndef QK_NO_MUTEX
 
     /** \brief QK Mutex type.
     *
@@ -143,6 +143,9 @@ void QK_onIdle(void);
     */
     void QK_mutexUnlock(QMutex mutex);
 
-#endif                                                          /* QK_MUTEX */
+    /** \brief current ceiling priority of a mutex */
+    extern uint8_t volatile QK_ceilingPrio_;
+
+#endif                                                       /* QK_NO_MUTEX */
 
 #endif                                                             /* qkn_h */

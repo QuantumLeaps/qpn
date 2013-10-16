@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: DPP example, Win32, MinGW compiler
-# Last Updated for Version: 4.5.04
-# Date of the Last Update:  Feb 02, 2013
+# Product: QP-nano make, Win32, MinGW compiler
+# Last Updated for Version: 5.1.1
+# Date of the Last Update:  Oct 11, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -11,7 +11,7 @@
 #
 # This program is open source software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation, either version 2 of the License, or
+# by the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # Alternatively, this program may be distributed and modified under the
@@ -43,6 +43,9 @@
 # make CONF=rel clean
 # make CONF=spy clean
 
+# Project basename
+PROJECT := dpp
+
 #-----------------------------------------------------------------------------
 # NOTE: the Makefile expects that the QPN environment variable is defined
 # and points to the QP-nano installation directory
@@ -52,36 +55,29 @@ $(error The QPN environment variable must be defined)
 endif
 
 #-----------------------------------------------------------------------------
-# general utilities
-#
-RM = del
-
-#-----------------------------------------------------------------------------
-# NOTE: this Makefile assumes that the Qtools\bin directory is added
+# NOTE: this Makefile assumes that the MinGW\bin directory is added
 # to the PATH variable.
 #
 CC    := gcc
 CPP   := g++
-LINK  := gcc                                                # for C programs
-#LINK  := g++                                               # for C++ programs
+LINK  := gcc
+#LINK  := g++
+RM    := rm
 
 #-----------------------------------------------------------------------------
 # directories
 #
-QP_PORT_DIR := $(QPN)\ports\win32
+QP_PORT_DIR := $(QPN)/ports/win32
 APP_DIR     := .
 
 VPATH = $(APP_DIR) \
-	$(QPN)\source \
-	$(QP_PORT_DIR)
-
-# Output file basename
-OUTPUT    := dpp
+	-I$(QPN)/source \
+	-I$(QP_PORT_DIR)
 
 # include directories
 INCLUDES  = -I. \
-	-I$(QPN)\include	\
-	-I$(QP_PORT_DIR)
+	-I$(QPN)/include	\
+	-I$(QP_PORT_DIR) \
 
 # defines
 DEFINES =
@@ -95,8 +91,8 @@ ASM_SRCS :=
 
 # C source files
 C_SRCS := $(wildcard *.c) \
-    qepn.c \
-    qfn_win32.c
+	qepn.c \
+	qfn_win32.c
 
 # C++ source files
 CPP_SRCS := $(wildcard *.cpp)
@@ -119,20 +115,6 @@ CPPFLAGS = -c -Wall -O2 $(INCLUDES) $(DEFINES) -DNDEBUG
 
 LINKFLAGS =
 
-else ifeq (spy, $(CONF))  # Spy configuration ................................
-
-BIN_DIR := spy
-
-C_SRCS += qspy.c
-
-ASFLAGS =
-
-CFLAGS = -c -g $(INCLUDES) $(DEFINES) -DQ_SPY
-
-CPPFLAGS = -c -Wall -g $(INCLUDES) $(DEFINES) -DQ_SPY
-
-LINKFLAGS =
-
 else                     # default Debug configuration .......................
 
 BIN_DIR := dbg
@@ -145,22 +127,20 @@ CPPFLAGS = -c -Wall -g $(INCLUDES) $(DEFINES)
 
 LINKFLAGS =
 
-
 endif
 
 
-ASM_OBJS     := $(patsubst %.s,%.o,$(ASM_SRCS))
-C_OBJS       := $(patsubst %.c,%.o,$(C_SRCS))
-CPP_OBJS     := $(patsubst %.cpp,%.o,$(CPP_SRCS))
+ASM_OBJS     := $(patsubst %.s,%.o,   $(ASM_SRCS))
+C_OBJS       := $(patsubst %.c,%.o,   $(C_SRCS))
+CPP_OBJS     := $(patsubst %.cpp,%.o, $(CPP_SRCS))
 
-TARGET_BIN   := $(BIN_DIR)/$(OUTPUT).bin
-TARGET_EXE   := $(BIN_DIR)/$(OUTPUT).exe
+TARGET_BIN   := $(BIN_DIR)/$(PROJECT).bin
+TARGET_EXE   := $(BIN_DIR)/$(PROJECT).exe
 ASM_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(ASM_OBJS))
 C_OBJS_EXT   := $(addprefix $(BIN_DIR)/, $(C_OBJS))
-C_DEPS_EXT   := $(patsubst %.o, %.d, $(C_OBJS_EXT))
+C_DEPS_EXT   := $(patsubst %.o,%.d,      $(C_OBJS_EXT))
 CPP_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(CPP_OBJS))
-CPP_DEPS_EXT := $(patsubst %.o, %.d, $(CPP_OBJS_EXT))
-
+CPP_DEPS_EXT := $(patsubst %.o,%.d,      $(CPP_OBJS_EXT))
 
 #-----------------------------------------------------------------------------
 # rules
@@ -180,10 +160,10 @@ $(TARGET_EXE) : $(ASM_OBJS_EXT) $(C_OBJS_EXT) $(CPP_OBJS_EXT)
 	$(LINK) $(LINKFLAGS) -o $@ $^
 
 $(BIN_DIR)/%.d : %.c
-	$(CC) -MM -MT $(@:.d=.o) $(CFLAGS) $< > $@
+	$(CC) -MM -MT $(@:.d=.o) $(filter-out -c -g, $(CFLAGS)) $< > $@
 
 $(BIN_DIR)/%.d : %.cpp
-	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
+	$(CPP) -MM -MT $(@:.d=.o) $(filter-out -c -g, $(CPPFLAGS)) $< > $@
 
 $(BIN_DIR)/%.o : %.s
 	$(AS) $(ASFLAGS) $< -o $@
@@ -194,23 +174,26 @@ $(BIN_DIR)/%.o : %.c
 $(BIN_DIR)/%.o : %.cpp
 	$(CPP) $(CPPFLAGS) -c $< -o $@
 
+# include dependency files only if our goal depends on their existence
+ifneq ($(MAKECMDGOALS),clean)
+  ifneq ($(MAKECMDGOALS),show)
 -include $(C_DEPS_EXT) $(CPP_DEPS_EXT)
-
+  endif
+endif
 
 .PHONY : clean
 clean:
-	-$(RM) $(BIN_DIR)\*.o \
-	$(BIN_DIR)\*.d \
-	$(BIN_DIR)\*.exe \
-	$(BIN_DIR)\*.map
+	-$(RM) $(BIN_DIR)/*.o \
+	$(BIN_DIR)/*.d \
+	$(BIN_DIR)/*.exe
 	
 show:
-	@echo CONF = $(CONF)
-	@echo ASM_SRCS = $(ASM_SRCS)
-	@echo C_SRCS = $(C_SRCS)
-	@echo CPP_SRCS = $(CPP_SRCS)
+	@echo CONF         = $(CONF)
+	@echo ASM_SRCS     = $(ASM_SRCS)
+	@echo C_SRCS       = $(C_SRCS)
+	@echo CPP_SRCS     = $(CPP_SRCS)
 	@echo ASM_OBJS_EXT = $(ASM_OBJS_EXT)
-	@echo C_OBJS_EXT = $(C_OBJS_EXT)
-	@echo C_DEPS_EXT = $(C_DEPS_EXT)
+	@echo C_OBJS_EXT   = $(C_OBJS_EXT)
+	@echo C_DEPS_EXT   = $(C_DEPS_EXT)
 	@echo CPP_DEPS_EXT = $(CPP_DEPS_EXT)
-	@echo TARGET_ELF = $(TARGET_ELF)
+	@echo TARGET_ELF   = $(TARGET_ELF)

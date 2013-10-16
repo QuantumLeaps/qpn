@@ -1,17 +1,17 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Jun 28, 2012
+* Last Updated for Version: 5.0.0
+* Date of the Last Update:  Aug 04, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -46,11 +46,15 @@ void QF_init(void) {
     QActive *a;
     uint8_t p;
 
-    QF_readySet_ = (uint8_t)0;
-
 #ifdef Q_TIMERSET
-    QF_timerSet_ = (uint8_t)0;
+    uint8_t n;
+
+    for (n = (uint8_t)0; n < (uint8_t)QF_MAX_TICK_RATE; ++n) {
+        QF_timerSetX_[n] = (uint8_t)0;
+    }
 #endif
+
+    QF_readySet_ = (uint8_t)0;
 
 #ifdef QK_PREEMPTIVE
     QK_currPrio_ = (uint8_t)(QF_MAX_ACTIVE + 1);
@@ -59,7 +63,7 @@ void QF_init(void) {
     QK_intNest_ = (uint8_t)0;
 #endif
 
-#ifdef QK_MUTEX
+#ifndef QK_NO_MUTEX
     QK_ceilingPrio_ = (uint8_t)0;
 #endif
 
@@ -67,13 +71,15 @@ void QF_init(void) {
                                   /* clear all registered active objects... */
     for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
-
         Q_ASSERT(a != (QActive *)0);    /* QF_active[p] must be initialized */
+
         a->head    = (uint8_t)0;
         a->tail    = (uint8_t)0;
         a->nUsed   = (uint8_t)0;
 #if (QF_TIMEEVT_CTR_SIZE != 0)
-        a->tickCtr = (QTimeEvtCtr)0;
+        for (n = (uint8_t)0; n < (uint8_t)QF_MAX_TICK_RATE; ++n) {
+            a->tickCtr[n] = (QTimeEvtCtr)0;
+        }
 #endif
     }
 }

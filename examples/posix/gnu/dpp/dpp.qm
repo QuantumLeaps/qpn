@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="2.2.01">
+<model version="2.3.2">
  <documentation>Dining Philosopher Problem example</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
@@ -11,7 +11,7 @@
      </initial_glyph>
     </initial>
     <state name="thinking">
-     <entry>QActive_arm((QActive *)me, THINK_TIME);</entry>
+     <entry>QActive_armX((QActive *)me, 0U, THINK_TIME);</entry>
      <tran trig="Q_TIMEOUT" target="../../2">
       <tran_glyph conn="2,12,3,1,20,13,-3">
        <action box="0,-2,6,2"/>
@@ -45,7 +45,7 @@
      </state_glyph>
     </state>
     <state name="eating">
-     <entry>QActive_arm((QActive *)me, EAT_TIME);</entry>
+     <entry>QActive_armX((QActive *)me, 0U, EAT_TIME);</entry>
      <exit>QActive_post((QActive *)&amp;AO_Table, DONE_SIG, me-&gt;super.prio);</exit>
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,51,3,1,22,-41,-5">

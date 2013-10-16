@@ -11,7 +11,7 @@
 #
 # This program is open source software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation, either version 2 of the License, or
+# by the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # Alternatively, this program may be distributed and modified under the
@@ -121,9 +121,9 @@ BIN_DIR := rel
 
 ASFLAGS =
 
-CFLAGS = -c -Wall -O2 $(INCLUDES) $(DEFINES) -DNDEBUG
+CFLAGS = -c -Wall -O1 $(INCLUDES) $(DEFINES) -DNDEBUG
 
-CPPFLAGS = -c -Wall -O2 $(INCLUDES) $(DEFINES) -DNDEBUG
+CPPFLAGS = -c -Wall -O1 $(INCLUDES) $(DEFINES) -DNDEBUG
 
 LINKFLAGS = -s -mwindows
 

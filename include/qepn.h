@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.04
-* Date of the Last Update:  Feb 02, 2013
+* Last Updated for Version: 5.1.1
+* Date of the Last Update:  Oct 15, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -11,7 +11,7 @@
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -46,13 +46,19 @@
 */
 
 /****************************************************************************/
-/** \brief The current QP-nano version number
+/** \brief The current QP version number
 *
-* \return version of the QP as a hex constant constant 0xXYZZ, where X is
-* a 1-digit major version number, Y is a 1-digit minor version number, and
-* ZZ is a 2-digit release number.
+* version of the QP as a hex constant 0x0XYZ, where X is a 1-digit
+* major version number, Y is a 1-digit minor version number, and Z is
+* a 1-digit release number.
 */
-#define QP_VERSION      0x4504U
+#define QP_VERSION      0x0511U
+
+/** \brief The current QP version string */
+#define QP_VERSION_STR  "5.1.1"
+
+/** \brief Temperproof current QP-nano release (5.1.1) and date (13-10-15) */
+#define QP_RELEASE      0xB1E8B090U
 
 /****************************************************************************/
 #ifndef Q_ROM             /* if NOT defined, provide the default definition */
@@ -127,30 +133,19 @@ typedef float float32_t;
 /** typedef for 64-bit IEEE 754 floating point numbers  */
 typedef double float64_t;
 
-/** \brief Perform cast from unsigned integer \a uint_ to pointer
-* of type \a type_.
-*
-* This macro encapsulates the cast to (type_ *), which QP ports or
-* application might use to access embedded hardware registers.
-* Such uses can trigger PC-Lint "Note 923: cast from int to pointer" and
-* this macro helps to encapsulate this deviation.
-*/
-#define Q_UINT2PTR_CAST(type_, uint_)  ((type_ *)(uint_))
-
-/****************************************************************************/
-/** \brief get the current QP version number string
-*
-* \return version of the QP-nano as a constant 6-character string of the
-* form X.Y.ZZ, where X is a 1-digit major version number, Y is a 1-digit
-* minor version number, and ZZ is a 2-digit release number.
-*/
-char_t const Q_ROM * Q_ROM_VAR QP_getVersion(void);
-
 /** \brief Scalar type describing the signal of an event.
 */
 typedef uint8_t QSignal;
 
-/****************************************************************************/
+/** typedef for enumerations used for event signals */
+typedef int enum_t;
+
+/** typedef for ints used for line numbers */
+typedef int int_t;
+
+/** typedef for temporary variables, like fast loop counters */
+typedef unsigned int uint_t;
+
 #ifndef Q_PARAM_SIZE
     /** \brief macro to define the size of event parameter.
     * Valid values 0, 1, 2, or 4; default 0
@@ -192,58 +187,48 @@ typedef struct QEvtTag {
 } QEvt;
 
 /****************************************************************************/
-/** \brief QP reserved signals */
-enum QReservedSignals {
-    Q_ENTRY_SIG = 1,                   /**< signal for coding entry actions */
-    Q_EXIT_SIG,                         /**< signal for coding exit actions */
-    Q_INIT_SIG,           /**< signal for coding nested initial transitions */
-    Q_TIMEOUT_SIG,                          /**< signal used by time events */
-    Q_USER_SIG      /**< first signal that can be used in user applications */
-};
-
-/****************************************************************************/
 
 /** \brief Type returned from  a state-handler function. */
 typedef uint8_t QState;
 
                        /** \brief the signature of a state handler function */
-typedef QState (*QStateHandler)(void *me);
+typedef QState (*QStateHandler)(void * const me);
 
-/** \brief Perform cast to QStateHandler.
-*
-* This macro encapsulates the cast of a specific state handler function
-* pointer to QStateHandler, which violates MISRA-C 2004 rule 11.4(advisory).
-* This macro helps to localize this deviation.
-*/
-#define Q_STATE_CAST(handler_)  ((QStateHandler)(handler_))
+                      /** \brief the signature of a action handler function */
+typedef QState (*QActionHandler)(void * const me);
 
-/** \brief Finite State Machine.
+/** \brief State object for the QMsm class (Meta State Machine).
 *
-* QFsm represents a traditional non-hierarchical Finite State Machine (FSM)
-* without state hierarchy, but with entry/exit actions.
+* This class groups together the attributes of a QMsm state, such as the
+* parent state (state nesting), the associated state handler function and
+* the exit action handler function. These attributes are used inside the
+* QMsm_dispatch() and QMsm_init() functions.
 *
-* \note QFsm is not intended to be instantiated directly, but rather serves
-* as the base structure for derivation of state machines in the application
-* code.
-*
-* The following example illustrates how to derive a state machine structure
-* from QFsm. Please note that the QFsm member super_ is defined as the FIRST
-* member of the derived struct.
-* \include qepn_qfsm.c
-*
-* \sa \ref derivation
+* \note The QMStateObj class is only intended for the QM code generator
+* and should not be used in hand-crafted code.
 */
-typedef struct QFsmTag {
-    QStateHandler state;                /**< current active state (private) */
-    QStateHandler temp; /**< temporary state: target of tran. or superstate */
-    QEvt evt;         /**< currently processed event in the FSM (protected) */
-} QFsm;
+typedef struct QMStateTag {
+    struct QMStateTag const *parent;      /**< parent state (state nesting) */
+    QStateHandler  stateHandler;               /**<  state handler function */
+    QActionHandler exitAction;            /**< exit action handler function */
+} QMState;
+
+/** \brief Attribute of for the QMsm class (Meta State Machine).
+*
+* This union represents possible values stored in the 'state' and 'temp'
+* attributes of the QMsm class.
+*/
+typedef union QMAttrTag {
+    QMState const *obj;                      /**< pointer to QMState object */
+    QActionHandler const *act;                /**< array of action handlers */
+    QStateHandler  fun;            /**< pointer to a state handler function */
+} QMAttr;
 
 /** \brief macro to access the signal of the current event of a state machine
 *
-* \sa ::QFsm ::QHsm
+* \sa ::QMsm ::QFsm ::QHsm
 */
-#define Q_SIG(me_)  (((QFsm *)(me_))->evt.sig)
+#define Q_SIG(me_)  (((QMsm *)(me_))->evt.sig)
 
 #if (Q_PARAM_SIZE != 0)
 /** \brief macro to access the parameter of the current event of
@@ -251,41 +236,156 @@ typedef struct QFsmTag {
 *
 * \sa ::QFsm ::QHsm Q_PARAM_SIZE
 */
-#define Q_PAR(me_)  (((QFsm *)(me_))->evt.par)
+#define Q_PAR(me_)  (((QMsm *)(me_))->evt.par)
+#endif                                               /* (Q_PARAM_SIZE != 0) */
+
+
+/****************************************************************************/
+typedef struct QMsmVtblTag QMsmVtbl;     /**< declaration (needed for QMsm) */
+
+/** \brief Meta State Machine
+*
+* QMsm represents the most fundamental State Machine in QP. The application-
+* level state machines derived directly from QMsm typically require the use
+* of the QM modeling tool, but are the fastest and need the least run-time
+* support (the smallest event-processor taking up the least code space).
+*
+* QMsm is also the base class for the QFsm and QHsm state machines, which
+* can be coded and maintained by hand (as well as by QM), but aren't as fast
+* and require significantly more run-time code (0.5-1KB) to execute.
+*
+* \note QMsm is not intended to be instantiated directly, but rather serves
+* as the base structure for derivation of state machines in the application
+* code.
+*
+* The following example illustrates how to derive a state machine structure
+* from QMsm. Please note that the QMsm member 'super' is defined as the
+* _first_ member of the derived struct.
+* \include qepn_qmsm.c
+*
+* \sa \ref derivation
+*/
+typedef struct QMsmTag {
+    QMsmVtbl const *vptr;                       /**< \brief virtual pointer */
+    QMAttr state;         /**< \brief current active state (state-variable) */
+    QMAttr temp;     /**< \brief temporary: tran. chain, target state, etc. */
+    QEvt evt;   /**< \brief currently processed event in the SM (protected) */
+} QMsm;
+
+/** \brief Virtual table for the QMsm class
+*
+* The QMsm class provides two virtual functions: init() and dispatch().
+*/
+struct QMsmVtblTag {
+    /** \brief virtual function to initialize a state machine (take the
+    * top-most initial transition.
+    */
+    void (*init)(QMsm * const me);
+
+    /** \brief virtual function to dispatch an event to a state machine.
+    */
+    void (*dispatch)(QMsm * const me);
+};
+
+/** \brief Performs the second step of QMsm initialization by triggering
+* the top-most initial transition.
+*
+* \param me_ pointer the state machine structure derived from QMsm.
+* \note Must be called only ONCE after the "constructor" QMsm_ctor().
+*
+* The following example illustrates how to initialize a FSM, and dispatch
+* events to it:
+* \include qepn_qmsm_use.c
+*/
+#define QMSM_INIT(me_) ((*(me_)->vptr->init)((me_)))
+
+/** \brief Dispatches an event to a state machine
+*
+* Processes one event at a time in Run-to-Completion fashion. The argument
+* \a me is the pointer the state machine structure derived from QMsm.
+*
+* \note Must be called after the "constructor" QMsm_ctor() and QMsm_init().
+*
+* \sa example for QMsm_init() \n \ref derivation
+*/
+#define QMSM_DISPATCH(me_) ((*(me_)->vptr->dispatch)((me_)))
+
+#ifndef Q_NMSM
+
+/** \brief Protected "constructor" of a QM SM.
+*
+* Performs the first step of QMsm initialization by assigning the initial
+* pseudostate to the currently active state of the state machine.
+*
+* \note Must be called only by the "constructors" of the derived state
+* machines.
+* \note Must be called only ONCE before QMsm_init().
+*/
+void QMsm_ctor(QMsm * const me, QStateHandler initial);
+
+/** \brief Implementation of the top-most initial transition in QMsm.
+*/
+void QMsm_init(QMsm * const me);
+
+/** \brief Implementation of disparching events to QMsm.
+*/
+#ifndef QK_PREEMPTIVE
+    void QMsm_dispatch(QMsm * const me);
+#else
+    void QMsm_dispatch(QMsm * const me) Q_REENTRANT;
 #endif
 
+/** \brief Empty action used in transition tables without any
+* entry/exit/initial actions
+*/
+extern QActionHandler const QMsm_emptyAction_[1];
+
+#endif                                                            /* Q_NMSM */
+
+
+/****************************************************************************/
 #ifndef Q_NFSM
 
-/** \brief State machine constructor.
+/** \brief Finite State Machine
 *
-* \param me_ pointer the state machine structure derived from ::QHsm.
-* \param initial_ is the pointer to the initial state of the state machine.
-* \note Must be called only ONCE before taking the initial transition
-* with QFsm_init() and dispatching any events via QFsm_dispatch().
+* QFsm represents a traditional non-hierarchical Finite State Machine (FSM)
+* without state hierarchy, but with entry/exit actions. QFsm inherits QMsm
+* "as is" without adding new attributes, so it is typedef'ed as QMsm.
+*
+* \note QFsm is not intended to be instantiated directly, but rather serves
+* as the base structure for derivation of state machines in the application
+* code.
+*
+* The following example illustrates how to derive a state machine structure
+* from QFsm. Please note that the QFsm member super is defined as the FIRST
+* member of the derived struct.
+* \include qepn_qfsm.c
+*
+* \sa \ref derivation
 */
-#define QFsm_ctor(me_, initial_) do { \
-    (me_)->state = Q_STATE_CAST(0); \
-    (me_)->temp  = (initial_); \
-} while (0)
+typedef QMsm QFsm;
 
-/** \brief Initializes a FSM
+/** \brief Protected "constructor" of a FSM.
 *
-* Takes the top-most initial transition in a FSM.
-* \param me is the pointer the state machine structure derived from ::FHsm.
+* Performs the first step of FSM initialization by assigning the
+* initial pseudostate to the currently active state of the state machine.
+* \note Must be called only by the "constructors" of the derived state
+* machines.
+* \note Must be called only ONCE before QFsm_init().
 *
-* \note Must be called only ONCE after QFsm_ctor() and before any calls
-* to QFsm_dispatch().
+* The following example illustrates how to invoke QFsm_ctor() in the
+* "constructor" of a derived state machine:
+* \include qepn_qfsm_ctor.c
+*/
+void QFsm_ctor(QFsm * const me, QStateHandler initial);
+
+/** \brief Implementation of the top-most initial transition in QFsm.
 */
 void QFsm_init(QFsm * const me);
 
+/** \brief Implementation of disparching events to QFsm.
+*/
 #ifndef QK_PREEMPTIVE
-    /** \brief Dispatches an event to a FSM
-    *
-    * Processes one event at a time in Run-to-Completion fashion. The argument
-    * \a me is the pointer the state machine structure derived from ::QFsm.
-    *
-    * \note Must be called after QFsm_init().
-    */
     void QFsm_dispatch(QFsm * const me);
 #else
     void QFsm_dispatch(QFsm * const me) Q_REENTRANT;
@@ -294,135 +394,72 @@ void QFsm_init(QFsm * const me);
 #endif                                                            /* Q_NFSM */
 
 
-/** \brief Value returned by a state-handler function when it handles
-* the event.
-*/
-#define Q_RET_HANDLED       ((QState)0)
-
-/** \brief Macro to specify the return of a state-handler function when
-* it handles the event.
-*
-* \include qepn_qfsm.c
-*/
-#define Q_HANDLED()         (Q_RET_HANDLED)
-
-/** \brief Value returned by a non-hierarchical state-handler function when
-* it ignores (does not handle) the event.
-*/
-#define Q_RET_IGNORED       ((QState)1)
-
-/** \brief Macro to specify the return of a state-handler function when
-* it ignores (does not handle in any way) the event.
-*
-* \note Can be used in non-hierarchical state machines.
-*
-* \include qepn_qfsm.c
-*/
-#define Q_IGNORED()         (Q_RET_IGNORED)
-
-/** \brief Value returned by a state-handler function when it takes a
-* regular state transition.
-*/
-#define Q_RET_TRAN          ((QState)2)
-
-/** \brief Designates a target for an initial or regular transition.
-* Q_TRAN() can be used both in the FSMs and HSMs.
-*
-* \include qepn_qtran.c
-*/
-#define Q_TRAN(target_)  \
-    (((QFsm *)me)->temp = Q_STATE_CAST(target_), Q_RET_TRAN)
-
-/** \brief Value returned by a state-handler function when it forwards
-* the event to the superstate to handle.
-*/
-#define Q_RET_SUPER         ((QState)3)
-
-/** \brief Designates the superstate of a given state in an HSM.
-*
-* \include qepn_qhsm.c
-*/
-#define Q_SUPER(super_)  \
-    (((QHsm *)me)->temp = Q_STATE_CAST(super_),  Q_RET_SUPER)
-
-/** \brief Value returned by a state-handler function when a guard
-* condition prevents it from handling the event.
-*/
-#define Q_RET_UNHANDLED    ((QState)4)
-
-/** \brief Macro to specify the return of a state-handler function when
-* it attempts to handle the event but a guard condition evaluates to false
-* and there is no other explicit way of handling the event.
-*
-* \include qepn_qfsm.c
-*/
-#define Q_UNHANDLED()      (Q_RET_UNHANDLED)
-
-
 /****************************************************************************/
 #ifndef Q_NHSM
 
-/** \brief a Hierarchical State Machine.
+/** \brief Hierarchical State Machine
 *
-* QHsm represents a Hierarchical Finite State Machine (HSM). QHsm
-* extends the capabilities of a basic FSM with state hierarchy.
+* QHsm represents a Hierarchical Finite State Machine (HSM) with full
+* support for hierarchical nesting of states, entry/exit actions,
+* and initial transitions in any composite state. QHsm inherits QMsm
+* "as is" without adding new attributes, so it is typedef'ed as QMsm.
 *
 * \note QHsm is not intended to be instantiated directly, but rather serves
 * as the base structure for derivation of state machines in the application
 * code.
 *
 * The following example illustrates how to derive a state machine structure
-* from QHsm. Please note that the QHsm member super_ is defined as the FIRST
+* from QHsm. Please note that the QHsm member super is defined as the FIRST
 * member of the derived struct.
 * \include qepn_qhsm.c
 *
 * \sa \ref derivation
 */
-typedef struct QFsmTag QHsm;
+typedef QMsm QHsm;
 
 /* public methods */
-/** \brief State machine constructor.
+
+/** \brief protected "constructor" of a HSM.
+* Performs the first step of HSM initialization by assigning the
+* initial pseudostate to the currently active state of the state machine.
 *
-* \param me_ pointer the state machine structure derived from ::QHsm.
-* \param initial_ is the pointer to the initial state of the state machine.
-* \note Must be called only ONCE before taking the initial transition
-* with QHsm_init() and dispatching any events via QHsm_dispatch().
+* \note Must be called only by the "constructors" of the derived state
+* machines.
+* \note Must be called before QHsm_init().
+*
+* The following example illustrates how to invoke QHsm_ctor() in the
+* "constructor" of a derived state machine:
+* \include qepn_qhsm_ctor.c
 */
-#define QHsm_ctor(me_, initial_) do { \
-    (me_)->state = Q_STATE_CAST(&QHsm_top); \
-    (me_)->temp  = (initial_); \
-} while (0)
+void QHsm_ctor(QHsm * const me, QStateHandler initial);
 
 /** \brief Obtain the current active state from a HSM (read only).
 */
-#define QHsm_state(me_) (Q_STATE_CAST((me_)->state))
+#define QHsm_state(me_) (Q_STATE_CAST((me_)->state.fun))
 
-/** \brief Initializes a HSM.
-*
-* Takes the top-most initial transition in a HSM.
-* \param me is the pointer the state machine structure derived from ::QHsm.
-*
-* \note Must be called only ONCE after QHsm_ctor() and before any calls
-* to QHsm_dispatch().
+/** \brief Implementation of the top-most initial transition in QHsm.
 */
 void QHsm_init(QHsm * const me);
 
+/** \brief Implementation of dispatching events to QHsm.
+*/
 #ifndef QK_PREEMPTIVE
-    /** \brief Dispatches an event to a HSM
-    *
-    * Processes one event at a time in Run-to-Completion fashion.
-    * \a me is the pointer the state machine structure derived from ::QHsm.
-    *
-    * \note Must be called repetitively for each event after QHsm_init().
-    */
     void QHsm_dispatch(QHsm * const me);
 #else
     void QHsm_dispatch(QHsm * const me) Q_REENTRANT;
 #endif
 
-/* protected methods... */
+/** \brief Tests if a given state is part of the current active state
+* configuration
+*
+* \param me is the pointer the state machine structure derived from ::QHsm.
+* \param state is a pointer to the state handler function, e.g., &QCalc_on.
+*/
+uint8_t QHsm_isIn(QHsm * const me, QStateHandler const state);
 
-/** \brief The top-state.
+/* protected methods */
+
+/** \brief the top-state.
 *
 * QHsm_top() is the ultimate root of state hierarchy in all HSMs derived
 * from ::QHsm. This state handler always returns (QState)0, which means
@@ -434,11 +471,150 @@ QState QHsm_top(void const * const me);
 
 #endif                                                            /* Q_NHSM */
 
-#include "qassert.h"            /* include the QP-nano assertions (for DbC) */
+/****************************************************************************/
+
+/** \brief All possible values returned from state/action handlers */
+enum QHandlerReturnValues {
+    Q_RET_SUPER,       /**< \brief event passed to the superstate to handle */
+    Q_RET_HANDLED,     /**< \brief event handled (internal transition)      */
+    Q_RET_UNHANDLED,   /**< \brief event unhandled                          */
+    Q_RET_IGNORED,     /**< \brief event ignored (bubbled up to top)        */
+    Q_RET_TRAN,        /**< \brief regular transition taken                 */
+    Q_RET_ENTRY,       /**< \brief entry action executed                    */
+    Q_RET_EXIT,        /**< \brief exit action executed                     */
+    Q_RET_INITIAL      /**< \brief initial transition taken                 */
+};
+
+
+/** \brief Perform cast to QStateHandler.
+*
+* This macro encapsulates the cast of a specific state handler function
+* pointer to QStateHandler, which violates MISRA-C 2004 rule 11.4(advisory).
+* This macro helps to localize this deviation.
+*/
+#define Q_STATE_CAST(handler_)  ((QStateHandler)(handler_))
+
+/** \brief Perform cast to QActionHandler.
+*
+* This macro encapsulates the cast of a specific action handler function
+* pointer to QActionHandler, which violates MISRA-C 2004 rule 11.4(advisory).
+* This macro helps to localize this deviation.
+*/
+#define Q_ACTION_CAST(action_)  ((QActionHandler)(action_))
+
+
+/** \brief Macro to call in a QM action-handler when it executes
+* an entry action. Applicable only to QMSMs.
+*/
+#define QM_ENTRY(dummy) ((QState)Q_RET_ENTRY)
+
+/** \brief Macro to call in a QM action-handler when it executes
+* an exit action. Applicable only to QMSMs.
+*/
+#define QM_EXIT(dummy)  ((QState)Q_RET_EXIT)
+
+/** \brief Macro to call in a QM state-handler when it executes a regular
+* transition. Applicable only to QMSMs.
+*/
+#define QM_TRAN(target_, act_) \
+    (((((QMsm *)me)->state.obj = (target_)), \
+      (((QMsm *)me)->temp.act = (act_))), (QState)Q_RET_TRAN)
+
+/** \brief Macro to call in a QM state-handler when it executes an initial
+* transition. Applicable only to QMSMs.
+*/
+#define QM_INITIAL(target_, act_) \
+    (((((QMsm *)me)->state.obj = (target_)), \
+      (((QMsm *)me)->temp.act = (act_))), Q_RET_INITIAL)
+
+/** \brief Macro to call in a QM state-handler when it handled an event.
+* Applicable only to QMSMs.
+*/
+#define QM_HANDLED()     ((QState)Q_RET_HANDLED)
+
+/** \brief Macro to call in a QM state-handler when when it attempts to
+* handle an event but a guard condition evaluates to false and there is
+* no other explicit way of handling the event. Applicable only to QMSMs.
+*/
+#define QM_UNHANDLED()   ((QState)Q_RET_UNHANDLED)
+/** \brief Macro to call in a QM state-handler when it designates the
+* superstate to handle an event. Applicable only to QMSMs.
+*/
+#define QM_SUPER()       ((QState)Q_RET_SUPER)
+
+
+/** \brief Macro to call in a state-handler when it executes a regular
+* or and initial transition. Applicable to both HSMs and FSMs.
+* \include qepn_qtran.c
+*/
+#define Q_TRAN(target_)  \
+    (((QMsm *)me)->temp.fun = Q_STATE_CAST(target_), (QState)Q_RET_TRAN)
+
+/** \brief Macro to call in a state-handler when it designates the
+* superstate of a given state. Applicable only to HSMs.
+* \include qepn_qhsm.c
+*/
+#define Q_SUPER(super_)  \
+    (((QMsm *)me)->temp.fun = Q_STATE_CAST(super_),  (QState)Q_RET_SUPER)
+
+/** \brief Macro to call in a state-handler when it handles an event.
+*  Applicable to both HSMs and FSMs.
+* \include qepn_qfsm.c
+*/
+#define Q_HANDLED()      ((QState)Q_RET_HANDLED)
+
+/** \brief Macro to call in a state-handler when it attempts to handle
+* an event but a guard condition evaluates to false and there is no other
+* explicit way of handling the event. Applicable only to HSMs.
+*/
+#define Q_UNHANDLED()    ((QState)Q_RET_UNHANDLED)
+
+/** \brief Macro to
+ call in a non-hierarchical state-handler when it
+* ignores (does not handle) an event. Applicable only to FSMs.
+* \include qepn_qfsm.c
+*/
+#define Q_IGNORED()      ((QState)Q_RET_IGNORED)
+
+/** \brief QP reserved signals */
+enum QReservedSignals {
+    Q_ENTRY_SIG = 1,                   /**< signal for coding entry actions */
+    Q_EXIT_SIG,                         /**< signal for coding exit actions */
+    Q_INIT_SIG,           /**< signal for coding nested initial transitions */
+    Q_TIMEOUT_SIG, /**< signal used by time events at the default tick rate */
+    Q_TIMEOUT1_SIG,          /**< signal used by time events at tick rate 1 */
+    Q_TIMEOUT2_SIG,          /**< signal used by time events at tick rate 2 */
+    Q_TIMEOUT3_SIG,          /**< signal used by time events at tick rate 3 */
+    Q_USER_SIG      /**< first signal that can be used in user applications */
+};
+
+/** \brief Perform cast from unsigned integer \a uint_ to pointer
+* of type \a type_.
+*
+* This macro encapsulates the cast to (type_ *), which QP ports or
+* application might use to access embedded hardware registers.
+* Such uses can trigger PC-Lint "Note 923: cast from int to pointer" and
+* this macro helps to encapsulate this deviation.
+*/
+#define Q_UINT2PTR_CAST(type_, uint_)  ((type_ *)(uint_))
+
+
+/****************************************************************************/
+/** \brief obtain the current QP-nano version number string
+*
+* version of QP-nano as a constant 5-character string of the form X.Y.Z,
+* where X is a 1-digit major version number, Y is a 1-digit minor
+* version number, and Z is a 1-digit release number.
+*/
+#define QP_getVersion() (QP_VERSION_STR)
 
 /****************************************************************************/
 #ifndef Q_NQEVENT
-    typedef QEvt QEvent;             /**< typedef for backwards compatibity */
+    typedef QEvt QEvent;/**< Deprecated typedef for backwards compatibility */
 #endif
 
+/****************************************************************************/
+#include "qassert.h"            /* include the QP-nano assertions (for DbC) */
+
 #endif                                                            /* qepn_h */
+

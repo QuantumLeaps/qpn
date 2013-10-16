@@ -1,17 +1,17 @@
 /*****************************************************************************
-* Product: DPP example, 80x86, Win32
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 15, 2012
+* Product: BSP for DPP example, Win32
+* Last Updated for Version: 4.5.05
+* Date of the Last Update:  Mar 28, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -36,55 +36,14 @@
 #include "dpp.h"
 #include "bsp.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>                                           /* Win32 API */
-
 #include <conio.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 
 Q_DEFINE_THIS_FILE
 
 /* local variables ---------------------------------------------------------*/
-static uint8_t  l_running;
 static uint32_t l_rnd;                                       /* random seed */
-
-/*..........................................................................*/
-static DWORD WINAPI isrThread(LPVOID par) {  /* Win32 thred to emulate ISRs */
-    (void)par;                                          /* unused parameter */
-    //SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-    l_running = (uint8_t)1;
-    while (l_running) {
-        Sleep(1000UL / BSP_TICKS_PER_SEC);      /* wait for the tick period */
-
-        QF_tickISR();          /* perform the QF-nano clock tick processing */
-
-        if (_kbhit()) {                                 /* any key pressed? */
-            int ch = _getch();
-            if (ch == 0x1B) {                 /* see if the ESC key pressed */
-                QActive_post((QActive *)&AO_Table, TERMINATE_SIG, 0U);
-            }
-            else if (ch == 'p') {
-                QActive_post((QActive *)&AO_Table, PAUSE_SIG, 0U);
-            }
-        }
-    }
-    return 0U;                                            /* return success */
-}
-/*..........................................................................*/
-void QF_onStartup(void) {
-    Q_ALLEGE(CreateThread(NULL, 1024, &isrThread, 0, 0, NULL)
-             != (HANDLE)0);                       /* thread must be created */
-}
-/*..........................................................................*/
-void QF_onCleanup(void) {
-    l_running = (uint8_t)0;
-}
-/*..........................................................................*/
-void QF_onIdle(void) {                    /* called within critical section */
-    QF_INT_ENABLE();
-}
 
 /*..........................................................................*/
 void BSP_init(void) {
@@ -96,8 +55,8 @@ void BSP_init(void) {
 }
 /*..........................................................................*/
 void BSP_terminate(int16_t result) {
+    (void)result;
     QF_stop();
-    exit(result);
 }
 /*..........................................................................*/
 void BSP_displayPhilStat(uint8_t n, char_t const *stat) {
@@ -122,5 +81,31 @@ void BSP_randomSeed(uint32_t seed) {
 /*..........................................................................*/
 void Q_onAssert(char_t const Q_ROM * const Q_ROM_VAR file, int_t line) {
     fprintf(stderr, "Assertion failed in %s, line %d", file, line);
-    BSP_terminate(-1);
+    exit(-1);
 }
+
+/*--------------------------------------------------------------------------*/
+void QF_onStartup(void) {
+    QF_setTickRate(BSP_TICKS_PER_SEC);
+}
+/*..........................................................................*/
+void QF_onCleanup(void) {
+    printf("\nBye! Bye!\n");
+}
+/*..........................................................................*/
+void QF_onClockTickISR(void) {
+    QF_tickXISR(0U);           /* perform the QF-nano clock tick processing */
+
+    if (_kbhit()) {                                     /* any key pressed? */
+        int ch = _getch();
+        if (ch == 0x1B) {                     /* see if the ESC key pressed */
+            QACTIVE_POST_ISR((QActive *)&AO_Table, TERMINATE_SIG, 0U);
+        }
+        else if (ch == 'p') {
+            QACTIVE_POST_ISR((QActive *)&AO_Table, PAUSE_SIG, 0U);
+        }
+    }
+}
+
+
+

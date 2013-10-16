@@ -1,0 +1,70 @@
+
+--- Module:   D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c (C)
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 57 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'AO_Pelican' at location line 57, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+
+/// Start of Pass 2 ///
+
+--- Module:   D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c (C)
+
+--- Global Wrap-up
+
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMActive_ctor' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_init' 
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h" 49 1 Warning 526: Symbol 'BSP_terminate(int16_t)' (line 49, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_terminate' 
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h" 50 1 Warning 526: Symbol 'BSP_showState(const char_t *)' (line 50, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_showState' 
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h" 51 1 Warning 526: Symbol 'BSP_signalCars(enum BSP_CarsSignal)' (line 51, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_signalCars' 
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h" 52 1 Warning 526: Symbol 'BSP_signalPeds(enum BSP_PedsSignal)' (line 52, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_signalPeds' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_init' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_intNest_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_onStartup' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_onIdle' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_active' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_readySet_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_run' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_mutexLock' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_mutexUnlock' 
+"D:\qp\qpn\include\qfn.h" 355 1 Warning 526: Symbol 'QActive_armX(QActive *, uint8_t, QTimeEvtCtr)' (line 355, file D:\qp\qpn\include\qfn.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_armX' 
+"D:\qp\qpn\include\qfn.h" 212 1 Warning 526: Symbol 'QActive_ctor(QActive *, QStateHandler)' (line 212, file D:\qp\qpn\include\qfn.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_ctor' 
+"D:\qp\qpn\include\qfn.h" 368 1 Warning 526: Symbol 'QActive_disarmX(QActive *, uint8_t)' (line 368, file D:\qp\qpn\include\qfn.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_disarmX' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_postX' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_postXISR' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_stop' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_ctor' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_dispatch' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_init' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_isIn' 
+"D:\qp\qpn\include\qepn.h" 464 1 Warning 526: Symbol 'QHsm_top(const void *)' (line 464, file D:\qp\qpn\include\qepn.h) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_top' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_tickXISR' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_onIdle' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'Q_onAssert' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_currPrio_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_ceilingPrio_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_schedPrio_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_sched_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_ctor' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_init' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_dispatch' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_emptyAction_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_init' 
+"D:\qp\qpn\include\qepn.h" 474 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_UNHANDLED' (line 474, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 475 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_IGNORED' (line 475, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 477 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_ENTRY' (line 477, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 478 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_EXIT' (line 478, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 479 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_INITIAL' (line 479, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 578 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT1_SIG' (line 578, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 579 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT2_SIG' (line 579, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 580 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT3_SIG' (line 580, file D:\qp\qpn\include\qepn.h) not referenced
+
+Count   Type    Number  Text
+
+8       Warning 526     Symbol '___' (___) not defined
+8       Info    769     global enumeration constant '___' (___) not referenced
+39      Note    960     Violates MISRA 2004 Required Rule ___, ___

@@ -1,6 +1,0 @@
--F0x30 -g -blit:0x150.0x7fff 
- -bdata:0.0x6ff -bSSCParmBlk:0x00F7.0x00FF -BInterruptRAM:0 -Bvirtual_registers -elim:UserModules 
- -Bqhsmtst_psoceval1_RAM 
- -o"output/qhsmtst_psoceval1" 
- ./obj/bsp.o ./obj/main.o ./obj/qepn.o ./obj/qhsmtst.o   
- C:/software/qpn/examples/psoc/iccm8c/QHSMTS~1/lib/libPSoc.a -LC:/tools/Cypress/PSOC_D~1/tools/lib/LMM/eightpages C:/tools/Cypress/PSOC_D~1/tools/lib/CY8C29000/cms.a C:/tools/Cypress/PSOC_D~1/tools/lib/LMM/UASW/MAC/arith.a 

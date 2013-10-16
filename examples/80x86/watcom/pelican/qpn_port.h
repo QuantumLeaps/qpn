@@ -1,17 +1,17 @@
 /*****************************************************************************
-* Product: Time Bomb example, 80x86, Vanilla kernel, Open Watcom compiler
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2012
+* Product: PELICAN crossing example, 80x86, Vanilla kernel, Open Watcom
+* Last Updated for Version: 4.5.05
+* Date of the Last Update:  Mar 28, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the

@@ -155,7 +155,7 @@ void QF_stop(void) {
 }
 /*..........................................................................*/
 void QF_onIdle(void) {
-    QF_INT_ENABLE();                            /* always enable interrutps */
+    QF_INT_ENABLE();                            /* always enable interrupts */
 }
 /*..........................................................................*/
 /* this function is used by the QP embedded systems-friendly assertions     */

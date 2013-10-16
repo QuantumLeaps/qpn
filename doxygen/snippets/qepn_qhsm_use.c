@@ -1,19 +1,19 @@
-#include "qpn.h"                                /* QP-nano public interface */
-#include "qcalc.h"                           /* QCalc HSM derived from QHsm */
+#include "qpn_port.h"  /* QP-nano port */
+#include "calc.h"      /* Calc HSM derived from QHsm */
 
-static QCalc l_qcalc;                           /* an instance of QCalc HSM */
+static Calc l_calc;    /* an instance of Calc HSM */
 
 int main() {
-    QCalc_ctor(&l_qcalc);    /* QCalc HSM "constructor" invokes QHsm_ctor() */
+    Calc_ctor(&l_calc); /* Calc HSM "constructor" invokes QHsm_ctor() */
 
-    QHsm_init((QHsm *)&l_qcalc);              /* trigger initial transition */
+    QMSM_INIT(&l_calc.super); /* trigger initial transition, late biniding */
 
-    for (;;) {                                                /* event loop */
+    for (;;) { /* event loop */
         . . .
         /* wait for the next event and assign it to the current event */
-        QSIG(&l_qcalc) = ...
-        QPAR(&l_qcalc) = ...
-        QHsm_dispatch((QHsm *)&l_qcalc);   /* dispatch the event to l_qcalc */
+        QSIG(&l_calc) = ...
+        QPAR(&l_calc) = ...
+        QMSM_DISPATCH(&l_calc.super); /* dispatch the event, late binding */
     }
     return 0;
 }

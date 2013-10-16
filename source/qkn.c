@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 4.5.04
-* Date of the Last Update:  Feb 04, 2013
+* Last Updated for Version: 5.1.1
+* Date of the Last Update:  Oct 14, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -11,7 +11,7 @@
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -51,10 +51,10 @@ Q_DEFINE_THIS_MODULE("qkn")
 uint8_t volatile QK_currPrio_ = (uint8_t)(QF_MAX_ACTIVE + 1);
 
 #ifdef QF_ISR_NEST
-uint8_t volatile QK_intNest_;              /* start with nesting level of 0 */
+uint8_t volatile QK_intNest_;            /* interrupt nesting for QK kernel */
 #endif
 
-#ifdef QK_MUTEX
+#ifndef QK_NO_MUTEX
 uint8_t volatile QK_ceilingPrio_;            /* ceiling priority of a mutex */
 #endif
 
@@ -64,6 +64,10 @@ static void initialize(void);                /* prototype required by MISRA */
 static void initialize(void) {
     uint8_t p;
     QActive *a;
+
+#ifdef QK_INIT             /* initialization of the QK-nano kernel defined? */
+    QK_INIT();                             /* initialize the QK-nano kernel */
+#endif
                          /* set priorities all registered active objects... */
     for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
@@ -73,11 +77,7 @@ static void initialize(void) {
          /* trigger initial transitions in all registered active objects... */
     for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
-#ifndef QF_FSM_ACTIVE
-        QHsm_init(&a->super);                              /* initial tran. */
-#else
-        QFsm_init(&a->super);                              /* initial tran. */
-#endif
+        QMSM_INIT(&a->super);      /* take the initial transition in the SM */
     }
 
     QF_INT_DISABLE();
@@ -96,7 +96,9 @@ int16_t QF_run(void) {
     for (;;) {                                    /* enter the QK idle loop */
         QK_onIdle();                         /* invoke the on-idle callback */
     }
-    return (int16_t)0; /* this unreachable return is to make compiler happy */
+#ifdef __GNUC__                                            /* GNU compiler? */
+    return (int16_t)0;
+#endif
 }
 
 /*..........................................................................*/
@@ -105,15 +107,33 @@ uint8_t QK_schedPrio_(void) Q_REENTRANT {
     uint8_t p;               /* highest-priority active object ready to run */
 
           /* determine the priority of the highest-priority AO ready to run */
+#ifdef QF_LOG2
     p = QF_LOG2(QF_readySet_);
+#else
 
-#ifdef QK_MUTEX                     /* QK priority-ceiling mutexes allowed? */
-    if ((p <= QK_currPrio_) || (p <= QK_ceilingPrio_)) {
-#else                                /* QK priority-ceiling mutexes allowed */
-    if (p <= QK_currPrio_) {                    /* do we have a preemption? */
+#if (QF_MAX_ACTIVE > 4)
+    if ((QF_readySet_ & (uint8_t)0xF0) != (uint8_t)0) {  /* hi nibble used? */
+        p = (uint8_t)(Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
+                      + (uint8_t)4);
+    }
+    else                               /* hi nibble of QF_readySet_ is zero */
 #endif
+    {
+        p = Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
+    }
+#endif
+
+    if (p <= QK_currPrio_) {     /* below the current preemption threshold? */
         p = (uint8_t)0;
     }
+#ifndef QK_NO_MUTEX
+    else if (p <= QK_ceilingPrio_) {            /* below the mutex ceiling? */
+        p = (uint8_t)0;
+    }
+    else {
+        /* empty */
+    }
+#endif
     return p;
 }
 /*..........................................................................*/
@@ -150,30 +170,46 @@ void QK_sched_(uint8_t p) Q_REENTRANT {
             a->tail = Q_ROM_BYTE(acb->end);
         }
         --a->tail;
-        QF_INT_ENABLE();              /* unlock interrupts to launch a task */
+        QF_INT_ENABLE();              /* enable interrupts to launch a task */
 
-                                      /* dispatch to HSM (execute RTC step) */
-#ifndef QF_FSM_ACTIVE
-        QHsm_dispatch(&a->super);
-#else
-        QFsm_dispatch(&a->super);
-#endif
+        QMSM_DISPATCH(&a->super);  /* dispatch to the SM (execute RTC step) */
 
         QF_INT_DISABLE();
 
-                          /* determine the highest-priority AO ready to run */
+                       /* determine the highest-priority AO ready to run... */
+#ifdef QF_LOG2
         p = QF_LOG2(QF_readySet_);
-
-#ifdef QK_MUTEX                     /* QK priority-ceiling mutexes allowed? */
-    } while ((p > pin) && (p > QK_ceilingPrio_));
 #else
-    } while (p > pin);
-#endif                                                          /* QK_MUTEX */
+
+#if (QF_MAX_ACTIVE > 4)
+        if ((QF_readySet_ & (uint8_t)0xF0) != (uint8_t)0) {   /* hi nibble? */
+            p = (uint8_t)(Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
+                          + (uint8_t)4);
+        }
+        else                           /* hi nibble of QF_readySet_ is zero */
+#endif
+        {
+            p = Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
+        }
+#endif
+
+        if (p <= pin) {          /* below the current preemption threshold? */
+            p = (uint8_t)0;
+        }
+#ifndef QK_NO_MUTEX
+        else if (p <= QK_ceilingPrio_) {        /* below the mutex ceiling? */
+            p = (uint8_t)0;
+        }
+        else {
+            /* empty */
+        }
+#endif
+    } while (p != (uint8_t)0);
 
     QK_currPrio_ = pin;                     /* restore the initial priority */
 }
 
-#ifdef QK_MUTEX
+#ifndef QK_NO_MUTEX
 /*..........................................................................*/
 QMutex QK_mutexLock(uint8_t const prioCeiling) {
     uint8_t mutex;
@@ -198,3 +234,4 @@ void QK_mutexUnlock(QMutex mutex) {
     QF_INT_ENABLE();
 }
 #endif                                                   /* #ifdef QK_MUTEX */
+

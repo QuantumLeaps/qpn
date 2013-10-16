@@ -1,5 +1,5 @@
 /* HSM definition ----------------------------------------------------------*/
-QState Pelican_carsGreenNoPed(Pelican *me) {
+QState Pelican_carsGreenNoPed(Pelican * const me) {
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             BSP_showState(me->super.prio, "carsGreenNoPed");
@@ -15,7 +15,7 @@ QState Pelican_carsGreenNoPed(Pelican *me) {
     return Q_SUPER(&Pelican_carsGreen);
 }
 /*..........................................................................*/
-QState Pelican_carsGreenPedWait(Pelican *me) {
+QState Pelican_carsGreenPedWait(Pelican * const me) {
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             BSP_showState(me->super.prio, "carsGreenPedWait");

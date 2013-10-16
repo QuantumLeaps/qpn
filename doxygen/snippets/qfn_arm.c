@@ -1,7 +1,7 @@
-QState Pelican_carsGreen(Pelican *me) {
+QState Pelican_carsGreen(Pelican * const me) {
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            QActive_arm((QActive *)me, CARS_GREEN_MIN_TOUT);  /* arm timer */
+            QActive_armX((QActive *)me, 0U, CARS_GREEN_MIN_TOUT); /* arm timer */
             BSP_signalCars(CARS_GREEN);
             return Q_HANDLED();
         }

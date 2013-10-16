@@ -1,5 +1,0 @@
-execUserSetup()	{
-    __orderInterrupt("TI2_int 0x2B  2  IE.ET2  TMR2CN",
-                     400000, 400000, 0, 0, 0, 100 );
-    __message "Set interrupt: TI2_int 0x2B  2  IE.ET2  TMR2CN";
-}

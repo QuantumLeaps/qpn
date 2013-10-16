@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="2.2.01">
+<model version="2.3.2">
  <documentation>&quot;Fly 'n' Shoot&quot; game example (see Chapter 1 in PSiCC2)</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
@@ -176,7 +176,7 @@ for (x = 0; x &lt; w; ++x) {
 return (uint8_t)0;</code>
    </operation>
    <statechart>
-    <initial target="../1/2">
+    <initial target="../1/6">
      <action>uint8_t n;
 for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
     QHsm_init(me-&gt;mine1_pool[n]); /* initial tran. for Mine1 */
@@ -184,7 +184,7 @@ for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
 }
 
 randomSeed(1234); /* seed the pseudo-random generator */</action>
-     <initial_glyph conn="3,2,5,1,25,14,-2">
+     <initial_glyph conn="3,2,5,1,25,13,-2">
       <action box="1,-2,6,2"/>
      </initial_glyph>
     </initial>
@@ -193,12 +193,12 @@ randomSeed(1234); /* seed the pseudo-random generator */</action>
       <action>Q_ASSERT((Q_PAR(me) &lt; GAME_MINES_MAX)
          &amp;&amp; (me-&gt;mines[Q_PAR(me)] != (QHsm *)0));
 me-&gt;mines[Q_PAR(me)] = (QHsm *)0;</action>
-      <tran_glyph conn="3,9,3,-1,18">
+      <tran_glyph conn="2,9,3,-1,18">
        <action box="0,-2,14,2"/>
       </tran_glyph>
      </tran>
      <tran trig="PLAYER_QUIT" target="../../2">
-      <tran_glyph conn="3,12,3,1,62,59,-39">
+      <tran_glyph conn="2,12,3,1,64,76,-41">
        <action box="0,-2,11,2"/>
       </tran_glyph>
      </tran>
@@ -224,11 +224,11 @@ me-&gt;blink_ctr = 20*2; /* 20s timeout total */</entry>
 QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2); /* 1/2 sec */</action>
        <choice target="../../../4">
         <guard>me-&gt;blink_ctr == 0</guard>
-        <choice_glyph conn="17,26,5,3,16">
+        <choice_glyph conn="16,42,5,3,18">
          <action box="1,0,14,2"/>
         </choice_glyph>
        </choice>
-       <tran_glyph conn="5,26,3,-1,12">
+       <tran_glyph conn="4,42,3,-1,12">
         <action box="0,-2,12,4"/>
        </tran_glyph>
       </tran>
@@ -242,16 +242,16 @@ if ((me-&gt;blink_ctr &amp; 1) != 0) {
         (GAME_SCREEN_HEIGHT - 8)/2);
 }
 BSP_drawBitmap(l_frame);</action>
-       <tran_glyph conn="5,23,3,-1,12">
+       <tran_glyph conn="4,39,3,-1,12">
         <action box="0,-2,12,2"/>
        </tran_glyph>
       </tran>
       <tran trig="PLAYER_TRIGGER" target="../../3">
-       <tran_glyph conn="5,31,3,1,23,6,-2">
+       <tran_glyph conn="4,47,3,1,24,7,-2">
         <action box="0,-2,13,2"/>
        </tran_glyph>
       </tran>
-      <state_glyph node="5,14,21,19">
+      <state_glyph node="4,30,22,20">
        <entry box="1,2,5,2"/>
        <exit box="1,4,5,2"/>
       </state_glyph>
@@ -263,14 +263,14 @@ BSP_drawBitmap(l_frame);</action>
 memset(l_walls, (uint8_t)0,
        (GAME_SCREEN_WIDTH * GAME_SCREEN_HEIGHT/8));
 
-QActive_post((QActive *)&amp;AO_Ship, TAKE_OFF_SIG, 0);</entry>
+QACTIVE_POST((QActive *)&amp;AO_Ship, TAKE_OFF_SIG, 0);</entry>
       <exit>Tunnel_dispatchToAllMines(me, MINE_RECYCLE_SIG, 0);</exit>
       <tran trig="TIME_TICK">
        <action>BSP_drawBitmap(l_frame); /* render this frame on the display */
 Tunnel_advance(me);
 Tunnel_plantMine(me);
 Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
-       <tran_glyph conn="5,44,3,-1,12">
+       <tran_glyph conn="4,61,3,-1,12">
         <action box="0,-2,9,2"/>
        </tran_glyph>
       </tran>
@@ -281,11 +281,11 @@ uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);
 
 /* did the Ship/Missile hit the tunnel wall? */
 if (Tunnel_isWallHit(me, bmp, x, y)) {
-    QActive_post((QActive *)&amp;AO_Ship, HIT_WALL_SIG, 0);
+    QACTIVE_POST((QActive *)&amp;AO_Ship, HIT_WALL_SIG, 0);
 }
 Tunnel_addImageAt(me, bmp, x, y);
 Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
-       <tran_glyph conn="5,47,3,-1,12">
+       <tran_glyph conn="4,64,3,-1,12">
         <action box="0,-2,9,2"/>
        </tran_glyph>
       </tran>
@@ -296,11 +296,11 @@ uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);
 
 /* did the Ship/Missile hit the tunnel wall? */
 if (Tunnel_isWallHit(me, bmp, x, y)) {
-    QActive_post((QActive *)&amp;AO_Missile, HIT_WALL_SIG, 0);
+    QACTIVE_POST((QActive *)&amp;AO_Missile, HIT_WALL_SIG, 0);
 }
 Tunnel_addImageAt(me, bmp, x, y);
 Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
-       <tran_glyph conn="5,50,3,-1,12">
+       <tran_glyph conn="4,67,3,-1,12">
         <action box="0,-2,12,2"/>
        </tran_glyph>
       </tran>
@@ -309,7 +309,7 @@ Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
                   (uint8_t)(Q_PAR(me) &gt;&gt; 16),
                   (uint8_t)Q_PAR(me),
                   (int8_t) (Q_PAR(me) &gt;&gt; 8));</action>
-       <tran_glyph conn="5,53,3,-1,12">
+       <tran_glyph conn="4,70,3,-1,12">
         <action box="0,-2,9,2"/>
        </tran_glyph>
       </tran>
@@ -318,7 +318,7 @@ Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
                   (uint8_t)(Q_PAR(me) &gt;&gt; 16),
                   (uint8_t)Q_PAR(me),
                   (int8_t) (Q_PAR(me) &gt;&gt; 8));</action>
-       <tran_glyph conn="5,56,3,-1,12">
+       <tran_glyph conn="4,73,3,-1,12">
         <action box="0,-2,11,2"/>
        </tran_glyph>
       </tran>
@@ -330,7 +330,7 @@ Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
 */
 me-&gt;minimal_gap = (uint8_t)(GAME_SCREEN_HEIGHT - 3U
                             - ((uint16_t)Q_PAR(me)/2000U));</action>
-       <tran_glyph conn="5,59,3,-1,12">
+       <tran_glyph conn="4,76,3,-1,12">
         <action box="0,-2,6,2"/>
        </tran_glyph>
       </tran>
@@ -353,23 +353,23 @@ str[2] = '0' + (score % 10); score /= 10;
 str[1] = '0' + (score % 10); score /= 10;
 str[0] = '0' + (score % 10);
 BSP_drawNString((GAME_SCREEN_WIDTH - 6*10)/2 + 6*6, 1, str);</action>
-       <tran_glyph conn="5,62,3,3,25,-7,3">
+       <tran_glyph conn="4,79,3,3,26,-8,2">
         <action box="0,-2,10,2"/>
        </tran_glyph>
       </tran>
-      <state_glyph node="5,35,21,30">
+      <state_glyph node="4,52,22,30">
        <entry box="1,2,6,2"/>
        <exit box="1,4,5,2"/>
       </state_glyph>
      </state>
      <state name="screen_saver">
       <initial target="../2">
-       <initial_glyph conn="34,18,5,1,21,7,-2">
+       <initial_glyph conn="35,34,5,1,21,7,-2">
         <action box="1,0,6,2"/>
        </initial_glyph>
       </initial>
       <tran trig="PLAYER_TRIGGER" target="../../2">
-       <tran_glyph conn="33,21,3,1,28,-8,-31,5,-4">
+       <tran_glyph conn="34,37,3,1,28,-9,-30,6,-6">
         <action box="0,-2,13,2"/>
        </tran_glyph>
       </tran>
@@ -379,11 +379,11 @@ QActive_arm((QActive *)me, BSP_TICKS_PER_SEC*3); /* 3s timeout */</entry>
        <exit>QActive_disarm((QActive *)me);
 BSP_displayOn(); /* power up the display */</exit>
        <tran trig="Q_TIMEOUT" target="../../3">
-        <tran_glyph conn="35,32,3,1,20,6,-2">
+        <tran_glyph conn="36,48,3,1,20,6,-2">
          <action box="0,-2,10,2"/>
         </tran_glyph>
        </tran>
-       <state_glyph node="35,23,18,11">
+       <state_glyph node="36,39,18,11">
         <entry box="1,2,5,2"/>
         <exit box="1,4,5,2"/>
        </state_glyph>
@@ -405,16 +405,16 @@ memset(l_frame, (uint8_t)0,
        (GAME_SCREEN_WIDTH * GAME_SCREEN_HEIGHT/8));
 BSP_drawBitmap(l_frame); /* render this frame on the display */</exit>
        <tran trig="Q_TIMEOUT" target="../../2">
-        <tran_glyph conn="35,45,3,1,22,-15,-4">
+        <tran_glyph conn="36,61,3,1,22,-15,-4">
          <action box="0,-2,13,2"/>
         </tran_glyph>
        </tran>
-       <state_glyph node="35,36,18,11">
+       <state_glyph node="36,52,18,11">
         <entry box="1,2,5,2"/>
         <exit box="1,4,5,2"/>
        </state_glyph>
       </state>
-      <state_glyph node="33,14,26,35"/>
+      <state_glyph node="34,30,26,35"/>
      </state>
      <state name="game_over">
       <entry>QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2); /* 1/2 sec */
@@ -431,20 +431,66 @@ BSP_drawNString((GAME_SCREEN_WIDTH - 6*9)/2, 0,
                  : &quot;         &quot;));</action>
        <choice target="../../../2">
         <guard>me-&gt;blink_ctr == 0</guard>
-        <choice_glyph conn="46,62,5,1,15,-11,-31,-22,-4">
+        <choice_glyph conn="45,78,5,1,15,-11,-30,-22,-4">
          <action box="1,0,17,2"/>
         </choice_glyph>
        </choice>
-       <tran_glyph conn="33,62,3,-1,13">
+       <tran_glyph conn="32,78,3,-1,13">
         <action box="0,-2,12,4"/>
        </tran_glyph>
       </tran>
-      <state_glyph node="33,53,26,12">
+      <state_glyph node="32,69,26,12">
        <entry box="1,2,5,2"/>
        <exit box="1,4,5,2"/>
       </state_glyph>
      </state>
-     <state_glyph node="3,4,60,63"/>
+     <state name="show_logo">
+      <entry>QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2); /* 1/2s timeout */
+me-&gt;blink_ctr = 10U;
+BSP_drawNString(0U, 0U, &quot; Quantum  LeAps &quot;);
+BSP_drawNString(0U, 1U, &quot;state-machine.co&quot;);</entry>
+      <exit>QActive_disarm((QActive *)me);</exit>
+      <tran trig="Q_TIMEOUT">
+       <action>--me-&gt;blink_ctr; /* toggle the blink couner */</action>
+       <choice target="../../../2">
+        <guard>me-&gt;blink_ctr == 0U</guard>
+        <choice_glyph conn="18,25,5,1,10,7,-2">
+         <action box="1,0,15,2"/>
+        </choice_glyph>
+       </choice>
+       <choice>
+        <guard brief="else"/>
+        <action>QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2); /* 1/2s timeout */</action>
+        <choice>
+         <guard>else</guard>
+         <action>BSP_drawNString(6U*9U, 0U,         &quot;LeaPs &quot;);
+BSP_drawNString(0U,    1U, &quot;tate-machine.com&quot;);</action>
+         <choice_glyph conn="18,21,5,-1,6">
+          <action box="2,0,6,2"/>
+         </choice_glyph>
+        </choice>
+        <choice>
+         <guard>(me-&gt;blink_ctr &amp; 1U) != 0U</guard>
+         <action>BSP_drawNString(6U*9U, 0U,         &quot; LeAps&quot;);
+BSP_drawNString(0U,    1U, &quot;state-machine.co&quot;);</action>
+         <choice_glyph conn="18,21,4,-1,-4,6">
+          <action box="2,-3,15,2"/>
+         </choice_glyph>
+        </choice>
+        <choice_glyph conn="18,25,4,-1,-4">
+         <action box="-4,-3,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="4,25,3,-1,14">
+        <action box="0,-2,12,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,13,22,14">
+       <entry box="1,2,5,2"/>
+       <exit box="1,4,5,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="2,4,62,80"/>
     </state>
     <state name="final">
      <entry>/* clear the screen */
@@ -452,11 +498,11 @@ memset(l_frame, (uint8_t)0,
        (GAME_SCREEN_WIDTH * GAME_SCREEN_HEIGHT/8));
 BSP_drawBitmap(l_frame); /* render this frame on the display */
 QF_stop();  /* stop QF and cleanup */</entry>
-     <state_glyph node="3,69,23,5">
+     <state_glyph node="2,86,23,6">
       <entry box="1,2,5,2"/>
      </state_glyph>
     </state>
-    <state_diagram size="67,76"/>
+    <state_diagram size="68,94"/>
    </statechart>
   </class>
   <class name="Ship" superclass="qpn::QActive">
@@ -494,10 +540,10 @@ me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
      </state>
      <state name="flying">
       <entry>me-&gt;score = 0; /* reset the score */
-QActive_post((QActive *)&amp;AO_Tunnel, SCORE_SIG, me-&gt;score);</entry>
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, SCORE_SIG, me-&gt;score);</entry>
       <tran trig="TIME_TICK">
        <action>/* tell the Tunnel to draw the Ship and test for hits */
-QActive_post((QActive *)&amp;AO_Tunnel, SHIP_IMG_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, SHIP_IMG_SIG,
              ((QParam)SHIP_BMP &lt;&lt; 16)
              | (QParam)me-&gt;x
              | ((QParam)me-&gt;y &lt;&lt; 8));
@@ -505,14 +551,14 @@ QActive_post((QActive *)&amp;AO_Tunnel, SHIP_IMG_SIG,
 ++me-&gt;score;  /* increment the score for surviving another tick */
 
 if ((me-&gt;score % 10) == 0) { /* is the score &quot;round&quot;? */
-    QActive_post((QActive *)&amp;AO_Tunnel, SCORE_SIG, me-&gt;score);
+    QACTIVE_POST((QActive *)&amp;AO_Tunnel, SCORE_SIG, me-&gt;score);
 }</action>
        <tran_glyph conn="5,35,3,-1,16">
         <action box="0,-2,9,2"/>
        </tran_glyph>
       </tran>
       <tran trig="PLAYER_TRIGGER">
-       <action>QActive_post((QActive *)&amp;AO_Missile, MISSILE_FIRE_SIG,
+       <action>QACTIVE_POST((QActive *)&amp;AO_Missile, MISSILE_FIRE_SIG,
              (QParam)me-&gt;x
              | (((QParam)(me-&gt;y - 1 + SHIP_HEIGHT) &amp; 0xFF) &lt;&lt; 8));</action>
        <tran_glyph conn="5,38,3,-1,16">
@@ -548,7 +594,7 @@ if ((me-&gt;score % 10) == 0) { /* is the score &quot;round&quot;? */
         <action>++me-&gt;exp_ctr;
 
   /* tell the Tunnel to draw the current stage of Explosion */
-QActive_post((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
          ((QParam)(EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
          | (QParam)me-&gt;x
          | (((QParam)(me-&gt;y - 4 + SHIP_HEIGHT) &amp; 0xFF) &lt;&lt; 8));</action>
@@ -558,7 +604,7 @@ QActive_post((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
        </choice>
        <choice target="../../../2">
         <guard>else</guard>
-        <action>QActive_post((QActive *)&amp;AO_Tunnel, GAME_OVER_SIG, me-&gt;score);</action>
+        <action>QACTIVE_POST((QActive *)&amp;AO_Tunnel, GAME_OVER_SIG, me-&gt;score);</action>
         <choice_glyph conn="16,60,4,1,4,21,-42,-4">
          <action box="1,4,6,2"/>
         </choice_glyph>
@@ -604,7 +650,7 @@ me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
        <guard>me-&gt;x + GAME_MISSILE_SPEED_X &lt; GAME_SCREEN_WIDTH</guard>
        <action>me-&gt;x += me-&gt;speed;
 /*tell the Tunnel to draw the Missile and test for wall hits*/
-QActive_post((QActive *)&amp;AO_Tunnel, MISSILE_IMG_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, MISSILE_IMG_SIG,
              ((QParam)MISSILE_BMP &lt;&lt; 16)
              | (QParam)me-&gt;x
              | ((QParam)me-&gt;y &lt;&lt; 8));</action>
@@ -629,7 +675,7 @@ QActive_post((QActive *)&amp;AO_Tunnel, MISSILE_IMG_SIG,
      </tran>
      <tran trig="DESTROYED_MINE" target="../../1">
       <action>/* tell the Ship the score for destroing this Mine */
-QActive_post((QActive *)&amp;AO_Ship, Q_SIG(me), Q_PAR(me));
+QACTIVE_POST((QActive *)&amp;AO_Ship, Q_SIG(me), Q_PAR(me));
 /* re-arm immediately &amp; let the destroyed Mine do the exploding */</action>
       <tran_glyph conn="3,32,3,1,40,-23,-7">
        <action box="0,-2,15,2"/>
@@ -646,7 +692,7 @@ QActive_post((QActive *)&amp;AO_Ship, Q_SIG(me), Q_PAR(me));
 me-&gt;x -= me-&gt;speed;       /* move the explosion by one step */
 
 /* tell the Tunnel to render the current stage of Explosion */
-QActive_post((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
          ((QParam)(EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
          | (QParam)(me-&gt;x + 3)
          | ((QParam)((int)me-&gt;y - 4) &lt;&lt; 8));</action>
@@ -695,7 +741,7 @@ me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
     </state>
     <state name="used">
      <exit brief="...">/* tell the Tunnel that this mine is becoming disabled */
-QActive_post((QActive *)&amp;AO_Tunnel,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel,
              MINE_DISABLED_SIG, MINE_ID(me));</exit>
      <tran trig="MINE_RECYCLE" target="../../1">
       <tran_glyph conn="3,21,3,1,43,-13,-18">
@@ -709,7 +755,7 @@ QActive_post((QActive *)&amp;AO_Tunnel,
         <action>me-&gt;x -= GAME_SPEED_X;  /* move the mine 1 step */
 
 /* tell the Tunnel to draw the Mine */
-QActive_post((QActive *)&amp;AO_Tunnel, MINE_IMG_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, MINE_IMG_SIG,
              ((QParam)MINE1_BMP &lt;&lt; 16)
              | (QParam)me-&gt;x
              | ((QParam)me-&gt;y &lt;&lt; 8));
@@ -734,7 +780,7 @@ uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
 uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
        <choice target="../../../../1">
         <guard>do_bitmaps_overlap(MINE1_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
-        <action>QActive_post((QActive *)&amp;AO_Ship, HIT_MINE_SIG,  1);
+        <action>QACTIVE_POST((QActive *)&amp;AO_Ship, HIT_MINE_SIG,  1);
 
 /* go straight to 'disabled' and let the Ship do
 * the exploding
@@ -754,7 +800,7 @@ uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
        <choice target="../../../2">
         <guard>do_bitmaps_overlap(MINE1_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
         <action>/* post the score for destroying Mine type-1 */
-QActive_post((QActive *)&amp;AO_Missile, DESTROYED_MINE_SIG, 25);</action>
+QACTIVE_POST((QActive *)&amp;AO_Missile, DESTROYED_MINE_SIG, 25);</action>
         <choice_glyph conn="16,42,5,1,24,9,-2">
          <action box="1,0,21,4"/>
         </choice_glyph>
@@ -774,7 +820,7 @@ QActive_post((QActive *)&amp;AO_Missile, DESTROYED_MINE_SIG, 25);</action>
 me-&gt;x -= GAME_SPEED_X; /* move explosion by 1 step */
 
 /* tell the Game to render the current stage of Explosion */
-QActive_post((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
          ((QParam)(EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
          | ((QParam)(me-&gt;x + 1))
          | (((QParam)((int)me-&gt;y - 4 + 2)) &lt;&lt; 8));</action>
@@ -826,7 +872,7 @@ me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
     </state>
     <state name="used">
      <exit brief="...">/* tell the Tunnel that this mine is becoming disabled */
-QActive_post((QActive *)&amp;AO_Tunnel,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel,
              MINE_DISABLED_SIG, MINE_ID(me));</exit>
      <tran trig="MINE_RECYCLE" target="../../1">
       <tran_glyph conn="3,21,3,1,42,-13,-14">
@@ -840,7 +886,7 @@ QActive_post((QActive *)&amp;AO_Tunnel,
         <action>me-&gt;x -= GAME_SPEED_X;              /* move the mine 1 step */
 
 /* tell the Tunnel to draw the Mine */
-QActive_post((QActive *)&amp;AO_Tunnel, MINE_IMG_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, MINE_IMG_SIG,
              ((QParam)MINE2_BMP &lt;&lt; 16)
              | (QParam)me-&gt;x
              | ((QParam)me-&gt;y &lt;&lt; 8));</action>
@@ -864,7 +910,7 @@ uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
 uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
        <choice target="../../../../1">
         <guard>do_bitmaps_overlap(MINE2_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
-        <action>QActive_post((QActive *)&amp;AO_Ship, HIT_MINE_SIG,  2);
+        <action>QACTIVE_POST((QActive *)&amp;AO_Ship, HIT_MINE_SIG,  2);
 /* go straight to 'disabled' and let the Ship do the exploding */</action>
         <choice_glyph conn="17,37,5,1,32,-29,-18">
          <action box="1,0,21,4"/>
@@ -887,7 +933,7 @@ uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
 * a smaller bitmap MINE2_MISSILE_BMP.
 */
 /* post the score for destroying Mine type-2 */
-QActive_post((QActive *)&amp;AO_Missile, DESTROYED_MINE_SIG, 45);</action>
+QACTIVE_POST((QActive *)&amp;AO_Missile, DESTROYED_MINE_SIG, 45);</action>
         <choice_glyph conn="17,43,5,1,22,9,-2">
          <action box="1,0,26,4"/>
         </choice_glyph>
@@ -907,7 +953,7 @@ QActive_post((QActive *)&amp;AO_Missile, DESTROYED_MINE_SIG, 45);</action>
 me-&gt;x -= GAME_SPEED_X; /* move explosion by 1 step */
 
 /* tell the Game to render the current stage of Explosion */
-QActive_post((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
+QACTIVE_POST((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
          ((QParam)(EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
          | ((QParam)(me-&gt;x + 1))
          | (((QParam)((int)me-&gt;y - 4 + 2)) &lt;&lt; 8));</action>

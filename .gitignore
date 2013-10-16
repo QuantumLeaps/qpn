@@ -22,6 +22,8 @@
 *.chm
 *.avrsuo
 
+test/
+test_ports/
 dbg/
 rel/
 spy/

@@ -1,17 +1,17 @@
 ##############################################################################
-# Product: DPP example, Linux, GNU compiler
-# Last Updated for Version: 4.5.00
-# Date of the Last Update:  May 22, 2012
+# Product: QP-nano Makefile, DPP example, Linux, GNU compiler
+# Last Updated for Version: 5.1.1
+# Date of the Last Update:  Oct 12, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
 #                    innovating embedded systems
 #
-# Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+# Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 #
 # This program is open source software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation, either version 2 of the License, or
+# by the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # Alternatively, this program may be distributed and modified under the
@@ -41,6 +41,9 @@
 # make clean
 # make CONF=rel clean
 
+# Output file basename
+PROJECT    := dpp
+
 #-----------------------------------------------------------------------------
 # NOTE: the Makefile expects that the QPN environment variable is defined
 # and points to the QP-nano installation directory
@@ -50,11 +53,6 @@ $(error The QPN environment variable must be defined)
 endif
 
 #-----------------------------------------------------------------------------
-# general utilities
-#
-RM = rm
-
-#-----------------------------------------------------------------------------
 # NOTE: this Makefile assumes that the MinGW\bin directory is added
 # to the PATH variable.
 #
@@ -62,6 +60,7 @@ CC    := gcc
 CPP   := g++
 LINK  := gcc                                                 # for C programs
 #LINK  := g++                                               # for C++ programs
+RM    := rm
 
 #-----------------------------------------------------------------------------
 # directories
@@ -74,13 +73,10 @@ VPATH = $(APP_DIR) \
 	$(QPN)/ports/posix
 
 
-# Output file basename
-OUTPUT    := dpp
-
 # include directories
-INCLUDES  = -I$(QPN)/include \
-	-I$(QP_PORT_DIR) \
-	-I.
+INCLUDES  = -I. \
+	-I$(QPN)/include \
+	-I$(QP_PORT_DIR)
 
 # defines
 DEFINES =
@@ -144,8 +140,8 @@ ASM_OBJS     := $(patsubst %.s,%.o,$(ASM_SRCS))
 C_OBJS       := $(patsubst %.c,%.o,$(C_SRCS))
 CPP_OBJS     := $(patsubst %.cpp,%.o,$(CPP_SRCS))
 
-TARGET_BIN   := $(BIN_DIR)/$(OUTPUT).bin
-TARGET_EXE   := $(BIN_DIR)/$(OUTPUT)
+TARGET_BIN   := $(BIN_DIR)/$(PROJECT).bin
+TARGET_EXE   := $(BIN_DIR)/$(PROJECT)
 ASM_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(ASM_OBJS))
 C_OBJS_EXT   := $(addprefix $(BIN_DIR)/, $(C_OBJS))
 C_DEPS_EXT   := $(patsubst %.o, %.d, $(C_OBJS_EXT))
@@ -192,4 +188,4 @@ $(BIN_DIR)/%.o : %.cpp
 clean:
 	-$(RM) $(BIN_DIR)/*.o \
 	$(BIN_DIR)/*.d \
-	$(BIN_DIR)/$(OUTPUT)
+	$(BIN_DIR)/$(PROJECT)

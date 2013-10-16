@@ -1,0 +1,158 @@
+
+--- Module:   D:\qp\qpn\source\qepn.c (C)
+
+--- Module:   D:\qp\qpn\source\qfn.c (C)
+
+--- Module:   D:\qp\qpn\source\qfn_init.c (C)
+
+--- Module:   D:\qp\qpn\source\qkn.c (C)
+
+/// Start of Pass 2 ///
+
+--- Module:   D:\qp\qpn\source\qepn.c (C)
+
+--- Module:   D:\qp\qpn\source\qfn.c (C)
+
+--- Module:   D:\qp\qpn\source\qfn_init.c (C)
+
+--- Module:   D:\qp\qpn\source\qkn.c (C)
+
+--- Global Wrap-up
+
+"D:\qp\qpn\ports\lint\stdint.h" 29 1 Info 756: global typedef 'uint32_t' (line 29, file D:\qp\qpn\ports\lint\stdint.h) not referenced
+"D:\qp\qpn\ports\lint\stdint.h" 30 1 Info 756: global typedef 'uint64_t' (line 30, file D:\qp\qpn\ports\lint\stdint.h) not referenced
+"D:\qp\qpn\include\qepn.h" 147 1 Info 756: global typedef 'uint_t' (line 147, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\ports\lint\stdint.h" 25 1 Info 756: global typedef 'int64_t' (line 25, file D:\qp\qpn\ports\lint\stdint.h) not referenced
+"D:\qp\qpn\include\qepn.h" 613 1 Info 756: global typedef 'QEvent' (line 613, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\source\qfn.c" 94 1 Info 759: header declaration for symbol 'QMActive_ctor(QMActive *, QStateHandler)' defined at (line 94, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 94 1 Info 765: external 'QMActive_ctor(QMActive *, QStateHandler)' (line 94, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 94 1 Info 714: Symbol 'QMActive_ctor(QMActive *, QStateHandler)' (line 94, file D:\qp\qpn\source\qfn.c) not referenced
+"D:\qp\qpn\include\qepn.h" 131 1 Info 756: global typedef 'float32_t' (line 131, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 134 1 Info 756: global typedef 'float64_t' (line 134, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qkn.h" 64 1 Warning 526: Symbol 'QK_init(void)' (line 64, file D:\qp\qpn\include\qkn.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_init' 
+"D:\qp\qpn\source\qkn.c" 54 1 Warning 552: Symbol 'QK_intNest_' (line 54, file D:\qp\qpn\source\qkn.c) not accessed
+"D:\qp\qpn\include\qfn.h" 437 1 Warning 526: Symbol 'QF_onStartup(void)' (line 437, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_onStartup' 
+"D:\qp\qpn\include\qfn.h" 481 1 Info 757: global declarator 'QF_onIdle(void)' (line 481, file D:\qp\qpn\include\qfn.h) not referenced
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_onIdle' 
+"D:\qp\qpn\include\qfn.h" 502 1 Warning 526: Symbol 'QF_active' (line 502, file D:\qp\qpn\include\qfn.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_active' 
+"D:\qp\qpn\source\qepn.c" 407 1 Info 759: header declaration for symbol 'QFsm_ctor(QFsm *, QStateHandler)' defined at (line 407, file D:\qp\qpn\source\qepn.c) could be moved from header to module
+"D:\qp\qpn\source\qepn.c" 407 1 Info 765: external 'QFsm_ctor(QFsm *, QStateHandler)' (line 407, file D:\qp\qpn\source\qepn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qepn.c" 407 1 Info 714: Symbol 'QFsm_ctor(QFsm *, QStateHandler)' (line 407, file D:\qp\qpn\source\qepn.c) not referenced
+"D:\qp\qpn\source\qepn.c" 433 1 Info 759: header declaration for symbol 'QFsm_dispatch(QFsm *)' defined at (line 433, file D:\qp\qpn\source\qepn.c) could be moved from header to module
+"D:\qp\qpn\source\qepn.c" 433 1 Info 765: external 'QFsm_dispatch(QFsm *)' (line 433, file D:\qp\qpn\source\qepn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qepn.c" 418 1 Info 759: header declaration for symbol 'QFsm_init(QFsm *)' defined at (line 418, file D:\qp\qpn\source\qepn.c) could be moved from header to module
+"D:\qp\qpn\source\qepn.c" 418 1 Info 765: external 'QFsm_init(QFsm *)' (line 418, file D:\qp\qpn\source\qepn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qkn.c" 92 1 Info 759: header declaration for symbol 'QF_run(void)' defined at (line 92, file D:\qp\qpn\source\qkn.c) could be moved from header to module
+"D:\qp\qpn\source\qkn.c" 92 1 Info 765: external 'QF_run(void)' (line 92, file D:\qp\qpn\source\qkn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qkn.c" 92 1 Info 714: Symbol 'QF_run(void)' (line 92, file D:\qp\qpn\source\qkn.c) not referenced
+"D:\qp\qpn\source\qkn.c" 214 1 Info 759: header declaration for symbol 'QK_mutexLock(uint8_t)' defined at (line 214, file D:\qp\qpn\source\qkn.c) could be moved from header to module
+"D:\qp\qpn\source\qkn.c" 214 1 Info 765: external 'QK_mutexLock(uint8_t)' (line 214, file D:\qp\qpn\source\qkn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qkn.c" 214 1 Info 714: Symbol 'QK_mutexLock(uint8_t)' (line 214, file D:\qp\qpn\source\qkn.c) not referenced
+"D:\qp\qpn\source\qkn.c" 225 1 Info 759: header declaration for symbol 'QK_mutexUnlock(QMutex)' defined at (line 225, file D:\qp\qpn\source\qkn.c) could be moved from header to module
+"D:\qp\qpn\source\qkn.c" 225 1 Info 765: external 'QK_mutexUnlock(QMutex)' (line 225, file D:\qp\qpn\source\qkn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qkn.c" 225 1 Info 714: Symbol 'QK_mutexUnlock(QMutex)' (line 225, file D:\qp\qpn\source\qkn.c) not referenced
+"D:\qp\qpn\source\qfn.c" 237 1 Info 759: header declaration for symbol 'QActive_armX(QActive *, uint8_t, QTimeEvtCtr)' defined at (line 237, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 237 1 Info 765: external 'QActive_armX(QActive *, uint8_t, QTimeEvtCtr)' (line 237, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 237 1 Info 714: Symbol 'QActive_armX(QActive *, uint8_t, QTimeEvtCtr)' (line 237, file D:\qp\qpn\source\qfn.c) not referenced
+"D:\qp\qpn\source\qfn.c" 79 1 Info 759: header declaration for symbol 'QActive_ctor(QActive *, QStateHandler)' defined at (line 79, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 79 1 Info 765: external 'QActive_ctor(QActive *, QStateHandler)' (line 79, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 79 1 Info 714: Symbol 'QActive_ctor(QActive *, QStateHandler)' (line 79, file D:\qp\qpn\source\qfn.c) not referenced
+"D:\qp\qpn\source\qfn.c" 248 1 Info 759: header declaration for symbol 'QActive_disarmX(QActive *, uint8_t)' defined at (line 248, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 248 1 Info 765: external 'QActive_disarmX(QActive *, uint8_t)' (line 248, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 248 1 Info 714: Symbol 'QActive_disarmX(QActive *, uint8_t)' (line 248, file D:\qp\qpn\source\qfn.c) not referenced
+"D:\qp\qpn\source\qfn.c" 110 1 Info 759: header declaration for symbol 'QActive_postX(QActive *, uint8_t, enum_t, QParam)' defined at (line 110, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 110 1 Info 765: external 'QActive_postX(QActive *, uint8_t, enum_t, QParam)' (line 110, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 156 1 Info 759: header declaration for symbol 'QActive_postXISR(QActive *, uint8_t, enum_t, QParam)' defined at (line 156, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 156 1 Info 765: external 'QActive_postXISR(QActive *, uint8_t, enum_t, QParam)' (line 156, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\include\qfn.h" 427 1 Info 757: global declarator 'QF_stop(void)' (line 427, file D:\qp\qpn\include\qfn.h) not referenced
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_stop' 
+"D:\qp\qpn\include\qepn.h" 458 1 Info 757: global declarator 'QHsm_isIn(QHsm *, QStateHandler)' (line 458, file D:\qp\qpn\include\qepn.h) not referenced
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_isIn' 
+"D:\qp\qpn\source\qepn.c" 166 1 Info 759: header declaration for symbol 'QHsm_top(const void *)' defined at (line 166, file D:\qp\qpn\source\qepn.c) could be moved from header to module
+"D:\qp\qpn\source\qepn.c" 166 1 Info 765: external 'QHsm_top(const void *)' (line 166, file D:\qp\qpn\source\qepn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 214 1 Info 759: header declaration for symbol 'QF_tickXISR(uint8_t)' defined at (line 214, file D:\qp\qpn\source\qfn.c) could be moved from header to module
+"D:\qp\qpn\source\qfn.c" 214 1 Info 765: external 'QF_tickXISR(uint8_t)' (line 214, file D:\qp\qpn\source\qfn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn.c" 214 1 Info 714: Symbol 'QF_tickXISR(uint8_t)' (line 214, file D:\qp\qpn\source\qfn.c) not referenced
+"D:\qp\qpn\source\qfn.c" 49 1 Warning 552: Symbol 'QF_timerSetX_' (line 49, file D:\qp\qpn\source\qfn.c) not accessed
+"D:\qp\qpn\include\qkn.h" 116 1 Warning 526: Symbol 'QK_onIdle(void)' (line 116, file D:\qp\qpn\include\qkn.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_onIdle' 
+"D:\qp\qpn\ports\lint\qpn_port.h" 239 1 Warning 526: Symbol 'int_disable(void)' (line 239, file D:\qp\qpn\ports\lint\qpn_port.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'int_disable' 
+"D:\qp\qpn\ports\lint\qpn_port.h" 240 1 Warning 526: Symbol 'int_enable(void)' (line 240, file D:\qp\qpn\ports\lint\qpn_port.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'int_enable' 
+"D:\qp\qpn\include\qassert.h" 153 1 Warning 526: Symbol 'Q_onAssert(const char_t *, int_t)' (line 153, file D:\qp\qpn\include\qassert.h, module D:\qp\qpn\source\qepn.c) not defined
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'Q_onAssert' 
+"D:\qp\qpn\ports\lint\stdint.h" 24 1 Info 756: global typedef 'int32_t' (line 24, file D:\qp\qpn\ports\lint\stdint.h) not referenced
+"D:\qp\qpn\source\qepn.c" 57 1 Info 759: header declaration for symbol 'QMsm_emptyAction_' defined at (line 57, file D:\qp\qpn\source\qepn.c) could be moved from header to module
+"D:\qp\qpn\source\qepn.c" 57 1 Info 765: external 'QMsm_emptyAction_' (line 57, file D:\qp\qpn\source\qepn.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qepn.c" 57 1 Info 714: Symbol 'QMsm_emptyAction_' (line 57, file D:\qp\qpn\source\qepn.c) not referenced
+"D:\qp\qpn\source\qfn_init.c" 45 1 Info 759: header declaration for symbol 'QF_init(void)' defined at (line 45, file D:\qp\qpn\source\qfn_init.c) could be moved from header to module
+"D:\qp\qpn\source\qfn_init.c" 45 1 Info 765: external 'QF_init(void)' (line 45, file D:\qp\qpn\source\qfn_init.c) could be made static [MISRA 2004 Rule 8.10, required]
+"D:\qp\qpn\source\qfn_init.c" 45 1 Info 714: Symbol 'QF_init(void)' (line 45, file D:\qp\qpn\source\qfn_init.c) not referenced
+"D:\qp\qpn\include\qepn.h" 543 1 Info 755: global macro 'QM_SUPER' (line 543, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 521 1 Info 755: global macro 'QM_TRAN' (line 521, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 61 1 Info 755: global macro 'QP_RELEASE' (line 61, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 509 1 Info 755: global macro 'QM_ENTRY' (line 509, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 514 1 Info 755: global macro 'QM_EXIT' (line 514, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 539 1 Info 755: global macro 'QM_UNHANDLED' (line 539, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 570 1 Info 755: global macro 'Q_UNHANDLED' (line 570, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 178 1 Info 755: global macro 'Q_ENSURE' (line 178, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 185 1 Info 755: global macro 'Q_ENSURE_ID' (line 185, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\ports\lint\qpn_port.h" 218 1 Info 755: global macro 'QK_ISR_ENTRY' (line 218, file D:\qp\qpn\ports\lint\qpn_port.h) not referenced
+"D:\qp\qpn\ports\lint\qpn_port.h" 224 1 Info 755: global macro 'QK_ISR_EXIT' (line 224, file D:\qp\qpn\ports\lint\qpn_port.h) not referenced
+"D:\qp\qpn\include\qassert.h" 96 1 Info 755: global macro 'Q_ASSERT_ID' (line 96, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 207 1 Info 755: global macro 'Q_ASSERT_COMPILE' (line 207, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 533 1 Info 755: global macro 'QM_HANDLED' (line 533, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 528 1 Info 755: global macro 'QM_INITIAL' (line 528, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 55 1 Info 755: global macro 'QP_VERSION' (line 55, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 58 1 Info 755: global macro 'QP_VERSION_STR' (line 58, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 551 1 Info 755: global macro 'Q_TRAN' (line 551, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 573 1 Info 755: global macro 'QF_ACTIVE_CAST' (line 573, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 609 1 Info 755: global macro 'QP_getVersion' (line 609, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 128 1 Info 755: global macro 'Q_ERROR' (line 128, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 138 1 Info 755: global macro 'Q_ERROR_ID' (line 138, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 192 1 Info 755: global macro 'Q_INVARIANT' (line 192, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 199 1 Info 755: global macro 'Q_INVARIANT_ID' (line 199, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qassert.h" 171 1 Info 755: global macro 'Q_REQUIRE_ID' (line 171, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 558 1 Info 755: global macro 'Q_SUPER' (line 558, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 243 1 Info 755: global macro 'QACTIVE_POST' (line 243, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 259 1 Info 755: global macro 'QACTIVE_POST_X' (line 259, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 288 1 Info 755: global macro 'QACTIVE_POST_X_ISR' (line 288, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 621 1 Info 755: global macro 'QActive_arm' (line 621, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 624 1 Info 755: global macro 'QActive_disarm' (line 624, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 581 1 Info 755: global macro 'QActive_post' (line 581, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 585 1 Info 755: global macro 'QActive_postISR' (line 585, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\ports\lint\qpn_port.h" 212 1 Info 755: global macro 'QF_CPU_SLEEP' (line 212, file D:\qp\qpn\ports\lint\qpn_port.h) not referenced
+"D:\qp\qpn\include\qepn.h" 438 1 Info 755: global macro 'QHsm_state' (line 438, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 66 1 Info 755: global macro 'Q_DEFINE_THIS_FILE' (line 66, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qepn.h" 564 1 Info 755: global macro 'Q_HANDLED' (line 564, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 613 1 Info 755: global macro 'QF_tickISR' (line 613, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 616 1 Info 755: global macro 'QF_tick' (line 616, file D:\qp\qpn\include\qfn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 118 1 Info 755: global macro 'Q_DIM' (line 118, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qassert.h" 120 1 Info 755: global macro 'Q_ALLEGE_ID' (line 120, file D:\qp\qpn\include\qassert.h) not referenced
+"D:\qp\qpn\include\qkn.h" 99 1 Info 755: global macro 'QK_SCHEDULE_' (line 99, file D:\qp\qpn\include\qkn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 599 1 Info 755: global macro 'Q_UINT2PTR_CAST' (line 599, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 483 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_ENTRY' (line 483, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 484 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_EXIT' (line 484, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 585 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT1_SIG' (line 585, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 586 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT2_SIG' (line 586, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 587 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT3_SIG' (line 587, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 588 1 Info 769: global enumeration constant 'QReservedSignals::Q_USER_SIG' (line 588, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qfn.h" 189 1 Info 768: global struct member 'QActiveVtblTag::post' (line 189, file D:\qp\qpn\include\qfn.h) not referenced
+
+Count   Type    Number  Text
+
+7       Warning 526     Symbol '___' (___) not defined
+2       Warning 552     Symbol '___' (___) not accessed
+11      Info    714     Symbol '___' (___) not referenced
+43      Info    755     global macro '___' (___) not referenced
+8       Info    756     global typedef '___' (___) not referenced
+3       Info    757     global declarator '___' (___) not referenced
+16      Info    759     header declaration for symbol '___' defined at (___) could be moved from header to module
+16      Info    765     external '___' (___) could be made static
+1       Info    768     global struct member '___' (___) not referenced
+6       Info    769     global enumeration constant '___' (___) not referenced
+10      Note    960     Violates MISRA 2004 Required Rule ___, ___

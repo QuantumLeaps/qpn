@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="2.2.01">
+<model version="2.3.2">
  <documentation>Dining Philosopher Problem example</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
@@ -28,7 +28,7 @@
      </state_glyph>
     </state>
     <state name="hungry">
-     <entry>QActive_post((QActive *)&amp;AO_Table, HUNGRY_SIG, me-&gt;super.prio);</entry>
+     <entry>QACTIVE_POST((QActive *)&amp;AO_Table, HUNGRY_SIG, me-&gt;super.prio);</entry>
      <tran trig="EAT" target="../../3">
       <tran_glyph conn="2,30,3,1,20,13,-3">
        <action box="0,-2,14,2"/>
@@ -46,7 +46,7 @@
     </state>
     <state name="eating">
      <entry>QActive_arm((QActive *)me, EAT_TIME);</entry>
-     <exit>QActive_post((QActive *)&amp;AO_Table, DONE_SIG, me-&gt;super.prio);</exit>
+     <exit>QACTIVE_POST((QActive *)&amp;AO_Table, DONE_SIG, me-&gt;super.prio);</exit>
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,51,3,1,22,-41,-5">
        <action box="0,-2,6,2"/>
@@ -107,7 +107,7 @@ for (n = 0U; n &lt; N_PHILO; ++n) { /* give permissions to eat... */
         me-&gt;fork[n] = USED;
         philo =
            (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + n].act);
-        QActive_post(philo, EAT_SIG, n);
+        QACTIVE_POST(philo, EAT_SIG, n);
         me-&gt;isHungry[n] = 0U;
         BSP_displayPhilStat(n, &quot;eating  &quot;);
     }
@@ -127,7 +127,7 @@ m = LEFT(n);</action>
         <action>me-&gt;fork[m] = USED;
 me-&gt;fork[n] = USED;
 philo = (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + n].act);
-QActive_post(philo, EAT_SIG, n);
+QACTIVE_POST(philo, EAT_SIG, n);
 BSP_displayPhilStat(n, &quot;eating  &quot;);</action>
         <choice_glyph conn="19,26,5,-1,10">
          <action box="1,0,10,2"/>
@@ -166,7 +166,7 @@ if ((me-&gt;isHungry[m] != 0U) &amp;&amp; (me-&gt;fork[m] == FREE)) {
     me-&gt;fork[m] = USED;
     me-&gt;isHungry[m] = 0U;
     philo = (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + m].act);
-    QActive_post(philo, EAT_SIG, m);
+    QACTIVE_POST(philo, EAT_SIG, m);
     BSP_displayPhilStat(m, &quot;eating  &quot;);
 }
 m = LEFT(n); /* check the left neighbor */
@@ -176,7 +176,7 @@ if ((me-&gt;isHungry[m] != 0U) &amp;&amp; (me-&gt;fork[n] == FREE)) {
     me-&gt;fork[n] = USED;
     me-&gt;isHungry[m] = 0U;
     philo = (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + m].act);
-    QActive_post(philo, EAT_SIG, m);
+    QACTIVE_POST(philo, EAT_SIG, m);
     BSP_displayPhilStat(m, &quot;eating  &quot;);
 }</action>
        <tran_glyph conn="4,34,3,-1,15">

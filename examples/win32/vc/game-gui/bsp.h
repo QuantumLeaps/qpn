@@ -1,17 +1,17 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2010
+* Last Updated for Version: 5.1.0
+* Date of the Last Update:  Oct 09, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2010 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
-* by the Free Software Foundation, either version 2 of the License, or
+* by the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
 * Alternatively, this program may be distributed and modified under the
@@ -55,5 +55,8 @@ void BSP_moveShipUp(void);
 void BSP_moveShipDown(void);
 
 void BSP_terminate(int16_t result);
+
+/* Windows-GUI does not use the regular main() */
+#define main()  main_gui()
 
 #endif                                                             /* bsp_h */

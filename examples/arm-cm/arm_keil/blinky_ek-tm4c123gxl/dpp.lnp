@@ -1,0 +1,5 @@
+--cpu Cortex-M3 "startup_keil.o" "bsp.o" "display96x16x1.o" "main.o" "philo.o" "table.o" "system_lm3s.o" "qepn.o" "qfn.o" 
+--library_type=microlib --strict --scatter "dpp.sct" 
+--entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\dbg\dpp.map" -o dpp.axf

@@ -1,21 +1,34 @@
-QState Ped_wait(Ped *me) {
-    switch (Q_SIG(me)) {
-        case Q_ENTRY_SIG: {
-            BSP_showState(me->super.prio, "wait");
-            me->retryCtr = N_ATTEMPTS;
-            QActive_arm((QActive *)me, WAIT_TOUT);
-            return Q_HANDLED();
+void BSP_onKeyboardInputISR(uint8_t key) {
+    switch (key) {
+        case '\33': {                                 /* ESC pressed? */
+            QACTIVE_POST_ISR((QActive *)&AO_Cruncher, TERMINATE_SIG, 0);
+            break;
         }
-        case Q_TIMEOUT_SIG: {
-            if ((--me->retryCtr) != 0) {
-                QActive_arm((QActive *)me, WAIT_TOUT);
-                QActive_post((QActive *)&AO_Pelican, PEDS_WAITING_SIG, 0);
-            }
-            else {
-                return Q_TRAN(&Ped_off);
-            }
-            return Q_HANDLED();
+        case 'e': {                                     /* echo event */
+            QACTIVE_POST_ISR((QActive *)&AO_Cruncher, ECHO_SIG, 0);
+            break;
         }
     }
-    return Q_SUPER(&QHsm_top);
+}
+/*....................................................................*/
+QState Cruncher_processing(Cruncher * const me) {
+    QState status;
+    switch (Q_SIG(me)) {
+        case Q_ENTRY_SIG: {
+            QACTIVE_POST((QActive *)me, CRUNCH_SIG, 0);
+            me->sum = 0.0;
+            status = Q_HANDLED();
+            break;
+        }
+        case CRUNCH_SIG: {
+            . . .
+            if (i < 0x07000000) {
+                QACTIVE_POST((QActive *)me, CRUNCH_SIG, i);
+                status = Q_HANDLED();
+            }
+            break;
+        }
+        . . .
+    }
+    return status;
 }
