@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: Simple Blinky example, Vanilla kernel
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -76,7 +76,7 @@ void GPIOPortA_IRQHandler(void);
 
 /*..........................................................................*/
 void SysTick_Handler(void) {
-    QF_tickISR();                          /* process all armed time events */
+    QF_tickXISR(0U);                       /* process time events at rate 0 */
 }
 /*..........................................................................*/
 void GPIOPortA_IRQHandler(void) {
@@ -163,17 +163,16 @@ void QF_onIdle(void) {       /* called with interrupts disabled, see NOTE01 */
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
-    (void)file;                                   /* avoid compiler warning */
-    (void)line;                                   /* avoid compiler warning */
-    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
-    for (;;) {       /* NOTE: replace the loop with reset for final version */
-    }
+void Q_onAssert(char const Q_ROM * const file, int line) {
+    assert_failed(file, line);
 }
 /*..........................................................................*/
 /* error routine that is called if the CMSIS library encounters an error    */
 void assert_failed(char const *file, int line) {
-    Q_onAssert(file, line);
+    (void)file;                                   /* avoid compiler warning */
+    (void)line;                                   /* avoid compiler warning */
+    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
+    ROM_SysCtlReset();                                  /* reset the system */
 }
 
 /*****************************************************************************

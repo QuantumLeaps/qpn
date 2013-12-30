@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano port for DPP example, POSIX emulation
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 18, 2012
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -35,7 +35,8 @@
 #ifndef qpn_port_h
 #define qpn_port_h
 
-#define Q_NFSM                  1
+#define Q_NFSM
+#define Q_NHSM
 #define Q_PARAM_SIZE            4
 #define QF_TIMEEVT_CTR_SIZE     2
 

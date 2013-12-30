@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: PELICAN crossing example, cooperative Vanilla kerenel
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -81,7 +81,7 @@ void SysTick_Handler(void) {
     static uint8_t  debounce_state = 0U;
     uint32_t btn;
 
-    QF_tickISR();                          /* process all armed time events */
+    QF_tickXISR(0U);                       /* process time events at rate 0 */
 
                                              /* debounce the USER button... */
     btn = GPIOF->DATA_Bits[USR_SW1];                   /* read the User Sw1 */
@@ -112,8 +112,8 @@ void SysTick_Handler(void) {
                 btn_debounced = btn;     /* save the debounced button value */
 
                 if (btn == 0U) {                /* is the button depressed? */
-                    QActive_postISR((QActive *)&AO_Pelican,
-                                    PEDS_WAITING_SIG, 0U);
+                    QACTIVE_POST_ISR((QActive *)&AO_Pelican,
+                                     PEDS_WAITING_SIG, 0);
                 }
                 else {                                   /* button released */
                 }
@@ -124,7 +124,7 @@ void SysTick_Handler(void) {
 }
 /*..........................................................................*/
 void GPIOPortA_IRQHandler(void) {
-    QActive_postISR((QActive *)&AO_Pelican, PEDS_WAITING_SIG, 0);/* testing */
+    QACTIVE_POST_ISR((QActive *)&AO_Pelican, PEDS_WAITING_SIG, 0);/*testing */
 }
 /*..........................................................................*/
 void BSP_init(void) {
@@ -249,20 +249,19 @@ void QF_onIdle(void) {      /* entered with interrupts DISABLED, see NOTE01 */
     QF_INT_ENABLE();                              /* just enable interrupts */
 #endif
 }
+
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const Q_ROM_VAR file, int_t line) {
-    (void)file;                                   /* avoid compiler warning */
-    (void)line;                                   /* avoid compiler warning */
-    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
-    for (;;) {       /* NOTE: replace the loop with reset for final version */
-    }
+void Q_onAssert(char const Q_ROM * const file, int_t line) {
+    assert_failed(file, line);
 }
 /*..........................................................................*/
 /* error routine that is called if the CMSIS library encounters an error    */
 void assert_failed(char const *file, int line) {
-    Q_onAssert(file, line);
+    (void)file;                                   /* avoid compiler warning */
+    (void)line;                                   /* avoid compiler warning */
+    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
+    ROM_SysCtlReset();                                  /* reset the system */
 }
-
 
 /*****************************************************************************
 * NOTE00:

@@ -203,7 +203,7 @@ void BSP_showState(uint8_t prio, char const *state) {
     Video_printStrAt(20, 12 + prio, VIDEO_FGND_YELLOW, state);
 }
 /*--------------------------------------------------------------------------*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+void Q_onAssert(char const Q_ROM * const file, int line) {
     Video_clearRect(0, 24, 80, 25, VIDEO_BGND_RED);
     Video_printStrAt( 0, 24, VIDEO_FGND_WHITE, "ASSERTION FAILED in file:");
     Video_printStrAt(26, 24, VIDEO_FGND_YELLOW, file);

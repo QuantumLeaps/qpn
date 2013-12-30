@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example, preemptive QK-nano kernel
-* Last Updated for Version: 5.1.0
-* Date of the Last Update:  Oct 04, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -82,12 +82,12 @@ void GPIOPortA_IRQHandler(void);
 void SysTick_Handler(void) {
     QK_ISR_ENTRY();                /* inform QK-nano about entering the ISR */
 
-    QF_tickISR();                             /* process all armed time events */
+    QF_tickXISR(0U);                       /* process time events at rate 0 */
 
                /* post TIME_TICK events to all interested active objects... */
-    QActive_postISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0U);
-    QActive_postISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0U);
-    QActive_postISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0);
 
     QK_ISR_EXIT();                  /* inform QK-nano about exiting the ISR */
 }
@@ -118,8 +118,8 @@ void ADCSeq3_IRQHandler(void) {
     tmp = (((1U << 10) - adcLPS)*(BSP_SCREEN_HEIGHT - 2)) >> 10;
 
     if (tmp != wheel) {                   /* did the wheel position change? */
-        QActive_postISR((QActive *)&AO_Ship, PLAYER_SHIP_MOVE_SIG,
-                        ((tmp << 8) | GAME_SHIP_X));
+        QACTIVE_POST_ISR((QActive *)&AO_Ship, PLAYER_SHIP_MOVE_SIG,
+                         ((tmp << 8) | GAME_SHIP_X));
         wheel = tmp;                 /* save the last position of the wheel */
     }
 
@@ -151,10 +151,10 @@ void ADCSeq3_IRQHandler(void) {
                 btn_debounced = tmp;     /* save the debounced button value */
 
                 if (tmp == 0) {                 /* is the button depressed? */
-                    QActive_postISR((QActive *)&AO_Ship,
-                                    PLAYER_TRIGGER_SIG, 0);
-                    QActive_postISR((QActive *)&AO_Tunnel,
-                                    PLAYER_TRIGGER_SIG, 0);
+                    QACTIVE_POST_ISR((QActive *)&AO_Ship,
+                                     PLAYER_TRIGGER_SIG, 0);
+                    QACTIVE_POST_ISR((QActive *)&AO_Tunnel,
+                                     PLAYER_TRIGGER_SIG, 0);
                 }
             }
             debounce_state = 0;               /* transition back to state 0 */
@@ -167,7 +167,7 @@ void ADCSeq3_IRQHandler(void) {
 void GPIOPortA_IRQHandler(void) {
     QK_ISR_ENTRY();                /* inform QK-nano about entering the ISR */
 
-    QActive_postISR((QActive *)&AO_Tunnel, TAKE_OFF_SIG, 0); /* for testing */
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel, TAKE_OFF_SIG, 0);/* for testing */
 
     QK_ISR_EXIT();                  /* inform QK-nano about exiting the ISR */
 }
@@ -288,18 +288,16 @@ void QK_onIdle(void) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
-    (void)file;                                   /* avoid compiler warning */
-    (void)line;                                   /* avoid compiler warning */
-    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
-    for (;;) {       /* NOTE: replace the loop with reset for final version */
-    }
+void Q_onAssert(char const Q_ROM * const file, int_t line) {
+    assert_failed(file, line);
 }
 /*..........................................................................*/
 /* error routine that is called if the CMSIS library encounters an error    */
-void assert_failed(char_t const *file, int_t line);            /* prototype */
-void assert_failed(char_t const *file, int_t line) {
-    Q_onAssert(file, line);
+void assert_failed(char const *file, int line) {
+    (void)file;                                   /* avoid compiler warning */
+    (void)line;                                   /* avoid compiler warning */
+    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
+    NVIC_SystemReset();                             /* perform system reset */
 }
 
 /*****************************************************************************

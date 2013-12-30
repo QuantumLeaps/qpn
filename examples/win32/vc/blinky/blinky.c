@@ -109,7 +109,7 @@ static Blinky l_blinky;                         /* the Blinky active object */
 static QEvt l_blinkyQSto[10];             /* Event queue storage for Blinky */
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,           (QEvt *)0,        0U                      },
     { (QActive *)&l_blinky,   l_blinkyQSto,     Q_DIM(l_blinkyQSto)     }
 };

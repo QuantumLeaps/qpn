@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: PELICAN crossing example
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 14, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -44,7 +44,12 @@ __interrupt void timerA_ISR(void) {
 #ifdef NDEBUG
     __low_power_mode_off_on_exit();
 #endif
-    QF_tickISR();
+    QF_tickXISR(0U);                       /* process time events at rate 0 */
+}
+/*..........................................................................*/
+#pragma vector = NMI_VECTOR
+__interrupt void nmi_ISR(void) {
+    WDTCTL = (WDTPW | WDTHOLD);                                 /* Stop WDT */
 }
 /*..........................................................................*/
 void BSP_init(void) {
@@ -67,7 +72,7 @@ void QF_onIdle(void) {
 #endif
 }
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+void Q_onAssert(char const Q_ROM * const file, int line) {
     (void)file;                                   /* avoid compiler warning */
     (void)line;                                   /* avoid compiler warning */
     QF_INT_DISABLE();               /* make sure that interrupts are locked */

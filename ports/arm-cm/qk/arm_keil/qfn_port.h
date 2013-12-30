@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QF-nano port to ARM Cortex-M, QK-nano, ARM-KEIL compiler
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -46,9 +46,8 @@
 
 #else                                        /* Cortex-M3/M4/M4F, see NOTE3 */
 
-    #define QF_SET_BASEPRI(val)     __asm("msr BASEPRI," #val)
-    #define QF_INT_DISABLE()        QF_SET_BASEPRI(QF_BASEPRI)
-    #define QF_INT_ENABLE()         QF_SET_BASEPRI(0U)
+    #define QF_INT_DISABLE()        QF_set_BASEPRI(QF_BASEPRI)
+    #define QF_INT_ENABLE()         QF_set_BASEPRI(0U)
 
     /* NOTE: keep in synch with the value defined in "qk_port.s", see NOTE4 */
     #define QF_BASEPRI              (0xFF >> 2)
@@ -59,6 +58,12 @@
               /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint8_t)(32U - __clz(n_)))
 
+    /* inline function for setting the BASEPRI register */
+    __inline void QF_set_BASEPRI(unsigned basePri) {
+        register unsigned __regBasePri __asm("basepri");
+        __regBasePri = basePri;
+    }
+
 #endif
 
                                 /* interrupt disabling policy for ISR level */
@@ -66,7 +71,11 @@
                                /* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04U) = 0x10000000U)
+#define QK_ISR_EXIT()    do { \
+    if (QK_schedPrio_() != (uint8_t)0) { \
+        *Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U; \
+    } \
+} while (0)
 
 #include <stdint.h>      /* Keil provides C99-standard exact-width integers */
 #include "qepn.h"         /* QEP-nano platform-independent public interface */

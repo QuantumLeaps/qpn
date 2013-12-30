@@ -40,7 +40,7 @@ static QEvt l_bombQueue[3];
 static QEvt l_operQueue[2];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,        (QEvt *)0,   0U                 },     /* unused */
     { (QActive *)&AO_Oper, l_operQueue, Q_DIM(l_operQueue) },  /* OPER_PRIO */
     { (QActive *)&AO_Bomb, l_bombQueue, Q_DIM(l_bombQueue) }   /* BOMB_PRIO */

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: BSP for DPP example, Win32
-* Last Updated for Version: 4.5.05
-* Date of the Last Update:  Mar 28, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -79,7 +79,7 @@ void BSP_randomSeed(uint32_t seed) {
     l_rnd = seed;
 }
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const Q_ROM_VAR file, int_t line) {
+void Q_onAssert(char_t const Q_ROM * const file, int_t line) {
     fprintf(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);
 }

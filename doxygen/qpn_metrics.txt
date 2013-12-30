@@ -1,0 +1,585 @@
+/** \page metrics Code Metrics 
+
+\code 
+                   Standard Code Metrics for QP-nano 5.2.0 
+
+           Resource Standard Metrics (TM) for C, C++, C# and Java
+                   Version 7.75 - mSquaredTechnologies.com
+
+  License Type: Windows Single User License
+  Licensed To : Quantum Leaps, LLC
+  License No. : WS2975                          License Date: Dec 15, 2013
+  Build Date  : Sep  2 2009                         Run Date: Dec 30, 2013
+  (C)1996-2009 M Squared Technologies LLC
+  ________________________________________________________________________
+
+                           ~~ Function Metrics ~~
+                      ~~ Complexity Detail Analysis ~~
+
+  File: ..\include\qassert.h
+  ________________________________________________________________________
+
+                          ~~ Total File Summary ~~
+
+  LOC 43       eLOC 42       lLOC 3        Comment 147      Lines      209
+  ________________________________________________________________________
+  End of File: ..\include\qassert.h
+
+
+  File: ..\include\qepn.h
+  ________________________________________________________________________
+
+                          ~~ Total File Summary ~~
+
+  LOC 146      eLOC 143      lLOC 50       Comment 417      Lines      621
+  ________________________________________________________________________
+  End of File: ..\include\qepn.h
+
+
+  File: ..\include\qfn.h
+  ________________________________________________________________________
+
+                          ~~ Total File Summary ~~
+
+  LOC 163      eLOC 163      lLOC 39       Comment 417      Lines      640
+  ________________________________________________________________________
+  End of File: ..\include\qfn.h
+
+
+  File: ..\include\qkn.h
+  ________________________________________________________________________
+
+                          ~~ Total File Summary ~~
+
+  LOC 32       eLOC 32       lLOC 14       Comment 105      Lines      151
+  ________________________________________________________________________
+  End of File: ..\include\qkn.h
+
+
+  Error: Problem opening input file:
+         ..\source\*.h
+         For read, Invalid argument
+
+
+  File: ..\source\qepn.c
+  ________________________________________________________________________
+
+  Function: QMsm_ctor
+  Parameters: (QMsm * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 9        eLOC 7        lLOC 4        Comment 3        Lines        9
+
+  Function: QMsm_init_
+  Parameters: (QMsm * const me)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 1     
+      Loops for / foreach     : 1     
+      Logical and ( && )      : 2     
+  Complexity   Param 1       Return 1      Cyclo Vg 5       Total        7
+  LOC 15       eLOC 12       lLOC 8        Comment 8        Lines       19
+
+  Function: QMsm_dispatch_
+  Parameters: (QMsm * const me)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 1     
+      Loops for / foreach     : 4     
+      Conditional if / else if: 4     
+  Complexity   Param 1       Return 1      Cyclo Vg 10      Total       12
+  LOC 36       eLOC 24       lLOC 15       Comment 14       Lines       46
+
+  Function: QHsm_ctor
+  Parameters: (QHsm * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 9        eLOC 7        lLOC 4        Comment 3        Lines       10
+
+  Function: QHsm_top
+  Parameters: (void const * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 1       Total        3
+  LOC 4        eLOC 3        lLOC 2        Comment 3        Lines        4
+
+  Function: QHsm_init_
+  Parameters: (QHsm * const me)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 3     
+      Logical and ( && )      : 1     
+  Complexity   Param 1       Return 1      Cyclo Vg 5       Total        7
+  LOC 29       eLOC 27       lLOC 22       Comment 11       Lines       37
+
+  Function: QHsm_dispatch_
+  Parameters: (QHsm * const me)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 5     
+      Loops for / foreach     : 1     
+      Conditional if / else if: 3     
+  Complexity   Param 1       Return 1      Cyclo Vg 10      Total       12
+  LOC 62       eLOC 54       lLOC 45       Comment 33       Lines       78
+
+  Function: QHsm_tran_
+  Parameters: (QHsm * const me, QStateHandler path[QEP_MAX_NEST_DEPTH_])
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 4     
+      Conditional if / else if: 10    
+  Complexity   Param 2       Return 1      Cyclo Vg 15      Total       18
+  LOC 98       eLOC 78       lLOC 57       Comment 55       Lines      120
+
+  Function: QFsm_ctor
+  Parameters: (QFsm * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 9        eLOC 7        lLOC 4        Comment 4        Lines       10
+
+  Function: QFsm_init_
+  Parameters: (QFsm * const me)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Logical and ( && )      : 1     
+  Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
+  LOC 8        eLOC 7        lLOC 5        Comment 7        Lines       11
+
+  Function: QFsm_dispatch_
+  Parameters: (QFsm *const me)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Conditional if / else if: 1     
+  Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
+  LOC 9        eLOC 7        lLOC 5        Comment 5        Lines       10
+
+  ------------------------------------------------------------------------
+
+                          ~~ Total File Summary ~~
+
+  LOC 306      eLOC 250      lLOC 173      Comment 200      Lines      448
+  ------------------------------------------------------------------------
+
+                        ~~ File Functional Summary ~~
+
+  File Function Count....:         11
+  Total Function LOC.....:        288  Total Function Pts LOC :        2.4
+  Total Function eLOC....:        233  Total Function Pts eLOC:        2.0
+  Total Function lLOC....:        171  Total Function Pts lLOC:        1.4
+  Total Function Params .:         15  Total Function Return .:         11
+  Total Cyclo Complexity :         53  Total Function Complex.:         79
+         ------     -----     -----     ------     ------     -----       
+  Max Function LOC ......:         98  Average Function LOC ..:      26.18
+  Max Function eLOC .....:         78  Average Function eLOC .:      21.18
+  Max Function lLOC .....:         57  Average Function lLOC .:      15.55
+         ------     -----     -----     ------     ------     -----       
+  Max Function Parameters:          2  Avg Function Parameters:       1.36
+  Max Function Returns ..:          1  Avg Function Returns ..:       1.00
+  Max Interface Complex. :          3  Avg Interface Complex. :       2.36
+  Max Cyclomatic Complex.:         15  Avg Cyclomatic Complex.:       4.82
+  Max Total Complexity ..:         18  Avg Total Complexity ..:       7.18
+  ________________________________________________________________________
+  End of File: ..\source\qepn.c
+
+
+  File: ..\source\qfn.c
+  ________________________________________________________________________
+
+  Function: QActive_ctor
+  Parameters: (QActive * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 10       eLOC 8        lLOC 3        Comment 3        Lines       10
+
+  Function: QMActive_ctor
+  Parameters: (QMActive * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 10       eLOC 8        lLOC 3        Comment 3        Lines       11
+
+  Function: QActive_postX_
+  Parameters: (QActive * const me, uint8_t margin, enum_t const sig, QPara
+              m const par)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Conditional if / else if: 4     
+  Complexity   Param 4       Return 1      Cyclo Vg 5       Total       10
+  LOC 35       eLOC 28       lLOC 18       Comment 12       Lines       39
+
+  Function: QActive_postXISR_
+  Parameters: (QActive * const me, uint8_t margin, enum_t const sig, QPara
+              m const par)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Conditional if / else if: 3     
+  Complexity   Param 4       Return 1      Cyclo Vg 4       Total        9
+  LOC 43       eLOC 37       lLOC 17       Comment 9        Lines       48
+
+  Function: QF_tickXISR
+  Parameters: (uint8_t const tickRate)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 1     
+      Conditional if / else if: 2     
+  Complexity   Param 1       Return 1      Cyclo Vg 4       Total        6
+  LOC 21       eLOC 18       lLOC 8        Comment 1        Lines       22
+
+  Function: QActive_armX
+  Parameters: (QActive * const me, uint8_t const tickRate, QTimeEvtCtr con
+              st ticks)
+  Complexity   Param 3       Return 1      Cyclo Vg 1       Total        5
+  LOC 8        eLOC 6        lLOC 4        Comment 2        Lines        8
+
+  Function: QActive_disarmX
+  Parameters: (QActive * const me, uint8_t const tickRate)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 8        eLOC 7        lLOC 4        Comment 2        Lines        8
+
+  Function: QF_run
+  Parameters: (void)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops for / foreach     : 3     
+      Conditional if / else if: 4     
+  Complexity   Param 0       Return 1      Cyclo Vg 8       Total        9
+  LOC 57       eLOC 46       lLOC 29       Comment 16       Lines       64
+
+  ------------------------------------------------------------------------
+
+                          ~~ Total File Summary ~~
+
+  LOC 241      eLOC 204      lLOC 91       Comment 108      Lines      336
+  ------------------------------------------------------------------------
+
+                        ~~ File Functional Summary ~~
+
+  File Function Count....:          8
+  Total Function LOC.....:        192  Total Function Pts LOC :        1.9
+  Total Function eLOC....:        158  Total Function Pts eLOC:        1.6
+  Total Function lLOC....:         86  Total Function Pts lLOC:        0.7
+  Total Function Params .:         18  Total Function Return .:          8
+  Total Cyclo Complexity :         25  Total Function Complex.:         51
+         ------     -----     -----     ------     ------     -----       
+  Max Function LOC ......:         57  Average Function LOC ..:      24.00
+  Max Function eLOC .....:         46  Average Function eLOC .:      19.75
+  Max Function lLOC .....:         29  Average Function lLOC .:      10.75
+         ------     -----     -----     ------     ------     -----       
+  Max Function Parameters:          4  Avg Function Parameters:       2.25
+  Max Function Returns ..:          1  Avg Function Returns ..:       1.00
+  Max Interface Complex. :          5  Avg Interface Complex. :       3.25
+  Max Cyclomatic Complex.:          8  Avg Cyclomatic Complex.:       3.13
+  Max Total Complexity ..:         10  Avg Total Complexity ..:       6.38
+  ________________________________________________________________________
+  End of File: ..\source\qfn.c
+
+
+  File: ..\source\qfn_init.c
+  ________________________________________________________________________
+
+  Function: QF_init
+  Parameters: (void)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops for / foreach     : 3     
+  Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
+  LOC 32       eLOC 28       lLOC 17       Comment 3        Lines       40
+
+  ------------------------------------------------------------------------
+
+                          ~~ Total File Summary ~~
+
+  LOC 34       eLOC 30       lLOC 17       Comment 43       Lines       84
+  ------------------------------------------------------------------------
+
+                        ~~ File Functional Summary ~~
+
+  File Function Count....:          1
+  Total Function LOC.....:         32  Total Function Pts LOC :        0.3
+  Total Function eLOC....:         28  Total Function Pts eLOC:        0.2
+  Total Function lLOC....:         17  Total Function Pts lLOC:        0.1
+  Total Function Params .:          0  Total Function Return .:          1
+  Total Cyclo Complexity :          4  Total Function Complex.:          5
+         ------     -----     -----     ------     ------     -----       
+  Max Function LOC ......:         32  Average Function LOC ..:      32.00
+  Max Function eLOC .....:         28  Average Function eLOC .:      28.00
+  Max Function lLOC .....:         17  Average Function lLOC .:      17.00
+         ------     -----     -----     ------     ------     -----       
+  Max Function Parameters:          0  Avg Function Parameters:       0.00
+  Max Function Returns ..:          1  Avg Function Returns ..:       1.00
+  Max Interface Complex. :          1  Avg Interface Complex. :       1.00
+  Max Cyclomatic Complex.:          4  Avg Cyclomatic Complex.:       4.00
+  Max Total Complexity ..:          5  Avg Total Complexity ..:       5.00
+  ________________________________________________________________________
+  End of File: ..\source\qfn_init.c
+
+
+  File: ..\source\qkn.c
+  ________________________________________________________________________
+
+  Function: initialize
+  Parameters: (void)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops for / foreach     : 2     
+      Conditional if / else if: 1     
+  Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
+  LOC 23       eLOC 19       lLOC 15       Comment 10       Lines       27
+
+  Function: QF_run
+  Parameters: (void)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops for / foreach     : 1     
+  Complexity   Param 0       Return 1      Cyclo Vg 2       Total        3
+  LOC 10       eLOC 8        lLOC 5        Comment 5        Lines       11
+
+  Function: QK_schedPrio_
+  Parameters: (void)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Conditional if / else if: 3     
+  Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
+  LOC 28       eLOC 21       lLOC 7        Comment 9        Lines       33
+
+  Function: QK_sched_
+  Parameters: (uint8_t p)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Loops while / do        : 1     
+      Conditional if / else if: 5     
+  Complexity   Param 1       Return 1      Cyclo Vg 7       Total        9
+  LOC 58       eLOC 48       lLOC 26       Comment 20       Lines       70
+
+  Function: QK_mutexLock
+  Parameters: (uint8_t const prioCeiling)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Conditional if / else if: 1     
+  Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
+  LOC 10       eLOC 8        lLOC 6        Comment 3        Lines       10
+
+  Function: QK_mutexUnlock
+  Parameters: (QMutex mutex)
+    Cyclomatic Complexity Vg Detail
+      Function Base           : 1
+      Conditional if / else if: 2     
+  Complexity   Param 1       Return 1      Cyclo Vg 3       Total        5
+  LOC 11       eLOC 8        lLOC 5        Comment 3        Lines       11
+
+  ------------------------------------------------------------------------
+
+                          ~~ Total File Summary ~~
+
+  LOC 155      eLOC 127      lLOC 68       Comment 96       Lines      237
+  ------------------------------------------------------------------------
+
+                        ~~ File Functional Summary ~~
+
+  File Function Count....:          6
+  Total Function LOC.....:        140  Total Function Pts LOC :        1.2
+  Total Function eLOC....:        112  Total Function Pts eLOC:        1.0
+  Total Function lLOC....:         64  Total Function Pts lLOC:        0.5
+  Total Function Params .:          3  Total Function Return .:          6
+  Total Cyclo Complexity :         22  Total Function Complex.:         31
+         ------     -----     -----     ------     ------     -----       
+  Max Function LOC ......:         58  Average Function LOC ..:      23.33
+  Max Function eLOC .....:         48  Average Function eLOC .:      18.67
+  Max Function lLOC .....:         26  Average Function lLOC .:      10.67
+         ------     -----     -----     ------     ------     -----       
+  Max Function Parameters:          1  Avg Function Parameters:       0.50
+  Max Function Returns ..:          1  Avg Function Returns ..:       1.00
+  Max Interface Complex. :          2  Avg Interface Complex. :       1.50
+  Max Cyclomatic Complex.:          7  Avg Cyclomatic Complex.:       3.67
+  Max Total Complexity ..:          9  Avg Total Complexity ..:       5.17
+  ________________________________________________________________________
+  End of File: ..\source\qkn.c
+
+
+  ------------------------------------------------------------------------
+
+                     ~~ Project Analysis For 8 Files ~~
+
+  ------------------------------------------------------------------------
+
+                         ~~ Total Project Summary ~~
+
+  LOC 1120     eLOC 991      lLOC 455      Comment 1533     Lines     2726
+  Average per File, metric/8 files
+  LOC 140      eLOC 123      lLOC 56       Comment 191      Lines      340
+
+  ------------------------------------------------------------------------
+
+                      ~~ Project Functional Metrics ~~
+
+  Function: QMsm_ctor
+  Parameters: (QMsm * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 9        eLOC 7        lLOC 4        Comment 3        Lines        9
+
+  Function: QMsm_init_
+  Parameters: (QMsm * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 5       Total        7
+  LOC 15       eLOC 12       lLOC 8        Comment 8        Lines       19
+
+  Function: QMsm_dispatch_
+  Parameters: (QMsm * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 10      Total       12
+  LOC 36       eLOC 24       lLOC 15       Comment 14       Lines       46
+
+  Function: QHsm_ctor
+  Parameters: (QHsm * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 9        eLOC 7        lLOC 4        Comment 3        Lines       10
+
+  Function: QHsm_top
+  Parameters: (void const * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 1       Total        3
+  LOC 4        eLOC 3        lLOC 2        Comment 3        Lines        4
+
+  Function: QHsm_init_
+  Parameters: (QHsm * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 5       Total        7
+  LOC 29       eLOC 27       lLOC 22       Comment 11       Lines       37
+
+  Function: QHsm_dispatch_
+  Parameters: (QHsm * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 10      Total       12
+  LOC 62       eLOC 54       lLOC 45       Comment 33       Lines       78
+
+  Function: QHsm_tran_
+  Parameters: (QHsm * const me, QStateHandler path[QEP_MAX_NEST_DEPTH_])
+  Complexity   Param 2       Return 1      Cyclo Vg 15      Total       18
+  LOC 98       eLOC 78       lLOC 57       Comment 55       Lines      120
+
+  Function: QFsm_ctor
+  Parameters: (QFsm * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 9        eLOC 7        lLOC 4        Comment 4        Lines       10
+
+  Function: QFsm_init_
+  Parameters: (QFsm * const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
+  LOC 8        eLOC 7        lLOC 5        Comment 7        Lines       11
+
+  Function: QFsm_dispatch_
+  Parameters: (QFsm *const me)
+  Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
+  LOC 9        eLOC 7        lLOC 5        Comment 5        Lines       10
+
+  Function: QActive_ctor
+  Parameters: (QActive * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 10       eLOC 8        lLOC 3        Comment 3        Lines       10
+
+  Function: QMActive_ctor
+  Parameters: (QMActive * const me, QStateHandler initial)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 10       eLOC 8        lLOC 3        Comment 3        Lines       11
+
+  Function: QActive_postX_
+  Parameters: (QActive * const me, uint8_t margin, enum_t const sig, QPara
+              m const par)
+  Complexity   Param 4       Return 1      Cyclo Vg 5       Total       10
+  LOC 35       eLOC 28       lLOC 18       Comment 12       Lines       39
+
+  Function: QActive_postXISR_
+  Parameters: (QActive * const me, uint8_t margin, enum_t const sig, QPara
+              m const par)
+  Complexity   Param 4       Return 1      Cyclo Vg 4       Total        9
+  LOC 43       eLOC 37       lLOC 17       Comment 9        Lines       48
+
+  Function: QF_tickXISR
+  Parameters: (uint8_t const tickRate)
+  Complexity   Param 1       Return 1      Cyclo Vg 4       Total        6
+  LOC 21       eLOC 18       lLOC 8        Comment 1        Lines       22
+
+  Function: QActive_armX
+  Parameters: (QActive * const me, uint8_t const tickRate, QTimeEvtCtr con
+              st ticks)
+  Complexity   Param 3       Return 1      Cyclo Vg 1       Total        5
+  LOC 8        eLOC 6        lLOC 4        Comment 2        Lines        8
+
+  Function: QActive_disarmX
+  Parameters: (QActive * const me, uint8_t const tickRate)
+  Complexity   Param 2       Return 1      Cyclo Vg 1       Total        4
+  LOC 8        eLOC 7        lLOC 4        Comment 2        Lines        8
+
+  Function: QF_run
+  Parameters: (void)
+  Complexity   Param 0       Return 1      Cyclo Vg 8       Total        9
+  LOC 57       eLOC 46       lLOC 29       Comment 16       Lines       64
+
+  Function: QF_init
+  Parameters: (void)
+  Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
+  LOC 32       eLOC 28       lLOC 17       Comment 3        Lines       40
+
+  Function: initialize
+  Parameters: (void)
+  Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
+  LOC 23       eLOC 19       lLOC 15       Comment 10       Lines       27
+
+  Function: QF_run
+  Parameters: (void)
+  Complexity   Param 0       Return 1      Cyclo Vg 2       Total        3
+  LOC 10       eLOC 8        lLOC 5        Comment 5        Lines       11
+
+  Function: QK_schedPrio_
+  Parameters: (void)
+  Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
+  LOC 28       eLOC 21       lLOC 7        Comment 9        Lines       33
+
+  Function: QK_sched_
+  Parameters: (uint8_t p)
+  Complexity   Param 1       Return 1      Cyclo Vg 7       Total        9
+  LOC 58       eLOC 48       lLOC 26       Comment 20       Lines       70
+
+  Function: QK_mutexLock
+  Parameters: (uint8_t const prioCeiling)
+  Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
+  LOC 10       eLOC 8        lLOC 6        Comment 3        Lines       10
+
+  Function: QK_mutexUnlock
+  Parameters: (QMutex mutex)
+  Complexity   Param 1       Return 1      Cyclo Vg 3       Total        5
+  LOC 11       eLOC 8        lLOC 5        Comment 3        Lines       11
+
+  Total: Functions  
+  LOC 652      eLOC 531      lLOC 338      InCmp 62       CycloCmp     104
+  Function Points         FP(LOC) 5.1     FP(eLOC) 4.1    FP(lLOC)     2.6
+
+  ------------------------------------------------------------------------
+
+                      ~~ Project Functional Analysis ~~
+
+  Total Functions .......:         26  Total Physical Lines ..:        766
+  Total LOC .............:        652  Total Function Pts LOC :        5.1
+  Total eLOC ............:        531  Total Function Pts eLOC:        4.1
+  Total lLOC.............:        338  Total Function Pts lLOC:        2.6
+  Total Cyclomatic Comp. :        104  Total Interface Comp. .:         62
+  Total Parameters ......:         36  Total Return Points ...:         26
+  Total Comment Lines ...:        247  Total Blank Lines .....:         80
+         ------     -----     -----     ------     ------     -----       
+  Avg Physical Lines ....:      29.46
+  Avg LOC ...............:      25.08  Avg eLOC ..............:      20.42
+  Avg lLOC ..............:      13.00  Avg Cyclomatic Comp. ..:       4.00
+  Avg Interface Comp. ...:       2.38  Avg Parameters ........:       1.38
+  Avg Return Points .....:       1.00  Avg Comment Lines .....:       9.50
+         ------     -----     -----     ------     ------     -----       
+  Max LOC ...............:         98
+  Max eLOC ..............:         78  Max lLOC ..............:         57
+  Max Cyclomatic Comp. ..:         15  Max Interface Comp. ...:          5
+  Max Parameters ........:          4  Max Return Points .....:          1
+  Max Comment Lines .....:         55  Max Total Lines .......:        120
+         ------     -----     -----     ------     ------     -----       
+  Min LOC ...............:          4
+  Min eLOC ..............:          3  Min lLOC ..............:          2
+  Min Cyclomatic Comp. ..:          1  Min Interface Comp. ...:          1
+  Min Parameters ........:          0  Min Return Points .....:          1
+  Min Comment Lines .....:          1  Min Total Lines .......:          4
+
+  ------------------------------------------------------------------------
+
+                             ~~ File Summary ~~
+
+  C Source Files *.c ....:          4  C/C++ Include Files *.h:          4
+  C++ Source Files *.c* .:          0  C++ Include Files *.h* :          0
+  C# Source Files *.cs ..:          0  Java Source File *.jav*:          0
+  Other File Count ......:          0  Total File Count ......:          8
+  ________________________________________________________________________
+
+\endcode 
+*/ 

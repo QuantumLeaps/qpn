@@ -90,10 +90,10 @@ uint8_t do_bitmaps_overlap(
 
 /* instantiation of the Mines orthogonal components */
 /* @(/1/12) ................................................................*/
-QHsm * Mine1_ctor(uint8_t id);
+QMsm * Mine1_ctor(uint8_t id);
 
 /* @(/1/13) ................................................................*/
-QHsm * Mine2_ctor(uint8_t id);
+QMsm * Mine2_ctor(uint8_t id);
 
 
 #endif  /* game_h */

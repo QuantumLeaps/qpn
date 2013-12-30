@@ -25,7 +25,7 @@ Q_DEFINE_THIS_MODULE("table")
 /* @(/1/1) .................................................................*/
 typedef struct TableTag {
 /* protected: */
-    QActive super;
+    QMActive super;
 
 /* private: */
     uint8_t fork[N_PHILO];
@@ -34,9 +34,27 @@ typedef struct TableTag {
 
 /* protected: */
 static QState Table_initial(Table * const me);
-static QState Table_active(Table * const me);
-static QState Table_serving(Table * const me);
-static QState Table_paused(Table * const me);
+static QState Table_active  (Table * const me);
+static QMState const Table_active_s = {
+    (QMState const *)0,
+    Q_STATE_CAST(&Table_active),
+    Q_ACTION_CAST(0)
+};
+static QState Table_serving  (Table * const me);
+static QState Table_serving_e(Table * const me);
+static QMState const Table_serving_s = {
+    &Table_active_s,
+    Q_STATE_CAST(&Table_serving),
+    Q_ACTION_CAST(0)
+};
+static QState Table_paused  (Table * const me);
+static QState Table_paused_e(Table * const me);
+static QState Table_paused_x(Table * const me);
+static QMState const Table_paused_s = {
+    &Table_active_s,
+    Q_STATE_CAST(&Table_paused),
+    Q_ACTION_CAST(&Table_paused_x)
+};
 
 
 /* Global objects ----------------------------------------------------------*/
@@ -55,7 +73,7 @@ void Table_ctor(void) {
     uint8_t n;
     Table *me = &AO_Table;
 
-    QActive_ctor(&me->super, Q_STATE_CAST(&Table_initial));
+    QMActive_ctor(&me->super, Q_STATE_CAST(&Table_initial));
     for (n = 0U; n < N_PHILO; ++n) {
         me->fork[n] = FREE;
         me->isHungry[n] = 0U;
@@ -65,13 +83,17 @@ void Table_ctor(void) {
 /* @(/1/1/2) ...............................................................*/
 /* @(/1/1/2/0) */
 static QState Table_initial(Table * const me) {
+    static QActionHandler const act_[] = {
+        Q_ACTION_CAST(&Table_serving_e),
+        Q_ACTION_CAST(0)
+    };
     uint8_t n;
     for (n = 0U; n < N_PHILO; ++n) {
         me->fork[n] = FREE;
         me->isHungry[n] = 0U;
         BSP_displayPhilStat(n, "thinking");
     }
-    return Q_TRAN(&Table_serving);
+    return QM_INITIAL(&Table_serving_s, &act_[0]);
 }
 /* @(/1/1/2/1) .............................................................*/
 static QState Table_active(Table * const me) {
@@ -80,48 +102,46 @@ static QState Table_active(Table * const me) {
         /* @(/1/1/2/1/0) */
         case TERMINATE_SIG: {
             BSP_terminate(0);
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/2/1/1) */
         case EAT_SIG: {
             Q_ERROR();
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         default: {
-            status_ = Q_SUPER(&QHsm_top);
+            status_ = QM_SUPER();
             break;
         }
     }
     return status_;
 }
 /* @(/1/1/2/1/2) ...........................................................*/
+static QState Table_serving_e(Table * const me) {
+    uint8_t n;
+    for (n = 0U; n < N_PHILO; ++n) { /* give permissions to eat... */
+        if ((me->isHungry[n] != 0U)
+            && (me->fork[LEFT(n)] == FREE)
+            && (me->fork[n] == FREE))
+        {
+            QActive *philo;
+
+            me->fork[LEFT(n)] = USED;
+            me->fork[n] = USED;
+            philo =
+               (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + n].act);
+            QACTIVE_POST(philo, EAT_SIG, n);
+            me->isHungry[n] = 0U;
+            BSP_displayPhilStat(n, "eating  ");
+        }
+    }
+    return QM_ENTRY(&Table_serving_s);
+}
 static QState Table_serving(Table * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/1/2/1/2) */
-        case Q_ENTRY_SIG: {
-            uint8_t n;
-            for (n = 0U; n < N_PHILO; ++n) { /* give permissions to eat... */
-                if ((me->isHungry[n] != 0U)
-                    && (me->fork[LEFT(n)] == FREE)
-                    && (me->fork[n] == FREE))
-                {
-                    QActive *philo;
-
-                    me->fork[LEFT(n)] = USED;
-                    me->fork[n] = USED;
-                    philo =
-                       (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + n].act);
-                    QACTIVE_POST(philo, EAT_SIG, n);
-                    me->isHungry[n] = 0U;
-                    BSP_displayPhilStat(n, "eating  ");
-                }
-            }
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/1/2/1/2/0) */
         case HUNGRY_SIG: {
             uint8_t n, m;
@@ -140,12 +160,12 @@ static QState Table_serving(Table * const me) {
                 philo = (QActive *)Q_ROM_PTR(QF_active[PHILO_0_PRIO + n].act);
                 QACTIVE_POST(philo, EAT_SIG, n);
                 BSP_displayPhilStat(n, "eating  ");
-                status_ = Q_HANDLED();
+                status_ = QM_HANDLED();
             }
             /* @(/1/1/2/1/2/0/1) */
             else {
                 me->isHungry[n] = 1U;
-                status_ = Q_HANDLED();
+                status_ = QM_HANDLED();
             }
             break;
         }
@@ -185,46 +205,51 @@ static QState Table_serving(Table * const me) {
                 QACTIVE_POST(philo, EAT_SIG, m);
                 BSP_displayPhilStat(m, "eating  ");
             }
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/2/1/2/2) */
         case EAT_SIG: {
             Q_ERROR();
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/2/1/2/3) */
         case PAUSE_SIG: {
-            status_ = Q_TRAN(&Table_paused);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Table_paused_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Table_paused_s, &act_[0]);
             break;
         }
         default: {
-            status_ = Q_SUPER(&Table_active);
+            status_ = QM_SUPER();
             break;
         }
     }
     return status_;
 }
 /* @(/1/1/2/1/3) ...........................................................*/
+static QState Table_paused_e(Table * const me) {
+    BSP_displayPaused(1U);
+    return QM_ENTRY(&Table_paused_s);
+}
+static QState Table_paused_x(Table * const me) {
+    BSP_displayPaused(0U);
+    return QM_EXIT(&Table_paused_s);
+}
 static QState Table_paused(Table * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/1/2/1/3) */
-        case Q_ENTRY_SIG: {
-            BSP_displayPaused(1U);
-            status_ = Q_HANDLED();
-            break;
-        }
-        /* @(/1/1/2/1/3) */
-        case Q_EXIT_SIG: {
-            BSP_displayPaused(0U);
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/1/2/1/3/0) */
         case PAUSE_SIG: {
-            status_ = Q_TRAN(&Table_serving);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Table_paused_x),
+                Q_ACTION_CAST(&Table_serving_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Table_serving_s, &act_[0]);
             break;
         }
         /* @(/1/1/2/1/3/1) */
@@ -234,7 +259,7 @@ static QState Table_paused(Table * const me) {
             Q_ASSERT((n < N_PHILO) && (me->isHungry[n] == 0U));
             me->isHungry[n] = 1U;
             BSP_displayPhilStat(n, "hungry  ");
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/2/1/3/2) */
@@ -252,11 +277,11 @@ static QState Table_paused(Table * const me) {
 
             me->fork[m] = FREE;
             me->fork[n] = FREE;
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         default: {
-            status_ = Q_SUPER(&Table_active);
+            status_ = QM_SUPER();
             break;
         }
     }

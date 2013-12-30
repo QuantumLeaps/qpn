@@ -215,7 +215,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg,
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+void Q_onAssert(char const Q_ROM * const file, int line) {
     char message[80];
     QF_stop();                                              /* stop ticking */
     snprintf(message, Q_DIM(message) - 1,

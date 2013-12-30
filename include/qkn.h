@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -68,7 +68,7 @@ void QK_init(void);
 * \note QK_schedPrio_() must be always called with interrupts locked
 * and returns with interrupts locked.
 */
-uint8_t QK_schedPrio_(void) Q_REENTRANT;
+uint8_t QK_schedPrio_(void);
 
 /** \brief QK-nano scheduler
 *
@@ -76,7 +76,7 @@ uint8_t QK_schedPrio_(void) Q_REENTRANT;
 * The scheduler might unlock the interrupts internally, but always
 * returns with interrupts locked.
 */
-void QK_sched_(uint8_t p) Q_REENTRANT;
+void QK_sched_(uint8_t p);
 
 extern uint8_t volatile QK_currPrio_;              /**< current QK priority */
 

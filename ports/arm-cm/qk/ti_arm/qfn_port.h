@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QF-nano port to ARM Cortex-M, QK-nano, TI_ARM compiler
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 08, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -45,7 +45,11 @@
                                /* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04U) = 0x10000000U)
+#define QK_ISR_EXIT()    do { \
+    if (QK_schedPrio_() != (uint8_t)0) { \
+        *Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U; \
+    } \
+} while (0)
 
                    /* is the target M3 or M4? (M0/M0+/M1 don't support CLZ) */
 #if (defined __TI_TMS470_V7M3__) || (defined __TI_TMS470_V7M4__)

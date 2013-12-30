@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="2.3.2">
+<model version="3.0.0">
  <documentation>Dining Philosopher Problem example</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
-  <class name="Philo" superclass="qpn::QActive">
+  <class name="Philo" superclass="qpn::QMActive">
    <statechart>
     <initial target="../1">
      <initial_glyph conn="2,3,5,1,20,5,-3">
@@ -11,7 +11,7 @@
      </initial_glyph>
     </initial>
     <state name="thinking">
-     <entry>QActive_arm((QActive *)me, THINK_TIME);</entry>
+     <entry>QActive_armX(&amp;me-&gt;super, 0U, THINK_TIME);</entry>
      <tran trig="Q_TIMEOUT" target="../../2">
       <tran_glyph conn="2,12,3,1,20,13,-3">
        <action box="0,-2,6,2"/>
@@ -45,7 +45,7 @@
      </state_glyph>
     </state>
     <state name="eating">
-     <entry>QActive_arm((QActive *)me, EAT_TIME);</entry>
+     <entry>QActive_armX(&amp;me-&gt;super, 0U, EAT_TIME);</entry>
      <exit>QACTIVE_POST((QActive *)&amp;AO_Table, DONE_SIG, me-&gt;super.prio);</exit>
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,51,3,1,22,-41,-5">
@@ -66,7 +66,7 @@
     <state_diagram size="37,61"/>
    </statechart>
   </class>
-  <class name="Table" superclass="qpn::QActive">
+  <class name="Table" superclass="qpn::QMActive">
    <attribute name="fork[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="isHungry[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
    <statechart>
@@ -251,18 +251,18 @@ me-&gt;fork[n] = FREE;</action>
   <attribute name="AO_Philo4" type="struct PhiloTag" visibility="0x00" properties="0x00"/>
   <attribute name="AO_Table" type="struct TableTag" visibility="0x00" properties="0x00"/>
   <operation name="Philo_ctor" type="void" visibility="0x00" properties="0x00">
-   <code>QActive_ctor(&amp;AO_Philo0.super, Q_STATE_CAST(&amp;Philo_initial));
-QActive_ctor(&amp;AO_Philo1.super, Q_STATE_CAST(&amp;Philo_initial));
-QActive_ctor(&amp;AO_Philo2.super, Q_STATE_CAST(&amp;Philo_initial));
-QActive_ctor(&amp;AO_Philo3.super, Q_STATE_CAST(&amp;Philo_initial));
-QActive_ctor(&amp;AO_Philo4.super, Q_STATE_CAST(&amp;Philo_initial));
+   <code>QMActive_ctor(&amp;AO_Philo0.super, Q_STATE_CAST(&amp;Philo_initial));
+QMActive_ctor(&amp;AO_Philo1.super, Q_STATE_CAST(&amp;Philo_initial));
+QMActive_ctor(&amp;AO_Philo2.super, Q_STATE_CAST(&amp;Philo_initial));
+QMActive_ctor(&amp;AO_Philo3.super, Q_STATE_CAST(&amp;Philo_initial));
+QMActive_ctor(&amp;AO_Philo4.super, Q_STATE_CAST(&amp;Philo_initial));
 BSP_randomSeed(123U);</code>
   </operation>
   <operation name="Table_ctor" type="void" visibility="0x00" properties="0x00">
    <code>uint8_t n;
 Table *me = &amp;AO_Table;
 
-QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Table_initial));
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Table_initial));
 for (n = 0U; n &lt; N_PHILO; ++n) {
     me-&gt;fork[n] = FREE;
     me-&gt;isHungry[n] = 0U;
@@ -347,6 +347,39 @@ $define(AOs::AO_Table)
 /*..........................................................................*/
 $define(AOs::Table_ctor)
 $define(AOs::Table)</text>
+  </file>
+  <file name="main.c">
+   <text>#include &quot;qpn_port.h&quot;                                       /* QP-nano port */
+#include &quot;dpp.h&quot;                                   /* application interface */
+#include &quot;bsp.h&quot;                             /* Board Support Package (BSP) */
+
+/*..........................................................................*/
+static QEvt l_philoQueue[N_PHILO][N_PHILO];
+static QEvt l_tableQueue[2];
+
+/* QF_active[] array defines all active object control blocks --------------*/
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,           (QEvt *)0,        0U                      },
+    { (QActive *)&amp;AO_Philo0,  l_philoQueue[0],  Q_DIM(l_philoQueue[0])  },
+    { (QActive *)&amp;AO_Philo1,  l_philoQueue[1],  Q_DIM(l_philoQueue[1])  },
+    { (QActive *)&amp;AO_Philo2,  l_philoQueue[2],  Q_DIM(l_philoQueue[2])  },
+    { (QActive *)&amp;AO_Philo3,  l_philoQueue[3],  Q_DIM(l_philoQueue[3])  },
+    { (QActive *)&amp;AO_Philo4,  l_philoQueue[4],  Q_DIM(l_philoQueue[4])  },
+    { (QActive *)&amp;AO_Table,   l_tableQueue,     Q_DIM(l_tableQueue)     }
+};
+
+/* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */
+Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
+
+/*..........................................................................*/
+int_t main() {
+    Philo_ctor();                              /* instantiate all Philo AOs */
+    Table_ctor();                               /* instantiate the Table AO */
+
+    BSP_init();
+
+    return QF_run();                         /* transfer control to QF-nano */
+}</text>
   </file>
  </directory>
 </model>

@@ -736,6 +736,7 @@ WARN_LOGFILE           =
 INPUT                  = ./qpn.txt \
                          ./qpn_rev.txt \
                          ./qpn_macros.h \
+                         ./qpn_metrics.txt \
                          ../include \
                          ../source \
                          ../ports/lint
@@ -1062,7 +1063,7 @@ HTML_HEADER            =
 # that doxygen normally uses.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_FOOTER            =
+HTML_FOOTER            = ./qpn_footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading style
 # sheet that is used by each HTML page. It can be used to fine-tune the look of

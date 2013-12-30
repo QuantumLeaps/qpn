@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 14, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -56,7 +56,7 @@ uint8_t volatile QF_timerSetX_[QF_MAX_TICK_RATE];   /* timer-set of QF-nano */
 #endif
 
 #ifndef QF_LOG2
-uint8_t const Q_ROM Q_ROM_VAR QF_log2Lkup[16] = {
+uint8_t const Q_ROM QF_log2Lkup[16] = {
     (uint8_t)0, (uint8_t)1, (uint8_t)2, (uint8_t)2,
     (uint8_t)3, (uint8_t)3, (uint8_t)3, (uint8_t)3,
     (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
@@ -70,12 +70,12 @@ static HANDLE l_win32Event;     /* Win32 event to signal when AOs are ready */
 static DWORD l_tickMsec = 10;  /* clock tick in msec (argument for Sleep()) */
 static uint8_t volatile l_running;
 
-static uint8_t const Q_ROM Q_ROM_VAR l_pow2Lkup[] = {
+static uint8_t const Q_ROM l_pow2Lkup[] = {
     (uint8_t)0x00,
     (uint8_t)0x01, (uint8_t)0x02, (uint8_t)0x04, (uint8_t)0x08,
     (uint8_t)0x10, (uint8_t)0x20, (uint8_t)0x40, (uint8_t)0x80
 };
-static uint8_t const Q_ROM Q_ROM_VAR l_invPow2Lkup[] = {
+static uint8_t const Q_ROM l_invPow2Lkup[] = {
     (uint8_t)0xFF,
     (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
     (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
@@ -96,10 +96,10 @@ void QF_leaveCriticalSection(void) {
 #ifndef Q_NHSM
 void QActive_ctor(QActive * const me, QStateHandler initial) {
     static QActiveVtbl const vtbl = {              /* QActive virtual table */
-        { &QHsm_init,
-          &QHsm_dispatch },
-        &QActive_postX,
-        &QActive_postXISR
+        { &QHsm_init_,
+          &QHsm_dispatch_ },
+        &QActive_postX_,
+        &QActive_postXISR_
     };
     QHsm_ctor(&me->super, initial);
     me->super.vptr = &vtbl.super;              /* hook the QActive's vtable */
@@ -111,10 +111,10 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
 
 void QMActive_ctor(QMActive * const me, QStateHandler initial) {
     static QActiveVtbl const vtbl = {             /* QMActive virtual table */
-        { &QMsm_init,
-          &QMsm_dispatch },
-        &QActive_postX,
-        &QActive_postXISR
+        { &QMsm_init_,
+          &QMsm_dispatch_ },
+        &QActive_postX_,
+        &QActive_postXISR_
     };
 
     QMsm_ctor(&me->super, initial);/*call instead of QActive_ctor(), NOTE01 */
@@ -125,10 +125,10 @@ void QMActive_ctor(QMActive * const me, QStateHandler initial) {
 
 /*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
-uint8_t QActive_postX(QActive * const me, uint8_t margin, enum_t const sig,
-                      QParam const par)
+uint8_t QActive_postX_(QActive * const me, uint8_t margin, enum_t const sig,
+                       QParam const par)
 #else
-uint8_t QActive_postX(QActive * const me, uint8_t margin, enum_t const sig)
+uint8_t QActive_postX_(QActive * const me, uint8_t margin, enum_t const sig)
 #endif
 {
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
@@ -163,10 +163,10 @@ uint8_t QActive_postX(QActive * const me, uint8_t margin, enum_t const sig)
 }
 /*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
-uint8_t QActive_postXISR(QActive * const me, uint8_t margin, enum_t const sig,
-                         QParam const par)
+uint8_t QActive_postXISR_(QActive * const me, uint8_t margin, enum_t const sig,
+                          QParam const par)
 #else
-uint8_t QActive_postXISR(QActive * const me, uint8_t margin, enum_t const sig)
+uint8_t QActive_postXISR_(QActive * const me, uint8_t margin, enum_t const sig)
 #endif
 {
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
@@ -252,7 +252,7 @@ void QF_stop(void) {
     SetEvent(l_win32Event);   /* unblock the event-loop so it can terminate */
 }
 /*..........................................................................*/
-int16_t QF_run(void) {
+int_t QF_run(void) {
     uint8_t p;
     QActive *a;
 
@@ -325,7 +325,7 @@ int16_t QF_run(void) {
     //CloseHandle(l_win32Event);
     //DeleteCriticalSection(&l_win32CritSect);
 
-    return (int16_t)0;                                           /* success */
+    return (int_t)0;                                             /* success */
 }
 /*..........................................................................*/
 void QF_setTickRate(uint32_t ticksPerSec) {

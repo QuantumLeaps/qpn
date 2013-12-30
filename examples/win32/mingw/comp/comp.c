@@ -180,7 +180,7 @@ QState AlarmClock_mode12hr(AlarmClock *me) {
 static QEvt l_clockQueue[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,              (QEvt *)0,    0U                  },
     { (QActive *)&AO_AlarmClock, l_clockQueue, Q_DIM(l_clockQueue) }
 };

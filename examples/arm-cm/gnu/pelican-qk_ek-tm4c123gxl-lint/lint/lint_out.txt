@@ -1,6 +1,45 @@
 
 --- Module:   D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c (C)
-"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 57 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'AO_Pelican' at location line 57, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 155 1 Info 715: Symbol 'me' (line 151) not referenced
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 151 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 155 1 Info 818: Pointer parameter 'me' (line 151) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 151 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 192 1 Info 715: Symbol 'me' (line 189) not referenced
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 189 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 192 1 Info 818: Pointer parameter 'me' (line 189) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 189 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 208 5 Info 764: switch statement does not have a case [MISRA 2004 Rule 15.5, required]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 210 1 Info 818: Pointer parameter 'me' (line 201) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 201 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 235 5 Info 764: switch statement does not have a case [MISRA 2004 Rule 15.5, required]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 237 1 Info 818: Pointer parameter 'me' (line 228) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 228 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 242 1 Info 715: Symbol 'me' (line 239) not referenced
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 239 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 242 1 Info 818: Pointer parameter 'me' (line 239) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 239 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 275 1 Info 715: Symbol 'me' (line 272) not referenced
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 272 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 275 1 Info 818: Pointer parameter 'me' (line 272) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 272 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 300 1 Info 715: Symbol 'me' (line 297) not referenced
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 297 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 300 1 Info 818: Pointer parameter 'me' (line 297) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 297 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 357 1 Info 715: Symbol 'me' (line 354) not referenced
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 354 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 357 1 Info 818: Pointer parameter 'me' (line 354) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 354 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 372 5 Info 764: switch statement does not have a case [MISRA 2004 Rule 15.5, required]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 374 1 Info 818: Pointer parameter 'me' (line 365) could be declared as pointing to const [MISRA 2004 Rule 16.7, advisory]
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 365 1 Info 830: Location cited in prior message
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 84 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'Pelican_carsGreenPedWait_s' at location line 84, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 77 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'Pelican_carsGreenInt_s' at location line 77, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 70 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'Pelican_carsGreenNoPed_s' at location line 70, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 132 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'AO_Pelican' at location line 132, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 124 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'Pelican_offline_s' at location line 124, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 108 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'Pelican_pedsWalk_s' at location line 108, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
+"D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c" 116 1 Note 960: Violates MISRA 2004 Required Rule 8.7, could define variable at block scope: 'Pelican_pedsFlash_s' at location line 116, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\pelican.c
 
 /// Start of Pass 2 ///
 
@@ -8,6 +47,7 @@
 
 --- Global Wrap-up
 
+"D:\qp\qpn\include\qfn.h" 397 1 Warning 526: Symbol 'QMActive_ctor(QMActive *, QStateHandler)' (line 397, file D:\qp\qpn\include\qfn.h) not defined
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMActive_ctor' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_init' 
 "D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h" 49 1 Warning 526: Symbol 'BSP_terminate(int16_t)' (line 49, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h) not defined
@@ -19,7 +59,6 @@
 "D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h" 52 1 Warning 526: Symbol 'BSP_signalPeds(enum BSP_PedsSignal)' (line 52, file D:\qp\qpn\examples\arm-cm\gnu\pelican-qk_ek-tm4c123gxl-lint\bsp.h) not defined
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'BSP_signalPeds' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_init' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_intNest_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_onStartup' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_onIdle' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_active' 
@@ -29,18 +68,16 @@
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_mutexUnlock' 
 "D:\qp\qpn\include\qfn.h" 355 1 Warning 526: Symbol 'QActive_armX(QActive *, uint8_t, QTimeEvtCtr)' (line 355, file D:\qp\qpn\include\qfn.h) not defined
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_armX' 
-"D:\qp\qpn\include\qfn.h" 212 1 Warning 526: Symbol 'QActive_ctor(QActive *, QStateHandler)' (line 212, file D:\qp\qpn\include\qfn.h) not defined
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_ctor' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_postXISR_' 
 "D:\qp\qpn\include\qfn.h" 368 1 Warning 526: Symbol 'QActive_disarmX(QActive *, uint8_t)' (line 368, file D:\qp\qpn\include\qfn.h) not defined
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_disarmX' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_postX' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_postXISR' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QActive_postX_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_stop' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_ctor' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_dispatch' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_init' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_dispatch_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_init_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_isIn' 
-"D:\qp\qpn\include\qepn.h" 464 1 Warning 526: Symbol 'QHsm_top(const void *)' (line 464, file D:\qp\qpn\include\qepn.h) not defined
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QHsm_top' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_tickXISR' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_onIdle' 
@@ -50,21 +87,24 @@
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_schedPrio_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QK_sched_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_ctor' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_init' 
- Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_dispatch' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_init_' 
+ Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_dispatch_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QMsm_emptyAction_' 
  Note 960: Violates MISRA 2004 Required Rule 8.9, undefined symbol: 'QF_init' 
-"D:\qp\qpn\include\qepn.h" 474 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_UNHANDLED' (line 474, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 475 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_IGNORED' (line 475, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 477 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_ENTRY' (line 477, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 478 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_EXIT' (line 478, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 479 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_INITIAL' (line 479, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 578 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT1_SIG' (line 578, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 579 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT2_SIG' (line 579, file D:\qp\qpn\include\qepn.h) not referenced
-"D:\qp\qpn\include\qepn.h" 580 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT3_SIG' (line 580, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 429 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_UNHANDLED' (line 429, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 430 1 Info 769: global enumeration constant 'QHandlerReturnValues::Q_RET_IGNORED' (line 430, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 530 1 Info 769: global enumeration constant 'QReservedSignals::Q_ENTRY_SIG' (line 530, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 531 1 Info 769: global enumeration constant 'QReservedSignals::Q_EXIT_SIG' (line 531, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 532 1 Info 769: global enumeration constant 'QReservedSignals::Q_INIT_SIG' (line 532, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 534 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT1_SIG' (line 534, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 535 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT2_SIG' (line 535, file D:\qp\qpn\include\qepn.h) not referenced
+"D:\qp\qpn\include\qepn.h" 536 1 Info 769: global enumeration constant 'QReservedSignals::Q_TIMEOUT3_SIG' (line 536, file D:\qp\qpn\include\qepn.h) not referenced
 
 Count   Type    Number  Text
 
-8       Warning 526     Symbol '___' (___) not defined
+7       Warning 526     Symbol '___' (___) not defined
+6       Info    715     Symbol '___' (___) not referenced
+3       Info    764     switch statement does not have a case
 8       Info    769     global enumeration constant '___' (___) not referenced
-39      Note    960     Violates MISRA 2004 Required Rule ___, ___
+9       Info    818     Pointer parameter '___' (___) could be declared as pointing to const
+44      Note    960     Violates MISRA 2004 Required Rule ___, ___

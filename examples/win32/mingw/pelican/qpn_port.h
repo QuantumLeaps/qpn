@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano port for PELICAN crossing example, Win32 emulation
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 12, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -42,14 +42,7 @@
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
 #define QF_MAX_ACTIVE           1
 
-                               /* Exact-width types. WG14/N843 C99 Standard */
-typedef signed   char      int8_t;
-typedef signed   short     int16_t;
-typedef signed   int       int32_t;
-typedef unsigned char      uint8_t;
-typedef unsigned short     uint16_t;
-typedef unsigned int       uint32_t;
-
+#include <stdint.h>            /* Exact-width types. WG14/N843 C99 Standard */
 #include "qepn.h"              /* QEP-nano platform-independent header file */
 #include "qfn_win32.h"           /* QF-nano emulation for Win32 header file */
 

@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: QP-nano make, Win32, MinGW compiler
-# Last Updated for Version: 5.1.0
-# Date of the Last Update:  Oct 11, 2013
+# Product: Generic Makefile for QP-nano application, Win32, MinGW compiler
+# Last Updated for Version: 5.1.2
+# Date of the Last Update:  Nov 04, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -40,9 +40,11 @@
 # cleaning configurations: Debug (default) and Release
 # make clean
 # make CONF=rel clean
-
-# Project basename
-PROJECT := defer
+##############################################################################
+#
+# NOTE: Typically, you should have no need to change anything in this Makefile
+#
+##############################################################################
 
 #-----------------------------------------------------------------------------
 # NOTE: the Makefile expects that the QPN environment variable is defined
@@ -65,6 +67,9 @@ RM    := rm
 #-----------------------------------------------------------------------------
 # directories
 #
+# Project name is derived from the directory name
+PROJECT := $(notdir $(CURDIR))
+
 QP_PORT_DIR := $(QPN)/ports/win32
 APP_DIR     := .
 
@@ -74,18 +79,17 @@ VPATH = $(APP_DIR) \
 
 # include directories
 INCLUDES  = -I. \
-	-I$(QPN)/include	\
-	-I$(QP_PORT_DIR)
+	-I$(QPN)/include \
+	-I$(QP_PORT_DIR) \
 
 # defines
 DEFINES =
 
+LINKFLAGS = -Wl,-Map,$(BIN_DIR)/$(PROJECT).map
+
 #-----------------------------------------------------------------------------
 # files
 #
-
-# assembler source files
-ASM_SRCS :=
 
 # C source files
 C_SRCS := $(wildcard *.c) \
@@ -95,8 +99,6 @@ C_SRCS := $(wildcard *.c) \
 # C++ source files
 CPP_SRCS := $(wildcard *.cpp)
 
-LD_SCRIPT :=
-
 #-----------------------------------------------------------------------------
 # build options for various configurations
 #
@@ -105,40 +107,29 @@ ifeq (rel, $(CONF))       # Release configuration ............................
 
 BIN_DIR := rel
 
-ASFLAGS =
-
 CFLAGS = -c -Wall -O2 $(INCLUDES) $(DEFINES) -DNDEBUG
 
 CPPFLAGS = -c -Wall -O2 $(INCLUDES) $(DEFINES) -DNDEBUG
-
-LINKFLAGS =
 
 else                     # default Debug configuration .......................
 
 BIN_DIR := dbg
 
-ASFLAGS =
-
 CFLAGS = -c -Wall -g $(INCLUDES) $(DEFINES)
 
 CPPFLAGS = -c -Wall -g $(INCLUDES) $(DEFINES)
 
-LINKFLAGS =
-
 endif
 
-
-ASM_OBJS     := $(patsubst %.s,%.o,   $(ASM_SRCS))
 C_OBJS       := $(patsubst %.c,%.o,   $(C_SRCS))
 CPP_OBJS     := $(patsubst %.cpp,%.o, $(CPP_SRCS))
 
 TARGET_BIN   := $(BIN_DIR)/$(PROJECT).bin
 TARGET_EXE   := $(BIN_DIR)/$(PROJECT).exe
-ASM_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(ASM_OBJS))
 C_OBJS_EXT   := $(addprefix $(BIN_DIR)/, $(C_OBJS))
-C_DEPS_EXT   := $(patsubst %.o,%.d,      $(C_OBJS_EXT))
+C_DEPS_EXT   := $(patsubst %.o,%.d, $(C_OBJS_EXT))
 CPP_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(CPP_OBJS))
-CPP_DEPS_EXT := $(patsubst %.o,%.d,      $(CPP_OBJS_EXT))
+CPP_DEPS_EXT := $(patsubst %.o,%.d, $(CPP_OBJS_EXT))
 
 #-----------------------------------------------------------------------------
 # rules
@@ -154,14 +145,14 @@ $(BIN_DIR):
 $(TARGET_BIN): $(TARGET_EXE)
 	$(BIN) -O binary $< $@
 
-$(TARGET_EXE) : $(ASM_OBJS_EXT) $(C_OBJS_EXT) $(CPP_OBJS_EXT)
+$(TARGET_EXE) : $(C_OBJS_EXT) $(CPP_OBJS_EXT)
 	$(LINK) $(LINKFLAGS) -o $@ $^
 
 $(BIN_DIR)/%.d : %.c
-	$(CC) -MM -MT $(@:.d=.o) $(filter-out -c -g, $(CFLAGS)) $< > $@
+	$(CC) -MM -MT $(@:.d=.o) $(CFLAGS) $< > $@
 
 $(BIN_DIR)/%.d : %.cpp
-	$(CPP) -MM -MT $(@:.d=.o) $(filter-out -c -g, $(CPPFLAGS)) $< > $@
+	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
 
 $(BIN_DIR)/%.o : %.s
 	$(AS) $(ASFLAGS) $< -o $@
@@ -183,15 +174,17 @@ endif
 clean:
 	-$(RM) $(BIN_DIR)/*.o \
 	$(BIN_DIR)/*.d \
-	$(BIN_DIR)/*.exe
+	$(BIN_DIR)/*.exe \
+	$(BIN_DIR)/*.map
 	
 show:
-	@echo CONF         = $(CONF)
-	@echo ASM_SRCS     = $(ASM_SRCS)
-	@echo C_SRCS       = $(C_SRCS)
-	@echo CPP_SRCS     = $(CPP_SRCS)
+	@echo PROJECT  = $(PROJECT)
+	@echo CONF     = $(CONF)
+	@echo VPATH    = $(VPATH)
+	@echo C_SRCS   = $(C_SRCS)
+	@echo CPP_SRCS = $(CPP_SRCS)
 	@echo ASM_OBJS_EXT = $(ASM_OBJS_EXT)
 	@echo C_OBJS_EXT   = $(C_OBJS_EXT)
 	@echo C_DEPS_EXT   = $(C_DEPS_EXT)
 	@echo CPP_DEPS_EXT = $(CPP_DEPS_EXT)
-	@echo TARGET_ELF   = $(TARGET_ELF)
+

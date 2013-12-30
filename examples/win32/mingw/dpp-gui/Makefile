@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: QP-nano, dpp-gui example, Win32, MinGW compiler
-# Last Updated for Version: 4.5.04
-# Date of the Last Update:  Feb 02, 2013
+# Product: Generic Makefile for QP-nano GUI application, Win32-GUI, MinGW
+# Last Updated for Version: 5.1.2
+# Date of the Last Update:  Nov 04, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -33,16 +33,18 @@
 # e-mail:                  info@quantum-leaps.com
 ##############################################################################
 # examples of invoking this Makefile:
-# building configurations: Debug (default), Release, and Spy
+# building configurations: Debug (default) and Release
 # make
 # make CONF=rel
 #
-# cleaning configurations: Debug (default), Release, and Spy
+# cleaning configurations: Debug (default) and Release
 # make clean
 # make CONF=rel clean
-
-# Output file basename
-OUTPUT    := dpp-gui
+##############################################################################
+#
+# NOTE: Typically, you should have no need to change anything in this Makefile
+#
+##############################################################################
 
 #-----------------------------------------------------------------------------
 # NOTE: the Makefile expects that the QPN environment variable is defined
@@ -53,11 +55,6 @@ $(error The QPN environment variable must be defined)
 endif
 
 #-----------------------------------------------------------------------------
-# general utilities
-#
-RM = del
-
-#-----------------------------------------------------------------------------
 # NOTE: this Makefile assumes that the Qtools\bin directory is added
 # to the PATH variable.
 #
@@ -66,20 +63,24 @@ CPP   := g++
 LINK  := gcc                                                # for C programs
 #LINK  := g++                                               # for C++ programs
 RC    := windres
+RM    := rm
 
 #-----------------------------------------------------------------------------
 # directories
 #
-QP_PORT_DIR := $(QPN)\ports\win32
+# Project name is derived from the directory name
+PROJECT := $(notdir $(CURDIR))
+
+QP_PORT_DIR := $(QPN)/ports/win32
 APP_DIR     := .
 
 VPATH = $(APP_DIR) \
-	$(QPN)\source \
+	$(QPN)/source \
 	$(QP_PORT_DIR)
 
 # include directories
 INCLUDES  = -I. \
-	-I$(QPN)\include	\
+	-I$(QPN)/include	\
 	-I$(QP_PORT_DIR)
 
 # resource directory
@@ -87,6 +88,8 @@ RCINCLUDES = -IRes
 
 # defines
 DEFINES =
+
+LINKFLAGS = -Wl,-Map,$(BIN_DIR)/$(PROJECT).map -s -mwindows
 
 #-----------------------------------------------------------------------------
 # files
@@ -107,8 +110,6 @@ CPP_SRCS := $(wildcard *.cpp)
 # Resource files
 RC_SRCS := $(wildcard *.rc)
 
-LD_SCRIPT :=
-
 #-----------------------------------------------------------------------------
 # build options for various configurations
 #
@@ -117,40 +118,30 @@ ifeq (rel, $(CONF))       # Release configuration ............................
 
 BIN_DIR := rel
 
-ASFLAGS =
-
 CFLAGS = -c -Wall -O1 $(INCLUDES) $(DEFINES) -DNDEBUG
 
 CPPFLAGS = -c -Wall -O1 $(INCLUDES) $(DEFINES) -DNDEBUG
-
-LINKFLAGS = -s -mwindows
 
 else                     # default Debug configuration .......................
 
 BIN_DIR := dbg
 
-ASFLAGS =
-
 CFLAGS = -c -Wall -g $(INCLUDES) $(DEFINES)
 
 CPPFLAGS = -c -Wall -g $(INCLUDES) $(DEFINES)
 
-LINKFLAGS = -s -mwindows
-
 endif
 
-ASM_OBJS     := $(patsubst %.s,%.o,$(ASM_SRCS))
 C_OBJS       := $(patsubst %.c,%.o,$(C_SRCS))
 CPP_OBJS     := $(patsubst %.cpp,%.o,$(CPP_SRCS))
 RC_OBJS      := $(patsubst %.rc,%.o,$(RC_SRCS))
 
-TARGET_BIN   := $(BIN_DIR)/$(OUTPUT).bin
-TARGET_EXE   := $(BIN_DIR)/$(OUTPUT).exe
-ASM_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(ASM_OBJS))
+TARGET_BIN   := $(BIN_DIR)/$(PROJECT).bin
+TARGET_EXE   := $(BIN_DIR)/$(PROJECT).exe
 C_OBJS_EXT   := $(addprefix $(BIN_DIR)/, $(C_OBJS))
-C_DEPS_EXT   := $(patsubst %.o, %.d, $(C_OBJS_EXT))
+C_DEPS_EXT   := $(patsubst %.o,%.d, $(C_OBJS_EXT))
 CPP_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(CPP_OBJS))
-CPP_DEPS_EXT := $(patsubst %.o, %.d, $(CPP_OBJS_EXT))
+CPP_DEPS_EXT := $(patsubst %.o,%.d, $(CPP_OBJS_EXT))
 RC_OBJS_EXT  := $(addprefix $(BIN_DIR)/, $(RC_OBJS))
 
 #-----------------------------------------------------------------------------
@@ -167,45 +158,48 @@ $(BIN_DIR):
 $(TARGET_BIN): $(TARGET_EXE)
 	$(BIN) -O binary $< $@
 
-$(TARGET_EXE) : $(ASM_OBJS_EXT) $(CPP_OBJS_EXT) $(C_OBJS_EXT) $(RC_OBJS_EXT)
+$(TARGET_EXE) : $(C_OBJS_EXT) $(CPP_OBJS_EXT) $(RC_OBJS_EXT)
 	$(LINK) $(LINKFLAGS) -o $@ $^
-
-$(BIN_DIR)/%.d : %.cpp
-	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
 
 $(BIN_DIR)/%.d : %.c
 	$(CC) -MM -MT $(@:.d=.o) $(CFLAGS) $< > $@
 
+$(BIN_DIR)/%.d : %.cpp
+	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
+
 $(BIN_DIR)/%.o : %.s
 	$(AS) $(ASFLAGS) $< -o $@
-
-$(BIN_DIR)/%.o : %.cpp
-	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 $(BIN_DIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(BIN_DIR)/%.o : %.cpp
+	$(CPP) $(CPPFLAGS) -c $< -o $@
+
 $(BIN_DIR)/%.o : %.rc
 	$(RC) $(RCINCLUDES) -i $< -o $@
 
+# include dependency files only if our goal depends on their existence
+ifneq ($(MAKECMDGOALS),clean)
+  ifneq ($(MAKECMDGOALS),show)
 -include $(C_DEPS_EXT) $(CPP_DEPS_EXT)
-
+  endif
+endif
 
 .PHONY : clean
 clean:
-	-$(RM) $(BIN_DIR)\*.o \
-	$(BIN_DIR)\*.d \
-	$(BIN_DIR)\*.exe \
-	$(BIN_DIR)\*.map
+	-$(RM) $(BIN_DIR)/*.o \
+	$(BIN_DIR)/*.d \
+	$(BIN_DIR)/*.exe \
+	$(BIN_DIR)/*.map
 	
 show:
-	@echo CONF = $(CONF)
-	@echo ASM_SRCS = $(ASM_SRCS)
-	@echo C_SRCS = $(C_SRCS)
+	@echo PROJECT  = $(PROJECT)
+	@echo CONF     = $(CONF)
+	@echo VPATH    = $(VPATH)
+	@echo C_SRCS   = $(C_SRCS)
 	@echo CPP_SRCS = $(CPP_SRCS)
 	@echo ASM_OBJS_EXT = $(ASM_OBJS_EXT)
-	@echo C_OBJS_EXT = $(C_OBJS_EXT)
-	@echo C_DEPS_EXT = $(C_DEPS_EXT)
+	@echo C_OBJS_EXT   = $(C_OBJS_EXT)
+	@echo C_DEPS_EXT   = $(C_DEPS_EXT)
 	@echo CPP_DEPS_EXT = $(CPP_DEPS_EXT)
-	@echo RC_OBJS_EXT = $(RC_OBJS_EXT)
-	@echo TARGET_ELF = $(TARGET_ELF)

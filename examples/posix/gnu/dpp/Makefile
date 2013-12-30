@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: QP-nano Makefile, DPP example, Linux, GNU compiler
-# Last Updated for Version: 5.1.1
-# Date of the Last Update:  Oct 12, 2013
+# Product: Generic Makefile for QP-nano application, POSIX, GNU compiler
+# Last Updated for Version: 5.1.2
+# Date of the Last Update:  Nov 04, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -40,9 +40,11 @@
 # cleaning configurations: Debug (default), Release, and Spy
 # make clean
 # make CONF=rel clean
-
-# Output file basename
-PROJECT    := dpp
+##############################################################################
+#
+# NOTE: Typically, you should have no need to change anything in this Makefile
+#
+##############################################################################
 
 #-----------------------------------------------------------------------------
 # NOTE: the Makefile expects that the QPN environment variable is defined
@@ -65,6 +67,9 @@ RM    := rm
 #-----------------------------------------------------------------------------
 # directories
 #
+# Project name is derived from the directory name
+PROJECT := $(notdir $(CURDIR))
+
 QP_PORT_DIR := $(QPN)/ports/posix
 APP_DIR     := .
 
@@ -84,9 +89,6 @@ DEFINES =
 #-----------------------------------------------------------------------------
 # files
 #
-
-# assembler source files
-ASM_SRCS :=
 
 # C source files
 C_SRCS := $(wildcard *.c) \
@@ -115,8 +117,6 @@ CFLAGS = -c -Wall -pthread \
 CPPFLAGS = -c -Wall -pthread \
 	-O2 $(INCLUDES) $(DEFINES) -DNDEBUG
 
-LINKFLAGS = -L$(QP_PORT_DIR)/$(BIN_DIR) -pthread
-
 else                     # default Debug configuration .......................
 
 BIN_DIR := dbg
@@ -130,24 +130,21 @@ CFLAGS = -c -Wall -pthread \
 CPPFLAGS = -c -Wall -pthread \
 	-g $(INCLUDES) $(DEFINES)
 
-LINKFLAGS = -L$(QP_PORT_DIR)/$(BIN_DIR) -pthread
-
-
 endif
 
+LINKFLAGS = -pthread -Wl,-Map,$(BIN_DIR)/$(PROJECT).map
 
-ASM_OBJS     := $(patsubst %.s,%.o,$(ASM_SRCS))
+#-----------------------------------------------------------------------------
+
 C_OBJS       := $(patsubst %.c,%.o,$(C_SRCS))
 CPP_OBJS     := $(patsubst %.cpp,%.o,$(CPP_SRCS))
 
 TARGET_BIN   := $(BIN_DIR)/$(PROJECT).bin
 TARGET_EXE   := $(BIN_DIR)/$(PROJECT)
-ASM_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(ASM_OBJS))
 C_OBJS_EXT   := $(addprefix $(BIN_DIR)/, $(C_OBJS))
 C_DEPS_EXT   := $(patsubst %.o, %.d, $(C_OBJS_EXT))
 CPP_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(CPP_OBJS))
 CPP_DEPS_EXT := $(patsubst %.o, %.d, $(CPP_OBJS_EXT))
-
 
 #-----------------------------------------------------------------------------
 # rules
@@ -163,7 +160,7 @@ $(BIN_DIR):
 $(TARGET_BIN): $(TARGET_EXE)
 	$(BIN) -O binary $< $@
 
-$(TARGET_EXE) : $(ASM_OBJS_EXT) $(C_OBJS_EXT) $(CPP_OBJS_EXT)
+$(TARGET_EXE) : $(C_OBJS_EXT) $(CPP_OBJS_EXT)
 	$(LINK) $(LINKFLAGS) -o $@ $^ $(LIBS)
 
 $(BIN_DIR)/%.d : %.c
@@ -172,20 +169,32 @@ $(BIN_DIR)/%.d : %.c
 $(BIN_DIR)/%.d : %.cpp
 	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
 
-$(BIN_DIR)/%.o : %.s
-	$(AS) $(ASFLAGS) $< -o $@
-
 $(BIN_DIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BIN_DIR)/%.o : %.cpp
 	$(CPP) $(CPPFLAGS) -c $< -o $@
 
+# include dependency files only if our goal depends on their existence
+ifneq ($(MAKECMDGOALS),clean)
+  ifneq ($(MAKECMDGOALS),show)
 -include $(C_DEPS_EXT) $(CPP_DEPS_EXT)
-
+  endif
+endif
 
 .PHONY : clean
 clean:
 	-$(RM) $(BIN_DIR)/*.o \
 	$(BIN_DIR)/*.d \
 	$(BIN_DIR)/$(PROJECT)
+
+show:
+	@echo PROJECT  = $(PROJECT)
+	@echo CONF     = $(CONF)
+	@echo VPATH    = $(VPATH)
+	@echo C_SRCS   = $(C_SRCS)
+	@echo CPP_SRCS = $(CPP_SRCS)
+	@echo ASM_OBJS_EXT = $(ASM_OBJS_EXT)
+	@echo C_OBJS_EXT   = $(C_OBJS_EXT)
+	@echo C_DEPS_EXT   = $(C_DEPS_EXT)
+	@echo CPP_DEPS_EXT = $(CPP_DEPS_EXT)

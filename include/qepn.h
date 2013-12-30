@@ -1,7 +1,7 @@
 /*****************************************************************************
-* Product: QP-nano
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 15, 2013
+* Product: QEP-nano
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -48,17 +48,18 @@
 /****************************************************************************/
 /** \brief The current QP version number
 *
-* version of the QP as a hex constant 0x0XYZ, where X is a 1-digit
+* version of the QP as a decimal constant XYZ, where X is a 1-digit
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      0x0511U
+#define QP_VERSION      520
 
 /** \brief The current QP version string */
-#define QP_VERSION_STR  "5.1.1"
+#define QP_VERSION_STR  "5.2.0"
 
-/** \brief Temperproof current QP-nano release (5.1.1) and date (13-10-15) */
-#define QP_RELEASE      0xB1E8B090U
+/** \brief Tamperproof current QP release (5.2.0) and date (13-12-30) */
+#define QP_RELEASE      0xB1C7E217U
+
 
 /****************************************************************************/
 #ifndef Q_ROM             /* if NOT defined, provide the default definition */
@@ -77,40 +78,6 @@
     * 8051 compiler), PROGMEM (gcc for AVR), __flash (IAR for AVR).
     */
     #define Q_ROM
-#endif
-#ifndef Q_ROM_VAR         /* if NOT defined, provide the default definition */
-
-    /** \brief Macro to specify compiler-specific directive for accessing a
-    * constant object in ROM.
-    *
-    * Many compilers for 8-bit MCUs provide different size pointers for
-    * accessing objects in various memories. Constant objects allocated
-    * in ROM (see #Q_ROM macro) often mandate the use of specific-size
-    * pointers (e.g., far pointers) to get access to ROM objects. The
-    * macro Q_ROM_VAR specifies the kind of the pointer to be used to access
-    * the ROM objects.
-    *
-    * To override the following empty definition, you need to define the
-    * Q_ROM_VAR macro in the qpn_port.h header file. An example of valid
-    * Q_ROM_VAR macro definition is: __far (Freescale HC(S)08 compiler).
-    */
-    #define Q_ROM_VAR
-#endif
-#ifndef Q_REENTRANT       /* if NOT defined, provide the default definition */
-
-    /** \brief Macro to specify compiler-specific directive for generating
-    * reentrant function.
-    *
-    * Some compilers for 8-bit MCUs provide, most notably the Keil C51
-    * compiler for 8051, don't generate ANSI-C compliant reentrant functions
-    * by default, due to the limited CPU architecture. These compilers allow
-    * dedicating specific functions to be reentrant with a special extended
-    * keyword (such as "reentrant" for Keil C51). The macro Q_REENTRANT is
-    * defined to nothing by default, to work with ANSI-C compliant compilers,
-    * but can be defined to "reentrant" to work with Keil C51 and perhaps
-    * other embedded compilers.
-    */
-    #define Q_REENTRANT
 #endif
 
 /****************************************************************************/
@@ -201,16 +168,15 @@ typedef QState (*QActionHandler)(void * const me);
 *
 * This class groups together the attributes of a QMsm state, such as the
 * parent state (state nesting), the associated state handler function and
-* the exit action handler function. These attributes are used inside the
-* QMsm_dispatch() and QMsm_init() functions.
+* the exit action handler function.
 *
 * \note The QMStateObj class is only intended for the QM code generator
 * and should not be used in hand-crafted code.
 */
 typedef struct QMStateTag {
     struct QMStateTag const *parent;      /**< parent state (state nesting) */
-    QStateHandler  stateHandler;               /**<  state handler function */
-    QActionHandler exitAction;            /**< exit action handler function */
+    QStateHandler     const stateHandler;      /**<  state handler function */
+    QActionHandler    const exitAction;   /**< exit action handler function */
 } QMState;
 
 /** \brief Attribute of for the QMsm class (Meta State Machine).
@@ -219,7 +185,7 @@ typedef struct QMStateTag {
 * attributes of the QMsm class.
 */
 typedef union QMAttrTag {
-    QMState const *obj;                      /**< pointer to QMState object */
+    QMState        const *obj;               /**< pointer to QMState object */
     QActionHandler const *act;                /**< array of action handlers */
     QStateHandler  fun;            /**< pointer to a state handler function */
 } QMAttr;
@@ -304,9 +270,9 @@ struct QMsmVtblTag {
 * Processes one event at a time in Run-to-Completion fashion. The argument
 * \a me is the pointer the state machine structure derived from QMsm.
 *
-* \note Must be called after the "constructor" QMsm_ctor() and QMsm_init().
+* \note Must be called after the "constructor" QMsm_ctor() and QMsm_init_().
 *
-* \sa example for QMsm_init() \n \ref derivation
+* \sa example for QMsm_init_() \n \ref derivation
 */
 #define QMSM_DISPATCH(me_) ((*(me_)->vptr->dispatch)((me_)))
 
@@ -319,21 +285,15 @@ struct QMsmVtblTag {
 *
 * \note Must be called only by the "constructors" of the derived state
 * machines.
-* \note Must be called only ONCE before QMsm_init().
+* \note Must be called only ONCE before QMsm_init_().
 */
 void QMsm_ctor(QMsm * const me, QStateHandler initial);
 
-/** \brief Implementation of the top-most initial transition in QMsm.
-*/
-void QMsm_init(QMsm * const me);
+/** \brief Implementation of the top-most initial transition in QMsm. */
+void QMsm_init_(QMsm * const me);
 
-/** \brief Implementation of disparching events to QMsm.
-*/
-#ifndef QK_PREEMPTIVE
-    void QMsm_dispatch(QMsm * const me);
-#else
-    void QMsm_dispatch(QMsm * const me) Q_REENTRANT;
-#endif
+/** \brief Implementation of disparching events to QMsm. */
+void QMsm_dispatch_(QMsm * const me);
 
 /** \brief Empty action used in transition tables without any
 * entry/exit/initial actions
@@ -371,7 +331,7 @@ typedef QMsm QFsm;
 * initial pseudostate to the currently active state of the state machine.
 * \note Must be called only by the "constructors" of the derived state
 * machines.
-* \note Must be called only ONCE before QFsm_init().
+* \note Must be called only ONCE before QFsm_init_().
 *
 * The following example illustrates how to invoke QFsm_ctor() in the
 * "constructor" of a derived state machine:
@@ -379,17 +339,11 @@ typedef QMsm QFsm;
 */
 void QFsm_ctor(QFsm * const me, QStateHandler initial);
 
-/** \brief Implementation of the top-most initial transition in QFsm.
-*/
-void QFsm_init(QFsm * const me);
+/** \brief Implementation of the top-most initial transition in QFsm. */
+void QFsm_init_(QFsm * const me);
 
-/** \brief Implementation of disparching events to QFsm.
-*/
-#ifndef QK_PREEMPTIVE
-    void QFsm_dispatch(QFsm * const me);
-#else
-    void QFsm_dispatch(QFsm * const me) Q_REENTRANT;
-#endif
+/** \brief Implementation of disparching events to QFsm. */
+void QFsm_dispatch_(QFsm * const me);
 
 #endif                                                            /* Q_NFSM */
 
@@ -425,7 +379,7 @@ typedef QMsm QHsm;
 *
 * \note Must be called only by the "constructors" of the derived state
 * machines.
-* \note Must be called before QHsm_init().
+* \note Must be called before QHsm_init_().
 *
 * The following example illustrates how to invoke QHsm_ctor() in the
 * "constructor" of a derived state machine:
@@ -439,15 +393,10 @@ void QHsm_ctor(QHsm * const me, QStateHandler initial);
 
 /** \brief Implementation of the top-most initial transition in QHsm.
 */
-void QHsm_init(QHsm * const me);
+void QHsm_init_(QHsm * const me);
 
-/** \brief Implementation of dispatching events to QHsm.
-*/
-#ifndef QK_PREEMPTIVE
-    void QHsm_dispatch(QHsm * const me);
-#else
-    void QHsm_dispatch(QHsm * const me) Q_REENTRANT;
-#endif
+/** \brief Implementation of dispatching events to QHsm. */
+void QHsm_dispatch_(QHsm * const me);
 
 /** \brief Tests if a given state is part of the current active state
 * configuration
@@ -609,12 +558,64 @@ enum QReservedSignals {
 #define QP_getVersion() (QP_VERSION_STR)
 
 /****************************************************************************/
-#ifndef Q_NQEVENT
-    typedef QEvt QEvent;/**< Deprecated typedef for backwards compatibility */
-#endif
+#include "qassert.h"            /* include the QP-nano assertions (for DbC) */
 
 /****************************************************************************/
-#include "qassert.h"            /* include the QP-nano assertions (for DbC) */
+/* QP API compatibility layer */
+#ifndef QP_API_VERSION
+
+/** \brief Macro that specifies the backwards compatibility with the
+* QP-nano API version.
+*
+* For example, QP_API_VERSION=450 will cause generating the compatibility
+* layer with QP-nano version 4.5.0 and newer, but not older than 4.5.0.
+* QP_API_VERSION=0 causes generation of the compatibility layer "from the
+* begining of time", which is the maximum backwards compatibilty. This is
+* the default.
+*
+* Conversely, QP_API_VERSION=9999 means that no compatibility layer should
+* be generated. This setting is useful for checking if an application
+* complies with the latest QP-nano API.
+*/
+#define QP_API_VERSION 0
+#endif                                            /* #ifndef QP_API_VERSION */
+
+/*..........................................................................*/
+#if (QP_API_VERSION < 500)
+
+/** \brief Deprecated macro for odd 8-bit CPUs. */
+#define Q_ROM_VAR
+
+/** \brief Deprecated macro for odd 8-bit CPUs. */
+#define Q_REENTRANT
+
+/** \brief Deprecated API defined for backwards-compatibility */
+#define QMsm_init(me_)      QMSM_INIT((me_))
+
+/** \brief Deprecated API defined for backwards-compatibility */
+#define QMsm_dispatch(me_)  QMSM_DISPATCH((me_))
+
+/** \brief Deprecated API defined for backwards-compatibility */
+#define QHsm_init(me_)      QMSM_INIT((me_))
+
+/** \brief Deprecated API defined for backwards-compatibility */
+#define QHsm_dispatch(me_)  QMSM_DISPATCH((me_))
+
+/** \brief Deprecated API defined for backwards-compatibility */
+#define QFsm_init(me_)      QMSM_INIT((me_))
+
+/** \brief Deprecated API defined for backwards-compatibility */
+#define QFsm_dispatch(me_)  QMSM_DISPATCH((me_))
+
+/*..........................................................................*/
+#if (QP_API_VERSION < 450)
+
+/** \brief deprecated typedef for backwards compatibility */
+typedef QEvt QEvent;
+
+#endif                                              /* QP_API_VERSION < 450 */
+#endif                                              /* QP_API_VERSION < 500 */
+/****************************************************************************/
 
 #endif                                                            /* qepn_h */
 

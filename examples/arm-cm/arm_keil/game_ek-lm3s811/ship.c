@@ -28,7 +28,7 @@
 /* @(/1/1) .................................................................*/
 typedef struct ShipTag {
 /* protected: */
-    QActive super;
+    QMActive super;
 
 /* private: */
     uint8_t x;
@@ -39,10 +39,33 @@ typedef struct ShipTag {
 
 /* protected: */
 static QState Ship_initial(Ship * const me);
-static QState Ship_active(Ship * const me);
-static QState Ship_parked(Ship * const me);
-static QState Ship_flying(Ship * const me);
-static QState Ship_exploding(Ship * const me);
+static QState Ship_active  (Ship * const me);
+static QState Ship_active_i(Ship * const me);
+static QMState const Ship_active_s = {
+    (QMState const *)0,
+    Q_STATE_CAST(&Ship_active),
+    Q_ACTION_CAST(0)
+};
+static QState Ship_parked  (Ship * const me);
+static QMState const Ship_parked_s = {
+    &Ship_active_s,
+    Q_STATE_CAST(&Ship_parked),
+    Q_ACTION_CAST(0)
+};
+static QState Ship_flying  (Ship * const me);
+static QState Ship_flying_e(Ship * const me);
+static QMState const Ship_flying_s = {
+    &Ship_active_s,
+    Q_STATE_CAST(&Ship_flying),
+    Q_ACTION_CAST(0)
+};
+static QState Ship_exploding  (Ship * const me);
+static QState Ship_exploding_e(Ship * const me);
+static QMState const Ship_exploding_s = {
+    &Ship_active_s,
+    Q_STATE_CAST(&Ship_exploding),
+    Q_ACTION_CAST(0)
+};
 
 
 /* global objects ----------------------------------------------------------*/
@@ -52,7 +75,7 @@ Ship AO_Ship;
 /* @(/1/10) ................................................................*/
 void Ship_ctor(void) {
     Ship *me = &AO_Ship;
-    QActive_ctor(&me->super, (QStateHandler)&Ship_initial);
+    QMActive_ctor(&me->super, Q_STATE_CAST(&Ship_initial));
     me->x = GAME_SHIP_X;
     me->y = GAME_SHIP_Y;
 }
@@ -60,26 +83,28 @@ void Ship_ctor(void) {
 /* @(/1/1/4) ...............................................................*/
 /* @(/1/1/4/0) */
 static QState Ship_initial(Ship * const me) {
-    return Q_TRAN(&Ship_active);
+    static QActionHandler const act_[] = {
+        Q_ACTION_CAST(&Ship_active_i),
+        Q_ACTION_CAST(0)
+    };
+    return QM_INITIAL(&Ship_active_s, &act_[0]);
 }
 /* @(/1/1/4/1) .............................................................*/
+static QState Ship_active_i(Ship * const me) {
+    return QM_INITIAL(&Ship_parked_s, QMsm_emptyAction_);
+}
 static QState Ship_active(Ship * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/1/4/1/0) */
-        case Q_INIT_SIG: {
-            status_ = Q_TRAN(&Ship_parked);
-            break;
-        }
         /* @(/1/1/4/1/1) */
         case PLAYER_SHIP_MOVE_SIG: {
             me->x = (uint8_t)Q_PAR(me);
             me->y = (uint8_t)(Q_PAR(me) >> 8);
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         default: {
-            status_ = Q_SUPER(&QHsm_top);
+            status_ = QM_SUPER();
             break;
         }
     }
@@ -91,27 +116,29 @@ static QState Ship_parked(Ship * const me) {
     switch (Q_SIG(me)) {
         /* @(/1/1/4/1/2/0) */
         case TAKE_OFF_SIG: {
-            status_ = Q_TRAN(&Ship_flying);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Ship_flying_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Ship_flying_s, &act_[0]);
             break;
         }
         default: {
-            status_ = Q_SUPER(&Ship_active);
+            status_ = QM_SUPER();
             break;
         }
     }
     return status_;
 }
 /* @(/1/1/4/1/3) ...........................................................*/
+static QState Ship_flying_e(Ship * const me) {
+    me->score = 0; /* reset the score */
+    QACTIVE_POST((QActive *)&AO_Tunnel, SCORE_SIG, me->score);
+    return QM_ENTRY(&Ship_flying_s);
+}
 static QState Ship_flying(Ship * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/1/4/1/3) */
-        case Q_ENTRY_SIG: {
-            me->score = 0; /* reset the score */
-            QACTIVE_POST((QActive *)&AO_Tunnel, SCORE_SIG, me->score);
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/1/4/1/3/0) */
         case TIME_TICK_SIG: {
             /* tell the Tunnel to draw the Ship and test for hits */
@@ -125,7 +152,7 @@ static QState Ship_flying(Ship * const me) {
             if ((me->score % 10) == 0) { /* is the score "round"? */
                 QACTIVE_POST((QActive *)&AO_Tunnel, SCORE_SIG, me->score);
             }
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/4/1/3/1) */
@@ -133,43 +160,49 @@ static QState Ship_flying(Ship * const me) {
             QACTIVE_POST((QActive *)&AO_Missile, MISSILE_FIRE_SIG,
                          (QParam)me->x
                          | (((QParam)(me->y - 1 + SHIP_HEIGHT) & 0xFF) << 8));
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/4/1/3/2) */
         case DESTROYED_MINE_SIG: {
             me->score += (uint16_t)Q_PAR(me);
             /* the score will be sent to the Tunnel by the next TIME_TICK */
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         /* @(/1/1/4/1/3/3) */
         case HIT_WALL_SIG: {
-            status_ = Q_TRAN(&Ship_exploding);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Ship_exploding_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Ship_exploding_s, &act_[0]);
             break;
         }
         /* @(/1/1/4/1/3/4) */
         case HIT_MINE_SIG: {
-            status_ = Q_TRAN(&Ship_exploding);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Ship_exploding_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Ship_exploding_s, &act_[0]);
             break;
         }
         default: {
-            status_ = Q_SUPER(&Ship_active);
+            status_ = QM_SUPER();
             break;
         }
     }
     return status_;
 }
 /* @(/1/1/4/1/4) ...........................................................*/
+static QState Ship_exploding_e(Ship * const me) {
+    me->exp_ctr = 0;
+    return QM_ENTRY(&Ship_exploding_s);
+}
 static QState Ship_exploding(Ship * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/1/4/1/4) */
-        case Q_ENTRY_SIG: {
-            me->exp_ctr = 0;
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/1/4/1/4/0) */
         case TIME_TICK_SIG: {
             /* @(/1/1/4/1/4/0/0) */
@@ -181,17 +214,17 @@ static QState Ship_exploding(Ship * const me) {
                          ((QParam)(EXPLOSION0_BMP + (me->exp_ctr >> 2)) << 16)
                          | (QParam)me->x
                          | (((QParam)(me->y - 4 + SHIP_HEIGHT) & 0xFF) << 8));
-                status_ = Q_HANDLED();
+                status_ = QM_HANDLED();
             }
             /* @(/1/1/4/1/4/0/1) */
             else {
                 QACTIVE_POST((QActive *)&AO_Tunnel, GAME_OVER_SIG, me->score);
-                status_ = Q_TRAN(&Ship_parked);
+                status_ = QM_TRAN(&Ship_parked_s, QMsm_emptyAction_);
             }
             break;
         }
         default: {
-            status_ = Q_SUPER(&Ship_active);
+            status_ = QM_SUPER();
             break;
         }
     }

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 5.1.0
-* Date of the Last Update:  Oct 04, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -61,15 +61,15 @@ QActionHandler const QMsm_emptyAction_[1] = {
 /*..........................................................................*/
 void QMsm_ctor(QMsm * const me, QStateHandler initial) {
     static QMsmVtbl const vtbl = {                    /* QMsm virtual table */
-        &QMsm_init,
-        &QMsm_dispatch
+        &QMsm_init_,
+        &QMsm_dispatch_
     };
     me->vptr = &vtbl;                /* hook the vptr to QMsm virtual table */
     me->state.obj = (void *)0;
     me->temp.fun  = initial;
 }
 /*..........................................................................*/
-void QMsm_init(QMsm * const me) {
+void QMsm_init_(QMsm * const me) {
     QState r;
 
     Q_REQUIRE((me->vptr != (QMsmVtbl const *)0)    /* ctor must be executed */
@@ -84,16 +84,12 @@ void QMsm_init(QMsm * const me) {
 
         r = (QState)0U;                      /* invalidate the return value */
         for (a = me->temp.act; *a != Q_ACTION_CAST(0); QEP_ACT_PTR_INC_(a)) {
-            r = (**a)(me);
+            r = (*(*a))(me);                          /* execute the action */
         }
     }
 }
 /*..........................................................................*/
-#ifndef QK_PREEMPTIVE
-    void QMsm_dispatch(QMsm * const me) {
-#else
-    void QMsm_dispatch(QMsm * const me) Q_REENTRANT {
-#endif
+void QMsm_dispatch_(QMsm * const me) {
     QMState const *s = me->state.obj;            /* store the current state */
     QMState const *t;
     QState r = (QState)Q_RET_HANDLED;
@@ -125,7 +121,7 @@ void QMsm_init(QMsm * const me) {
         /*  at this point s == t and both hold the source of the transition */
 
         for (; *a != Q_ACTION_CAST(0); QEP_ACT_PTR_INC_(a)) {
-            r = (**a)(me);
+            r = (*(*a))(me);                          /* execute the action */
         }
 
         while (r == (QState)Q_RET_INITIAL) {
@@ -134,7 +130,7 @@ void QMsm_init(QMsm * const me) {
                  *a != Q_ACTION_CAST(0);
                  QEP_ACT_PTR_INC_(a))
             {
-                r = (**a)(me);
+                r = (*(*a))(me);                       /* execute the action */
             }
         }
     }
@@ -154,8 +150,8 @@ void QMsm_init(QMsm * const me) {
 /*..........................................................................*/
 void QHsm_ctor(QHsm * const me, QStateHandler initial) {
     static QMsmVtbl const vtbl = {                    /* QHsm virtual table */
-        &QHsm_init,
-        &QHsm_dispatch
+        &QHsm_init_,
+        &QHsm_dispatch_
     };
 
     me->vptr = &vtbl;                /* hook the vptr to QHsm virtual table */
@@ -168,7 +164,7 @@ QState QHsm_top(void const * const me) {
     return Q_IGNORED();                 /* the top state ignores all events */
 }
 /*..........................................................................*/
-void QHsm_init(QHsm * const me) {
+void QHsm_init_(QHsm * const me) {
     QStateHandler t = me->state.fun;
 
     Q_REQUIRE((me->temp.fun != Q_STATE_CAST(0))    /* ctor must be executed */
@@ -206,11 +202,10 @@ void QHsm_init(QHsm * const me) {
     me->temp.fun  = t;                  /* mark the configuration as stable */
 }
 /*..........................................................................*/
-#ifndef QK_PREEMPTIVE
-void QHsm_dispatch(QHsm * const me) {
-#else
-void QHsm_dispatch(QHsm * const me) Q_REENTRANT {
-#endif
+static int8_t QHsm_tran_(QHsm * const me,
+                         QStateHandler path[QEP_MAX_NEST_DEPTH_]);
+/*..........................................................................*/
+void QHsm_dispatch_(QHsm * const me) {
     QStateHandler t = me->state.fun;
     QStateHandler s;
     QState r;
@@ -231,11 +226,12 @@ void QHsm_dispatch(QHsm * const me) Q_REENTRANT {
     } while (r == (QState)Q_RET_SUPER);
 
     if (r == (QState)Q_RET_TRAN) {                     /* transition taken? */
-        QStateHandler path[QEP_MAX_NEST_DEPTH_];
-        int8_t ip = (int8_t)(-1);            /* transition entry path index */
+        QStateHandler path[QEP_MAX_NEST_DEPTH_];   /* transition entry path */
+        int8_t ip;                           /* transition entry path index */
 
         path[0] = me->temp.fun;        /* save the target of the transition */
         path[1] = t;
+        path[2] = s;
 
         while (t != s) {    /* exit current state to transition source s... */
             Q_SIG(me) = (QSignal)Q_EXIT_SIG;        /* find superstate of t */
@@ -246,119 +242,8 @@ void QHsm_dispatch(QHsm * const me) Q_REENTRANT {
             t = me->temp.fun;              /* me->temp holds the superstate */
         }
 
-        t = path[0];                            /* target of the transition */
+        ip = QHsm_tran_(me, path);             /* take the state transition */
 
-        if (s == t) {      /* (a) check source==target (transition to self) */
-            Q_SIG(me) = (QSignal)Q_EXIT_SIG;
-            (void)(*s)(me);                              /* exit the source */
-            ip = (int8_t)0;                             /* enter the target */
-        }
-        else {
-            Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-            (void)(*t)(me);                    /* find superstate of target */
-            t = me->temp.fun;
-            if (s == t) {                /* (b) check source==target->super */
-                ip = (int8_t)0;                         /* enter the target */
-            }
-            else {
-                Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-                (void)(*s)(me);                /* find superstate of source */
-
-                                  /* (c) check source->super==target->super */
-                if (me->temp.fun == t) {
-                    Q_SIG(me) = (QSignal)Q_EXIT_SIG;
-                    (void)(*s)(me);                      /* exit the source */
-                    ip = (int8_t)0;                     /* enter the target */
-                }
-                else {
-                                         /* (d) check source->super==target */
-                    if (me->temp.fun == path[0]) {
-                        Q_SIG(me) = (QSignal)Q_EXIT_SIG;
-                        (void)(*s)(me);                  /* exit the source */
-                    }
-                    else { /* (e) check rest of source==target->super->super..
-                            * and store the entry path along the way
-                            */
-                        iq = (int8_t)0;      /* indicate that LCA not found */
-                        ip = (int8_t)1;  /* enter target and its superstate */
-                        path[1] = t;       /* save the superstate of target */
-                        t = me->temp.fun;             /* save source->super */
-
-                        Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-                        r = (*path[1])(me);    /* find target->super->super */
-                        while (r == (QState)Q_RET_SUPER) {
-                            ++ip;
-                            path[ip] = me->temp.fun;/* store the entry path */
-                            if (me->temp.fun == s) {   /* is it the source? */
-                                iq = (int8_t)1;  /* indicate that LCA found */
-                                            /* entry path must not overflow */
-                                Q_ASSERT(ip < (int8_t)QEP_MAX_NEST_DEPTH_);
-                                --ip;            /* do not enter the source */
-                                r = (QState)Q_RET_HANDLED;/* terminate loop */
-                            }
-                            else {   /* it is not the source, keep going up */
-                                r = (*me->temp.fun)(me); /* superstate of t */
-                            }
-                        }
-                        if (iq == (int8_t)0) {    /* the LCA not found yet? */
-
-                                            /* entry path must not overflow */
-                            Q_ASSERT(ip < (int8_t)QEP_MAX_NEST_DEPTH_);
-
-                            Q_SIG(me) = (QSignal)Q_EXIT_SIG;
-                            (void)(*s)(me);              /* exit the source */
-
-                                /* (f) check the rest of source->super
-                                 *                  == target->super->super...
-                                 */
-                            iq = ip;
-                            r = (QState)Q_RET_IGNORED;     /* LCA NOT found */
-                            do {
-                                s = path[iq];
-                                if (t == s) {           /* is this the LCA? */
-                                    r = (QState)Q_RET_HANDLED; /* LCA found */
-                                                        /* do not enter LCA */
-                                    ip = (int8_t)(iq - (int8_t)1);
-                                    iq = (int8_t)(-1);/* terminate the loop */
-                                }
-                                else {
-                                    --iq; /* try lower superstate of target */
-                                }
-                            } while (iq >= (int8_t)0);
-
-                            if (r != (QState)Q_RET_HANDLED) {/*LCAnot found?*/
-                                    /* (g) check each source->super->...
-                                     * for each target->super...
-                                     */
-                                r = (QState)Q_RET_IGNORED;  /* keep looping */
-                                do {
-                                                       /* exit t unhandled? */
-                                    Q_SIG(me) = (QSignal)Q_EXIT_SIG;
-                                    if ((*t)(me) == (QState)Q_RET_HANDLED) {
-                                        Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-                                        (void)(*t)(me);  /* find super of t */
-                                    }
-                                    t = me->temp.fun; /*  set to super of t */
-                                    iq = ip;
-                                    do {
-                                        s = path[iq];
-                                        if (t == s) {       /* is this LCA? */
-                                                        /* do not enter LCA */
-                                            ip = (int8_t)(iq - (int8_t)1);
-                                            iq = (int8_t)(-1);/*break inner */
-                                            r = (QState)Q_RET_HANDLED;/*break*/
-                                        }
-                                        else {
-                                            --iq;
-                                        }
-                                    } while (iq >= (int8_t)0);
-                                } while (r != (QState)Q_RET_HANDLED);
-                            }
-                        }
-                    }
-                }
-            }
-        }
                     /* retrace the entry path in reverse (desired) order... */
         Q_SIG(me) = (QSignal)Q_ENTRY_SIG;
         for (; ip >= (int8_t)0; --ip) {
@@ -398,6 +283,129 @@ void QHsm_dispatch(QHsm * const me) Q_REENTRANT {
     me->state.fun = t;                   /* change the current active state */
     me->temp.fun  = t;                  /* mark the configuration as stable */
 }
+/*..........................................................................*/
+static int8_t QHsm_tran_(QHsm * const me,
+                         QStateHandler path[QEP_MAX_NEST_DEPTH_])
+{
+    int8_t ip = (int8_t)(-1);                /* transition entry path index */
+    int8_t iq;                        /* helper transition entry path index */
+    QStateHandler t = path[0];
+    QStateHandler s = path[2];
+    QState r;
+
+    if (s == t) {          /* (a) check source==target (transition to self) */
+        Q_SIG(me) = (QSignal)Q_EXIT_SIG;
+        (void)(*s)(me);                                  /* exit the source */
+        ip = (int8_t)0;                                 /* enter the target */
+    }
+    else {
+        Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
+        (void)(*t)(me);                        /* find superstate of target */
+        t = me->temp.fun;
+        if (s == t) {                    /* (b) check source==target->super */
+            ip = (int8_t)0;                             /* enter the target */
+        }
+        else {
+            Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
+            (void)(*s)(me);                    /* find superstate of source */
+
+                                  /* (c) check source->super==target->super */
+            if (me->temp.fun == t) {
+                Q_SIG(me) = (QSignal)Q_EXIT_SIG;
+                (void)(*s)(me);                          /* exit the source */
+                ip = (int8_t)0;                         /* enter the target */
+            }
+            else {
+                                         /* (d) check source->super==target */
+                if (me->temp.fun == path[0]) {
+                    Q_SIG(me) = (QSignal)Q_EXIT_SIG;
+                    (void)(*s)(me);                      /* exit the source */
+                }
+                else { /* (e) check rest of source==target->super->super..
+                        * and store the entry path along the way
+                        */
+                    iq = (int8_t)0;          /* indicate that LCA not found */
+                    ip = (int8_t)1;      /* enter target and its superstate */
+                    path[1] = t;           /* save the superstate of target */
+                    t = me->temp.fun;                 /* save source->super */
+
+                    Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
+                    r = (*path[1])(me);        /* find target->super->super */
+                    while (r == (QState)Q_RET_SUPER) {
+                        ++ip;
+                        path[ip] = me->temp.fun;    /* store the entry path */
+                        if (me->temp.fun == s) {       /* is it the source? */
+                            iq = (int8_t)1;      /* indicate that LCA found */
+                                            /* entry path must not overflow */
+                            Q_ASSERT(ip < (int8_t)QEP_MAX_NEST_DEPTH_);
+                            --ip;                /* do not enter the source */
+                            r = (QState)Q_RET_HANDLED;    /* terminate loop */
+                        }
+                        else {       /* it is not the source, keep going up */
+                            r = (*me->temp.fun)(me);     /* superstate of t */
+                        }
+                    }
+                    if (iq == (int8_t)0) {        /* the LCA not found yet? */
+
+                                            /* entry path must not overflow */
+                        Q_ASSERT(ip < (int8_t)QEP_MAX_NEST_DEPTH_);
+
+                        Q_SIG(me) = (QSignal)Q_EXIT_SIG;
+                        (void)(*s)(me);                  /* exit the source */
+
+                        /* (f) check the rest of source->super
+                        *                  == target->super->super...
+                        */
+                        iq = ip;
+                        r = (QState)Q_RET_IGNORED;         /* LCA NOT found */
+                        do {
+                            s = path[iq];
+                            if (t == s) {               /* is this the LCA? */
+                                r = (QState)Q_RET_HANDLED;     /* LCA found */
+                                                        /* do not enter LCA */
+                                ip = (int8_t)(iq - (int8_t)1);
+                                iq = (int8_t)(-1);    /* terminate the loop */
+                            }
+                            else {
+                                --iq;     /* try lower superstate of target */
+                            }
+                        } while (iq >= (int8_t)0);
+
+                        if (r != (QState)Q_RET_HANDLED) {  /* LCAnot found? */
+                            /* (g) check each source->super->...
+                             * for each target->super...
+                             */
+                            r = (QState)Q_RET_IGNORED;      /* keep looping */
+                            do {
+                                                       /* exit t unhandled? */
+                                Q_SIG(me) = (QSignal)Q_EXIT_SIG;
+                                if ((*t)(me) == (QState)Q_RET_HANDLED) {
+                                    Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
+                                    (void)(*t)(me);      /* find super of t */
+                                }
+                                t = me->temp.fun;     /*  set to super of t */
+                                iq = ip;
+                                do {
+                                    s = path[iq];
+                                    if (t == s) {           /* is this LCA? */
+                                                        /* do not enter LCA */
+                                        ip = (int8_t)(iq - (int8_t)1);
+                                        iq = (int8_t)(-1);   /* break inner */
+                                        r = (QState)Q_RET_HANDLED; /* break */
+                                    }
+                                    else {
+                                        --iq;
+                                    }
+                                } while (iq >= (int8_t)0);
+                            } while (r != (QState)Q_RET_HANDLED);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return ip;
+}
 #endif                                                            /* Q_NHSM */
 
 
@@ -406,8 +414,8 @@ void QHsm_dispatch(QHsm * const me) Q_REENTRANT {
 /*..........................................................................*/
 void QFsm_ctor(QFsm * const me, QStateHandler initial) {
     static QMsmVtbl const vtbl = {                    /* QFsm virtual table */
-        &QFsm_init,
-        &QFsm_dispatch
+        &QFsm_init_,
+        &QFsm_dispatch_
     };
 
     me->vptr = &vtbl;                /* hook the vptr to QFsm virtual table */
@@ -415,7 +423,7 @@ void QFsm_ctor(QFsm * const me, QStateHandler initial) {
     me->temp.fun  = initial;
 }
 /*..........................................................................*/
-void QFsm_init(QFsm * const me) {
+void QFsm_init_(QFsm * const me) {
     Q_REQUIRE((me->temp.fun != Q_STATE_CAST(0))    /* ctor must be executed */
               && (me->state.fun == Q_STATE_CAST(0)));  /* initial NOT taken */
 
@@ -427,12 +435,7 @@ void QFsm_init(QFsm * const me) {
     me->state.fun = me->temp.fun;            /* change the new active state */
 }
 /*..........................................................................*/
-#ifndef QK_PREEMPTIVE
-void QFsm_dispatch(QFsm *const me) {
-#else
-void QFsm_dispatch(QFsm *const me) Q_REENTRANT {
-#endif
-
+void QFsm_dispatch_(QFsm *const me) {
     if ((*me->state.fun)(me) == (QState)Q_RET_TRAN) {       /* tran. taken? */
         Q_SIG(me) = (QSignal)Q_EXIT_SIG;
         (void)(*me->state.fun)(me);                      /* exit the source */

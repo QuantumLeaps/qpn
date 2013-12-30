@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example, preemptive QK-nano kernel
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -41,12 +41,35 @@
 
 Q_DEFINE_THIS_FILE
 
-enum ISR_Priorities {   /* ISR priorities starting from the highest urgency */
-    GPIOPORTA_PRIO,
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CAUTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+* Assign a priority to EVERY ISR explicitly by calling NVIC_SetPriority().
+* DO NOT LEAVE THE ISR PRIORITIES AT THE DEFAULT VALUE!
+*/
+enum KernelUnawareISRs {                                      /* see NOTE00 */
+    /* ... */
+    MAX_KERNEL_UNAWARE_CMSIS_PRI                        /* keep always last */
+};
+/* "kernel-unaware" interrupts can't overlap "kernel-aware" interrupts */
+Q_ASSERT_COMPILE(MAX_KERNEL_UNAWARE_CMSIS_PRI <= QF_AWARE_ISR_CMSIS_PRI);
+
+enum KernelAwareISRs {
+    GPIOPORTA_PRIO = QF_AWARE_ISR_CMSIS_PRI,                  /* see NOTE00 */
     ADCSEQ3_PRIO,
     SYSTICK_PRIO,
     /* ... */
+    MAX_KERNEL_AWARE_CMSIS_PRI                          /* keep always last */
 };
+/* "kernel-aware" interrupts should not overlap the PendSV priority */
+Q_ASSERT_COMPILE(MAX_KERNEL_AWARE_CMSIS_PRI <= (0xFF >>(8-__NVIC_PRIO_BITS)));
+
+/* ISRs defined in this BSP ------------------------------------------------*/
+void SysTick_Handler(void);
+void ADCSeq3_IRQHandler(void);
+void GPIOPortA_IRQHandler(void);
+
+/* Local-scope objects -----------------------------------------------------*/
+#define PUSH_BUTTON             (1U << 4)
+#define USER_LED                (1U << 5)
 
 #define ADC_TRIGGER_TIMER       0x00000005U
 #define ADC_CTL_IE              0x00000040U
@@ -55,26 +78,16 @@ enum ISR_Priorities {   /* ISR priorities starting from the highest urgency */
 #define ADC_SSFSTAT0_EMPTY      0x00000100U
 #define UART_FR_TXFE            0x00000080U
 
-/* ISR prototypes */
-void SysTick_Handler(void);
-void ADCSeq3_IRQHandler(void);
-void GPIOPortA_IRQHandler(void);
-
-
-/* Local-scope objects -----------------------------------------------------*/
-#define PUSH_BUTTON             (1U << 4)
-#define USER_LED                (1U << 5)
-
 /*..........................................................................*/
 void SysTick_Handler(void) {
     QK_ISR_ENTRY();                /* inform QK-nano about entering the ISR */
 
-    QF_tickISR();                          /* process all armed time events */
+    QF_tickXISR(0U);                       /* process time events at rate 0 */
 
                /* post TIME_TICK events to all interested active objects... */
-    QActive_postISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0U);
-    QActive_postISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0U);
-    QActive_postISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0);
 
     QK_ISR_EXIT();                  /* inform QK-nano about exiting the ISR */
 }
@@ -105,8 +118,8 @@ void ADCSeq3_IRQHandler(void) {
     tmp = (((1U << 10) - adcLPS)*(BSP_SCREEN_HEIGHT - 2)) >> 10;
 
     if (tmp != wheel) {                   /* did the wheel position change? */
-        QActive_postISR((QActive *)&AO_Ship, PLAYER_SHIP_MOVE_SIG,
-                        ((tmp << 8) | GAME_SHIP_X));
+        QACTIVE_POST_ISR((QActive *)&AO_Ship, PLAYER_SHIP_MOVE_SIG,
+                         ((tmp << 8) | GAME_SHIP_X));
         wheel = tmp;                 /* save the last position of the wheel */
     }
 
@@ -138,10 +151,10 @@ void ADCSeq3_IRQHandler(void) {
                 btn_debounced = tmp;     /* save the debounced button value */
 
                 if (tmp == 0) {                 /* is the button depressed? */
-                    QActive_postISR((QActive *)&AO_Ship,
-                                    PLAYER_TRIGGER_SIG, 0);
-                    QActive_postISR((QActive *)&AO_Tunnel,
-                                    PLAYER_TRIGGER_SIG, 0);
+                    QACTIVE_POST_ISR((QActive *)&AO_Ship,
+                                     PLAYER_TRIGGER_SIG, 0);
+                    QACTIVE_POST_ISR((QActive *)&AO_Tunnel,
+                                     PLAYER_TRIGGER_SIG, 0);
                 }
             }
             debounce_state = 0;               /* transition back to state 0 */
@@ -154,7 +167,7 @@ void ADCSeq3_IRQHandler(void) {
 void GPIOPortA_IRQHandler(void) {
     QK_ISR_ENTRY();                /* inform QK-nano about entering the ISR */
 
-    QActive_postISR((QActive *)&AO_Tunnel, TAKE_OFF_SIG, 0); /* for testing */
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel, TAKE_OFF_SIG, 0);/* for testing */
 
     QK_ISR_EXIT();                  /* inform QK-nano about exiting the ISR */
 }
@@ -230,11 +243,21 @@ void QF_onStartup(void) {               /* enable the configured interrupts */
               /* set up the SysTick timer to fire at BSP_TICKS_PER_SEC rate */
     SysTick_Config(SystemFrequency / BSP_TICKS_PER_SEC);
 
-                       /* set priorities of all interrupts in the system... */
+    /* assing all priority bits for preemption-prio. and none to sub-prio. */
+    NVIC_SetPriorityGrouping(0U);
+
+    /* set priorities of ALL ISRs used in the system, see NOTE00
+    *
+    * !!!!!!!!!!!!!!!!!!!!!!!!!!!! CAUTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    * Assign a priority to EVERY ISR explicitly by calling NVIC_SetPriority().
+    * DO NOT LEAVE THE ISR PRIORITIES AT THE DEFAULT VALUE!
+    */
     NVIC_SetPriority(SysTick_IRQn,   SYSTICK_PRIO);
     NVIC_SetPriority(ADCSeq3_IRQn,   ADCSEQ3_PRIO);
     NVIC_SetPriority(GPIOPortA_IRQn, GPIOPORTA_PRIO);
+    /* ... */
 
+                                                          /* enable IRQs... */
     NVIC_EnableIRQ(ADCSeq3_IRQn);
     NVIC_EnableIRQ(GPIOPortA_IRQn);
 
@@ -265,20 +288,36 @@ void QK_onIdle(void) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
-    (void)file;                                   /* avoid compiler warning */
-    (void)line;                                   /* avoid compiler warning */
-    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
-    for (;;) {       /* NOTE: replace the loop with reset for final version */
-    }
+void Q_onAssert(char const Q_ROM * const file, int_t line) {
+    assert_failed(file, line);
 }
 /*..........................................................................*/
 /* error routine that is called if the CMSIS library encounters an error    */
-void assert_failed(char_t const *file, int_t line) {
-    Q_onAssert(file, line);
+void assert_failed(char const *file, int line) {
+    (void)file;                                   /* avoid compiler warning */
+    (void)line;                                   /* avoid compiler warning */
+    QF_INT_DISABLE();         /* make sure that all interrupts are disabled */
+    NVIC_SystemReset();                             /* perform system reset */
 }
 
 /*****************************************************************************
+* NOTE00:
+* The QF_AWARE_ISR_CMSIS_PRI constant from the QF port specifies the highest
+* ISR priority that is disabled by the QF framework. The value is suitable
+* for the NVIC_SetPriority() CMSIS function.
+*
+* Only ISRs prioritized at or below the QF_AWARE_ISR_CMSIS_PRI level (i.e.,
+* with the numerical values of priorities equal or higher than
+* QF_AWARE_ISR_CMSIS_PRI) are allowed to call any QF services. These ISRs
+* are "QF-aware".
+*
+* Conversely, any ISRs prioritized above the QF_AWARE_ISR_CMSIS_PRI priority
+* level (i.e., with the numerical values of priorities less than
+* QF_AWARE_ISR_CMSIS_PRI) are never disabled and are not aware of the kernel.
+* Such "QF-unaware" ISRs cannot call any QF services. The only mechanism
+* by which a "QF-unaware" ISR can communicate with the QF framework is by
+* triggering a "QF-aware" ISR, which can post/publish events.
+*
 * NOTE01:
 * The User LED is used to visualize the idle loop activity. The brightness
 * of the LED is proportional to the frequency of invcations of the idle loop.

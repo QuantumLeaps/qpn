@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 14, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -89,7 +89,7 @@ static void initialize(void) {
     QF_INT_ENABLE();
 }
 /*..........................................................................*/
-int16_t QF_run(void) {
+int_t QF_run(void) {
     initialize();
     QF_onStartup();                              /* invoke startup callback */
 
@@ -97,13 +97,13 @@ int16_t QF_run(void) {
         QK_onIdle();                         /* invoke the on-idle callback */
     }
 #ifdef __GNUC__                                            /* GNU compiler? */
-    return (int16_t)0;
+    return (int_t)0;
 #endif
 }
 
 /*..........................................................................*/
 /* NOTE: QK schePrio_() is entered and exited with interrupts LOCKED */
-uint8_t QK_schedPrio_(void) Q_REENTRANT {
+uint8_t QK_schedPrio_(void) {
     uint8_t p;               /* highest-priority active object ready to run */
 
           /* determine the priority of the highest-priority AO ready to run */
@@ -138,8 +138,8 @@ uint8_t QK_schedPrio_(void) Q_REENTRANT {
 }
 /*..........................................................................*/
 /* NOTE: QK_sched_() is entered and exited with interrupts LOCKED */
-void QK_sched_(uint8_t p) Q_REENTRANT {
-    static uint8_t const Q_ROM Q_ROM_VAR invPow2Lkup[] = {
+void QK_sched_(uint8_t p) {
+    static uint8_t const Q_ROM invPow2Lkup[] = {
         (uint8_t)0xFF,
         (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
         (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F

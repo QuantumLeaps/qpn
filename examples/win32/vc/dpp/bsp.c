@@ -79,7 +79,7 @@ void BSP_randomSeed(uint32_t seed) {
     l_rnd = seed;
 }
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const Q_ROM_VAR file, int_t line) {
+void Q_onAssert(char_t const Q_ROM * const file, int_t line) {
     fprintf(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);
 }

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 5.0.0
-* Date of the Last Update:  Aug 04, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -45,10 +45,9 @@ Q_DEFINE_THIS_MODULE("qfn_init")
 void QF_init(void) {
     QActive *a;
     uint8_t p;
-
-#ifdef Q_TIMERSET
     uint8_t n;
 
+#ifdef Q_TIMERSET
     for (n = (uint8_t)0; n < (uint8_t)QF_MAX_TICK_RATE; ++n) {
         QF_timerSetX_[n] = (uint8_t)0;
     }

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano port to Lint
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -69,36 +69,6 @@
 * 8051 compiler), PROGMEM (gcc for AVR), __flash (IAR for AVR).
 */
 #define Q_ROM
-
-/** \brief Macro to specify compiler-specific directive for accessing a
-* constant object in ROM.
-*
-* Many compilers for 8-bit MCUs provide different size pointers for
-* accessing objects in various memories. Constant objects allocated
-* in ROM (see #Q_ROM macro) often mandate the use of specific-size
-* pointers (e.g., far pointers) to get access to ROM objects. The
-* macro Q_ROM_VAR specifies the kind of the pointer to be used to access
-* the ROM objects.
-*
-* To override the following empty definition, you need to define the
-* Q_ROM_VAR macro in the qpn_port.h header file. An example of valid
-* Q_ROM_VAR macro definition is: __far (Freescale HC(S)08 compiler).
-*/
-#define Q_ROM_VAR
-
-/** \brief Macro to specify compiler-specific directive for generating
-* reentrant function.
-*
-* Some compilers for 8-bit MCUs provide, most notably the Keil C51
-* compiler for 8051, don't generate ANSI-C compliant reentrant functions
-* by default, due to the limited hardware architecture. These compilers
-* allow to dedicate specific functions to be reentrant with a special
-* extended keyword (such as "reentrant" for Keil C51). The macro
-* Q_REENTRANT is defined to nothing by default, to work with ANSI-C
-* compiliant compilers, but can be defined to "reentrant" to work with
-* Keil C51 and perhpas other compilers.
-*/
-#define Q_REENTRANT
 
 /** \brief Macro to access a byte allocated in ROM
 *

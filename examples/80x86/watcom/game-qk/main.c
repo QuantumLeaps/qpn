@@ -42,7 +42,7 @@ static QEvt l_shipQueue[3];
 static QEvt l_missileQueue[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,           (QEvt *)0,      0U                    },
     { (QActive *)&AO_Tunnel,  l_tunnelQueue,  Q_DIM(l_tunnelQueue)  },
     { (QActive *)&AO_Ship,    l_shipQueue,    Q_DIM(l_shipQueue)    },

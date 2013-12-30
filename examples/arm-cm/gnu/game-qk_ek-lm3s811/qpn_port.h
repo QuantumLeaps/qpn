@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano configuration for the "Fly 'n' Shoot" game example
-* Last Updated for Version: 5.1.0
-* Date of the Last Update:  Oct 08, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -41,6 +41,7 @@
 #define QF_MAX_TICK_RATE        2
 #define Q_PARAM_SIZE            4
 #define QF_TIMEEVT_CTR_SIZE     2
+#define Q_NHSM
 #define Q_NFSM
 
 #include "qfn_port.h"                                       /* QF-nano port */

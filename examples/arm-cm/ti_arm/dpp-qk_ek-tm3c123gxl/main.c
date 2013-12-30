@@ -41,7 +41,7 @@ static QEvt l_philoQueue[N_PHILO][N_PHILO];
 static QEvt l_tableQueue[2];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,           (QEvt *)0,        0U                      },
     { (QActive *)&AO_Philo0,  l_philoQueue[0],  Q_DIM(l_philoQueue[0])  },
     { (QActive *)&AO_Philo1,  l_philoQueue[1],  Q_DIM(l_philoQueue[1])  },

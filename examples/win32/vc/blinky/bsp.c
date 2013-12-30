@@ -56,7 +56,7 @@ void BSP_ledOn() {
     printf("ON\n");
 }
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const Q_ROM_VAR file, int_t line) {
+void Q_onAssert(char_t const Q_ROM * const file, int_t line) {
     fprintf(stderr, "\nAssertion failed in %s, line %d\n", file, line);
     exit(-1);
 }

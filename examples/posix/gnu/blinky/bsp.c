@@ -104,7 +104,7 @@ void QF_onClockTickISR(void) {
     }
 }
 /*--------------------------------------------------------------------------*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+void Q_onAssert(char const Q_ROM * const file, int line) {
     QF_INT_DISABLE();                             /* cut-off all interrupts */
     fprintf(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);

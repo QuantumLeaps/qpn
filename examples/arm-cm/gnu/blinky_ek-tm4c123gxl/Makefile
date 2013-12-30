@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: Makefile for QP-nano project, TM4C123GXL, Vanilla, GNU/Sourcery
-# Last Updated for Version: 5.1.1
-# Date of the Last Update:  Oct 11, 2013
+# Last Updated for Version: 5.2.0
+# Date of the Last Update:  Dec 29, 2013
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -92,6 +92,8 @@ DEFINES = -DTARGET_IS_BLIZZARD_RA1 -D__VFP_FP__ -D__FPU_PRESENT
 ARM_CORE = cortex-m4
 ARM_FPU  = vfp
 
+LD_SCRIPT := $(PROJECT).ld
+
 #-----------------------------------------------------------------------------
 # files
 #
@@ -105,8 +107,6 @@ C_SRCS := $(wildcard *.c) \
 
 # C++ source files
 CPP_SRCS :=
-
-LD_SCRIPT := tm4c123gh6pm.ld
 
 #-----------------------------------------------------------------------------
 # build options for various configurations
@@ -195,8 +195,12 @@ $(BIN_DIR)/%.o : %.c
 $(BIN_DIR)/%.o : %.cpp
 	$(CPP) $(CPPFLAGS) -c $< -o $@
 
+# include dependency files only if our goal depends on their existence
+ifneq ($(MAKECMDGOALS),clean)
+  ifneq ($(MAKECMDGOALS),show)
 -include $(C_DEPS_EXT) $(CPP_DEPS_EXT)
-
+  endif
+endif
 
 .PHONY : clean
 clean:

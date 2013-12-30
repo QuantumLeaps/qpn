@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 14, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -236,7 +236,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * \note This function is intended only to be used at the task level
     * and should never be used inside ISRs.
     *
-    * \sa #QACTIVE_POST_X, QActive_postX().
+    * \sa #QACTIVE_POST_X, QActive_postX_().
     */
     #define QACTIVE_POST(me_, sig_, par_) \
         ((void)(*((QActiveVtbl const *)((me_)->super.vptr))->post)((me_), \
@@ -251,7 +251,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * succeeded, and 0 (FALSE) if the posting failed due to insufficient
     * margin of free slots available in the queue.
     *
-    * \sa #QACTIVE_POST, QActive_postX().
+    * \sa #QACTIVE_POST, QActive_postX_().
     * \include qfn_postx.c
     */
     #define QACTIVE_POST_X(me_, margin_, sig_, par_) \
@@ -280,7 +280,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * succeeded, and 0 (FALSE) if the posting failed due to insufficient
     * margin of free slots available in the queue.
     *
-    * \sa #QACTIVE_POST, QActive_postX().
+    * \sa #QACTIVE_POST, QActive_postX_().
     * \include qfn_postx.c
     */
     #define QACTIVE_POST_X_ISR(me_, margin_, sig_, par_) \
@@ -288,12 +288,12 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
                                   (margin_), (sig_), (par_)))
 
     /** \brief Implementation of the task-level posting */
-    uint8_t QActive_postX(QActive * const me, uint8_t margin,
-                          enum_t const sig, QParam const par);
+    uint8_t QActive_postX_(QActive * const me, uint8_t margin,
+                           enum_t const sig, QParam const par);
 
     /** \brief Implementation of the ISR-level posting */
-    uint8_t QActive_postXISR(QActive * const me, uint8_t margin,
-                             enum_t const sig, QParam const par);
+    uint8_t QActive_postXISR_(QActive * const me, uint8_t margin,
+                              enum_t const sig, QParam const par);
 
 #else                                                 /* no event parameter */
     #define QACTIVE_POST(me_, sig_) \
@@ -304,8 +304,8 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
         ((*((QActiveVtbl const *)((me_)->super.vptr))->post)((me_), \
                                   (margin_), (sig_)))
 
-    uint8_t QActive_postX(QActive * const me, uint8_t margin,
-                          enum_t const sig);
+    uint8_t QActive_postX_(QActive * const me, uint8_t margin,
+                           enum_t const sig);
 
     #define QACTIVE_POST_ISR(me_, sig_) \
         ((void)(*((QActiveVtbl const*)((me_)->super.vptr))->postISR)((me_),\
@@ -315,8 +315,8 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
         ((*((QActiveVtbl const *)((me_)->super.vptr))->postISR)((me_), \
                                   (margin_), (sig_)))
 
-    uint8_t QActive_postXISR(QActive * const me, uint8_t margin,
-                             enum_t const sig);
+    uint8_t QActive_postXISR_(QActive * const me, uint8_t margin,
+                              enum_t const sig);
 #endif
 
 #if (QF_TIMEEVT_CTR_SIZE != 0)
@@ -453,7 +453,7 @@ void QF_onStartup(void);
 * qf_port.c file is necessary). Moreover, QK implements the function QF_run()
 * in a platform-independent way, in the module qk.c.
 */
-int16_t QF_run(void);
+int_t QF_run(void);
 
 
 #ifndef QK_PREEMPTIVE
@@ -474,8 +474,7 @@ int16_t QF_run(void);
     *
     * \note QF_onIdle() is not used in the PREEMPTIVE configuration. When
     * QK_PREEMPTIVE macro is defined, the preemptive kernel QK-nano is used
-    * instead of the non-preemptive QF-nano scheduler. QK-nano
- uses a
+    * instead of the non-preemptive QF-nano scheduler. QK-nano uses a
     * different idle callback \sa QK_onIdle().
     */
 void QF_onIdle(void);
@@ -499,7 +498,7 @@ typedef struct QActiveCBTag {
 } QActiveCB;
                                            /** active object control blocks */
 /*lint -save -e960    MISRA-C:2004 8.12, extern array declared without size */
-extern QActiveCB const Q_ROM Q_ROM_VAR QF_active[];
+extern QActiveCB const Q_ROM QF_active[];
 /*lint -restore */
 
 /** \brief Ready set of QF-nano.
@@ -522,7 +521,7 @@ extern uint8_t volatile QF_readySet_;
     * This lookup delivers the 1-based number of the most significant 1-bit
     * of a nibble.
     */
-    extern uint8_t const Q_ROM Q_ROM_VAR QF_log2Lkup[16];
+    extern uint8_t const Q_ROM QF_log2Lkup[16];
 
 #endif
 
@@ -572,8 +571,15 @@ extern uint8_t volatile QF_readySet_;
 */
 #define QF_ACTIVE_CAST(a_)     ((QActive *)(a_))
 
+
 /****************************************************************************/
-/* Depricated definitions provided for backwards compatibility */
+/* QP API compatibility layer */
+#ifndef QP_API_VERSION
+#define QP_API_VERSION 0
+#endif                                            /* #ifndef QP_API_VERSION */
+
+/*..........................................................................*/
+#if (QP_API_VERSION < 500)
 
 #if (Q_PARAM_SIZE != 0)
     /** \brief Deprecated API defined for backwards-compatibility */
@@ -587,6 +593,16 @@ extern uint8_t volatile QF_readySet_;
     #define QActive_post(me_, sig_)    QACTIVE_POST((me_), (sig_))
     #define QActive_postISR(me_, sig_) QACTIVE_POST_ISR((me_), (sig_))
 #endif
+
+/** \brief Arming a time event for the default tick rate (rate 0) */
+#define QActive_arm(me_, ticks_) \
+    (QActive_armX((me_), (uint8_t)0, (ticks_)))
+
+/** \brief Disarming a time event for the default tick rate (rate 0) */
+#define QActive_disarm(me_)     (QActive_disarmX((me_), (uint8_t)0))
+
+/*..........................................................................*/
+#if (QP_API_VERSION < 450)
 
 #ifdef QF_INT_LOCK
     #define QF_INT_DISABLE()  QF_INT_LOCK()
@@ -616,13 +632,9 @@ extern uint8_t volatile QF_readySet_;
     #define QF_tick()    (QF_tickXISR((uint8_t)0))
 #endif
 
-/** \brief Arming a time event for the default tick rate (rate 0) */
-#define QActive_arm(me_, ticks_) \
-    (QActive_armX((me_), (uint8_t)0, (ticks_)))
-
-/** \brief Disarming a time event for the default tick rate (rate 0) */
-#define QActive_disarm(me_)     (QActive_disarmX((me_), (uint8_t)0))
-
+#endif                                              /* QP_API_VERSION < 450 */
+#endif                                              /* QP_API_VERSION < 500 */
+/****************************************************************************/
 
 #endif                                                             /* qfn_h */
 

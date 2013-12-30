@@ -25,14 +25,33 @@ Q_DEFINE_THIS_MODULE("philo")
 /* @(/1/0) .................................................................*/
 typedef struct PhiloTag {
 /* protected: */
-    QActive super;
+    QMActive super;
 } Philo;
 
 /* protected: */
 static QState Philo_initial(Philo * const me);
-static QState Philo_thinking(Philo * const me);
-static QState Philo_hungry(Philo * const me);
-static QState Philo_eating(Philo * const me);
+static QState Philo_thinking  (Philo * const me);
+static QState Philo_thinking_e(Philo * const me);
+static QMState const Philo_thinking_s = {
+    (QMState const *)0,
+    Q_STATE_CAST(&Philo_thinking),
+    Q_ACTION_CAST(0)
+};
+static QState Philo_hungry  (Philo * const me);
+static QState Philo_hungry_e(Philo * const me);
+static QMState const Philo_hungry_s = {
+    (QMState const *)0,
+    Q_STATE_CAST(&Philo_hungry),
+    Q_ACTION_CAST(0)
+};
+static QState Philo_eating  (Philo * const me);
+static QState Philo_eating_e(Philo * const me);
+static QState Philo_eating_x(Philo * const me);
+static QMState const Philo_eating_s = {
+    (QMState const *)0,
+    Q_STATE_CAST(&Philo_eating),
+    Q_ACTION_CAST(&Philo_eating_x)
+};
 
 
 /* Global objects ----------------------------------------------------------*/
@@ -61,106 +80,115 @@ struct PhiloTag AO_Philo4;
 /* Philo definition --------------------------------------------------------*/
 /* @(/1/8) .................................................................*/
 void Philo_ctor(void) {
-    QActive_ctor(&AO_Philo0.super, Q_STATE_CAST(&Philo_initial));
-    QActive_ctor(&AO_Philo1.super, Q_STATE_CAST(&Philo_initial));
-    QActive_ctor(&AO_Philo2.super, Q_STATE_CAST(&Philo_initial));
-    QActive_ctor(&AO_Philo3.super, Q_STATE_CAST(&Philo_initial));
-    QActive_ctor(&AO_Philo4.super, Q_STATE_CAST(&Philo_initial));
+    QMActive_ctor(&AO_Philo0.super, Q_STATE_CAST(&Philo_initial));
+    QMActive_ctor(&AO_Philo1.super, Q_STATE_CAST(&Philo_initial));
+    QMActive_ctor(&AO_Philo2.super, Q_STATE_CAST(&Philo_initial));
+    QMActive_ctor(&AO_Philo3.super, Q_STATE_CAST(&Philo_initial));
+    QMActive_ctor(&AO_Philo4.super, Q_STATE_CAST(&Philo_initial));
     BSP_randomSeed(123U);
 }
 /* @(/1/0) .................................................................*/
 /* @(/1/0/0) ...............................................................*/
 /* @(/1/0/0/0) */
 static QState Philo_initial(Philo * const me) {
-    return Q_TRAN(&Philo_thinking);
+    static QActionHandler const act_[] = {
+        Q_ACTION_CAST(&Philo_thinking_e),
+        Q_ACTION_CAST(0)
+    };
+    return QM_INITIAL(&Philo_thinking_s, &act_[0]);
 }
 /* @(/1/0/0/1) .............................................................*/
+static QState Philo_thinking_e(Philo * const me) {
+    QActive_armX(&me->super, 0U, THINK_TIME);
+    return QM_ENTRY(&Philo_thinking_s);
+}
 static QState Philo_thinking(Philo * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/0/0/1) */
-        case Q_ENTRY_SIG: {
-            QActive_arm((QActive *)me, THINK_TIME);
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/0/0/1/0) */
         case Q_TIMEOUT_SIG: {
-            status_ = Q_TRAN(&Philo_hungry);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Philo_hungry_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Philo_hungry_s, &act_[0]);
             break;
         }
         /* @(/1/0/0/1/1) */
         case EAT_SIG: /* intentionally fall through */
         case DONE_SIG: {
             Q_ERROR(); /* these events should never arrive in this state */
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         default: {
-            status_ = Q_SUPER(&QHsm_top);
+            status_ = QM_SUPER();
             break;
         }
     }
     return status_;
 }
 /* @(/1/0/0/2) .............................................................*/
+static QState Philo_hungry_e(Philo * const me) {
+    QACTIVE_POST((QActive *)&AO_Table, HUNGRY_SIG, me->super.prio);
+    return QM_ENTRY(&Philo_hungry_s);
+}
 static QState Philo_hungry(Philo * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/0/0/2) */
-        case Q_ENTRY_SIG: {
-            QACTIVE_POST((QActive *)&AO_Table, HUNGRY_SIG, me->super.prio);
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/0/0/2/0) */
         case EAT_SIG: {
-            status_ = Q_TRAN(&Philo_eating);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Philo_eating_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Philo_eating_s, &act_[0]);
             break;
         }
         /* @(/1/0/0/2/1) */
         case DONE_SIG: {
             Q_ERROR(); /* this event should never arrive in this state */
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         default: {
-            status_ = Q_SUPER(&QHsm_top);
+            status_ = QM_SUPER();
             break;
         }
     }
     return status_;
 }
 /* @(/1/0/0/3) .............................................................*/
+static QState Philo_eating_e(Philo * const me) {
+    QActive_armX(&me->super, 0U, EAT_TIME);
+    return QM_ENTRY(&Philo_eating_s);
+}
+static QState Philo_eating_x(Philo * const me) {
+    QACTIVE_POST((QActive *)&AO_Table, DONE_SIG, me->super.prio);
+    return QM_EXIT(&Philo_eating_s);
+}
 static QState Philo_eating(Philo * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/0/0/3) */
-        case Q_ENTRY_SIG: {
-            QActive_arm((QActive *)me, EAT_TIME);
-            status_ = Q_HANDLED();
-            break;
-        }
-        /* @(/1/0/0/3) */
-        case Q_EXIT_SIG: {
-            QACTIVE_POST((QActive *)&AO_Table, DONE_SIG, me->super.prio);
-            status_ = Q_HANDLED();
-            break;
-        }
         /* @(/1/0/0/3/0) */
         case Q_TIMEOUT_SIG: {
-            status_ = Q_TRAN(&Philo_thinking);
+            static QActionHandler const act_[] = {
+                Q_ACTION_CAST(&Philo_eating_x),
+                Q_ACTION_CAST(&Philo_thinking_e),
+                Q_ACTION_CAST(0)
+            };
+            status_ = QM_TRAN(&Philo_thinking_s, &act_[0]);
             break;
         }
         /* @(/1/0/0/3/1) */
         case EAT_SIG: /* intentionally fall through */
         case DONE_SIG: {
             Q_ERROR(); /* these events should never arrive in this state */
-            status_ = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         default: {
-            status_ = Q_SUPER(&QHsm_top);
+            status_ = QM_SUPER();
             break;
         }
     }

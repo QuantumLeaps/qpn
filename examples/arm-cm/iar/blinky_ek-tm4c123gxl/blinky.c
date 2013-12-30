@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: Simple Blinky example
-* Last Updated for Version: 5.1.0
-* Date of the Last Update:  Oct 09, 2013
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 29, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -56,7 +56,7 @@ void Blinky_ctor(Blinky * const me) {
 
 /* HSM definition ----------------------------------------------------------*/
 QState Blinky_initial(Blinky * const me) {
-    QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2U);
+    QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2U);
     return Q_TRAN(&Blinky_off);
 }
 /*..........................................................................*/
@@ -69,7 +69,7 @@ QState Blinky_off(Blinky * const me) {
             break;
         }
         case Q_TIMEOUT_SIG: {
-            QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2U);
+            QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2U);
             status = Q_TRAN(&Blinky_on);
             break;
         }
@@ -90,7 +90,7 @@ QState Blinky_on(Blinky * const me) {
             break;
         }
         case Q_TIMEOUT_SIG: {
-            QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2U);
+            QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2U);
             status = Q_TRAN(&Blinky_off);
             break;
         }
@@ -109,7 +109,7 @@ static Blinky l_blinky;                         /* the Blinky active object */
 static QEvt l_blinkyQSto[10];             /* Event queue storage for Blinky */
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,           (QEvt *)0,        0U                      },
     { (QActive *)&l_blinky,   l_blinkyQSto,     Q_DIM(l_blinkyQSto)     }
 };

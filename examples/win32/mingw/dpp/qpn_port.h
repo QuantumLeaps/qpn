@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano port for DPP example, Win32 emulation
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Jun 30, 2012
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -36,20 +36,14 @@
 #define qpn_port_h
 
 #define Q_NFSM
+#define Q_NHSM
 #define Q_PARAM_SIZE            4
 #define QF_TIMEEVT_CTR_SIZE     2
 
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
 #define QF_MAX_ACTIVE           6
 
-                               /* Exact-width types. WG14/N843 C99 Standard */
-typedef signed   char      int8_t;
-typedef signed   short     int16_t;
-typedef signed   int       int32_t;
-typedef unsigned char      uint8_t;
-typedef unsigned short     uint16_t;
-typedef unsigned int       uint32_t;
-
+#include <stdint.h>            /* Exact-width types. WG14/N843 C99 Standard */
 #include "qepn.h"              /* QEP-nano platform-independent header file */
 #include "qfn_win32.h"           /* QF-nano emulation for Win32 header file */
 

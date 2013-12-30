@@ -1,7 +1,7 @@
 /*****************************************************************************
 * QHsmTst example
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 18, 2012
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 03, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -36,16 +36,10 @@
 #define qpn_port_h
 
 #define Q_PARAM_SIZE   1
-
 //#define Q_NFSM        1
 
              /* Exact-width types. WG14/N843 C99 Standard, Section 7.18.1.1 */
-typedef signed   char  int8_t;
-typedef signed   short int16_t;
-typedef signed   int   int32_t;
-typedef unsigned char  uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int   uint32_t;
+#include <stdint.h>
 
 #include "qepn.h"              /* QEP-nano platform-independent header file */
 

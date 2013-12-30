@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.60.1.5099</state>
+          <state>6.70.2.6303</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -174,7 +174,6 @@
           <name>CCDefines</name>
           <state>ewarm</state>
           <state>PART_LM3S811</state>
-          <state>STACK_SIZE=400</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -707,7 +706,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\lm3s811.icf</state>
+          <state>$PROJ_DIR$\game.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1112,7 +1111,6 @@
           <state>ewarm</state>
           <state>PART_LM3S811</state>
           <state>NDEBUG</state>
-          <state>STACK_SIZE=400</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1645,7 +1643,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\lm3s811.icf</state>
+          <state>$PROJ_DIR$\game.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
