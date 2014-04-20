@@ -52,7 +52,7 @@ enum ToasterOvenSignals {
 /*..........................................................................*/
 typedef struct ToasterOvenTag {
     QHsm super;                                         /* derive from QHsm */
-    QStateHandler doorClosed_history;    /* history of the doorClosed state */
+    QStateHandler his_doorClosed;        /* history of the doorClosed state */
 } ToasterOven;
 
 void ToasterOven_ctor(ToasterOven *me);
@@ -73,7 +73,7 @@ void ToasterOven_ctor(ToasterOven *me) {                    /* default ctor */
 
 /* HSM definition ----------------------------------------------------------*/
 QState ToasterOven_initial(ToasterOven *me) {
-    me->doorClosed_history = Q_STATE_CAST(&ToasterOven_off);
+    me->his_doorClosed = Q_STATE_CAST(&ToasterOven_off);
     return Q_TRAN(&ToasterOven_doorClosed);
 }
 /*..........................................................................*/
@@ -96,7 +96,7 @@ QState ToasterOven_doorClosed(ToasterOven *me) {
             return Q_HANDLED();
         }
         case Q_EXIT_SIG: {
-            me->doorClosed_history = QHsm_state(&me->super);/*<-save HISTORY*/
+            me->his_doorClosed = QHsm_state(&me->super);/*<-save HISTORY*/
             return Q_HANDLED();
         }
         case Q_INIT_SIG: {
@@ -176,7 +176,7 @@ QState ToasterOven_doorOpen(ToasterOven *me) {
             return Q_HANDLED();
         }
         case CLOSE_SIG: {
-            return Q_TRAN(me->doorClosed_history);     /*<-tran. to HISTORY */
+            return Q_TRAN(me->his_doorClosed);     /*<-tran. to HISTORY */
         }
     }
     return Q_SUPER(&QHsm_top);

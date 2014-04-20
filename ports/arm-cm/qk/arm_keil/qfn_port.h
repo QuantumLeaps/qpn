@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QF-nano port to ARM Cortex-M, QK-nano, ARM-KEIL compiler
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 29, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,9 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef qfn_port_h
 #define qfn_port_h
@@ -41,10 +40,10 @@
     #define QF_INT_DISABLE()        __disable_irq()
     #define QF_INT_ENABLE()         __enable_irq()
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2   */
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
     #define QF_AWARE_ISR_CMSIS_PRI  0
 
-#else                                        /* Cortex-M3/M4/M4F, see NOTE3 */
+#else /* Cortex-M3/M4/M4F, see NOTE3 */
 
     #define QF_INT_DISABLE()        QF_set_BASEPRI(QF_BASEPRI)
     #define QF_INT_ENABLE()         QF_set_BASEPRI(0U)
@@ -52,23 +51,24 @@
     /* NOTE: keep in synch with the value defined in "qk_port.s", see NOTE4 */
     #define QF_BASEPRI              (0xFF >> 2)
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE5   */
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE5 */
     #define QF_AWARE_ISR_CMSIS_PRI  (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
-              /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
+    /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint8_t)(32U - __clz(n_)))
 
     /* inline function for setting the BASEPRI register */
-    __inline void QF_set_BASEPRI(unsigned basePri) {
-        register unsigned __regBasePri __asm("basepri");
+    static __inline void QF_set_BASEPRI(unsigned basePri) {
+        register unsigned volatile __regBasePri __asm("basepri");
         __regBasePri = basePri;
     }
 
 #endif
 
-                                /* interrupt disabling policy for ISR level */
+/* interrupt disabling policy for ISR level */
 #define QF_ISR_NEST
-                               /* QK-nano initialization and ISR entry/exit */
+
+/* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
 #define QK_ISR_EXIT()    do { \
@@ -77,10 +77,13 @@
     } \
 } while (0)
 
-#include <stdint.h>      /* Keil provides C99-standard exact-width integers */
-#include "qepn.h"         /* QEP-nano platform-independent public interface */
-#include "qfn.h"           /* QF-nano platform-independent public interface */
-#include "qkn.h"           /* QK-nano platform-independent public interface */
+#include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
+#include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
+
+#include "qepn.h"       /* QEP-nano platform-independent public interface */
+#include "qfn.h"        /* QF-nano platform-independent public interface */
+#include "qkn.h"        /* QK-nano platform-independent public interface */
+#include "qassert.h"    /* QP-nano assertions header file */
 
 /*****************************************************************************
 * NOTE2:
@@ -120,4 +123,4 @@
 * on the number of implemented priority bits in the NVIC.
 */
 
-#endif                                                        /* qfn_port_h */
+#endif /* qfn_port_h */

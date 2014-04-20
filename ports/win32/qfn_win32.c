@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 03, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,31 +28,29 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>                                           /* Win32 API */
 
-#include "qpn_port.h"                                       /* QP-nano port */
+#include "qpn_port.h" /* QP-nano port */
+#ifndef qassert_h
+    #include "qassert.h" /* QP assertions */
+#endif /* qassert_h */
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>  /* Win32 API */
+
 #ifdef QK_PREEMPTIVE
     #error "This QP-nano port does not support QK_PREEMPTIVE configuration"
 #endif
 
 Q_DEFINE_THIS_MODULE("qfn_win32")
 
-/**
-* \file
-* \ingroup qfn
-* QF-nano emulation for Win32.
-*/
-
 /* Global objects ----------------------------------------------------------*/
-uint8_t volatile QF_readySet_;                      /* ready-set of QF-nano */
+uint_fast8_t volatile QF_readySet_; /* ready-set of QF-nano */
 
 #ifdef Q_TIMERSET
-uint8_t volatile QF_timerSetX_[QF_MAX_TICK_RATE];   /* timer-set of QF-nano */
+uint_fast8_t volatile QF_timerSetX_[QF_MAX_TICK_RATE]; /* timer-set */
 #endif
 
 #ifndef QF_LOG2
@@ -62,13 +60,13 @@ uint8_t const Q_ROM QF_log2Lkup[16] = {
     (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
     (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4
 };
-#endif                                                           /* QF_LOG2 */
+#endif /* QF_LOG2 */
 
 /* local objects -----------------------------------------------------------*/
-static CRITICAL_SECTION l_win32CritSect;          /* Win32 critical section */
-static HANDLE l_win32Event;     /* Win32 event to signal when AOs are ready */
-static DWORD l_tickMsec = 10;  /* clock tick in msec (argument for Sleep()) */
-static uint8_t volatile l_running;
+static CRITICAL_SECTION l_win32CritSect; /* Win32 critical section */
+static HANDLE l_win32Event;   /* Win32 event to signal when AOs are ready */
+static DWORD l_tickMsec = 10; /* clock tick in msec (argument for Sleep()) */
+static uint_fast8_t volatile l_running;
 
 static uint8_t const Q_ROM l_pow2Lkup[] = {
     (uint8_t)0x00,
@@ -81,7 +79,7 @@ static uint8_t const Q_ROM l_invPow2Lkup[] = {
     (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
 };
 
-static DWORD WINAPI tickerThread(LPVOID par);      /* ticker thread routine */
+static DWORD WINAPI tickerThread(LPVOID par); /* ticker thread routine */
 
 /*..........................................................................*/
 void QF_enterCriticalSection(void) {
@@ -95,22 +93,22 @@ void QF_leaveCriticalSection(void) {
 /*..........................................................................*/
 #ifndef Q_NHSM
 void QActive_ctor(QActive * const me, QStateHandler initial) {
-    static QActiveVtbl const vtbl = {              /* QActive virtual table */
+    static QActiveVtbl const vtbl = { /* QActive virtual table */
         { &QHsm_init_,
           &QHsm_dispatch_ },
         &QActive_postX_,
         &QActive_postXISR_
     };
     QHsm_ctor(&me->super, initial);
-    me->super.vptr = &vtbl.super;              /* hook the QActive's vtable */
+    me->super.vptr = &vtbl.super; /* hook the QActive's vtable */
 }
-#endif                                                            /* Q_NHSM */
+#endif /* Q_NHSM */
 
 /*..........................................................................*/
 #ifndef Q_NMSM
 
 void QMActive_ctor(QMActive * const me, QStateHandler initial) {
-    static QActiveVtbl const vtbl = {             /* QMActive virtual table */
+    static QActiveVtbl const vtbl = { /* QMActive virtual table */
         { &QMsm_init_,
           &QMsm_dispatch_ },
         &QActive_postX_,
@@ -118,91 +116,96 @@ void QMActive_ctor(QMActive * const me, QStateHandler initial) {
     };
 
     QMsm_ctor(&me->super, initial);/*call instead of QActive_ctor(), NOTE01 */
-    me->super.vptr = &vtbl.super;             /* hook the QMActive's vtable */
+    me->super.vptr = &vtbl.super; /* hook the QMActive's vtable */
 }
 
-#endif                                                            /* Q_NMSM */
+#endif /* Q_NMSM */
 
 /*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
-uint8_t QActive_postX_(QActive * const me, uint8_t margin, enum_t const sig,
-                       QParam const par)
+bool QActive_postX_(QActive * const me, uint_fast8_t margin, enum_t const sig,
+                    QParam const par)
 #else
-uint8_t QActive_postX_(QActive * const me, uint8_t margin, enum_t const sig)
+bool QActive_postX_(QActive * const me, uint_fast8_t margin, enum_t const sig)
 #endif
 {
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
-    uint8_t end = Q_ROM_BYTE(acb->end);
+    uint_fast8_t end = (uint_fast8_t)Q_ROM_BYTE(acb->end);
 
     QF_INT_DISABLE();
 
-    if ((end - me->nUsed) > margin) {                  /* margin available? */
-                                /* insert event into the ring buffer (FIFO) */
+    /* margin available? */
+    if ((end - me->nUsed) > margin) {
+        /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
         QF_ROM_QUEUE_AT_(acb, me->head).par = par;
 #endif
-        if (me->head == (uint8_t)0) {
-            me->head = Q_ROM_BYTE(acb->end);               /* wrap the head */
+        if (me->head == (uint_fast8_t)0) {
+            me->head = (uint_fast8_t)Q_ROM_BYTE(acb->end); /* wrap the head */
         }
         --me->head;
         ++me->nUsed;
-        if (me->nUsed == (uint8_t)1) {          /* is this the first event? */
-            QF_readySet_ |= Q_ROM_BYTE(l_pow2Lkup[me->prio]);/* set the bit */
+        if (me->nUsed == (uint_fast8_t)1) { /* is this the first event? */
+            QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
             SetEvent(l_win32Event);
         }
-        margin = (uint8_t)1;                          /* posting successful */
+        margin = (uint_fast8_t)true; /* posting successful */
     }
     else {
-        Q_ASSERT(margin != (uint8_t)0);     /* can tollerate dropping evts? */
-        margin = (uint8_t)0;                              /* posting failed */
+        /* margin!=0 means that the caller can tolerate dropping evts */
+        Q_ASSERT(margin != (uint_fast8_t)0);
+
+        margin = (uint_fast8_t)false; /* posting failed */
     }
     QF_INT_ENABLE();
 
-    return margin;
+    return (bool)margin;
 }
 /*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
-uint8_t QActive_postXISR_(QActive * const me, uint8_t margin, enum_t const sig,
-                          QParam const par)
+bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
+                       enum_t const sig, QParam const par)
 #else
-uint8_t QActive_postXISR_(QActive * const me, uint8_t margin, enum_t const sig)
+bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
+                       enum_t const sig)
 #endif
 {
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
-    uint8_t end = Q_ROM_BYTE(acb->end);
+    uint_fast8_t end = (uint_fast8_t)Q_ROM_BYTE(acb->end);
 
-    if ((end - me->nUsed) > margin) {                  /* margin available? */
-                                /* insert event into the ring buffer (FIFO) */
+    /* margin available? */
+    if ((end - me->nUsed) > margin) {
+        /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
         QF_ROM_QUEUE_AT_(acb, me->head).par = par;
 #endif
-        if (me->head == (uint8_t)0) {
-            me->head = Q_ROM_BYTE(acb->end);               /* wrap the head */
+        if (me->head == (uint_fast8_t)0) {
+            me->head = (uint_fast8_t)Q_ROM_BYTE(acb->end); /* wrap the head */
         }
         --me->head;
         ++me->nUsed;
-        if (me->nUsed == (uint8_t)1) {          /* is this the first event? */
-            QF_readySet_ |= Q_ROM_BYTE(l_pow2Lkup[me->prio]);/* set the bit */
+        if (me->nUsed == (uint_fast8_t)1) { /* is this the first event? */
+            QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
             SetEvent(l_win32Event);
         }
-        margin = (uint8_t)1;                          /* posting successful */
+        margin = (uint_fast8_t)true; /* posting successful */
     }
     else {
-        Q_ASSERT(margin != (uint8_t)0);     /* can tollerate dropping evts? */
-        margin = (uint8_t)0;                              /* posting failed */
+        Q_ASSERT(margin != (uint_fast8_t)0); /* can tolerate dropping evts? */
+        margin = (uint_fast8_t)false; /* posting failed */
     }
 
-    return margin;
+    return (bool)margin;
 }
 
 /*--------------------------------------------------------------------------*/
 #if (QF_TIMEEVT_CTR_SIZE != 0)
 
 /*..........................................................................*/
-void QF_tickXISR(uint8_t const tickRate) {
-    uint8_t p = (uint8_t)QF_MAX_ACTIVE;
+void QF_tickXISR(uint_fast8_t const tickRate) {
+    uint_fast8_t p = (uint_fast8_t)QF_MAX_ACTIVE;
 
     do {
         QActive *a = QF_ROM_ACTIVE_GET_(p);
@@ -210,7 +213,8 @@ void QF_tickXISR(uint8_t const tickRate) {
             --a->tickCtr[tickRate];
             if (a->tickCtr[tickRate] == (QTimeEvtCtr)0) {
 #ifdef Q_TIMERSET
-                QF_timerSetX_[tickRate] &= Q_ROM_BYTE(l_invPow2Lkup[p]);
+                QF_timerSetX_[tickRate] &=
+                    (uint_fast8_t)Q_ROM_BYTE(l_invPow2Lkup[p]);
 #endif
 
 #if (Q_PARAM_SIZE != 0)
@@ -222,64 +226,66 @@ void QF_tickXISR(uint8_t const tickRate) {
             }
         }
         --p;
-    } while (p != (uint8_t)0);
+    } while (p != (uint_fast8_t)0);
 }
 /*..........................................................................*/
-void QActive_armX(QActive * const me, uint8_t const tickRate,
+void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const ticks)
 {
     QF_INT_DISABLE();
     me->tickCtr[tickRate] = ticks;
 #ifdef Q_TIMERSET
-    QF_timerSetX_[tickRate] |= Q_ROM_BYTE(l_pow2Lkup[me->prio]); /* set bit */
+    QF_timerSetX_[tickRate] |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
 #endif
     QF_INT_ENABLE();
 }
 /*..........................................................................*/
-void QActive_disarmX(QActive * const me, uint8_t const tickRate) {
+void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
     QF_INT_DISABLE();
     me->tickCtr[tickRate] = (QTimeEvtCtr)0;
 #ifdef Q_TIMERSET
-    QF_timerSetX_[tickRate] &= Q_ROM_BYTE(l_invPow2Lkup[me->prio]);/*clr bit*/
+    QF_timerSetX_[tickRate] &=
+        (uint_fast8_t)Q_ROM_BYTE(l_invPow2Lkup[me->prio]);
 #endif
     QF_INT_ENABLE();
 }
-#endif                                    /* #if (QF_TIMEEVT_CTR_SIZE != 0) */
+#endif /* #if (QF_TIMEEVT_CTR_SIZE != 0) */
 
 /*--------------------------------------------------------------------------*/
 void QF_stop(void) {
-    l_running = (uint8_t)0;
-    SetEvent(l_win32Event);   /* unblock the event-loop so it can terminate */
+    l_running = (uint_fast8_t)0;
+    SetEvent(l_win32Event); /* unblock the event-loop so it can terminate */
 }
 /*..........................................................................*/
 int_t QF_run(void) {
-    uint8_t p;
+    uint_fast8_t p;
     QActive *a;
 
     InitializeCriticalSection(&l_win32CritSect);
     l_win32Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 
-                         /* set priorities all registered active objects... */
-    for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
+    /* set priorities all registered active objects... */
+    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
-        Q_ASSERT(a != (QActive *)0);    /* QF_active[p] must be initialized */
-        a->prio = p;               /* set the priority of the active object */
-    }
-         /* trigger initial transitions in all registered active objects... */
-    for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
-        a = QF_ROM_ACTIVE_GET_(p);
-        QMSM_INIT(&a->super);      /* take the initial transition in the SM */
+        Q_ASSERT(a != (QActive *)0); /* QF_active[p] must be initialized */
+        a->prio = p; /* set the priority of the active object */
     }
 
-    QF_onStartup();                              /* invoke startup callback */
+    /* trigger initial transitions in all registered active objects... */
+    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+        a = QF_ROM_ACTIVE_GET_(p);
+        QMSM_INIT(&a->super); /* take the initial transition in the SM */
+    }
 
-    l_running = (uint8_t)1;
+    QF_onStartup(); /* invoke startup callback */
+
+    l_running = (uint_fast8_t)1;
     Q_ALLEGE(CreateThread(NULL, 1024, &tickerThread, 0, 0, NULL)
-             != (HANDLE)0);                /* ticker thread must be created */
+             != (HANDLE)0); /* ticker thread must be created */
 
-    while (l_running) {             /* the event loop of the vanilla kernel */
+    while (l_running) { /* the event loop of the vanilla kernel */
         QF_INT_DISABLE();
-        if (QF_readySet_ != (uint8_t)0) {
+        if (QF_readySet_ != (uint_fast8_t)0) {
             QActiveCB const Q_ROM *acb;
 
 #ifdef QF_LOG2
@@ -287,45 +293,54 @@ int_t QF_run(void) {
 #else
 
 #if (QF_MAX_ACTIVE > 4)
-            if ((QF_readySet_ & 0xF0) != 0U) {        /* upper nibble used? */
-                p = (uint8_t)(Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
-                              + (uint8_t)4);
+            /* upper nibble used? */
+            if ((uint_fast8_t)(QF_readySet_ & (uint_fast8_t)0xF0)
+                != (uint_fast8_t)0)
+            {
+                p = (uint_fast8_t)(
+                    (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
+                     + (uint_fast8_t)4);
             }
-            else                    /* upper nibble of QF_readySet_ is zero */
+            else /* upper nibble of QF_readySet_ is zero */
 #endif
             {
-                p = Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
+                p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
             }
 #endif
             acb = &QF_active[p];
             a = QF_ROM_ACTIVE_GET_(p);
-            Q_ASSERT(a->nUsed > (uint8_t)0);/*some events must be available */
+
+            /* some unsuded events must be available */
+            Q_ASSERT_ID(310, a->nUsed > (uint_fast8_t)0);
+
             --a->nUsed;
-            if (a->nUsed == (uint8_t)0) {          /* queue becoming empty? */
-                QF_readySet_ &= Q_ROM_BYTE(l_invPow2Lkup[p]);  /* clear bit */
+            if (a->nUsed == (uint_fast8_t)0) { /* queue becoming empty? */
+                QF_readySet_ &= (uint_fast8_t)Q_ROM_BYTE(l_invPow2Lkup[p]);
             }
             Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
 #if (Q_PARAM_SIZE != 0)
             Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
 #endif
-            if (a->tail == (uint8_t)0) {                    /* wrap around? */
-                a->tail = Q_ROM_BYTE(acb->end);
+            if (a->tail == (uint_fast8_t)0) { /* wrap around? */
+                a->tail = (uint_fast8_t)Q_ROM_BYTE(acb->end);
             }
             --a->tail;
             QF_INT_ENABLE();
-            QMSM_DISPATCH(&a->super);                 /* dispatch to the SM */
+            QMSM_DISPATCH(&a->super); /* dispatch to the SM */
         }
         else {
             QF_INT_ENABLE();
-                                 /* yield the CPU until new event(s) arrive */
+
+            /* yield the CPU until new event(s) arrive */
             WaitForSingleObject(l_win32Event, (DWORD)INFINITE);
         }
     }
-    QF_onCleanup();                                     /* cleanup callback */
+
+    QF_onCleanup(); /* cleanup callback */
     //CloseHandle(l_win32Event);
     //DeleteCriticalSection(&l_win32CritSect);
 
-    return (int_t)0;                                             /* success */
+    return (int_t)0; /* success */
 }
 /*..........................................................................*/
 void QF_setTickRate(uint32_t ticksPerSec) {
@@ -334,16 +349,16 @@ void QF_setTickRate(uint32_t ticksPerSec) {
 
 /*..........................................................................*/
 static DWORD WINAPI tickerThread(LPVOID par) {/* Win32 thread for time tick */
-    (void)par;                                          /* unused parameter */
+    (void)par; /* unused parameter */
     //SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
     while (l_running) {
-        Sleep(l_tickMsec);                    /* wait for the tick interval */
+        Sleep(l_tickMsec); /* wait for the tick interval */
 
-        QF_INT_DISABLE();    /* make sure simulated ISR cannot be preempted */
-        QF_onClockTickISR();            /* call back to the app, see NOTE01 */
+        QF_INT_DISABLE();  /* make sure simulated ISR cannot be preempted */
+        QF_onClockTickISR(); /* call back to the app, see NOTE01 */
         QF_INT_ENABLE();
     }
-    return 0U;                                            /* return success */
+    return 0U; /* return success */
 }
 
 /*****************************************************************************

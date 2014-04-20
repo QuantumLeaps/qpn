@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,30 +28,30 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef qfn_win32_h
 #define qfn_win32_h
-                   /* interrupt disabling policy for task level, see NOTE01 */
+
+/* interrupt disabling policy for task level, see NOTE1 */
 #define QF_INT_DISABLE()        QF_enterCriticalSection()
 #define QF_INT_ENABLE()         QF_leaveCriticalSection()
 
-                          /* interrupt disabling policy for interrupt level */
-/*#define QF_ISR_NEST*/                      /* nesting of ISRs not allowed */
+/* interrupt disabling policy for interrupt level */
+/*#define QF_ISR_NEST*/ /* nesting of ISRs not allowed */
 
-#include "qfn.h"                /* QF-nano platform-independent header file */
+#include "qfn.h" /* QF-nano platform-independent header file */
 
 void QF_enterCriticalSection(void);
 void QF_leaveCriticalSection(void);
-void QF_setTickRate(uint32_t ticksPerSec);           /* set clock tick rate */
-void QF_onClockTickISR(void);   /* clock tick callback (defined in the app) */
-void QF_onCleanup(void);   /* big OSes like Windows might require a cleanup */
+void QF_setTickRate(uint32_t ticksPerSec); /* set clock tick rate */
+void QF_onClockTickISR(void);  /* clock tick callback (defined in the app) */
+void QF_onCleanup(void); /* big OSes like Windows might require a cleanup */
 
 /* NOTES: ********************************************************************
 *
-* NOTE01:
+* NOTE1:
 * QF-nano, like all real-time kernels, needs to execute certain sections of
 * code indivisibly to avoid data corruption. The most straightforward way of
 * protecting such critical sections of code is disabling and enabling
@@ -73,4 +73,4 @@ void QF_onCleanup(void);   /* big OSes like Windows might require a cleanup */
 * more information.
 */
 
-#endif                                                       /* qfn_win32_h */
+#endif /* qfn_win32_h */

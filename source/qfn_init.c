@@ -1,13 +1,18 @@
-/*****************************************************************************
-* Product: QP-nano
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 30, 2013
+/**
+* \file
+* \brief QF_init() implementation.
+* \ingroup qfn
+* \cond
+******************************************************************************
+* Product: QF-nano
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,55 +33,71 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
-*****************************************************************************/
-#include "qpn_port.h"                                       /* QP-nano port */
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
+******************************************************************************
+* \endcond
+*/
+#include "qpn_port.h" /* QP-nano port */
+
+#ifndef qassert_h
+    #include "qassert.h" /* QP assertions */
+#endif /* qassert_h */
 
 Q_DEFINE_THIS_MODULE("qfn_init")
 
+/****************************************************************************/
 /**
-* \file
-* \ingroup qfn_init
-* QF-nano implementation.
+* \description
+* This function initializes the internal QF-nano variables as well as all
+* registered active objects to zero. In the C startup code compliant with
+* the C Standard this clearing of internal variables is unnecessary, because
+* all static variables are supposed to be cleared in the startup code.
+* However in non-compliant implementations calling QF_init() can be very
+* handy.
+*
+* \note Function QF_init() is defined in the separate module qf_init.c, which
+* needs to be included in the build only if the non-standard initialization
+* is required.
 */
-
 void QF_init(void) {
     QActive *a;
-    uint8_t p;
-    uint8_t n;
+    uint_fast8_t p;
+    uint_fast8_t n;
 
 #ifdef Q_TIMERSET
-    for (n = (uint8_t)0; n < (uint8_t)QF_MAX_TICK_RATE; ++n) {
-        QF_timerSetX_[n] = (uint8_t)0;
+    for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
+        QF_timerSetX_[n] = (uint_fast8_t)0;
     }
 #endif
 
-    QF_readySet_ = (uint8_t)0;
+    QF_readySet_ = (uint_fast8_t)0;
 
 #ifdef QK_PREEMPTIVE
-    QK_currPrio_ = (uint8_t)(QF_MAX_ACTIVE + 1);
+    QK_currPrio_ = (uint_fast8_t)(QF_MAX_ACTIVE + 1);
 
 #ifdef QF_ISR_NEST
-    QK_intNest_ = (uint8_t)0;
+    QK_intNest_ = (uint_fast8_t)0;
 #endif
 
 #ifndef QK_NO_MUTEX
-    QK_ceilingPrio_ = (uint8_t)0;
+    QK_ceilingPrio_ = (uint_fast8_t)0;
 #endif
 
-#endif                                              /* #ifdef QK_PREEMPTIVE */
-                                  /* clear all registered active objects... */
-    for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
-        a = QF_ROM_ACTIVE_GET_(p);
-        Q_ASSERT(a != (QActive *)0);    /* QF_active[p] must be initialized */
+#endif /* #ifdef QK_PREEMPTIVE */
 
-        a->head    = (uint8_t)0;
-        a->tail    = (uint8_t)0;
-        a->nUsed   = (uint8_t)0;
+    /* clear all registered active objects... */
+    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+        a = QF_ROM_ACTIVE_GET_(p);
+
+        /* QF_active[p] must be initialized */
+        Q_ASSERT_ID(110, a != (QActive *)0);
+
+        a->head    = (uint_fast8_t)0;
+        a->tail    = (uint_fast8_t)0;
+        a->nUsed   = (uint_fast8_t)0;
 #if (QF_TIMEEVT_CTR_SIZE != 0)
-        for (n = (uint8_t)0; n < (uint8_t)QF_MAX_TICK_RATE; ++n) {
+        for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
             a->tickCtr[n] = (QTimeEvtCtr)0;
         }
 #endif

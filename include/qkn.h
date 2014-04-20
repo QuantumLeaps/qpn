@@ -1,13 +1,18 @@
-/*****************************************************************************
-* Product: QP-nano
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 03, 2013
+/**
+* \file
+* \brief Public QK-nano interface.
+* \ingroup qkn
+* \cond
+******************************************************************************
+* Product: QK-nano
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,34 +33,26 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
-*****************************************************************************/
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
+******************************************************************************
+* \endcond
+*/
 #ifndef qkn_h
 #define qkn_h
 
-/**
-* \file
-* \ingroup qepn qfn qkn
-* \brief Public QP-nano interface.
-*
-* This header file must be included in all modules that use QP-nano with
-* preemptive kernel option. Typically, this header file is included
-* indirectly through the header file qpn.h.
-*/
-
-/** \brief Preprocessor switch for configuring preemptive real-time kernel
+/*! Preprocessor switch for configuring preemptive real-time kernel
 * (QK-nano). The macro is automatically defined by including the qkn.h file
 * in qpn_port.h.
-*
+*/
+/**
 * \note If defined, this macro eliminates the code for the non-preemptive
 * scheduler provided in QF-nano. Instead, the fully preemptive QK-nano
 * real-time kernel is used.
 */
 #define QK_PREEMPTIVE   1
 
-/** \brief QK-nano initialization.
+/*! QK-nano initialization.
 *
 * This function is optional and might be used in some QK-nano ports.
 * When the function is defined, it must called exactly once before any
@@ -63,47 +60,46 @@
 */
 void QK_init(void);
 
-/** \brief Find the highest-priority task ready to run
+/*! Find the highest-priority task ready to run
 *
 * \note QK_schedPrio_() must be always called with interrupts locked
 * and returns with interrupts locked.
 */
-uint8_t QK_schedPrio_(void);
+uint_fast8_t QK_schedPrio_(void);
 
-/** \brief QK-nano scheduler
+/*! QK-nano scheduler
 *
 * \note QK_sched_() must be always called with interrupts locked.
 * The scheduler might unlock the interrupts internally, but always
 * returns with interrupts locked.
 */
-void QK_sched_(uint8_t p);
+void QK_sched_(uint_fast8_t p);
 
-extern uint8_t volatile QK_currPrio_;              /**< current QK priority */
+extern uint_fast8_t volatile QK_currPrio_;  /*!< current QK priority */
 
 #ifndef QF_ISR_NEST
     #define QK_SCHEDULE_() do { \
-        uint8_t p = QK_schedPrio_(); \
-        if (p != (uint8_t)0) { \
+        uint_fast8_t p = QK_schedPrio_(); \
+        if (p != (uint_fast8_t)0) { \
             QK_sched_(p); \
         } \
     } while(0)
 #else
-    /** \brief The macro to invoke the QK scheduler in the QK_ISR_EXIT()
-    */
+    /*! The macro to invoke the QK scheduler in the QK_ISR_EXIT() */
     #define QK_SCHEDULE_() \
-        if (QK_intNest_ == (uint8_t)0) { \
-            uint8_t p = QK_schedPrio_(); \
-            if (p != (uint8_t)0) { \
+        if (QK_intNest_ == (uint_fast8_t)0) { \
+            uint_fast8_t p = QK_schedPrio_(); \
+            if (p != (uint_fast8_t)0) { \
                 QK_sched_(p); \
             } \
         } else ((void)0)
 
-    extern uint8_t volatile QK_intNest_;       /**< interrupt nesting level */
+    extern uint_fast8_t volatile QK_intNest_; /*!< interrupt nesting level */
 
 #endif
 
 
-/** \brief QK idle callback (customized in BSPs for QK)
+/*! QK idle callback (customized in BSPs for QK)
 *
 * QK_onIdle() is called continuously by the QK-nano idle loop. This callback
 * gives the application an opportunity to enter a power-saving CPU mode,
@@ -117,15 +113,15 @@ void QK_onIdle(void);
 
 #ifndef QK_NO_MUTEX
 
-    /** \brief QK Mutex type.
+    /*! QK Mutex type.
     *
     * QMutex represents the priority-ceiling mutex available in QK.
     * \sa QK_mutexLock()
     * \sa QK_mutexUnlock()
     */
-    typedef uint8_t QMutex;
+    typedef uint_fast8_t QMutex;
 
-    /** \brief QK priority-ceiling mutex lock
+    /*! QK priority-ceiling mutex lock
     *
     * Lock the QK scheduler up to the priority level \a prioCeiling.
     *
@@ -133,9 +129,9 @@ void QK_onIdle(void);
     * The code between QK_mutexLock() and QK_mutexUnlock() should be kept
     * to the minimum.
     */
-    QMutex QK_mutexLock(uint8_t const prioCeiling);
+    QMutex QK_mutexLock(uint_fast8_t const prioCeiling);
 
-    /** \brief QK priority-ceiling mutex unlock
+    /*! QK priority-ceiling mutex unlock
     *
     * \note This function should be always paired with QK_mutexLock().
     * The code between QK_mutexLock() and QK_mutexUnlock() should be kept
@@ -143,9 +139,9 @@ void QK_onIdle(void);
     */
     void QK_mutexUnlock(QMutex mutex);
 
-    /** \brief current ceiling priority of a mutex */
-    extern uint8_t volatile QK_ceilingPrio_;
+    /*! current ceiling priority of a mutex */
+    extern uint_fast8_t volatile QK_ceilingPrio_;
 
-#endif                                                       /* QK_NO_MUTEX */
+#endif /* QK_NO_MUTEX */
 
-#endif                                                             /* qkn_h */
+#endif /* qkn_h */

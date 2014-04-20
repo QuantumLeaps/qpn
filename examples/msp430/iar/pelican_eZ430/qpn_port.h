@@ -1,13 +1,13 @@
 /*****************************************************************************
-* Product: PELICAN crossing example
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 14, 2013
+* Product: Simple Blinky example, Vanilla kernel
+* Last updated for version 5.3.0
+* Last updated on  2014-04-19
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,32 +28,35 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef qpn_port_h
 #define qpn_port_h
 
+//#define Q_NMSM
 #define Q_NFSM
 #define Q_NHSM
+#define Q_NMSM_HIST
 #define Q_PARAM_SIZE            0
 #define QF_TIMEEVT_CTR_SIZE     1
 
-/* maximum # active objects--must match EXACTLY the QF_active[] definition  */
+/* maximum # active objects--must match EXACTLY the QF_active[] definition */
 #define QF_MAX_ACTIVE           2
 
-                               /* interrupt disabling policy for task level */
+/* interrupt disabling policy for task level */
 #define QF_INT_DISABLE()        __disable_interrupt()
 #define QF_INT_ENABLE()         __enable_interrupt()
 
-                          /* interrupt disabling policy for interrupt level */
-/* #define QF_ISR_NEST */                    /* nesting of ISRs not allowed */
+/* interrupt disabling policy for interrupt level */
+/* #define QF_ISR_NEST */ /* nesting of ISRs not allowed */
 
+#include <intrinsics.h> /* contains prototypes for the intrinsic functions */
+#include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
+#include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
 
-#include <intrinsics.h>  /* contains prototypes for the intrinsic functions */
-#include <stdint.h>    /* Exact-width integer types. WG14/N843 C99 Standard */
-#include "qepn.h"         /* QEP-nano platform-independent public interface */
-#include "qfn.h"           /* QF-nano platform-independent public interface */
+#include "qepn.h"       /* QEP-nano platform-independent public interface */
+#include "qfn.h"        /* QF-nano platform-independent public interface */
+#include "qassert.h"    /* QP-nano assertions header file */
 
-#endif                                                        /* qpn_port_h */
+#endif /* qpn_port_h */

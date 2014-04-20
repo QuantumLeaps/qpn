@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/0) .................................................................*/
+/*${.::pelican.h} ..........................................................*/
 #ifndef pelican_h
 #define pelican_h
 
@@ -26,10 +26,10 @@ enum PelicanSignals {
 };
 
 /* active objects ................................................*/
-/* @(/1/2) .................................................................*/
+/*${components::Pelican_ctor} ..............................................*/
 void Pelican_ctor(void);
 
 
-extern struct PelicanTag AO_Pelican;
+extern struct Pelican AO_Pelican;
 
 #endif /* pelican_h */

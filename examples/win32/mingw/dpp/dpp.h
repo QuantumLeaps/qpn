@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/0) .................................................................*/
+/*${.::dpp.h} ..............................................................*/
 #ifndef dpp_h
 #define dpp_h
 
@@ -31,23 +31,23 @@ enum DPPSignals {
 #define N_PHILO ((uint8_t)5)
 #define PHILO_0_PRIO 1
 
-extern struct PhiloTag AO_Philo0;
+extern struct Philo AO_Philo0;
 
-extern struct PhiloTag AO_Philo1;
+extern struct Philo AO_Philo1;
 
-extern struct PhiloTag AO_Philo2;
+extern struct Philo AO_Philo2;
 
-extern struct PhiloTag AO_Philo3;
+extern struct Philo AO_Philo3;
 
-extern struct PhiloTag AO_Philo4;
+extern struct Philo AO_Philo4;
 
-extern struct TableTag AO_Table;
+extern struct Table AO_Table;
 
 
-/* @(/1/8) .................................................................*/
+/*${AOs::Philo_ctor} .......................................................*/
 void Philo_ctor(void);
 
-/* @(/1/9) .................................................................*/
+/*${AOs::Table_ctor} .......................................................*/
 void Table_ctor(void);
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="3.0.0">
+<model version="3.1.1">
  <documentation>&quot;Fly 'n' Shoot&quot; game example (see Chapter 1 in PSiCC2)</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
@@ -976,15 +976,15 @@ QACTIVE_POST((QActive *)&amp;AO_Tunnel, EXPLOSION_SIG,
       </state_glyph>
      </state>
      <state_glyph node="3,14,38,52">
-      <exit box="2,2,5,2"/>
+      <exit box="1,2,5,2"/>
      </state_glyph>
     </state>
     <state_diagram size="53,68"/>
    </statechart>
   </class>
-  <attribute name="AO_Tunnel" type="struct TunnelTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Ship" type="struct ShipTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Missile" type="struct MissileTag" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Tunnel" type="struct Tunnel" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Ship" type="struct Ship" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Missile" type="struct Missile" visibility="0x00" properties="0x00"/>
   <operation name="do_bitmaps_overlap" type="uint8_t" visibility="0x00" properties="0x00">
    <parameter name="bmp_id1" type="uint8_t"/>
    <parameter name="x1" type="uint8_t"/>
@@ -1063,9 +1063,9 @@ enum GameSignals {                              /* signals used in the game */
 };
 
 /* active objects ..........................................................*/
-extern struct TunnelTag  AO_Tunnel;
-extern struct ShipTag    AO_Ship;
-extern struct MissileTag AO_Missile;
+extern struct Tunnel  AO_Tunnel;
+extern struct Ship    AO_Ship;
+extern struct Missile AO_Missile;
 
 $declare(AOs::Tunnel_ctor)
 $declare(AOs::Ship_ctor)

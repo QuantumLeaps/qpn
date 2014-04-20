@@ -1,13 +1,14 @@
 /*****************************************************************************
 * Product: PELICAN crossing example
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 14, 2013
+* Product: PELICAN crossing example
+* Last updated for version 5.3.0
+* Last updated on  2014-04-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,13 +29,12 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
-#include "qpn_port.h"                                       /* QP-nano port */
-#include "bsp.h"                             /* Board Support Package (BSP) */
-#include "pelican.h"                               /* application interface */
+#include "qpn_port.h"  /* QP-nano port */
+#include "bsp.h"       /* Board Support Package (BSP) */
+#include "pelican.h"   /* application interface */
 
 /*..........................................................................*/
 static QEvt  l_pelicanQueue[3];
@@ -52,10 +52,10 @@ Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
 int main (void) {
-    Pelican_ctor();                          /* instantiate the  Pelican AO */
-    Ped_ctor();                              /* instantiate the  Ped     AO */
+    Pelican_ctor();   /* instantiate the  Pelican AO */
+    Ped_ctor();       /* instantiate the  Ped     AO */
 
-    BSP_init();                                     /* initialize the board */
+    BSP_init();       /* initialize the board */
 
-    return QF_run();                         /* transfer control to QF-nano */
+    return QF_run();  /* transfer control to QF-nano */
 }

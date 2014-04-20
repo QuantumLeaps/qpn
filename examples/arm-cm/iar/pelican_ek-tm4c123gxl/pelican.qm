@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="3.0.0">
+<model version="3.1.0">
  <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing example</documentation>
  <framework name="qpn"/>
  <package name="components" stereotype="0x02">
@@ -250,7 +250,7 @@ enum PelicanSignals {
 /* active objects ................................................*/
 $declare(components::Pelican_ctor)
 
-extern struct PelicanTag AO_Pelican;
+extern struct Pelican AO_Pelican;
 
 #endif /* pelican_h */</text>
   </file>
@@ -272,7 +272,7 @@ extern struct PelicanTag AO_Pelican;
 $declare(components::Pelican)
 
 /* Global objects ----------------------------------------------------------*/
-struct PelicanTag AO_Pelican;      /* the single instance of the Pelican AO */
+struct Pelican AO_Pelican; /* the single instance of the Pelican AO */
 
 /* Pelican class definition ------------------------------------------------*/
 $define(components::Pelican_ctor)

@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QF-nano port to ARM Cortex-M, QK-nano, TI_ARM compiler
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 08, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,21 +28,20 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef qfn_port_h
 #define qfn_port_h
 
-                                 /* interrupt locking policy for task level */
+/* interrupt locking policy for task level */
 #define QF_INT_DISABLE()        asm(" CPSID I")
 #define QF_INT_ENABLE()         asm(" CPSIE I")
 
-                    /* interrupt disablgin policy for ISR level, see NOTE01 */
+/* interrupt disablgin policy for ISR level, see NOTE01 */
 #define QF_ISR_NEST
 
-                               /* QK-nano initialization and ISR entry/exit */
+/* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
 #define QK_ISR_EXIT()    do { \
@@ -51,17 +50,19 @@
     } \
 } while (0)
 
-                   /* is the target M3 or M4? (M0/M0+/M1 don't support CLZ) */
+/* is the target M3 or M4? (M0/M0+/M1 don't support CLZ) */
 #if (defined __TI_TMS470_V7M3__) || (defined __TI_TMS470_V7M4__)
-            /* the intrinsic function _norm() generates the CLZ instruction */
+    /* the intrinsic function _norm() generates the CLZ instruction */
     #define QF_LOG2(n_) ((uint8_t)(32U - _norm(n_)))
 #endif
 
-#include <stdint.h>    /* TI_ARM provides C99-standard exact-width integers */
+#include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
+#include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
 
-#include "qepn.h"         /* QEP-nano platform-independent public interface */
-#include "qfn.h"           /* QF-nano platform-independent public interface */
-#include "qkn.h"           /* QK-nano platform-independent public interface */
+#include "qepn.h"       /* QEP-nano platform-independent public interface */
+#include "qfn.h"        /* QF-nano platform-independent public interface */
+#include "qkn.h"        /* QK-nano platform-independent public interface */
+#include "qassert.h"    /* QP-nano assertions header file */
 
 /*****************************************************************************
 * NOTE01:
@@ -80,4 +81,4 @@
 * QK_intNest_, because it doesn't matter for the tail-chaining mechanism.
 */
 
-#endif                                                        /* qfn_port_h */
+#endif /* qfn_port_h */

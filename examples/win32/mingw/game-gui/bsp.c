@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: BSP for "Fly 'n' Shoot" game example, Win32
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-03-01
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,9 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #include "qpn_port.h"
 #include "game.h"
@@ -54,7 +53,7 @@ static SegmentDisplay   l_scoreBoard;      /* segment display for the score */
 static OwnerDrawnButton l_userBtn;   /* USER button of the EK-LM3S811 board */
 
 /* (R,G,B) colors for the OLED display */
-static BYTE const c_onColor [3] = { 255U, 255U,   0U };           /* yellow */
+static BYTE const c_onColor [3] = { 255U, 255U, 255U };            /* white */
 static BYTE const c_offColor[3] = {  15U,  15U,  15U };   /* very dark grey */
 
 static BYTE l_ship_pos = GAME_SHIP_Y;        /* the current ship Y-position */

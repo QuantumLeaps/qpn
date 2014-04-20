@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="3.0.0">
+<model version="3.1.1">
  <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing example</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
@@ -41,7 +41,7 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT);</entry>
         </initial_glyph>
        </initial>
        <state name="carsGreenNoPed">
-        <entry>BSP_showState(me-&gt;super.prio, &quot;carsGreenNoPed&quot;);</entry>
+        <entry>BSP_showState(&quot;carsGreenNoPed&quot;);</entry>
         <tran trig="PEDS_WAITING" target="../../3">
          <tran_glyph conn="8,38,3,1,19,15,-5">
           <action box="0,-2,11,2"/>
@@ -57,7 +57,7 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT);</entry>
         </state_glyph>
        </state>
        <state name="carsGreenInt">
-        <entry>BSP_showState(me-&gt;super.prio, &quot;carsGreenInt&quot;);</entry>
+        <entry>BSP_showState(&quot;carsGreenInt&quot;);</entry>
         <tran trig="PEDS_WAITING" target="../../../2">
          <tran_glyph conn="8,49,3,1,25,20,-4">
           <action box="0,-2,11,2"/>
@@ -68,7 +68,7 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT);</entry>
         </state_glyph>
        </state>
        <state name="carsGreenPedWait">
-        <entry>BSP_showState(me-&gt;super.prio, &quot;carsGreenPedWait&quot;);</entry>
+        <entry>BSP_showState(&quot;carsGreenPedWait&quot;);</entry>
         <tran trig="Q_TIMEOUT" target="../../../2">
          <tran_glyph conn="8,57,3,1,23,9,-2">
           <action box="0,-2,10,2"/>
@@ -83,7 +83,7 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT);</entry>
        </state_glyph>
       </state>
       <state name="carsYellow">
-       <entry brief="CARS_YELLOW">BSP_showState(me-&gt;super.prio, &quot;carsYellow&quot;);
+       <entry brief="CARS_YELLOW">BSP_showState(&quot;carsYellow&quot;);
 BSP_signalCars(CARS_YELLOW);
 QActive_armX(&amp;me-&gt;super, 0U, CARS_YELLOW_TOUT);</entry>
        <tran trig="Q_TIMEOUT" target="../../../3">
@@ -107,7 +107,7 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_YELLOW_TOUT);</entry>
        </initial_glyph>
       </initial>
       <state name="pedsWalk">
-       <entry brief="PEDS_WALK">BSP_showState(me-&gt;super.prio, &quot;pedsWalk&quot;);
+       <entry brief="PEDS_WALK">BSP_showState(&quot;pedsWalk&quot;);
 BSP_signalPeds(PEDS_WALK);
 QActive_armX(&amp;me-&gt;super, 0U, PEDS_WALK_TOUT);</entry>
        <tran trig="Q_TIMEOUT" target="../../2">
@@ -120,7 +120,7 @@ QActive_armX(&amp;me-&gt;super, 0U, PEDS_WALK_TOUT);</entry>
        </state_glyph>
       </state>
       <state name="pedsFlash">
-       <entry>BSP_showState(me-&gt;super.prio, &quot;pedsFlash&quot;);
+       <entry>BSP_showState(&quot;pedsFlash&quot;);
 QActive_armX(&amp;me-&gt;super, 0U, PEDS_FLASH_TOUT);
 me-&gt;flashCtr = (PEDS_FLASH_NUM * 2U) + 1U;</entry>
        <tran trig="Q_TIMEOUT">
@@ -169,7 +169,7 @@ QActive_armX(&amp;me-&gt;super, 0U, PEDS_FLASH_TOUT);</action>
      </state_glyph>
     </state>
     <state name="offline">
-     <entry>BSP_showState(me-&gt;super.prio, &quot;offline&quot;);
+     <entry>BSP_showState(&quot;offline&quot;);
 QActive_armX(&amp;me-&gt;super, 0U, OFF_FLASH_TOUT);
 me-&gt;flashCtr = 0U;</entry>
      <tran trig="Q_TIMEOUT">
@@ -209,7 +209,9 @@ BSP_signalPeds(PEDS_BLANK);</action>
   </class>
   <class name="Ped" superclass="qpn::QMActive">
    <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing</documentation>
-   <attribute name="retryCtr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="offCtr" type="uint8_t" visibility="0x02" properties="0x00">
+    <documentation>Counter for posting the OFF signal</documentation>
+   </attribute>
    <statechart>
     <initial target="../1">
      <initial_glyph conn="2,2,5,1,32,4,-2">
@@ -217,21 +219,23 @@ BSP_signalPeds(PEDS_BLANK);</action>
      </initial_glyph>
     </initial>
     <state name="wait">
-     <entry>me-&gt;retryCtr = N_ATTEMPTS;
-QActive_armX(&amp;me-&gt;super, 0U, WAIT_TOUT);</entry>
+     <entry>me-&gt;offCtr = N_ATTEMPTS;
+QActive_armX(&amp;me-&gt;super, 0U, WAIT_TOUT);
+QACTIVE_POST((QActive *)&amp;AO_Pelican, ON_SIG);</entry>
      <tran trig="Q_TIMEOUT">
-      <action>--me-&gt;retryCtr;</action>
+      <action>--me-&gt;offCtr;
+QActive_armX((QActive *)me, 0U, WAIT_TOUT);</action>
       <choice>
-       <guard>me-&gt;retryCtr != 0U</guard>
-       <action>QActive_armX((QActive *)me, 0U, WAIT_TOUT);
-QACTIVE_POST((QActive *)&amp;AO_Pelican, PEDS_WAITING_SIG);</action>
+       <guard>me-&gt;offCtr != 0U</guard>
+       <action>QACTIVE_POST((QActive *)&amp;AO_Pelican, PEDS_WAITING_SIG);</action>
        <choice_glyph conn="16,14,4,-1,-5,12">
         <action box="1,-4,16,2"/>
        </choice_glyph>
       </choice>
-      <choice target="../../../2">
+      <choice target="../..">
        <guard>else</guard>
-       <choice_glyph conn="16,14,5,1,18,6,-2">
+       <action>QACTIVE_POST((QActive *)&amp;AO_Pelican, OFF_SIG);</action>
+       <choice_glyph conn="16,14,5,1,18,-4,-2">
         <action box="1,0,6,2"/>
        </choice_glyph>
       </choice>
@@ -243,20 +247,7 @@ QACTIVE_POST((QActive *)&amp;AO_Pelican, PEDS_WAITING_SIG);</action>
       <entry box="1,2,5,2"/>
      </state_glyph>
     </state>
-    <state name="off">
-     <entry>QActive_armX(&amp;me-&gt;super, 0U, OFF_TOUT);
-QACTIVE_POST((QActive *)&amp;AO_Pelican, OFF_SIG);</entry>
-     <tran trig="Q_TIMEOUT" target="../../1">
-      <action>QACTIVE_POST((QActive *)&amp;AO_Pelican, ON_SIG);</action>
-      <tran_glyph conn="2,26,3,1,34,-18,-4">
-       <action box="0,-2,10,2"/>
-      </tran_glyph>
-     </tran>
-     <state_glyph node="2,18,30,10">
-      <entry box="1,2,5,2"/>
-     </state_glyph>
-    </state>
-    <state_diagram size="38,30"/>
+    <state_diagram size="38,18"/>
    </statechart>
   </class>
   <attribute name="AO_Pelican" type="QActive * const" visibility="0x00" properties="0x00"/>
@@ -286,8 +277,8 @@ enum PelicanSignals {
 $declare(AOs::Pelican_ctor)
 $declare(AOs::Ped_ctor)
 
-extern struct PelicanTag AO_Pelican;
-extern struct PedTag     AO_Ped;
+extern struct Pelican AO_Pelican;
+extern struct Ped     AO_Ped;
 
 #endif /* pelican_h */</text>
   </file>
@@ -330,10 +321,9 @@ $declare(AOs::Ped)
 /* Global objects ----------------------------------------------------------*/
 Ped AO_Ped; /* the single instance of the Ped AO */
 
-enum PedTimeouts {                     /* various timeouts in ticks */
-    N_ATTEMPTS = 10,                   /* number of PED_WAITING attempts */
-    WAIT_TOUT = BSP_TICKS_PER_SEC * 3, /* wait between posting PED_WAITING */
-    OFF_TOUT  = BSP_TICKS_PER_SEC * 8  /* wait time after posting OFF_SIG */
+enum PedTimeouts {  /* various timeouts in ticks */
+    N_ATTEMPTS = 10, /* number of PED_WAITING attempts before posting OFF_SIG */
+    WAIT_TOUT  = BSP_TICKS_PER_SEC * 10 /* wait time after posting PEDS_WAITING_SIG */
 };
 
 /* Pelican class definition ------------------------------------------------*/

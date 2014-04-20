@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: PELICAN crossing example
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 29, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,19 +28,14 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef bsp_h
 #define bsp_h
 
-#include <msp430x20x3.h>                             /* MSP430 variant used */
-
-/*--------------------------------------------------------------------------*/
-#define BSP_MCK              16000000
-#define BSP_SMCLK            1100000
-#define BSP_TICKS_PER_SEC    20
+/* system clock ticks per second ...........................................*/
+#define BSP_TICKS_PER_SEC    20U
 
 /* street signals ..........................................................*/
 enum BSP_CarsSignal {
@@ -52,10 +47,10 @@ enum BSP_PedsSignal {
 };
 
 void BSP_init(void);
-#define BSP_signalCars(sig_)         ((void)0)
+#define BSP_signalCars(sig_)  ((void)0)
 void BSP_signalPeds(enum BSP_PedsSignal sig);
-#define BSP_showState(prio_, state_) ((void)0)
-#define BSP_terminate(stat_)         ((void)0)
+#define BSP_showState(state_) ((void)0)
+#define BSP_terminate(stat_)  ((void)0)
 
-#endif                                                             /* bsp_h */
+#endif /* bsp_h */
 

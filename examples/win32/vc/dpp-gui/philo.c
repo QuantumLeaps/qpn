@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/1) .................................................................*/
+/*${.::philo.c} ............................................................*/
 #include "qpn_port.h"                                       /* QP-nano port */
 #include "dpp.h"                                   /* application interface */
 #include "bsp.h"
@@ -22,8 +22,8 @@
 Q_DEFINE_THIS_MODULE("philo")
 
 /* Active object class -----------------------------------------------------*/
-/* @(/1/0) .................................................................*/
-typedef struct PhiloTag {
+/*${AOs::Philo} ............................................................*/
+typedef struct Philo {
 /* protected: */
     QMActive super;
 } Philo;
@@ -33,42 +33,48 @@ static QState Philo_initial(Philo * const me);
 static QState Philo_thinking  (Philo * const me);
 static QState Philo_thinking_e(Philo * const me);
 static QMState const Philo_thinking_s = {
-    (QMState const *)0,
+    (QMState const *)0, /* superstate (top) */
     Q_STATE_CAST(&Philo_thinking),
-    Q_ACTION_CAST(0)
+    Q_ACTION_CAST(&Philo_thinking_e),
+    Q_ACTION_CAST(0), /* no exit action */
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 static QState Philo_hungry  (Philo * const me);
 static QState Philo_hungry_e(Philo * const me);
 static QMState const Philo_hungry_s = {
-    (QMState const *)0,
+    (QMState const *)0, /* superstate (top) */
     Q_STATE_CAST(&Philo_hungry),
-    Q_ACTION_CAST(0)
+    Q_ACTION_CAST(&Philo_hungry_e),
+    Q_ACTION_CAST(0), /* no exit action */
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 static QState Philo_eating  (Philo * const me);
 static QState Philo_eating_e(Philo * const me);
 static QState Philo_eating_x(Philo * const me);
 static QMState const Philo_eating_s = {
-    (QMState const *)0,
+    (QMState const *)0, /* superstate (top) */
     Q_STATE_CAST(&Philo_eating),
-    Q_ACTION_CAST(&Philo_eating_x)
+    Q_ACTION_CAST(&Philo_eating_e),
+    Q_ACTION_CAST(&Philo_eating_x),
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 
 
 /* Global objects ----------------------------------------------------------*/
-/* @(/1/2) .................................................................*/
-struct PhiloTag AO_Philo0;
+/*${AOs::AO_Philo0} ........................................................*/
+struct Philo AO_Philo0;
 
-/* @(/1/3) .................................................................*/
-struct PhiloTag AO_Philo1;
+/*${AOs::AO_Philo1} ........................................................*/
+struct Philo AO_Philo1;
 
-/* @(/1/4) .................................................................*/
-struct PhiloTag AO_Philo2;
+/*${AOs::AO_Philo2} ........................................................*/
+struct Philo AO_Philo2;
 
-/* @(/1/5) .................................................................*/
-struct PhiloTag AO_Philo3;
+/*${AOs::AO_Philo3} ........................................................*/
+struct Philo AO_Philo3;
 
-/* @(/1/6) .................................................................*/
-struct PhiloTag AO_Philo4;
+/*${AOs::AO_Philo4} ........................................................*/
+struct Philo AO_Philo4;
 
 
 /* Local objects -----------------------------------------------------------*/
@@ -78,7 +84,7 @@ struct PhiloTag AO_Philo4;
     (QTimeEvtCtr)((BSP_random() % BSP_TICKS_PER_SEC) + BSP_TICKS_PER_SEC)
 
 /* Philo definition --------------------------------------------------------*/
-/* @(/1/8) .................................................................*/
+/*${AOs::Philo_ctor} .......................................................*/
 void Philo_ctor(void) {
     QMActive_ctor(&AO_Philo0.super, Q_STATE_CAST(&Philo_initial));
     QMActive_ctor(&AO_Philo1.super, Q_STATE_CAST(&Philo_initial));
@@ -87,34 +93,48 @@ void Philo_ctor(void) {
     QMActive_ctor(&AO_Philo4.super, Q_STATE_CAST(&Philo_initial));
     BSP_randomSeed(123U);
 }
-/* @(/1/0) .................................................................*/
-/* @(/1/0/0) ...............................................................*/
-/* @(/1/0/0/0) */
+/*${AOs::Philo} ............................................................*/
+/*${AOs::Philo::SM} ........................................................*/
 static QState Philo_initial(Philo * const me) {
-    static QActionHandler const act_[] = {
-        Q_ACTION_CAST(&Philo_thinking_e),
-        Q_ACTION_CAST(0)
+    static struct {
+        QMState const *target;
+        QActionHandler act[2];
+    } const tatbl_ = { /* transition-action table */
+        &Philo_thinking_s, /* target state */
+        {
+            Q_ACTION_CAST(&Philo_thinking_e), /* entry */
+            Q_ACTION_CAST(0) /* zero terminator */
+        }
     };
-    return QM_INITIAL(&Philo_thinking_s, &act_[0]);
+    /* ${AOs::Philo::SM::initial} */
+    return QM_TRAN_INIT(&tatbl_);
 }
-/* @(/1/0/0/1) .............................................................*/
+/*${AOs::Philo::SM::thinking} ..............................................*/
+/* ${AOs::Philo::SM::thinking} */
 static QState Philo_thinking_e(Philo * const me) {
     QActive_armX(&me->super, 0U, THINK_TIME);
     return QM_ENTRY(&Philo_thinking_s);
 }
+/* ${AOs::Philo::SM::thinking} */
 static QState Philo_thinking(Philo * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/0/0/1/0) */
+        /* ${AOs::Philo::SM::thinking::Q_TIMEOUT} */
         case Q_TIMEOUT_SIG: {
-            static QActionHandler const act_[] = {
-                Q_ACTION_CAST(&Philo_hungry_e),
-                Q_ACTION_CAST(0)
+            static struct {
+                QMState const *target;
+                QActionHandler act[2];
+            } const tatbl_ = { /* transition-action table */
+                &Philo_hungry_s, /* target state */
+                {
+                    Q_ACTION_CAST(&Philo_hungry_e), /* entry */
+                    Q_ACTION_CAST(0) /* zero terminator */
+                }
             };
-            status_ = QM_TRAN(&Philo_hungry_s, &act_[0]);
+            status_ = QM_TRAN(&tatbl_);
             break;
         }
-        /* @(/1/0/0/1/1) */
+        /* ${AOs::Philo::SM::thinking::EAT, DONE} */
         case EAT_SIG: /* intentionally fall through */
         case DONE_SIG: {
             Q_ERROR(); /* these events should never arrive in this state */
@@ -126,26 +146,35 @@ static QState Philo_thinking(Philo * const me) {
             break;
         }
     }
+    (void)me; /* avoid compiler warning in case 'me' is not used */
     return status_;
 }
-/* @(/1/0/0/2) .............................................................*/
+/*${AOs::Philo::SM::hungry} ................................................*/
+/* ${AOs::Philo::SM::hungry} */
 static QState Philo_hungry_e(Philo * const me) {
     QACTIVE_POST((QActive *)&AO_Table, HUNGRY_SIG, me->super.prio);
     return QM_ENTRY(&Philo_hungry_s);
 }
+/* ${AOs::Philo::SM::hungry} */
 static QState Philo_hungry(Philo * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/0/0/2/0) */
+        /* ${AOs::Philo::SM::hungry::EAT} */
         case EAT_SIG: {
-            static QActionHandler const act_[] = {
-                Q_ACTION_CAST(&Philo_eating_e),
-                Q_ACTION_CAST(0)
+            static struct {
+                QMState const *target;
+                QActionHandler act[2];
+            } const tatbl_ = { /* transition-action table */
+                &Philo_eating_s, /* target state */
+                {
+                    Q_ACTION_CAST(&Philo_eating_e), /* entry */
+                    Q_ACTION_CAST(0) /* zero terminator */
+                }
             };
-            status_ = QM_TRAN(&Philo_eating_s, &act_[0]);
+            status_ = QM_TRAN(&tatbl_);
             break;
         }
-        /* @(/1/0/0/2/1) */
+        /* ${AOs::Philo::SM::hungry::DONE} */
         case DONE_SIG: {
             Q_ERROR(); /* this event should never arrive in this state */
             status_ = QM_HANDLED();
@@ -156,31 +185,41 @@ static QState Philo_hungry(Philo * const me) {
             break;
         }
     }
+    (void)me; /* avoid compiler warning in case 'me' is not used */
     return status_;
 }
-/* @(/1/0/0/3) .............................................................*/
+/*${AOs::Philo::SM::eating} ................................................*/
+/* ${AOs::Philo::SM::eating} */
 static QState Philo_eating_e(Philo * const me) {
     QActive_armX(&me->super, 0U, EAT_TIME);
     return QM_ENTRY(&Philo_eating_s);
 }
+/* ${AOs::Philo::SM::eating} */
 static QState Philo_eating_x(Philo * const me) {
     QACTIVE_POST((QActive *)&AO_Table, DONE_SIG, me->super.prio);
     return QM_EXIT(&Philo_eating_s);
 }
+/* ${AOs::Philo::SM::eating} */
 static QState Philo_eating(Philo * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/0/0/3/0) */
+        /* ${AOs::Philo::SM::eating::Q_TIMEOUT} */
         case Q_TIMEOUT_SIG: {
-            static QActionHandler const act_[] = {
-                Q_ACTION_CAST(&Philo_eating_x),
-                Q_ACTION_CAST(&Philo_thinking_e),
-                Q_ACTION_CAST(0)
+            static struct {
+                QMState const *target;
+                QActionHandler act[3];
+            } const tatbl_ = { /* transition-action table */
+                &Philo_thinking_s, /* target state */
+                {
+                    Q_ACTION_CAST(&Philo_eating_x), /* exit */
+                    Q_ACTION_CAST(&Philo_thinking_e), /* entry */
+                    Q_ACTION_CAST(0) /* zero terminator */
+                }
             };
-            status_ = QM_TRAN(&Philo_thinking_s, &act_[0]);
+            status_ = QM_TRAN(&tatbl_);
             break;
         }
-        /* @(/1/0/0/3/1) */
+        /* ${AOs::Philo::SM::eating::EAT, DONE} */
         case EAT_SIG: /* intentionally fall through */
         case DONE_SIG: {
             Q_ERROR(); /* these events should never arrive in this state */
@@ -192,6 +231,7 @@ static QState Philo_eating(Philo * const me) {
             break;
         }
     }
+    (void)me; /* avoid compiler warning in case 'me' is not used */
     return status_;
 }
 

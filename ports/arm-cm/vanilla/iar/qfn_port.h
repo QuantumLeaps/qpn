@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QF-nano port for ARM Cortex-M, Vanilla kernel, IAR EWARM
-* Last Updated for Version: 5.1.1
-* Date of the Last Update:  Oct 11, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,28 +28,28 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef qfn_port_h
 #define qfn_port_h
-                               /* QF interrupt disable/enable and log2()... */
-#if (__CORE__ == __ARM6M__)                /* Cortex-M0/M0+/M1 ?, see NOTE1 */
+
+/* QF interrupt disable/enable and log2()... */
+#if (__CORE__ == __ARM6M__) /* Cortex-M0/M0+/M1 ?, see NOTE1 */
 
     #define QF_INT_DISABLE()    __disable_interrupt()
     #define QF_INT_ENABLE()     __enable_interrupt()
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE1   */
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE1 */
     #define QF_AWARE_ISR_CMSIS_PRI  0
 
-                          /* macro to put the CPU to sleep inside QF_idle() */
+    /* macro to put the CPU to sleep inside QF_idle() */
     #define QF_CPU_SLEEP() do { \
         __WFI(); \
         QF_INT_ENABLE(); \
     } while (0)
 
-#else                                        /* Cortex-M3/M4/M4F, see NOTE2 */
+#else /* Cortex-M3/M4/M4F, see NOTE2 */
 
     #define QF_INT_DISABLE()    __set_BASEPRI(QF_BASEPRI)
     #define QF_INT_ENABLE()     __set_BASEPRI(0U)
@@ -57,10 +57,10 @@
     /* NOTE: keep in synch with the value defined in "qk_port.s", see NOTE3 */
     #define QF_BASEPRI  (0xFF >> 2)
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4   */
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4 */
     #define QF_AWARE_ISR_CMSIS_PRI  (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
-                          /* macro to put the CPU to sleep inside QF_idle() */
+    /* macro to put the CPU to sleep inside QF_idle() */
     #define QF_CPU_SLEEP() do { \
         __disable_interrupt(); \
         QF_INT_ENABLE(); \
@@ -68,17 +68,21 @@
         __enable_interrupt(); \
     } while (0)
 
-              /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
+    /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint8_t)(32U - __CLZ(n_)))
 
 #endif
-                                /* interrupt disabling policy for ISR level */
+
+/* interrupt disabling policy for ISR level */
 #define QF_ISR_NEST
 
-#include <intrinsics.h>                          /* IAR intrinsic functions */
-#include <stdint.h>       /* IAR provides C99-standard exact-width integers */
-#include "qepn.h"         /* QEP-nano platform-independent public interface */
-#include "qfn.h"           /* QF-nano platform-independent public interface */
+#include <intrinsics.h> /* intrinsic IAR functions */
+#include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
+#include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
+
+#include "qepn.h"       /* QEP-nano platform-independent public interface */
+#include "qfn.h"        /* QF-nano platform-independent public interface */
+#include "qassert.h"    /* QP-nano assertions header file */
 
 /*****************************************************************************
 * NOTE1:
@@ -118,4 +122,4 @@
 * on the number of implemented priority bits in the NVIC.
 */
 
-#endif                                                        /* qfn_port_h */
+#endif /* qfn_port_h */

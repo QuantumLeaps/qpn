@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/0) .................................................................*/
+/*${.::game.h} .............................................................*/
 #ifndef game_h
 #define game_h
 
@@ -40,17 +40,17 @@ enum GameSignals {                              /* signals used in the game */
 };
 
 /* active objects ..........................................................*/
-extern struct TunnelTag  AO_Tunnel;
-extern struct ShipTag    AO_Ship;
-extern struct MissileTag AO_Missile;
+extern struct Tunnel  AO_Tunnel;
+extern struct Ship    AO_Ship;
+extern struct Missile AO_Missile;
 
-/* @(/1/9) .................................................................*/
+/*${AOs::Tunnel_ctor} ......................................................*/
 void Tunnel_ctor(void);
 
-/* @(/1/10) ................................................................*/
+/*${AOs::Ship_ctor} ........................................................*/
 void Ship_ctor(void);
 
-/* @(/1/11) ................................................................*/
+/*${AOs::Missile_ctor} .....................................................*/
 void Missile_ctor(uint8_t speed);
 
 
@@ -78,7 +78,7 @@ enum GameBitmapIds {
     MAX_BMP
 };
 
-/* @(/1/8) .................................................................*/
+/*${AOs::do_bitmaps_overlap} ...............................................*/
 uint8_t do_bitmaps_overlap(
     uint8_t bmp_id1,
     uint8_t x1,
@@ -89,10 +89,10 @@ uint8_t do_bitmaps_overlap(
 
 
 /* instantiation of the Mines orthogonal components */
-/* @(/1/12) ................................................................*/
+/*${AOs::Mine1_ctor} .......................................................*/
 QMsm * Mine1_ctor(uint8_t id);
 
-/* @(/1/13) ................................................................*/
+/*${AOs::Mine2_ctor} .......................................................*/
 QMsm * Mine2_ctor(uint8_t id);
 
 

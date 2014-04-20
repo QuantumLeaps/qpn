@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/2) .................................................................*/
+/*${.::ped.c} ..............................................................*/
 #include "qpn_port.h"
 #include "bsp.h"
 #include "pelican.h"
@@ -22,13 +22,13 @@
 /*Q_DEFINE_THIS_FILE*/
 
 /* Ped class declaration ---------------------------------------------------*/
-/* @(/1/1) .................................................................*/
-typedef struct PedTag {
+/*${AOs::Ped} ..............................................................*/
+typedef struct Ped {
 /* protected: */
     QMActive super;
 
 /* private: */
-    uint8_t retryCtr;
+    uint8_t offCtr;
 } Ped;
 
 /* protected: */
@@ -36,95 +36,79 @@ static QState Ped_initial(Ped * const me);
 static QState Ped_wait  (Ped * const me);
 static QState Ped_wait_e(Ped * const me);
 static QMState const Ped_wait_s = {
-    (QMState const *)0,
+    (QMState const *)0, /* superstate (top) */
     Q_STATE_CAST(&Ped_wait),
-    Q_ACTION_CAST(0)
-};
-static QState Ped_off  (Ped * const me);
-static QState Ped_off_e(Ped * const me);
-static QMState const Ped_off_s = {
-    (QMState const *)0,
-    Q_STATE_CAST(&Ped_off),
-    Q_ACTION_CAST(0)
+    Q_ACTION_CAST(&Ped_wait_e),
+    Q_ACTION_CAST(0), /* no exit action */
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 
 
 /* Global objects ----------------------------------------------------------*/
 Ped AO_Ped; /* the single instance of the Ped AO */
 
-enum PedTimeouts {                     /* various timeouts in ticks */
-    N_ATTEMPTS = 10,                   /* number of PED_WAITING attempts */
-    WAIT_TOUT = BSP_TICKS_PER_SEC * 3, /* wait between posting PED_WAITING */
-    OFF_TOUT  = BSP_TICKS_PER_SEC * 8  /* wait time after posting OFF_SIG */
+enum PedTimeouts {  /* various timeouts in ticks */
+    N_ATTEMPTS = 10, /* number of PED_WAITING attempts before posting OFF_SIG */
+    WAIT_TOUT  = BSP_TICKS_PER_SEC * 10 /* wait time after posting PEDS_WAITING_SIG */
 };
 
 /* Pelican class definition ------------------------------------------------*/
-/* @(/1/5) .................................................................*/
+/*${AOs::Ped_ctor} .........................................................*/
 void Ped_ctor(void) {
     QMActive_ctor(&AO_Ped.super, Q_STATE_CAST(&Ped_initial));
 }
-/* @(/1/1) .................................................................*/
-/* @(/1/1/1) ...............................................................*/
-/* @(/1/1/1/0) */
+/*${AOs::Ped} ..............................................................*/
+/*${AOs::Ped::SM} ..........................................................*/
 static QState Ped_initial(Ped * const me) {
-    static QActionHandler const act_[] = {
-        Q_ACTION_CAST(&Ped_wait_e),
-        Q_ACTION_CAST(0)
+    static struct {
+        QMState const *target;
+        QActionHandler act[2];
+    } const tatbl_ = { /* transition-action table */
+        &Ped_wait_s, /* target state */
+        {
+            Q_ACTION_CAST(&Ped_wait_e), /* entry */
+            Q_ACTION_CAST(0) /* zero terminator */
+        }
     };
-    return QM_INITIAL(&Ped_wait_s, &act_[0]);
+    /* ${AOs::Ped::SM::initial} */
+    return QM_TRAN_INIT(&tatbl_);
 }
-/* @(/1/1/1/1) .............................................................*/
+/*${AOs::Ped::SM::wait} ....................................................*/
+/* ${AOs::Ped::SM::wait} */
 static QState Ped_wait_e(Ped * const me) {
-    me->retryCtr = N_ATTEMPTS;
+    me->offCtr = N_ATTEMPTS;
     QActive_armX(&me->super, 0U, WAIT_TOUT);
+    QACTIVE_POST((QActive *)&AO_Pelican, ON_SIG);
     return QM_ENTRY(&Ped_wait_s);
 }
+/* ${AOs::Ped::SM::wait} */
 static QState Ped_wait(Ped * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/1/1/1/0) */
+        /* ${AOs::Ped::SM::wait::Q_TIMEOUT} */
         case Q_TIMEOUT_SIG: {
-            --me->retryCtr;
-            /* @(/1/1/1/1/0/0) */
-            if (me->retryCtr != 0U) {
-                QActive_armX((QActive *)me, 0U, WAIT_TOUT);
+            --me->offCtr;
+            QActive_armX((QActive *)me, 0U, WAIT_TOUT);
+            /* ${AOs::Ped::SM::wait::Q_TIMEOUT::[me->offCtr!=0U]} */
+            if (me->offCtr != 0U) {
                 QACTIVE_POST((QActive *)&AO_Pelican, PEDS_WAITING_SIG);
                 status_ = QM_HANDLED();
             }
-            /* @(/1/1/1/1/0/1) */
+            /* ${AOs::Ped::SM::wait::Q_TIMEOUT::[else]} */
             else {
-                static QActionHandler const act_[] = {
-                    Q_ACTION_CAST(&Ped_off_e),
-                    Q_ACTION_CAST(0)
+                static struct {
+                    QMState const *target;
+                    QActionHandler act[2];
+                } const tatbl_ = { /* transition-action table */
+                    &Ped_wait_s, /* target state */
+                    {
+                        Q_ACTION_CAST(&Ped_wait_e), /* entry */
+                        Q_ACTION_CAST(0) /* zero terminator */
+                    }
                 };
-                status_ = QM_TRAN(&Ped_off_s, &act_[0]);
+                QACTIVE_POST((QActive *)&AO_Pelican, OFF_SIG);
+                status_ = QM_TRAN(&tatbl_);
             }
-            break;
-        }
-        default: {
-            status_ = QM_SUPER();
-            break;
-        }
-    }
-    return status_;
-}
-/* @(/1/1/1/2) .............................................................*/
-static QState Ped_off_e(Ped * const me) {
-    QActive_armX(&me->super, 0U, OFF_TOUT);
-    QACTIVE_POST((QActive *)&AO_Pelican, OFF_SIG);
-    return QM_ENTRY(&Ped_off_s);
-}
-static QState Ped_off(Ped * const me) {
-    QState status_;
-    switch (Q_SIG(me)) {
-        /* @(/1/1/1/2/0) */
-        case Q_TIMEOUT_SIG: {
-            static QActionHandler const act_[] = {
-                Q_ACTION_CAST(&Ped_wait_e),
-                Q_ACTION_CAST(0)
-            };
-            QACTIVE_POST((QActive *)&AO_Pelican, ON_SIG);
-            status_ = QM_TRAN(&Ped_wait_s, &act_[0]);
             break;
         }
         default: {

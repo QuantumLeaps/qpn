@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/4) .................................................................*/
+/*${.::mine1.c} ............................................................*/
 #include "qpn_port.h"
 #include "bsp.h"
 #include "game.h"
@@ -22,8 +22,8 @@
 Q_DEFINE_THIS_MODULE("mine1")
 
 /* encapsulated delcaration of the Mine1 HSM -------------------------------*/
-/* @(/1/3) .................................................................*/
-typedef struct Mine1Tag {
+/*${AOs::Mine1} ............................................................*/
+typedef struct Mine1 {
 /* protected: */
     QMsm super;
 
@@ -37,29 +37,37 @@ typedef struct Mine1Tag {
 static QState Mine1_initial(Mine1 * const me);
 static QState Mine1_unused  (Mine1 * const me);
 static QMState const Mine1_unused_s = {
-    (QMState const *)0,
+    (QMState const *)0, /* superstate (top) */
     Q_STATE_CAST(&Mine1_unused),
-    Q_ACTION_CAST(0)
+    Q_ACTION_CAST(0), /* no entry action */
+    Q_ACTION_CAST(0), /* no exit action */
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 static QState Mine1_used  (Mine1 * const me);
 static QState Mine1_used_x(Mine1 * const me);
 static QMState const Mine1_used_s = {
-    (QMState const *)0,
+    (QMState const *)0, /* superstate (top) */
     Q_STATE_CAST(&Mine1_used),
-    Q_ACTION_CAST(&Mine1_used_x)
+    Q_ACTION_CAST(0), /* no entry action */
+    Q_ACTION_CAST(&Mine1_used_x),
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 static QState Mine1_planted  (Mine1 * const me);
 static QMState const Mine1_planted_s = {
-    &Mine1_used_s,
+    &Mine1_used_s, /* superstate */
     Q_STATE_CAST(&Mine1_planted),
-    Q_ACTION_CAST(0)
+    Q_ACTION_CAST(0), /* no entry action */
+    Q_ACTION_CAST(0), /* no exit action */
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 static QState Mine1_exploding  (Mine1 * const me);
 static QState Mine1_exploding_e(Mine1 * const me);
 static QMState const Mine1_exploding_s = {
-    &Mine1_used_s,
+    &Mine1_used_s, /* superstate */
     Q_STATE_CAST(&Mine1_exploding),
-    Q_ACTION_CAST(0)
+    Q_ACTION_CAST(&Mine1_exploding_e),
+    Q_ACTION_CAST(0), /* no exit action */
+    Q_ACTION_CAST(0)  /* no intitial tran. */
 };
 
 
@@ -70,7 +78,7 @@ static Mine1 l_mine1[GAME_MINES_MAX];             /* a pool of type-1 mines */
 #define MINE_ID(me_)    ((me_) - l_mine1)
 
 /* Mine1 class definition --------------------------------------------------*/
-/* @(/1/12) ................................................................*/
+/*${AOs::Mine1_ctor} .......................................................*/
 QMsm * Mine1_ctor(uint8_t id) {
     Mine1 *me;
     Q_REQUIRE(id < GAME_MINES_MAX);
@@ -79,21 +87,34 @@ QMsm * Mine1_ctor(uint8_t id) {
     QMsm_ctor(&me->super, Q_STATE_CAST(&Mine1_initial));
     return (QMsm *)me;
 }
-/* @(/1/3) .................................................................*/
-/* @(/1/3/3) ...............................................................*/
-/* @(/1/3/3/0) */
+/*${AOs::Mine1} ............................................................*/
+/*${AOs::Mine1::SM} ........................................................*/
 static QState Mine1_initial(Mine1 * const me) {
-    return QM_INITIAL(&Mine1_unused_s, QMsm_emptyAction_);
+    static QMTranActTable const tatbl_ = { /* transition-action table */
+        &Mine1_unused_s,
+        {
+            Q_ACTION_CAST(0) /* zero terminator */
+        }
+    };
+    /* ${AOs::Mine1::SM::initial} */
+    return QM_TRAN_INIT(&tatbl_);
 }
-/* @(/1/3/3/1) .............................................................*/
+/*${AOs::Mine1::SM::unused} ................................................*/
+/* ${AOs::Mine1::SM::unused} */
 static QState Mine1_unused(Mine1 * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/3/3/1/0) */
+        /* ${AOs::Mine1::SM::unused::MINE_PLANT} */
         case MINE_PLANT_SIG: {
+            static QMTranActTable const tatbl_ = { /* transition-action table */
+                &Mine1_planted_s,
+                {
+                    Q_ACTION_CAST(0) /* zero terminator */
+                }
+            };
             me->x = (uint8_t)Q_PAR(me);
             me->y = (uint8_t)(Q_PAR(me) >> 8);
-            status_ = QM_TRAN(&Mine1_planted_s, QMsm_emptyAction_);
+            status_ = QM_TRAN(&tatbl_);
             break;
         }
         default: {
@@ -103,23 +124,31 @@ static QState Mine1_unused(Mine1 * const me) {
     }
     return status_;
 }
-/* @(/1/3/3/2) .............................................................*/
+/*${AOs::Mine1::SM::used} ..................................................*/
+/* ${AOs::Mine1::SM::used} */
 static QState Mine1_used_x(Mine1 * const me) {
     /* tell the Tunnel that this mine is becoming disabled */
     QACTIVE_POST((QActive *)&AO_Tunnel,
                  MINE_DISABLED_SIG, MINE_ID(me));
     return QM_EXIT(&Mine1_used_s);
 }
+/* ${AOs::Mine1::SM::used} */
 static QState Mine1_used(Mine1 * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/3/3/2/0) */
+        /* ${AOs::Mine1::SM::used::MINE_RECYCLE} */
         case MINE_RECYCLE_SIG: {
-            static QActionHandler const act_[] = {
-                Q_ACTION_CAST(&Mine1_used_x),
-                Q_ACTION_CAST(0)
+            static struct {
+                QMState const *target;
+                QActionHandler act[2];
+            } const tatbl_ = { /* transition-action table */
+                &Mine1_unused_s, /* target state */
+                {
+                    Q_ACTION_CAST(&Mine1_used_x), /* exit */
+                    Q_ACTION_CAST(0) /* zero terminator */
+                }
             };
-            status_ = QM_TRAN(&Mine1_unused_s, &act_[0]);
+            status_ = QM_TRAN(&tatbl_);
             break;
         }
         default: {
@@ -129,13 +158,14 @@ static QState Mine1_used(Mine1 * const me) {
     }
     return status_;
 }
-/* @(/1/3/3/2/1) ...........................................................*/
+/*${AOs::Mine1::SM::used::planted} .........................................*/
+/* ${AOs::Mine1::SM::used::planted} */
 static QState Mine1_planted(Mine1 * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/3/3/2/1/0) */
+        /* ${AOs::Mine1::SM::used::planted::TIME_TICK} */
         case TIME_TICK_SIG: {
-            /* @(/1/3/3/2/1/0/0) */
+            /* ${AOs::Mine1::SM::used::planted::TIME_TICK::[me->x>=GAME_S~]} */
             if (me->x >= GAME_SPEED_X) {
                 me->x -= GAME_SPEED_X;  /* move the mine 1 step */
 
@@ -147,53 +177,71 @@ static QState Mine1_planted(Mine1 * const me) {
 
                 status_ = QM_HANDLED();
             }
-            /* @(/1/3/3/2/1/0/1) */
+            /* ${AOs::Mine1::SM::used::planted::TIME_TICK::[else]} */
             else {
-                static QActionHandler const act_[] = {
-                    Q_ACTION_CAST(&Mine1_used_x),
-                    Q_ACTION_CAST(0)
+                static struct {
+                    QMState const *target;
+                    QActionHandler act[2];
+                } const tatbl_ = { /* transition-action table */
+                    &Mine1_unused_s, /* target state */
+                    {
+                        Q_ACTION_CAST(&Mine1_used_x), /* exit */
+                        Q_ACTION_CAST(0) /* zero terminator */
+                    }
                 };
-                status_ = QM_TRAN(&Mine1_unused_s, &act_[0]);
+                status_ = QM_TRAN(&tatbl_);
             }
             break;
         }
-        /* @(/1/3/3/2/1/1) */
+        /* ${AOs::Mine1::SM::used::planted::SHIP_IMG} */
         case SHIP_IMG_SIG: {
             uint8_t x   = (uint8_t)Q_PAR(me);
             uint8_t y   = (uint8_t)(Q_PAR(me) >> 8);
             uint8_t bmp = (uint8_t)(Q_PAR(me) >> 16);
-            /* @(/1/3/3/2/1/1/0) */
+            /* ${AOs::Mine1::SM::used::planted::SHIP_IMG::[do_bitmaps_ov~]} */
             if (do_bitmaps_overlap(MINE1_BMP, me->x, me->y, bmp, x, y)) {
-                static QActionHandler const act_[] = {
-                    Q_ACTION_CAST(&Mine1_used_x),
-                    Q_ACTION_CAST(0)
+                static struct {
+                    QMState const *target;
+                    QActionHandler act[2];
+                } const tatbl_ = { /* transition-action table */
+                    &Mine1_unused_s, /* target state */
+                    {
+                        Q_ACTION_CAST(&Mine1_used_x), /* exit */
+                        Q_ACTION_CAST(0) /* zero terminator */
+                    }
                 };
                 QACTIVE_POST((QActive *)&AO_Ship, HIT_MINE_SIG,  1);
 
                 /* go straight to 'disabled' and let the Ship do
                 * the exploding
                 */
-                status_ = QM_TRAN(&Mine1_unused_s, &act_[0]);
+                status_ = QM_TRAN(&tatbl_);
             }
             else {
                 status_ = QM_UNHANDLED();
             }
             break;
         }
-        /* @(/1/3/3/2/1/2) */
+        /* ${AOs::Mine1::SM::used::planted::MISSILE_IMG} */
         case MISSILE_IMG_SIG: {
             uint8_t x   = (uint8_t)Q_PAR(me);
             uint8_t y   = (uint8_t)(Q_PAR(me) >> 8);
             uint8_t bmp = (uint8_t)(Q_PAR(me) >> 16);
-            /* @(/1/3/3/2/1/2/0) */
+            /* ${AOs::Mine1::SM::used::planted::MISSILE_IMG::[do_bitmaps_ov~]} */
             if (do_bitmaps_overlap(MINE1_BMP, me->x, me->y, bmp, x, y)) {
-                static QActionHandler const act_[] = {
-                    Q_ACTION_CAST(&Mine1_exploding_e),
-                    Q_ACTION_CAST(0)
+                static struct {
+                    QMState const *target;
+                    QActionHandler act[2];
+                } const tatbl_ = { /* transition-action table */
+                    &Mine1_exploding_s, /* target state */
+                    {
+                        Q_ACTION_CAST(&Mine1_exploding_e), /* entry */
+                        Q_ACTION_CAST(0) /* zero terminator */
+                    }
                 };
                 /* post the score for destroying Mine type-1 */
                 QACTIVE_POST((QActive *)&AO_Missile, DESTROYED_MINE_SIG, 25);
-                status_ = QM_TRAN(&Mine1_exploding_s, &act_[0]);
+                status_ = QM_TRAN(&tatbl_);
             }
             else {
                 status_ = QM_UNHANDLED();
@@ -207,17 +255,19 @@ static QState Mine1_planted(Mine1 * const me) {
     }
     return status_;
 }
-/* @(/1/3/3/2/2) ...........................................................*/
+/*${AOs::Mine1::SM::used::exploding} .......................................*/
+/* ${AOs::Mine1::SM::used::exploding} */
 static QState Mine1_exploding_e(Mine1 * const me) {
     me->exp_ctr = 0;
     return QM_ENTRY(&Mine1_exploding_s);
 }
+/* ${AOs::Mine1::SM::used::exploding} */
 static QState Mine1_exploding(Mine1 * const me) {
     QState status_;
     switch (Q_SIG(me)) {
-        /* @(/1/3/3/2/2/0) */
+        /* ${AOs::Mine1::SM::used::exploding::TIME_TICK} */
         case TIME_TICK_SIG: {
-            /* @(/1/3/3/2/2/0/0) */
+            /* ${AOs::Mine1::SM::used::exploding::TIME_TICK::[(me->x>=GAME_~]} */
             if ((me->x >= GAME_SPEED_X) && (me->exp_ctr < 15)) {
                 ++me->exp_ctr;  /* advance the explosion counter */
                 me->x -= GAME_SPEED_X; /* move explosion by 1 step */
@@ -229,13 +279,19 @@ static QState Mine1_exploding(Mine1 * const me) {
                          | (((QParam)((int)me->y - 4 + 2)) << 8));
                 status_ = QM_HANDLED();
             }
-            /* @(/1/3/3/2/2/0/1) */
+            /* ${AOs::Mine1::SM::used::exploding::TIME_TICK::[else]} */
             else {
-                static QActionHandler const act_[] = {
-                    Q_ACTION_CAST(&Mine1_used_x),
-                    Q_ACTION_CAST(0)
+                static struct {
+                    QMState const *target;
+                    QActionHandler act[2];
+                } const tatbl_ = { /* transition-action table */
+                    &Mine1_unused_s, /* target state */
+                    {
+                        Q_ACTION_CAST(&Mine1_used_x), /* exit */
+                        Q_ACTION_CAST(0) /* zero terminator */
+                    }
                 };
-                status_ = QM_TRAN(&Mine1_unused_s, &act_[0]);
+                status_ = QM_TRAN(&tatbl_);
             }
             break;
         }

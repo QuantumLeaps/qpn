@@ -2022,6 +2022,9 @@
     <name>$PROJ_DIR$\bsp.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\bsp.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
   <file>

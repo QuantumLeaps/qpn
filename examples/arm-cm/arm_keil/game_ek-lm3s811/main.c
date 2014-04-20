@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
-* Last Updated for Version: 4.5.00
-* Date of the Last Update:  May 24, 2012
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -53,7 +53,7 @@ QActiveCB const Q_ROM QF_active[] = {
 Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
-int main (void) {
+int_t main () {
     Tunnel_ctor();
     Ship_ctor();
     Missile_ctor(GAME_MISSILE_SPEED_X);

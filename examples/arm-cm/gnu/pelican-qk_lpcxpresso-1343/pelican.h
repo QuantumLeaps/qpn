@@ -14,7 +14,7 @@
 * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 * for more details.
 *****************************************************************************/
-/* @(/2/0) .................................................................*/
+/*${.::pelican.h} ..........................................................*/
 #ifndef pelican_h
 #define pelican_h
 
@@ -22,18 +22,14 @@ enum PelicanSignals {
     PEDS_WAITING_SIG = Q_USER_SIG,
     OFF_SIG,
     ON_SIG,
-    TEST_SIG
+    TERMINATE_SIG
 };
 
-// active objects ................................................*/
-/* @(/1/3) .................................................................*/
+/* active objects ................................................*/
+/*${components::Pelican_ctor} ..............................................*/
 void Pelican_ctor(void);
 
-/* @(/1/4) .................................................................*/
-void Ped_ctor(void);
 
-
-extern struct PelicanTag AO_Pelican;
-extern struct PedTag     AO_Ped;
+extern struct Pelican AO_Pelican;
 
 #endif /* pelican_h */

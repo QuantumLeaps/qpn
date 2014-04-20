@@ -1,13 +1,13 @@
 /*****************************************************************************
-* Product: Game example
-* Last Updated for Version: 4.5.05
-* Date of the Last Update:  Mar 28, 2013
+* Product: "Fly 'n' Shoot" Game example, QK-nano kernel
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,13 +28,14 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #ifndef qpn_port_h
 #define qpn_port_h
 
+#define Q_NMSM
+//#define Q_NHSM
 #define Q_NFSM
 #define Q_PARAM_SIZE            4
 #define QF_TIMEEVT_CTR_SIZE     2
@@ -42,15 +43,15 @@
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
 #define QF_MAX_ACTIVE           3
 
-                                 /* interrupt locking policy for task level */
+/* interrupt locking policy for task level */
 #define QF_INT_DISABLE()        _disable()
 #define QF_INT_ENABLE()         _enable()
 
-                            /* interrupt locking policy for interrupt level */
+/* interrupt disabling policy for interrupt level */
 /* #define QF_ISR_NEST */
 
-                                        /* interrupt entry/exit for QK-nano */
-#ifndef QF_ISR_NEST                              /* ISR nesting NOT allowed */
+/* interrupt entry/exit for QK-nano */
+#ifndef QF_ISR_NEST  /* ISR nesting NOT allowed */
 
     #define QK_ISR_ENTRY()      ((void)0)
 
@@ -59,7 +60,7 @@
         QK_SCHEDULE_(); \
     } while (0)
 
-#else                                                /* ISR nesting allowed */
+#else /* ISR nesting allowed */
 
     #define QK_ISR_ENTRY() do { \
         ++QK_intNest_; \
@@ -75,11 +76,13 @@
 
 #endif
 
-#include <stdint.h>    /* Exact-width integer types. WG14/N843 C99 Standard */
-#include <i86.h>                                /* for _disable()/_enable() */
+#include <i86.h>        /* for _disable()/_enable() */
+#include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
+#include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
 
-#include "qepn.h"              /* QEP-nano platform-independent header file */
-#include "qfn.h"                /* QF-nano platform-independent header file */
-#include "qkn.h"                /* QK-nano platform-independent header file */
+#include "qepn.h"       /* QEP-nano platform-independent public interface */
+#include "qfn.h"        /* QF-nano platform-independent public interface */
+#include "qkn.h"        /* QK-nano platform-independent header file */
+#include "qassert.h"    /* QP-nano assertions header file */
 
-#endif                                                        /* qpn_port_h */
+#endif /* qpn_port_h */

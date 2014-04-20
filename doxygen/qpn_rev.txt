@@ -1,7 +1,84 @@
 /**
-\page rev_page QP-nano Revision History
+\page rev_page Revision History
 
-\section qpn_5_2_0 Version 5.2.0 Release date: Dec 30, 2013
+\section qpn_5_3_0 Version 5.3.0, Release date: Apr 18, 2014
+
+This release adds the "transition to history" (deep history) feature to
+both QHsm and QMsm state machines and their subclasses. This QP-nano
+release matches the new QM modeling tool version 3.1.0, which now
+supports the "transition to history" connector and the corresponding
+code generation for transitions to history.
+
+\note QP-nano 5.3.0 breaks backwards-compatibility with QP-nano
+applications developed for QP-nano 4.x and 5.x. However, the update to
+QP-nano 5.3.0 typically requires only to add #include <stdbool.h> and
+#include "qassert.h" to the qpn_port.h header file in the application
+directory. Any QM models created for the previous QP-nano versions
+remain fully compatible with QP-nano 5.3.0, but you need to re-generate
+the code with QM 3.1.0.
+
+This release comes with new and updated QDKs for MSP430. Specifically,
+new QDKs have been added for the MSP-EXP430G2 LaunchPad as well as the
+MSP-EXP420F5529LP LauchPad. Also, the QDKs for MSP430 with the TI Code
+Composer Studio are now part of the baseline QP-nano distribution.
+
+This release also goes several steps towards compliance with the new
+MISRA-C:2012 rules. For example, unused tag declarations have been
+removed (MISRA-C:2012 Rule 2.4), the C99 standard Boolean data type in
+<stdbool.h> has been added instead of uint8_t for stricter type
+analysis, and the C99 data types uint_fast8_t and uint_fast16_t are used
+instead of the non-standard uint_t.
+
+Finally, this QP-nano release brings deep changes in the source code
+comments and the doxygen documentation generated from the source code.
+All comments have now more consistent structure, and every function is
+now documented in the implementation file (.c file), whereas the
+interface (.h files) contain only the brief descriptions of the
+functions. This re-structuring of documentation is performed as part of
+the validation and verification effort that has begun to provide a
+certification package for QP-nano for safety standards, such as IEC
+61508 and ISO 62304 (FDA 510(k)).
+
+
+Changes in detail:
+
+1. Moved detailed documentation of functions from the header files (.h)
+to implementation files (.c).
+
+2. Added macros: Q_TRAN_HIST(), QM_TRAN_HIST(), and QM_TRAN_EP(), to
+"qepn.h"
+
+3. Added attributes entryAction and initAction to the QMState struct in
+"qepn.h" (needed for transition to history).
+
+4. Changed return type to bool in virtual functions QMsmVtbl.post() and
+QMsmVtbl.postISR() as well as the implementations: QActive_postX_(), and
+QActive_postXISR_().
+
+5. In qepn.h, changed the QState return type from action/state handler
+functions to uint_fast8_t.
+
+6. In qfn.h, changed the type of QActive attributes prio, head, tail,
+and nUsed to uint_fast8_t.
+
+7. In qfn.h, changed the type of of QTimeEvtCtr, as well of the tickRate
+argument in QF_tickXISR(), QActive_armX(), and QActive_disarmX() to
+uint_fast8_t.
+
+8. Changed the return type from QK_schedPrio_() (priority) as well as
+the p argument in QK_sched_() to uint_fast8_t
+
+9. Added new QDKs-nano/IAR for MSP-EXP430G2 LaunchPad
+
+10. Added new QDKs-nano/IAR for MSP-EXP420F5529LP LauchPad LaunchPad
+
+11. Added new QDKs-nano/CCS for MSP-EXP430G2 LaunchPad
+
+12. Added new QDKs-nano/CCS for MSP-EXP420F5529LP LauchPad LaunchPad
+
+
+<HR>
+\section qpn_5_2_0 Version 5.2.0, Release date: Dec 30, 2013
 
 This release matches the new QM 3.0.0, for which it provides model
 examples based on the new QMsm/QMActive classes. This, in turn
@@ -77,7 +154,7 @@ Stack Overflow?".
 
 
 <HR>
-\section qpn_5_1_1 Version 5.1.1 Release date: Oct 15, 2013
+\section qpn_5_1_1 Version 5.1.1, Release date: Oct 15, 2013
 
 \note QP-nano 5.1.1 remains backwards-compatible with the existing
 QP-nano 4.x applications, except QP-nano 5.1.x requires changing the
@@ -748,7 +825,7 @@ examples.
 
 In the process of converting the examples to Open Watcom a new SLS example
 have been added to the standard QP-nano distribution. The SLS example located
-in &lt;qpn&gt;/examples/80x86/watcom/sls/* shows the QP-nano implemenation of the
+in &lt;qpn&gt;/examples/80x86/watcom/sls/ shows the QP-nano implemenation of the
 new State-Local Storage state design pattern.
 
 

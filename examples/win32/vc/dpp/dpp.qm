@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="3.0.0">
- <documentation>Dining Philosopher Problem example</documentation>
+<model version="3.1.1">
+ <documentation>Dining Philosopher Problem example with QMActive</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
   <class name="Philo" superclass="qpn::QMActive">
@@ -244,12 +244,12 @@ me-&gt;fork[n] = FREE;</action>
     <state_diagram size="49,69"/>
    </statechart>
   </class>
-  <attribute name="AO_Philo0" type="struct PhiloTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Philo1" type="struct PhiloTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Philo2" type="struct PhiloTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Philo3" type="struct PhiloTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Philo4" type="struct PhiloTag" visibility="0x00" properties="0x00"/>
-  <attribute name="AO_Table" type="struct TableTag" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Philo0" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Philo1" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Philo2" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Philo3" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Philo4" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Table" type="struct Table" visibility="0x00" properties="0x00"/>
   <operation name="Philo_ctor" type="void" visibility="0x00" properties="0x00">
    <code>QMActive_ctor(&amp;AO_Philo0.super, Q_STATE_CAST(&amp;Philo_initial));
 QMActive_ctor(&amp;AO_Philo1.super, Q_STATE_CAST(&amp;Philo_initial));

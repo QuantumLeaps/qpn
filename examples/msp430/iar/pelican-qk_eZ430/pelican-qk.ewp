@@ -105,7 +105,7 @@
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>80</state>
+          <state>64</state>
         </option>
         <option>
           <name>GHeapSize2</name>
@@ -381,7 +381,7 @@
         </option>
         <option>
           <name>IccLang</name>
-          <state>2</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccCDialect</name>
@@ -731,11 +731,11 @@
         </option>
         <option>
           <name>XclOverride</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>XclFile</name>
-          <state>$PROJ_DIR$\lnk430F2013.xcl</state>
+          <state>$TOOLKIT_DIR$\CONFIG\lnk430F2013.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -807,7 +807,7 @@
         </option>
         <option>
           <name>IncludeSuppressed</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ModuleSummary</name>
@@ -980,7 +980,11 @@
         <debug>1</debug>
         <option>
           <name>CUTest</name>
-          <state>###Uninitialized###</state>
+          <state>-I$TOOLKIT_DIR$\inc</state>
+          <state>-@$TOOLKIT_DIR$\bin\iar.cmd</state>
+          <state>-@$PROJ_DIR$\source.txt</state>
+          <state>-@$PROJ_DIR$\include.txt</state>
+          <state>--preinclude=$PROJ_DIR$\IAR_ULPAdvisor_Defs.h</state>
         </option>
         <option>
           <name>ULPRules</name>
@@ -993,7 +997,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>$PROJ_FNAME$.ulp</state>
         </option>
         <option>
           <name>ULPStatus</name>
@@ -1122,7 +1126,7 @@
         </option>
         <option>
           <name>GHeap20Size</name>
-          <state>80</state>
+          <state>###Uninitialized###</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -1812,7 +1816,7 @@
         </option>
         <option>
           <name>IncludeSuppressed</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ModuleSummary</name>
@@ -2028,6 +2032,9 @@
     <name>$PROJ_DIR$\bsp.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\bsp.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
   <file>
@@ -2035,6 +2042,12 @@
   </file>
   <file>
     <name>$PROJ_DIR$\pelican.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\pelican.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\qpn_port.h</name>
   </file>
 </project>
 

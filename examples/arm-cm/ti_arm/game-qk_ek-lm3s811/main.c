@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
-* Last Updated for Version: 4.5.02
-* Date of the Last Update:  Aug 16, 2012
+* Last Updated for Version: 5.2.0
+* Date of the Last Update:  Dec 30, 2013
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2012 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -37,28 +37,28 @@
 #include "game.h"                                  /* application interface */
 
 /*..........................................................................*/
-static QEvent l_tunnelQueue[GAME_MINES_MAX + 5];
-static QEvent l_shipQueue[3];
-static QEvent l_missileQueue[3];
+static QEvt l_tunnelQueue[GAME_MINES_MAX + 5];
+static QEvt l_shipQueue[3];
+static QEvt l_missileQueue[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
 QActiveCB const Q_ROM QF_active[] = {
-    { (QActive *)0,           (QEvent *)0,    0                     },
+    { (QActive *)0,           (QEvt *)0,      0U                    },
     { (QActive *)&AO_Tunnel,  l_tunnelQueue,  Q_DIM(l_tunnelQueue)  },
     { (QActive *)&AO_Ship,    l_shipQueue,    Q_DIM(l_shipQueue)    },
     { (QActive *)&AO_Missile, l_missileQueue, Q_DIM(l_missileQueue) }
 };
 
 /* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */
-Q_ASSERT_COMPILE(QF_MAX_ACTIVE == (Q_DIM(QF_active) - 1));
+Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
-int_t main (void) {
+int_t main () {
     Tunnel_ctor();
     Ship_ctor();
     Missile_ctor(GAME_MISSILE_SPEED_X);
 
     BSP_init();                                     /* initialize the board */
 
-    return (int_t)QF_run();                  /* transfer control to QF-nano */
+    return QF_run();                         /* transfer control to QF-nano */
 }

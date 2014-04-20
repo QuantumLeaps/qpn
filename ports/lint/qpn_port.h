@@ -1,13 +1,18 @@
-/*****************************************************************************
-* Product: QP-nano port to Lint
-* Last Updated for Version: 5.2.0
-* Date of the Last Update:  Dec 03, 2013
+/**
+* \file
+* \brief QP-nano port for Lint (generic C compiler).
+* \ingroup qepn, qfn, qkn
+* \cond
+******************************************************************************
+* Product: QF-nano
+* Last updated for version 5.3.0
+* Last updated on  2014-04-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,25 +33,24 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
-*****************************************************************************/
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
+******************************************************************************
+* \endcond
+*/
 #ifndef qpn_port_h
 #define qpn_port_h
 
 /**
-* \file
-* \ingroup qepn qfn
-* \brief QP-nano port.
-*
+* \description
 * This header file contains the port and customization of QP-nano to
 * the specific CPU and compiler. Typically, this header file includes
 * the platform-independent header file qpn.h.
 */
 
-/** \brief The maximum number of active objects in the application.
-*
+/*! The maximum number of active objects in the application. */
+/**
+* \description
 * This macro should be defined in the QP-nano port header file qpn_port.h
 * and should be in range of 1..8, inclusive. In QF-nano, the value of
 * QF_MAX_ACTIVE does not incur bigger RAM or ROM overhead, but if you
@@ -55,9 +59,11 @@
 */
 #define QF_MAX_ACTIVE           8
 
-/** \brief Macro to specify compiler-specific directive for placing a
+/*! Macro to specify compiler-specific directive for placing a
 * constant object in ROM.
-*
+*/
+/**
+* \description
 * Many compilers for 8-bit Harvard-architecture MCUs provide non-stanard
 * extensions to support placement of objects in different memories.
 * In order to conserve the precious RAM, QP-nano uses the Q_ROM macro for
@@ -70,8 +76,9 @@
 */
 #define Q_ROM
 
-/** \brief Macro to access a byte allocated in ROM
-*
+/*! Macro to access a byte allocated in ROM */
+/**
+* \description
 * Some compilers for Harvard-architecture MCUs, such as gcc for AVR, do
 * not generate correct code for accessing data allocated in the program
 * space (ROM). The workaround for such compilers is to explicitly add
@@ -87,8 +94,9 @@
 */
 #define Q_ROM_BYTE(rom_var_)   (rom_var_)
 
-/** \brief Macro to access a pointer allocated in ROM
-*
+/*! Macro to access a pointer allocated in ROM */
+/**
+* \description
 * Some compilers for Harvard-architecture MCUs, such as the gcc for AVR,
 * do not generate correct code for accessing data allocated in the program
 * space. The workaround for such compilers is to explictly add assembly code
@@ -104,9 +112,11 @@
 */
 #define Q_ROM_PTR(rom_var_)    (rom_var_)
 
-/** \brief The size (in bytes) of the single scalar parameter representation
+/*! The size (in bytes) of the single scalar parameter representation
 * in the QEvent struct. Valid values: none (0), 1, 2, or 4; default none (0).
-*
+*/
+/**
+* \description
 * This macro can be defined in the QP-nano port header file qpn_port.h to
 * configure the parameter of Events. If the macro is not defined, the default
 * of no event parameter will be chosen. The valid Q_PARAM_SIZE values of 1, 2,
@@ -117,9 +127,11 @@
 */
 #define Q_PARAM_SIZE            1
 
-/** \brief The size (in bytes) of the time event-counter representation in
+/*! The size (in bytes) of the time event-counter representation in
 * the QActive struct. Valid values: none (0), 1, 2, or 4; default none (0).
-*
+*/
+/**
+* \description
 * This macro can be defined in the QP-nano port header file qpn_port.h to
 * configure the internal tick counters of Time Events. If the macro is not
 * defined, the default of no time event counter will be chosen. The valid
@@ -132,21 +144,22 @@
 */
 #define QF_TIMEEVT_CTR_SIZE     2
 
-/** \brief If defined, this macro eliminates the code supporting the simpler
+/*! If defined, this macro eliminates the code supporting the simpler
 * non-hierarchical FSMs.
 */
 /*#define Q_NFSM */
 
-/** \brief Configuration switch to enable/disable update of the QF timer set.
-*
+/*! Configuration switch to enable/disable update of the QF timer set. */
+/**
+* \description
 * The QF-nano timer set keeps track of the armed time event set.
 * The main use of the timer set is to quickly determine that all time
 * events are disarmed.
 */
 #define Q_TIMERSET              1
 
-/** \brief The macro defines the mechanism of locking the interrupts.
-*
+/*! The macro defines the mechanism of locking the interrupts. */
+/**
 * \note This is just an example of #QF_INT_DISABLE. You need to define
 * the macro appropriately for the CPU/compiler you're using.
 *
@@ -156,8 +169,9 @@
 #define QF_INT_DISABLE()        int_disable()
 
 
-/** \brief The macro defines the mechanism of unlocking the interrupts.
-*
+/*! The macro defines the mechanism of unlocking the interrupts. */
+/**
+* \description
 * \note This is just an example of #QF_INT_ENABLE. You need to define
 * the macro appropriately for the CPU/compiler you're using.
 *
@@ -166,9 +180,11 @@
 */
 #define QF_INT_ENABLE()         int_enable()
 
-/** \brief Macro to put the CPU to sleep safely in the cooperative
+/*! Macro to put the CPU to sleep safely in the cooperative
 * Vanilla kernel (inside QF_idle()).
-*
+*/
+/**
+* \description
 * This macro is provided in some QP ports for the Vanilla kernel and
 * in general it depends on the interrupt disabling policy.
 *
@@ -181,23 +197,21 @@
     __enable_interrupt(); \
 } while (0)
 
-/** \brief QK-nano ISR entry
+/*! QK-nano ISR entry
 *
 * an example only
 */
 #define QK_ISR_ENTRY()   ((void)0)
 
-/** \brief QK-nano ISR exit
-*
-* an example only
-*/
+/*! QK-nano ISR exit */
 #define QK_ISR_EXIT()    (*((uint32_t volatile *)0xE000ED04U) = 0x10000000U)
 
-/** \brief Macro that specifies whether QK-nano ISR nesting is allowed */
+/*! Macro that specifies whether QK-nano ISR nesting is allowed */
 #define QF_ISR_NEST
 
-/** \brief Macro that specifies QK-nano initialization
-*
+/*! Macro that specifies QK-nano initialization */
+/**
+* \description
 * Some QK-nano ports might need initialization (e.g., seeting the priorities
 * of exceptions PendSV and SVCall in ARM Cortex-M port). The QK_INIT() macro
 * in this case calls the initialization defined in assembly.
@@ -206,14 +220,14 @@
 */
 #define QK_INIT()        QK_init()
 
-void int_disable(void);    /**< example of a function to disable interrupts */
-void int_enable(void);      /**< example of a function to enable interrupts */
+void int_disable(void); /*!< example of a function to disable interrupts */
+void int_enable(void);  /*!< example of a function to enable interrupts */
 
-             /* Exact-width types. WG14/N843 C99 Standard, Section 7.18.1.1 */
-#include <stdint.h>
+#include <stdint.h>    /* Exact-width types. WG14/N843 C99 Standard */
+#include <stdbool.h>   /* Boolean type.      WG14/N843 C99 Standard */
 
-#include "qepn.h"         /* QEP-nano platform-independent public interface */
-#include "qfn.h"           /* QF-nano platform-independent public interface */
-#include "qkn.h"           /* QK-nano platform-independent public interface */
+#include "qepn.h"      /* QEP-nano platform-independent public interface */
+#include "qfn.h"       /* QF-nano platform-independent public interface */
+#include "qkn.h"       /* QK-nano platform-independent public interface */
 
-#endif                                                        /* qpn_port_h */
+#endif /* qpn_port_h */

@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: Simple Blinky example
-* Last Updated for Version: 5.1.0
-* Date of the Last Update:  Oct 09, 2013
+* Last updated for version 5.3.0
+* Last updated on  2014-04-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) Quantum Leaps, www.state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,9 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* Web:   www.state-machine.com
+* Email: info@state-machine.com
 *****************************************************************************/
 #include "qpn_port.h"
 #include "bsp.h"
@@ -38,13 +37,14 @@
 //Q_DEFINE_THIS_FILE
 
 /*..........................................................................*/
-typedef struct BlinkyTag {                      /* the Blinky active object */
-    QActive super;                                   /* derive from QActive */
+typedef struct Blinky { /* the Blinky active object */
+    QActive super;      /* derive from QActive */
 } Blinky;
 
 
 void Blinky_ctor(Blinky * const me);
-                                          /* hierarchical state machine ... */
+
+/* hierarchical state machine ... */
 static QState Blinky_initial(Blinky * const me);
 static QState Blinky_off    (Blinky * const me);
 static QState Blinky_on     (Blinky * const me);
@@ -56,7 +56,7 @@ void Blinky_ctor(Blinky * const me) {
 
 /* HSM definition ----------------------------------------------------------*/
 QState Blinky_initial(Blinky * const me) {
-    QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2U);
+    QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2U);
     return Q_TRAN(&Blinky_off);
 }
 /*..........................................................................*/
@@ -90,7 +90,7 @@ QState Blinky_on(Blinky * const me) {
             break;
         }
         case Q_TIMEOUT_SIG: {
-            QActive_arm((QActive *)me, BSP_TICKS_PER_SEC/2U);
+            QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2U);
             status = Q_TRAN(&Blinky_off);
             break;
         }
@@ -105,8 +105,8 @@ QState Blinky_on(Blinky * const me) {
 /* test harness ============================================================*/
 
 /* Local-scope objects -----------------------------------------------------*/
-static Blinky l_blinky;                         /* the Blinky active object */
-static QEvt l_blinkyQSto[10];             /* Event queue storage for Blinky */
+static Blinky l_blinky;       /* the Blinky active object */
+static QEvt l_blinkyQSto[10]; /* Event queue storage for Blinky */
 
 /* QF_active[] array defines all active object control blocks --------------*/
 QActiveCB const Q_ROM QF_active[] = {
@@ -119,9 +119,7 @@ Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
 int main(void) {
-    Blinky_ctor(&l_blinky);                    /* instantiate all Blinky AO */
-
-    BSP_init();
-
-    return QF_run();                         /* transfer control to QF-nano */
+    Blinky_ctor(&l_blinky);  /* instantiate all Blinky AO */
+    BSP_init();              /* initialize the Board Support Package */
+    return QF_run();         /* transfer control to QF-nano */
 }

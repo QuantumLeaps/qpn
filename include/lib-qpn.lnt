@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: PC-Lint 9.x option file for linting QP-nano applications
-// Last Updated for Version: 5.2.0
-// Date of the Last Update:  Dec 29, 2013
+// Last updated for version 5.3.0
+// Last updated on  2014-03-25
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
 //                    innovating embedded systems
 //
-// Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+// Copyright (C) 2002-2014 Quantum Leaps, LLC. All rights reserved.
 //
 // This program is open source software: you can redistribute it and/or
 // modify it under the terms of the GNU General Public License as published
@@ -28,9 +28,8 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 // Contact information:
-// Quantum Leaps Web sites: http://www.quantum-leaps.com
-//                          http://www.state-machine.com
-// e-mail:                  info@quantum-leaps.com
+// Web:   http://www.state-machine.com
+// Email: info@state-machine.com
 //////////////////////////////////////////////////////////////////////////////
 
 // general
@@ -42,7 +41,6 @@
  QP_getVersion)
 -emacro(866, Q_DIM)           // Unusual use of 'SYM' in argument to sizeof
 -esym(960,                    // MISRA04-19.10(req) unparenthesized macro par
- Q_DIM,
  Q_UINT2PTR_CAST)
 
 // Assertions
@@ -118,7 +116,7 @@
 -emacro(960,                  // MISRA04-11.1(req) Conversions involving
  Q_STATE_CAST,                // fun. pointers must be to/from integral types
  Q_ACTION_CAST)
--estring(960, QMAttrTag)      // MISRA04-18.4(req) declaration of union type
+-estring(960, QMAttr)         // MISRA04-18.4(req) declaration of union type
 -estring(961,                 // MISRA04-19.7(adv) function-like macro
  Q_SIG,
  Q_PAR,
@@ -127,9 +125,11 @@
  Q_HANDLED,
  Q_UNHANDLED,
  Q_TRAN,
+ Q_TRAN_HIST,
  Q_SUPER,
  Q_STATE_CAST,
  Q_ACTION_CAST,
+ Q_MSM_UPCAST,
  QEP_ACT_PTR_INC_,
  QP_getVersion)
 -estring(961,                 // MISRA04-19.7(adv) function-like macro
@@ -138,12 +138,15 @@
  QM_ENTRY,
  QM_EXIT,
  QM_TRAN,
+ QM_TRAN_INIT,
+ QM_TRAN_HIST,
  QM_INITIAL,
  QM_SUPER,
  QM_HANDLED,
  QM_UNHANDLED,
  QMsm_init,
  QMsm_dispatch,
+ QMsm_stateObj,
  QHsm_init,
  QHsm_dispatch,
  QHsm_state,
