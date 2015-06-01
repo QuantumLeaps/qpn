@@ -1,7 +1,7 @@
-#include "qpn_port.h"  /* QP-nano port */
-#include "calc.h"      /* Calc HSM derived from QHsm */
+#include "qpn.h"   /* QP-nano */
+#include "calc.h"  /* Application interface */
 
-static Calc l_calc;    /* an instance of Calc HSM */
+static Calc l_calc; /* an instance of Calc HSM */
 
 int main() {
     Calc_ctor(&l_calc); /* Calc HSM "constructor" invokes QHsm_ctor() */

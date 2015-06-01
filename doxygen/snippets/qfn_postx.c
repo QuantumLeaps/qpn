@@ -1,31 +1,32 @@
-/* event posting from the ISR level ...................................*/
+/* "extended" event posting from the interrupt context (QACTIVE_POST_X_ISR) */
 void SysTick_Handler(void) {
     . . .
-    if (!QACTIVE_POST_X_ISR((QActive *)&AO_Cruncher,
-                            5U,   /* margin of free slots in the queue */
-                            ECHO_SIG, 0))      /* signal and parameter */
+    if (!QACTIVE_POST_X_ISR((QMActive *)&AO_Cruncher,
+             5U,            /* margin of free slots in the queue */
+             ECHO_SIG, 0U)) /* signal and parameter */
     {
         /* event posting failed... */
     }
 }
 
-/* event posting from the task level ..................................*/
-QState Cruncher_processing(Cruncher * const me) {
-    QState status;
+/* "extended" event posting from the task context (QACTIVE_POST_X())... */
+static QState Ship_flying(Ship * const me) {
+    QState status_;
     switch (Q_SIG(me)) {
-        . . .
-        case CRUNCH_SIG: {
+        case TIME_TICK_SIG: {
             . . .
-            if (!QACTIVE_POST((QActive *)me,
-                              2U, /* margin of free slots in the queue */
-                              CRUNCH_SIG, i))  /* signal and parameter */
-            {
-                /* event posting failed... */
+            if ((me->score % 10) == 0) { /* is the score "round"? */
+                if (!QACTIVE_POST_X((QMActive *)&AO_Tunnel,
+                        4U, /* margin of free slots in the queue */
+                        SCORE_SIG, me->score)) /* signal and parameter */
+                {
+                    /* event posting failed... */
+                }
             }
-            status = Q_HANDLED();
+            status_ = QM_HANDLED();
             break;
         }
         . . .
     }
-    return status;
+    return status_;
 }

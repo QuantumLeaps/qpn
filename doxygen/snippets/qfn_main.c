@@ -1,6 +1,6 @@
-#include "qpn_port.h"    /* QP-nano port */
-#include "pelican.h"     /* application interface */
-#include "bsp.h"         /* Board Support Package (BSP) */
+#include "qpn.h"     /* QP-nano port */
+#include "bsp.h"     /* Board Support Package (BSP) */
+#include "pelican.h" /* Application interface */
 
 /*..........................................................................*/
 static QEvt l_pelicanQueue[2];
@@ -18,10 +18,10 @@ Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
 int_t main (void) {
-    Pelican_ctor();         /* instantiate the  Pelican AO */
-    Ped_ctor();             /* instantiate the  Ped     AO */
+    Pelican_ctor();  /* instantiate the  Pelican AO */
+    Ped_ctor();      /* instantiate the  Ped     AO */
 
-    BSP_init();             /* initialize the board */
+    BSP_init();      /* initialize the board */
 
-    return (int_t)QF_run(); /* transfer control to QF-nano */
+    return QF_run(); /* transfer control to QF-nano */
 }

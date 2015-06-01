@@ -1,12 +1,11 @@
 /**
-* \file
-* \brief QEP-nano implementation.
-* \ingroup qep
-* \cond
+* @file
+* @brief QEP-nano implementation.
+* @ingroup qep
+* @cond
 ******************************************************************************
-* Product: QEP-nano
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+* Last updated for version 5.4.0
+* Last updated on  2015-05-24
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -36,23 +35,24 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 ******************************************************************************
-* \endcond
+* @endcond
 */
-#include "qpn_port.h" /* QP-nano port */
-
-#ifndef qassert_h
-    #include "qassert.h" /* QP assertions */
-#endif /* qassert_h */
+#include "qpn_conf.h" /* QP-nano configuration file (from the application) */
+#include "qfn_port.h" /* QF-nano port from the port directory */
+#include "qassert.h"  /* embedded systems-friendly assertions */
 
 Q_DEFINE_THIS_MODULE("qepn")
+
+/****************************************************************************/
+char_t const Q_ROM QP_versionStr[6] = QP_VERSION_STR;
 
 /****************************************************************************/
 /****************************************************************************/
 #ifndef Q_NMSM
 
-/*! Internal QEP macro to increment the given action table \a act_ */
+/*! Internal QEP macro to increment the given action table @a act_ */
 /**
-* \description
+* @description
 * Incrementing a pointer violates the MISRA-C 2004 Rule 17.4(req),
 * pointer arithmetic other than array indexing. Encapsulating this violation
 * in a macro allows to selectively suppress this specific deviation.
@@ -76,18 +76,17 @@ static QState QMsm_enterHistory_(QMsm * const me, QMState const * const hist);
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Performs the first step of QMsm initialization by assigning the initial
 * pseudostate to the currently active state of the state machine.
 *
-* \arguments
-* \arg[in,out] \c me       pointer (see \ref derivation)
-* \arg[in]     \c initial  the top-most initial transition for the MSM.
+* @param[in,out] me       pointer (see @ref oop)
+* @param[in]     initial  the top-most initial transition for the MSM.
 *
-* \note Must be called only by the "constructors" of the derived state
+* @note Must be called only by the "constructors" of the derived state
 * machines.
 *
-* \note Must be called only ONCE before QMsm_init_().
+* @note Must be called only ONCE before QMsm_init_().
 */
 void QMsm_ctor(QMsm * const me, QStateHandler initial) {
     static QMsmVtbl const vtbl = { /* QMsm virtual table */
@@ -101,18 +100,17 @@ void QMsm_ctor(QMsm * const me, QStateHandler initial) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Executes the top-most initial transition in a MSM.
 *
-* \arguments
-* \arg[in,out] \c me pointer (see \ref derivation)
+* @param[in,out] me pointer (see @ref oop)
 *
-* \note Must be called only ONCE after the QMsm_ctor().
+* @note Must be called only ONCE after the QMsm_ctor().
 */
 void QMsm_init_(QMsm * const me) {
     QState r;
 
-    /** \pre the virtual pointer must be initialized, the top-most initial
+    /** @pre the virtual pointer must be initialized, the top-most initial
     * transition must be initialized, and the initial transition must not
     * be taken yet.
     */
@@ -133,14 +131,13 @@ void QMsm_init_(QMsm * const me) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Dispatches an event for processing to a meta state machine (MSM).
 * The processing of an event represents one run-to-completion (RTC) step.
 *
-* \arguments
-* \arg[in,out] \c me pointer (see \ref derivation)
+* @param[in,out] me pointer (see @ref oop)
 *
-* \note
+* @note
 * This function should be called only via the virtual table (see
 * QMSM_DISPATCH()) and should NOT be called directly in the applications.
 */
@@ -149,7 +146,7 @@ void QMsm_dispatch_(QMsm * const me) {
     QMState const *t;
     QState r = (QState)Q_RET_SUPER;
 
-    /** \pre current state must be initialized */
+    /** @pre current state must be initialized */
     Q_REQUIRE_ID(200, s != (QMState const *)0);
 
     /* scan the state hierarchy up to the top state... */
@@ -199,16 +196,15 @@ void QMsm_dispatch_(QMsm * const me) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Helper function to execute transition sequence in a transition-action table.
 *
-* \arguments
-* \arg[in,out] \c me    pointer (see \ref derivation)
-* \arg[in]     \c tatbl pointer to the transition-action table
+* @param[in,out] me    pointer (see @ref oop)
+* @param[in]     tatbl pointer to the transition-action table
 *
-* \returns status of the last action from the transition-action table.
+* @returns status of the last action from the transition-action table.
 *
-* \note
+* @note
 * This function is for internal use inside the QEP and should NOT be called
 * directly in the applications.
 */
@@ -216,7 +212,7 @@ static QState QMsm_execTatbl_(QMsm * const me, QMTranActTable const *tatbl) {
     QActionHandler const *a;
     QState r = (QState)Q_RET_NULL;
 
-    /** \pre the transition-action table pointer must not be NULL */
+    /** @pre the transition-action table pointer must not be NULL */
     Q_REQUIRE_ID(300, tatbl != (QMTranActTable const *)0);
 
     for (a = &tatbl->act[0]; *a != Q_ACTION_CAST(0); QEP_ACT_PTR_INC_(a)) {
@@ -234,15 +230,14 @@ static QState QMsm_execTatbl_(QMsm * const me, QMTranActTable const *tatbl) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Static helper function to exit the current state configuration to the
 * source of the transition, which is a hierarchical state machine might
 * be a superstate of the current state.
 *
-* \arguments
-* \arg[in,out] \c me   pointer (see \ref derivation)
-* \arg[in]     \c s    pointer to the current state
-* \arg[in]     \c ts   pointer to the transition source
+* @param[in,out] me   pointer (see @ref oop)
+* @param[in]     s    pointer to the current state
+* @param[in]     ts   pointer to the transition source
 */
 static void QMsm_exitToTranSource_(QMsm * const me, QMState const *s,
                                    QMState const * const ts)
@@ -270,15 +265,14 @@ static void QMsm_exitToTranSource_(QMsm * const me, QMState const *s,
 #ifndef Q_NMSM_HIST
 /****************************************************************************/
 /**
-* \description
+* @description
 * Static helper function to execute the segment of transition to history
 * after entering the composite state and
 *
-* \arguments
-* \arg[in,out] \c me   pointer (see \ref derivation)
-* \arg[in]     \c hist pointer to the history substate
+* @param[in,out] me   pointer (see @ref oop)
+* @param[in]     hist pointer to the history substate
 *
-* \returns Q_RET_INITIAL, if an initial transition has been executed in the
+* @returns Q_RET_INITIAL, if an initial transition has been executed in the
 * last entered state or 0 if no initial transition was taken.
 *
 */
@@ -339,32 +333,31 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Performs the first step of HSM initialization by assigning the initial
 * pseudostate to the currently active state of the state machine.
 *
-* \arguments
-* \arg[in,out] \c me      pointer (see \ref derivation)
-* \arg[in]     \c initial pointer to the top-most initial state-handler
-*                         function in the derived state machine
+* @param[in,out] me      pointer (see @ref oop)
+* @param[in]     initial pointer to the top-most initial state-handler
+*                        function in the derived state machine
 *
-* \note Must be called only by the constructors of the derived state
+* @note Must be called only by the constructors of the derived state
 * machines.
 *
-* \note Must be called only ONCE before QMSM_INIT().
+* @note Must be called only ONCE before QMSM_INIT().
 *
-* \note
-* QHsm inherits QMsm, so by the \ref derivation convention it should call the
+* @note
+* QHsm inherits QMsm, so by the @ref oop convention it should call the
 * constructor of the superclass, i.e., QMsm_ctor(). However, this would pull
 * in the QMsmVtbl, which in turn will pull in the code for QMsm_init_() and
 * QMsm_dispatch_() implemetations. To avoid this code size penalty, in case
 * ::QMsm is not used in a given project, the QHsm_ctor() performs direct
 * intitialization of the Vtbl, which avoids pulling in the code for QMsm.
 *
-* \usage
+* @usage
 * The following example illustrates how to invoke QHsm_ctor() in the
 * "constructor" of a derived state machine:
-* \include qepn_qhsm_ctor.c
+* @include qepn_qhsm_ctor.c
 */
 void QHsm_ctor(QHsm * const me, QStateHandler initial) {
     static QMsmVtbl const vtbl = { /* QHsm virtual table */
@@ -379,39 +372,37 @@ void QHsm_ctor(QHsm * const me, QStateHandler initial) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * QHsm_top() is the ultimate root of state hierarchy in all HSMs derived
 * from ::QHsm.
 *
-* \arguments
-* \arg[in] \c me pointer (see \ref derivation)
+* @param[in] me pointer (see @ref oop)
 *
-* \returns Always returns #Q_RET_IGNORED, which means that the top state
+* @returns Always returns #Q_RET_IGNORED, which means that the top state
 *          ignores all events.
 *
-* \note The argument \c me to this state handler is not used. It is provided
+* @note The parameter @p me to this state handler is not used. It is provided
 * for conformance with the state-handler function signature ::QStateHandler.
 */
 QState QHsm_top(void const * const me) {
-    (void)me;  /* suppress the "unused argument" compiler warning */
-    return Q_IGNORED(); /* the top state ignores all events */
+    (void)me;  /* suppress the "unused parameter" compiler warning */
+    return (QState)Q_RET_IGNORED; /* the top state ignores all events */
 }
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Executes the top-most initial transition in a HSM.
 *
-* \arguments
-* \arg[in,out] \c me pointer (see \ref derivation)
+* @param[in,out] me pointer (see @ref oop)
 *
-* \note Must be called only ONCE after the QHsm_ctor().
+* @note Must be called only ONCE after the QHsm_ctor().
 */
 void QHsm_init_(QHsm * const me) {
     QStateHandler t = me->state.fun;
     QState r;
 
-    /** \pre the virtual pointer must be initialized, the top-most initial
+    /** @pre the virtual pointer must be initialized, the top-most initial
     * transition must be initialized, and the initial transition must not
     * be taken yet.
     */
@@ -459,14 +450,13 @@ void QHsm_init_(QHsm * const me) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Dispatches an event for processing to a hierarchical state machine (HSM).
 * The processing of an event represents one run-to-completion (RTC) step.
 *
-* \arguments
-* \arg[in,out] \c me pointer (see \ref derivation)
+* @param[in,out] me pointer (see @ref oop)
 *
-* \note
+* @note
 * This function should be called only via the virtual table (see
 * QMSM_DISPATCH()) and should NOT be called directly in the applications.
 */
@@ -476,7 +466,7 @@ void QHsm_dispatch_(QHsm * const me) {
     QState r;
     int_fast8_t iq; /* helper transition entry path index */
 
-    /** \pre the state configuration must be stable */
+    /** @pre the state configuration must be stable */
     Q_REQUIRE_ID(700, t == me->temp.fun);
 
     /* process the event hierarchically... */
@@ -559,15 +549,14 @@ void QHsm_dispatch_(QHsm * const me) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Static helper function to execute transition sequence in a hierarchical
 * state machine (HSM).
 *
-* \arguments
-* \arg[in,out] \c me   pointer (see \ref derivation)
-* \arg[in,out] \c path array of pointers to state-handler functions
-*                      to execute the entry actions
-* \returns the depth of the entry path stored in the \c path argument.
+* @param[in,out] me   pointer (see @ref oop)
+* @param[in,out] path array of pointers to state-handler functions
+*                     to execute the entry actions
+* @returns the depth of the entry path stored in the @p path parameter.
 */
 static int_fast8_t QHsm_tran_(QHsm * const me,
                               QStateHandler path[QHSM_MAX_NEST_DEPTH_])
@@ -706,102 +695,3 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
     return ip;
 }
 #endif /* Q_NHSM */
-
-
-/****************************************************************************/
-/****************************************************************************/
-#ifndef Q_NFSM
-
-/****************************************************************************/
-/**
-* \description
-* Performs the first step of FSM initialization by assigning the initial
-* pseudostate to the currently active state of the state machine.
-*
-* \arguments
-* \arg[in,out] \c me      pointer (see \ref derivation)
-* \arg[in]     \c initial pointer to the top-most initial state-handler
-*                         function in the derived state machine
-*
-* \note Must be called only by the constructors of the derived state
-* machines.
-*
-* \note Must be called only ONCE before QMSM_INIT().
-*
-* \note
-* QFsm inherits QMsm, so by the \ref derivation convention it should call the
-* constructor of the superclass, i.e., QMsm_ctor(). However, this would pull
-* in the QMsmVtbl, which in turn will pull in the code for QMsm_init_() and
-* QMsm_dispatch_() implemetations. To avoid this code size penalty, in case
-* ::QMsm is not used in a given project, the QFsm_ctor() performs direct
-* intitialization of the Vtbl, which avoids pulling in the code for QMsm.
-*
-* \usage
-* The following example illustrates how to invoke QFsm_ctor() in the
-* "constructor" of a derived state machine:
-* \include qepn_qfsm_ctor.c
-*/
-void QFsm_ctor(QFsm * const me, QStateHandler initial) {
-    static QMsmVtbl const vtbl = { /* QFsm virtual table */
-        &QFsm_init_,
-        &QFsm_dispatch_
-    };
-    /* do not call the QMsm_ctor() here, see the note */
-    me->vptr = &vtbl; /* hook the vptr to QFsm virtual table */
-    me->state.fun = Q_STATE_CAST(0);
-    me->temp.fun  = initial;
-}
-
-/****************************************************************************/
-/**
-* \description
-* Executes the top-most initial transition in a FSM.
-*
-* \arguments
-* \arg[in,out] \c me pointer (see \ref derivation)
-* \arg[in]     \c e  pointer to the initialization event (might be NULL)
-*
-* \note Must be called only __once__ after the QFsm_ctor() and before
-* QFsm_dispatch_().
-*/
-void QFsm_init_(QFsm * const me) {
-
-    /** \pre the virtual pointer must be initialized, the top-most initial
-    * transition must be initialized, and the initial transition must not
-    * be taken yet.
-    */
-    Q_REQUIRE_ID(800, (me->vptr != (QMsmVtbl const *)0)
-                      && (me->temp.fun != Q_STATE_CAST(0))
-                      && (me->state.fun == Q_STATE_CAST(0)));
-
-    /* execute the top-most initial transition, which must be taken */
-    Q_ALLEGE_ID(810, (*me->temp.fun)(me) == (QState)Q_RET_TRAN);
-
-    Q_SIG(me) = (QSignal)Q_ENTRY_SIG;
-    (void)(*me->temp.fun)(me);    /* enter the target */
-    me->state.fun = me->temp.fun; /* change the new active state */
-}
-
-/****************************************************************************/
-/**
-* \description
-* Dispatches an event for processing to a non-hierarchical ("flat") state
-* machine (FSM). The processing of an event represents one run-to-completion
-* (RTC) step.
-*
-* \arguments
-* \arg[in,out] \c me pointer (see \ref derivation)
-*/
-void QFsm_dispatch_(QFsm *const me) {
-
-    /* tran. taken? */
-    if ((*me->state.fun)(me) == (QState)Q_RET_TRAN) {
-        Q_SIG(me) = (QSignal)Q_EXIT_SIG;
-        (void)(*me->state.fun)(me);   /* exit the source */
-
-        Q_SIG(me) = (QSignal)Q_ENTRY_SIG;
-        (void)(*me->temp.fun)(me);    /* enter the target */
-        me->state.fun = me->temp.fun; /* record the new active state */
-    }
-}
-#endif /* Q_NFSM */

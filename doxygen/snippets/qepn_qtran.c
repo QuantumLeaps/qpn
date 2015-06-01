@@ -1,30 +1,45 @@
 /* HSM definition ----------------------------------------------------------*/
 QState Pelican_carsGreenNoPed(Pelican * const me) {
+    QState status_;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             BSP_showState(me->super.prio, "carsGreenNoPed");
-            return Q_HANDLED();
+            status_ = Q_HANDLED();
+            break;
         }
         case PEDS_WAITING_SIG: {
-            return Q_TRAN(&Pelican_carsGreenPedWait);
+            status_ = Q_TRAN(&Pelican_carsGreenPedWait);
+            break;
         }
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&Pelican_carsGreenInt);
+            status_ = Q_TRAN(&Pelican_carsGreenInt);
+            break;
+        }
+        default: {
+            status_ = Q_SUPER(&Pelican_carsGreen);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsGreen);
+    return status_;
 }
 /*..........................................................................*/
 QState Pelican_carsGreenPedWait(Pelican * const me) {
+    QState status_;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             BSP_showState(me->super.prio, "carsGreenPedWait");
-            return Q_HANDLED();
+            status_ = Q_HANDLED();
+            break;
         }
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&Pelican_carsYellow);
+            status_ = Q_TRAN(&Pelican_carsYellow);
+            break;
+        }
+        default: {
+            status_ = Q_SUPER(&Pelican_carsGreen);
+            break;
         }
     }
-    return Q_SUPER(&Pelican_carsGreen);
+    return status_;
 }
 

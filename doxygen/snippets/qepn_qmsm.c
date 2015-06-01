@@ -1,4 +1,4 @@
-typedef struct CalcTag {
+typedef struct {
     QMsm super;  /* inherits QMsm */
 
     double operand1;

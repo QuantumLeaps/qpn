@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="bsp.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="philo.c" />
+    <ClCompile Include="table.c" />
+    <ClCompile Include="..\..\..\source\qepn.c">
+      <Filter>QP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ports\win32-qv\qfn_win32.c">
+      <Filter>QP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ports\win32-qv\win32_gui.c">
+      <Filter>QP</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bsp.h" />
+    <ClInclude Include="dpp.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\..\ports\win32-qv\qfn_port.h">
+      <Filter>QP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ports\win32-qv\win32_gui.h">
+      <Filter>QP</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dpp-gui.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\hungry.bmp">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\eating.bmp">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\qp.ico">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\thinking.bmp">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\BTN_UP.bmp">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\BTN_DWN.bmp">
+      <Filter>Res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Res">
+      <UniqueIdentifier>{382909e6-fb4e-4829-941e-d3461d9ce146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QP">
+      <UniqueIdentifier>{cead428d-5be7-440c-b491-936bfc2a36a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

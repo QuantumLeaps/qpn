@@ -1,12 +1,11 @@
 /**
-* \file
-* \brief QK-nano implementation.
-* \ingroup qkn
-* \cond
+* @file
+* @brief QK-nano implementation.
+* @ingroup qkn
+* @cond
 ******************************************************************************
-* Product: QK-nano
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+* Last updated for version 5.4.0
+* Last updated on  2015-05-15
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -36,18 +35,16 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 ******************************************************************************
-* \endcond
+* @endcond
 */
-#include "qpn_port.h" /* QP-nano port */
-
-#ifndef qassert_h
-    #include "qassert.h" /* QP assertions */
-#endif /* qassert_h */
+#include "qpn_conf.h" /* QP-nano configuration file (from the application) */
+#include "qfn_port.h" /* QF-nano port from the port directory */
+#include "qassert.h"  /* embedded systems-friendly assertions */
 
 Q_DEFINE_THIS_MODULE("qkn")
 
-#ifndef QK_PREEMPTIVE
-    #error "The required header file qkn.h is not included in qpn_port.h"
+#if (!defined(QK_PREEMPTIVE)) || defined(QV_COOPERATIVE)
+    #error "The preemptive QK-nano kernel is not configured properly"
 #endif
 
 /* Global-scope objects *****************************************************/
@@ -67,19 +64,19 @@ static void initialize(void); /* prototype required by MISRA */
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Helper function to set the priorities of all the statically allocated
 * active objects in the system followed by executing the top-most initial
 * transtions in all active objects.
 *
-* \note
+* @note
 * The system initialization is specifically encapsulated in a function
 * to reduce stack use, because the temporary stack variables needed
 * for the initialization go out of scope for the rest of system execution.
 */
 static void initialize(void) {
     uint_fast8_t p;
-    QActive *a;
+    QMActive *a;
 
 #ifdef QK_INIT /* initialization of the QK-nano kernel defined? */
     QK_INIT(); /* initialize the QK-nano kernel */
@@ -90,7 +87,7 @@ static void initialize(void) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(110, a != (QActive *)0);
+        Q_ASSERT_ID(110, a != (QMActive *)0);
 
         a->prio = p; /* set the priority of the active object */
     }
@@ -112,12 +109,12 @@ static void initialize(void) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * QF_run() is typically called from your startup code after you initialize
 * the QF and start at least one active object with QActive_start().
 * This implementation of QF_run() is for the preemptive QK-nano kernel.
 *
-* \returns QF_run() typically does not return in embedded applications.
+* @returns QF_run() typically does not return in embedded applications.
 * However, when QP runs on top of an operating system,  QF_run() might
 * return and in this case the return represents the error code (0 for
 * success). Typically the value returned from QF_run() is subsequently
@@ -138,16 +135,16 @@ int_t QF_run(void) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * This function finds out the priority of the highest-priority active object
 * that (1) has events to process, and (2) has priority that is above the
 * current priority, and (3) has priority that is above the mutex ceiling,
 * if mutex is configured in the port.
 *
-* \returns the 1-based priority of the the active object, or zero if
+* @returns the 1-based priority of the the active object, or zero if
 * no eligible active object is ready to run.
 *
-* \attention QK_schedPrio_() must be always called with interrupts
+* @attention QK_schedPrio_() must be always called with interrupts
 * __disabled__  and returns with interrupts __disabled__.
 */
 uint_fast8_t QK_schedPrio_(void) {
@@ -191,22 +188,16 @@ uint_fast8_t QK_schedPrio_(void) {
 
 /****************************************************************************/
 /**
-* \arguments
-* \arg[in] \c p  priority of the next AO to schedule, typically obtained
+* @param[in]  p  priority of the next AO to schedule, typically obtained
 *                from QK_schedPrio_().
 *
-* \attention QK_sched_() must be always called with interrupts
+* @attention QK_sched_() must be always called with interrupts
 * __disabled__  and returns with interrupts __disabled__.
 *
-* \note The scheduler might enable interrupts internally, but always
+* @note The scheduler might enable interrupts internally, but always
 * returns with interrupts __disabled__.
 */
 void QK_sched_(uint_fast8_t p) {
-    static uint8_t const Q_ROM invPow2Lkup[] = {
-        (uint8_t)0xFF,
-        (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
-        (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
-    };
     uint_fast8_t pin = QK_currPrio_; /* save the initial priority */
 
     do {
@@ -228,7 +219,7 @@ void QK_sched_(uint_fast8_t p) {
         /* queue becoming empty? */
         if (a->nUsed == (uint_fast8_t)0) {
             /* clear the ready bit */
-            QF_readySet_ &= (uint_fast8_t)Q_ROM_BYTE(invPow2Lkup[p]);
+            QF_readySet_ &= (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[p]);
         }
         Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
 #if (Q_PARAM_SIZE != 0)
@@ -236,7 +227,7 @@ void QK_sched_(uint_fast8_t p) {
 #endif
         /* wrap around? */
         if (a->tail == (uint_fast8_t)0) {
-            a->tail = (uint_fast8_t)Q_ROM_BYTE(acb->end);
+            a->tail = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
         }
         --a->tail;
         QF_INT_ENABLE(); /* enable interrupts to launch a task */
@@ -290,27 +281,26 @@ void QK_sched_(uint_fast8_t p) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Lock the QK scheduler up to the given priority level.
 *
-* \arguments
-* \arg[in] \c prioCeiling  priority ceiling to lock the mutex
+* @param[in] prioCeiling  priority ceiling to lock the mutex
 *
-* \returns the previous value of the mutex priority ceiling
+* @returns the previous value of the mutex priority ceiling
 *
-* \note This function should be always paired with QK_mutexUnlock(). The
+* @note This function should be always paired with QK_mutexUnlock(). The
 * code between QK_mutexLock() and QK_mutexUnlock() should be kept to the
 * minimum.
 *
-* \usage
-* \include qkn_mux.c
+* @usage
+* @include qkn_mux.c
 */
 QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
     uint_fast8_t mutex;
     QF_INT_DISABLE();
-    mutex = QK_ceilingPrio_;  /* the original QK priority ceiling to return */
+    mutex = QK_ceilingPrio_; /* the original QK priority ceiling to return */
     if (QK_ceilingPrio_ < prioCeiling) {
-        QK_ceilingPrio_ = prioCeiling;     /* raise the QK priority ceiling */
+        QK_ceilingPrio_ = prioCeiling; /* raise the QK priority ceiling */
     }
     QF_INT_ENABLE();
     return mutex;
@@ -318,25 +308,24 @@ QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
 
 /****************************************************************************/
 /**
-* \description
+* @description
 * Unlock the QK scheduler up to the saved priority level.
 *
-* \arguments
-* \arg[in] \c mutex  previous priority level to unlock the mutex
+* @param[in]  mutex  previous priority level to unlock the mutex
 *
-* \description
-* \note This function should be always paired with QK_mutexLock(). The
+* @description
+* @note This function should be always paired with QK_mutexLock(). The
 * code between QK_mutexLock() and QK_mutexUnlock() should be kept to the
 * minimum.
 *
-* \usage
-* \include qkn_mux.c
+* @usage
+* @include qkn_mux.c
 */
 void QK_mutexUnlock(QMutex mutex) {
     QF_INT_DISABLE();
     if (QK_ceilingPrio_ > mutex) {
-        QK_ceilingPrio_ = mutex;  /* restore the saved priority ceiling */
-        mutex = QK_schedPrio_();  /* reuse 'mutex' to hold priority */
+        QK_ceilingPrio_ = mutex; /* restore the saved priority ceiling */
+        mutex = QK_schedPrio_(); /* reuse 'mutex' to hold priority */
         if (mutex != (uint_fast8_t)0) {
             QK_sched_(mutex);
         }

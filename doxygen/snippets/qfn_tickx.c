@@ -1,21 +1,14 @@
-/* the system time tick ISR for C8051 from Silicon Labs ....................*/
-#pragma vector=0x2B
-__interrupt void timer2_ISR(void) {
-   TMR2CN &= ~(1 << 7);                      /* Clear Timer2 interrupt flag */
-   QF_tickISR();                 /* handle all armed time events in QF-nano */
-}
-
-/* the system time tick ISR for MSP430 from TI (non-preemptive case) .......*/
+/* system clock tick ISR for MSP430 from TI (cooperative QV-nano kernel) */
 #pragma vector = TIMERA0_VECTOR
 __interrupt void timerA_ISR(void) {
     __low_power_mode_off_on_exit();
    QF_tickXISR(0U);  /* handle all armed time events at tick rate 0 */
 }
 
-/* the system time tick ISR for MSP430 from TI (preemptive case QK-nano) ...*/
+/* system clock tick ISR for MSP430 from TI (preemptive QK-nano kernel) */
 #pragma vector = TIMERA0_VECTOR
 __interrupt void timerA_ISR(void) {
-    QK_ISR_ENTRY();    /* inform QK-nano about entering the ISR */
-    QF_tickXISR(0U);   /* handle all armed time events  at tick rate 0 */
-    QK_ISR_EXIT();     /* inform QK-nano about exiting the ISR */
+    QK_ISR_ENTRY();  /* inform QK-nano about entering the ISR */
+    QF_tickXISR(0U); /* handle all armed time events  at tick rate 0 */
+    QK_ISR_EXIT();   /* inform QK-nano about exiting the ISR */
 }

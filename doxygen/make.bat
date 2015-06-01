@@ -1,14 +1,14 @@
 @echo off
 :: ==========================================================================
 :: Product: QP-nano script for generating Doxygen documentation
-:: Last Updated for Version: 5.3.0
-:: Date of the Last Update:  Apr 14, 2014
+:: Last Updated for Version: 5.4.0
+:: Date of the Last Update:  2015-05-18
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
 ::                    innovating embedded systems
 ::
-:: Copyright (C) 2002-2014 Quantum Leaps, LLC. All rights reserved.
+:: Copyright (C) Quantum Leaps, LLC. All rights reserved.
 ::
 :: This program is open source software: you can redistribute it and/or
 :: modify it under the terms of the GNU General Public License as published
@@ -38,24 +38,54 @@ echo usage:
 echo make
 echo make -CHM
 
-set VERSION=5.2.0
+set VERSION=5.4.0
 
+:: Generate Resource Standard Metrics for QP-nano ............................ 
 set DOXHOME="C:\tools\doxygen\bin"
 set RCMHOME="C:\tools\MSquared\M2 RSM"
 
-set RSM_OUTPUT=qpn_metrics.txt
+set RSM_OUTPUT=qpn_metrics.dox
 set RSM_INPUT=..\include\*.h ..\source\*.h ..\source\*.c
 
-echo /** \page metrics Code Metrics > %RSM_OUTPUT%
+echo /** @page metrics Code Metrics > %RSM_OUTPUT%
 echo.>> %RSM_OUTPUT%
-echo \code >> %RSM_OUTPUT%
+echo @code >> %RSM_OUTPUT%
 echo                    Standard Code Metrics for QP-nano %VERSION% >> %RSM_OUTPUT%
 
 %RCMHOME%\rsm.exe -fd -xNOCOMMAND -xNOCONFIG -u"File cfg rsm_qpn.cfg" %RSM_INPUT% >> %RSM_OUTPUT%
 
-echo \endcode >> %RSM_OUTPUT%
+echo @endcode >> %RSM_OUTPUT%
 echo */ >> %RSM_OUTPUT%
 
-%DOXHOME%\doxygen.exe Doxyfile%1
+:: Generate Doxygen Documentation ........................................... 
+if "%1"=="-CHM" (
+    echo Generating HTML...
+    ::( type Doxyfile & echo GENERATE_HTMLHELP=YES ) | %DOXHOME%\doxygen.exe -
+    %DOXHOME%\doxygen.exe Doxyfile-CHM
+    
+    echo Adding custom images...
+    xcopy preview.js tmp\
+    xcopy img tmp\img\
+    echo img\img.htm >> tmp\index.hhp
+
+    echo Generate CHM...
+    "C:\tools\HTML Help Workshop\hhc.exe" tmp\index.hhp
+    
+    echo Cleanup...
+    rmdir /S /Q  tmp
+    echo CHM file generated in ..\doc\
+
+) else (
+    echo Cleanup...
+    rmdir /S /Q  ..\..\doc\qpn
+    
+    echo Adding custom images...
+    xcopy preview.js ..\..\doc\qpn\
+    xcopy img ..\..\doc\qpn\img\
+    copy images\favicon.ico ..\..\doc\qpn
+
+    echo Generating HTML...
+    %DOXHOME%\doxygen.exe Doxyfile
+)
 
 endlocal

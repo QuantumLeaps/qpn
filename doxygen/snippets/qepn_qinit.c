@@ -26,7 +26,7 @@ QState Pelican_operational(Pelican * const me) { /* a regular state handler */
             break;
         }
         default: {
-            status_ = Q_SUPER(&QHsm_top);            /* the superstate */
+            status_ = Q_SUPER(&QHsm_top);           /* the superstate */
             break;
         }
     }

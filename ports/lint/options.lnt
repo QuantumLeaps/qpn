@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: PC-Lint 9.x option file for linting QP-nano
-// Last updated for version 5.3.0
-// Last updated on  2014-04-14
+// Last updated for version 5.4.0
+// Last updated on  2015-05-19
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
 //                    innovating embedded systems
 //
-// Copyright (C) 2002-2014 Quantum Leaps, LLC. All rights reserved.
+// Copyright (C) Quantum Leaps, LLC. All rights reserved.
 //
 // This program is open source software: you can redistribute it and/or
 // modify it under the terms of the GNU General Public License as published
@@ -48,7 +48,7 @@
 
 au-misra2.lnt     // MISRA-C:2004 options
 au-ds.lnt         // Dan Saks recommendations
-lib-qpn.lnt       // QP-nano options
+qpn.lnt           // QP-nano options
 -strong(AXJ)      // Strong type checking
 
 
@@ -56,17 +56,27 @@ lib-qpn.lnt       // QP-nano options
 -estring(961,     // MISRA04-19.7(adv) function-like macro
  QEP_TRIG_,
  QEP_ENTER_,
- QEP_EXIT_)
--efunc(661, QMsm_execTatbl_)  // Possible access of out-of-bounds pointer
--efunc(644, QMsm_enterHistory_) // Variable 'entry' may not be initialized
-
+ QEP_EXIT_,
+ QEP_ACT_PTR_INC_)
+-emacro(960,      // MISRA04-17.4(req) pointer increment
+ QEP_ACT_PTR_INC_)
+-efunc(661,       // Possible access of out-of-bounds pointer
+ QMsm_execTatbl_)
+-efunc(644,       // Variable 'entry' may not be initialized
+ QMsm_enterHistory_)
 // QF-nano
--emacro(960, QF_ROM_QUEUE_AT_)  // MISRA04-17.4(req) pointer arithmetic
--emacro(929,                  // MISRA04-11.4(adv) cast pointer to pointer
+-emacro(960,      // MISRA04-17.4(req) pointer arithmetic
+ QF_ROM_QUEUE_AT_)
+-emacro(929,      // MISRA04-11.4(adv) cast pointer to pointer
  QF_ROM_ACTIVE_GET_,
  QF_ROM_QUEUE_AT_)
--efunc(527, QF_run)           // MISRA04-14.17(req) Unreachable code
+-efunc(527,       // MISRA04-14.17(req) Unreachable code
+ QF_run)
 -esym(960, 8.8)   // MISRA04-8.8(req) Seems to be checked incorrectly...
 
-// QK-nano
-
+// QK-nano, QV-nano
+-esym(960,        // MISRA04-8.7, could define variable at block scope
+ QF_active,
+ QF_readySet_,
+ QF_log2Lkup,
+ QF_invPow2Lkup)

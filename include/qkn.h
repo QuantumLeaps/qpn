@@ -1,10 +1,9 @@
 /**
-* \file
-* \brief Public QK-nano interface.
-* \ingroup qkn
-* \cond
+* @file
+* @brief Public QK-nano interface.
+* @ingroup qkn
+* @cond
 ******************************************************************************
-* Product: QK-nano
 * Last updated for version 5.3.0
 * Last updated on  2014-04-14
 *
@@ -36,7 +35,7 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 ******************************************************************************
-* \endcond
+* @endcond
 */
 #ifndef qkn_h
 #define qkn_h
@@ -46,7 +45,7 @@
 * in qpn_port.h.
 */
 /**
-* \note If defined, this macro eliminates the code for the non-preemptive
+* @note If defined, this macro eliminates the code for the non-preemptive
 * scheduler provided in QF-nano. Instead, the fully preemptive QK-nano
 * real-time kernel is used.
 */
@@ -62,14 +61,14 @@ void QK_init(void);
 
 /*! Find the highest-priority task ready to run
 *
-* \note QK_schedPrio_() must be always called with interrupts locked
+* @note QK_schedPrio_() must be always called with interrupts locked
 * and returns with interrupts locked.
 */
 uint_fast8_t QK_schedPrio_(void);
 
 /*! QK-nano scheduler
 *
-* \note QK_sched_() must be always called with interrupts locked.
+* @note QK_sched_() must be always called with interrupts locked.
 * The scheduler might unlock the interrupts internally, but always
 * returns with interrupts locked.
 */
@@ -105,7 +104,7 @@ extern uint_fast8_t volatile QK_currPrio_;  /*!< current QK priority */
 * gives the application an opportunity to enter a power-saving CPU mode,
 * or perform some other idle processing.
 *
-* \note QK_onIdle() is invoked with interrupts unlocked and must also
+* @note QK_onIdle() is invoked with interrupts unlocked and must also
 * return with interrupts unlocked. This is in contrast to the callback
 * QF_onIdle(), which is used by the non-preemptive QF-nano scheduler.
 */
@@ -116,16 +115,16 @@ void QK_onIdle(void);
     /*! QK Mutex type.
     *
     * QMutex represents the priority-ceiling mutex available in QK.
-    * \sa QK_mutexLock()
-    * \sa QK_mutexUnlock()
+    * @sa QK_mutexLock()
+    * @sa QK_mutexUnlock()
     */
     typedef uint_fast8_t QMutex;
 
     /*! QK priority-ceiling mutex lock
     *
-    * Lock the QK scheduler up to the priority level \a prioCeiling.
+    * Lock the QK scheduler up to the priority level @a prioCeiling.
     *
-    * \note This function should be always paired with QK_mutexUnlock().
+    * @note This function should be always paired with QK_mutexUnlock().
     * The code between QK_mutexLock() and QK_mutexUnlock() should be kept
     * to the minimum.
     */
@@ -133,7 +132,7 @@ void QK_onIdle(void);
 
     /*! QK priority-ceiling mutex unlock
     *
-    * \note This function should be always paired with QK_mutexLock().
+    * @note This function should be always paired with QK_mutexLock().
     * The code between QK_mutexLock() and QK_mutexUnlock() should be kept
     * to the minimum.
     */

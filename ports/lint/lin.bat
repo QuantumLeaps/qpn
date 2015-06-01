@@ -1,14 +1,14 @@
 @echo off
 :: ===========================================================================
 :: Product: QP-nano build script for PC-Lint(TM), Standard C compiler
-:: Last Updated for Version: 5.1.0
-:: Date of the Last Update:  Oct 04, 2013
+:: Last Updated for Version: 5.4.0
+:: Date of the Last Update:  2015-03-13
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
 ::                    innovating embedded systems
 ::
-:: Copyright (C) 2002-2013 Quantum Leaps, LLC. All rights reserved.
+:: Copyright (C) Quantum Leaps, LLC. All rights reserved.
 ::
 :: This program is open source software: you can redistribute it and/or
 :: modify it under the terms of the GNU General Public License as published
@@ -26,12 +26,11 @@
 :: GNU General Public License for more details.
 ::
 :: You should have received a copy of the GNU General Public License
-:: along with this program. If not, see <http:::www.gnu.org/licenses/>.
+:: along with this program. If not, see <http://www.gnu.org/licenses/>.
 ::
 :: Contact information:
-:: Quantum Leaps Web sites: http://www.quantum-leaps.com
-::                          http://www.state-machine.com
-:: e-mail:                  info@quantum-leaps.com
+:: Web:   http://www.state-machine.com
+:: Email: info@state-machine.com
 :: ===========================================================================
 setlocal
 
@@ -40,12 +39,23 @@ setlocal
 
 :: NOTE: adjust to for your installation directory of PC-Lint
 :: 
-set PC_LINT_DIR=C:\tools\lint
+set PC_LINT=C:\tools\lint
 
-set LINTFLAGS=%QPN%\include\std.lnt options.lnt %1 %2 %3 %4
+if NOT exist "%PC_LINT%" (
+    @echo The PC_LINT toolset not found. Please adjust lin.bat 
+    goto end
+)
 
-:: QP-nano -------------------------------------------------------------------
-set QEP_DIR=..\..\..\source
-%PC_LINT_DIR%\lint-nt -os(lint_qpn.txt) %LINTFLAGS% ..\..\source\*.c
+
+set LINTFLAGS=..\..\include\std.lnt options.lnt %1 %2 %3 %4
+
+:: do the linting...
+%PC_LINT%\lint-nt -os(lint_qepn.txt) %LINTFLAGS% -iqkn ..\..\source\qepn.c
+
+%PC_LINT%\lint-nt -os(lint_qfn.txt)  %LINTFLAGS% -iqkn ..\..\source\qfn.c
+
+%PC_LINT%\lint-nt -os(lint_qkn.txt)  %LINTFLAGS% -iqkn ..\..\source\qkn.c
+
+%PC_LINT%\lint-nt -os(lint_qvn.txt)  %LINTFLAGS% -iqvn ..\..\source\qvn.c
 
 endlocal

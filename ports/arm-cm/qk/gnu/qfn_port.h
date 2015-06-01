@@ -1,13 +1,16 @@
-/*****************************************************************************
-* Product: QF-nano port to ARM Cortex-M, QK-nano kernel, GNU compiler
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+/**
+* @file
+* @brief QF-nano port ARM Cortex-M, QK-nano kernel, GNU-ARM toolset
+* @cond
+******************************************************************************
+* Last Updated for Version: 5.4.0
+* Date of the Last Update:  2015-04-08
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. state-machine.com.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -30,7 +33,9 @@
 * Contact information:
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
-*****************************************************************************/
+******************************************************************************
+* @endcond
+*/
 #ifndef qfn_port_h
 #define qfn_port_h
 
@@ -67,11 +72,8 @@
 /* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    do { \
-    if (QK_schedPrio_() != (uint8_t)0) { \
-        *Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U; \
-    } \
-} while (0)
+#define QK_ISR_EXIT()    \
+    (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U)
 
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
@@ -79,7 +81,6 @@
 #include "qepn.h"       /* QEP-nano platform-independent public interface */
 #include "qfn.h"        /* QF-nano platform-independent public interface */
 #include "qkn.h"        /* QK-nano platform-independent public interface */
-#include "qassert.h"    /* QP-nano assertions header file */
 
 /*****************************************************************************
 * NOTE2:

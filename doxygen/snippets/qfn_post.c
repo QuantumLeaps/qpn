@@ -1,34 +1,32 @@
-void BSP_onKeyboardInputISR(uint8_t key) {
-    switch (key) {
-        case '\33': {                                 /* ESC pressed? */
-            QACTIVE_POST_ISR((QActive *)&AO_Cruncher, TERMINATE_SIG, 0);
-            break;
-        }
-        case 'e': {                                     /* echo event */
-            QACTIVE_POST_ISR((QActive *)&AO_Cruncher, ECHO_SIG, 0);
-            break;
-        }
-    }
+/* event posting from the interrupt context (QACTIVE_POST_ISR()) ... */
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void TIMER0_A0_ISR(void) {
+    QK_ISR_ENTRY();  /* infrom QK-nano about entering an ISR */
+
+    QF_tickXISR(0U); /* process time events for rate 0 */
+
+    /* post TIME_TICK events to all interested active objects... */
+    QACTIVE_POST_ISR((QMActive *)&AO_Tunnel,  TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QMActive *)&AO_Ship,    TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QMActive *)&AO_Missile, TIME_TICK_SIG, 0U);
+
+    QK_ISR_EXIT();   /* infrom QK-nano about exiting an ISR */
 }
-/*....................................................................*/
-QState Cruncher_processing(Cruncher * const me) {
-    QState status;
+
+/* event posting from the task context (QACTIVE_POST())... */
+static QState Ship_flying(Ship * const me) {
+    QState status_;
     switch (Q_SIG(me)) {
-        case Q_ENTRY_SIG: {
-            QACTIVE_POST((QActive *)me, CRUNCH_SIG, 0);
-            me->sum = 0.0;
-            status = Q_HANDLED();
-            break;
-        }
-        case CRUNCH_SIG: {
+        case TIME_TICK_SIG: {
             . . .
-            if (i < 0x07000000) {
-                QACTIVE_POST((QActive *)me, CRUNCH_SIG, i);
-                status = Q_HANDLED();
+            if ((me->score % 10) == 0) { /* is the score "round"? */
+                QACTIVE_POST((QMActive *)&AO_Tunnel,
+                    SCORE_SIG, me->score); /* signal and parameter */
             }
+            status_ = QM_HANDLED();
             break;
         }
         . . .
     }
-    return status;
+    return status_;
 }

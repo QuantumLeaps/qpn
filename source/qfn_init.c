@@ -1,12 +1,11 @@
 /**
-* \file
-* \brief QF_init() implementation.
-* \ingroup qfn
-* \cond
+* @file
+* @brief QF_init() implementation.
+* @ingroup qfn
+* @cond
 ******************************************************************************
-* Product: QF-nano
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+* Last updated for version 5.4.0
+* Last updated on  2015-05-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -36,40 +35,36 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 ******************************************************************************
-* \endcond
+* @endcond
 */
-#include "qpn_port.h" /* QP-nano port */
-
-#ifndef qassert_h
-    #include "qassert.h" /* QP assertions */
-#endif /* qassert_h */
+#include "qpn_conf.h" /* QP-nano configuration file (from the application) */
+#include "qfn_port.h" /* QF-nano port from the port directory */
+#include "qassert.h"  /* embedded systems-friendly assertions */
 
 Q_DEFINE_THIS_MODULE("qfn_init")
 
 /****************************************************************************/
 /**
-* \description
-* This function initializes the internal QF-nano variables as well as all
-* registered active objects to zero. In the C startup code compliant with
-* the C Standard this clearing of internal variables is unnecessary, because
-* all static variables are supposed to be cleared in the startup code.
-* However in non-compliant implementations calling QF_init() can be very
-* handy.
+* @description
+* The function QF_init() initializes the internal QF-nano variables as well
+* as all registered active objects to zero. This function is needed only
+* if the C startup code fails to perform the standard data initialzation,
+* as required by the C Standard.
 *
-* \note Function QF_init() is defined in the separate module qf_init.c, which
-* needs to be included in the build only if the non-standard initialization
-* is required.
+* @note
+* In non-compliant implementations, the function QF_init() must be called
+* from main() before accessing any other QP-nano services.
 */
 void QF_init(void) {
-    QActive *a;
+    QMActive *a;
     uint_fast8_t p;
     uint_fast8_t n;
 
-#ifdef Q_TIMERSET
+#ifdef QF_TIMEEVT_USAGE
     for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
         QF_timerSetX_[n] = (uint_fast8_t)0;
     }
-#endif
+#endif /* QF_TIMEEVT_USAGE */
 
     QF_readySet_ = (uint_fast8_t)0;
 
@@ -91,15 +86,18 @@ void QF_init(void) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(110, a != (QActive *)0);
+        Q_ASSERT_ID(110, a != (QMActive *)0);
 
         a->head    = (uint_fast8_t)0;
         a->tail    = (uint_fast8_t)0;
         a->nUsed   = (uint_fast8_t)0;
 #if (QF_TIMEEVT_CTR_SIZE != 0)
         for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
-            a->tickCtr[n] = (QTimeEvtCtr)0;
+            a->tickCtr[n].nTicks   = (QTimeEvtCtr)0;
+#ifdef QF_TIMEEVT_PERIODIC
+            a->tickCtr[n].interval = (QTimeEvtCtr)0;
+#endif /* def QF_TIMEEVT_PERIODIC */
         }
-#endif
+#endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
     }
 }

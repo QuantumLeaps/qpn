@@ -1,5 +1,5 @@
 typedef struct  {
-    QHsm super;                    /* inherit QHsm */
+    QHsm super; /* inherit QHsm */
 
     QStateHandler hist_doorClosed; /* history of doorClosed */
 } ToastOven;
