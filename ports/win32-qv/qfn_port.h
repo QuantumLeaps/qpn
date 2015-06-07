@@ -3,8 +3,8 @@
 * @brief QF-nano emulation for Win32 with cooperative QV kernel
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-03
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -64,6 +64,52 @@ void QF_onClockTickISR(void);
 
 /* application-level callback to cleanup the application */
 void QF_onCleanup(void);
+
+/* special adaptations for Win32 GUI applications */
+#ifdef WIN32_GUI
+    /* replace main() with main_gui() as the entry point to a GUI app. */
+    #define main() main_gui()
+    int_t main_gui(); /* prototype of the GUI application entry point */
+#endif
+
+/* portable "safe" facilities from <stdio.h> and <string.h> ... */
+#ifdef _MSC_VER /* Microsoft C/C++ compiler? */
+
+#define SNPRINTF_S(buf_, len_, format_, ...) \
+    _snprintf_s(buf_, len_, _TRUNCATE, format_, ##__VA_ARGS__)
+
+#define STRNCPY_S(dest_, src_, len_) \
+    strncpy_s(dest_, len_, src_, _TRUNCATE)
+
+#define FOPEN_S(fp_, fName_, mode_) \
+    if (fopen_s(&fp_, fName_, mode_) != 0) { \
+        fp_ = (FILE *)0; \
+    } else (void)0
+
+#define CTIME_S(buf_, len_, time_) \
+    ctime_s((char *)buf_, len_, time_)
+
+#define SSCANF_S(buf_, format_, ...) \
+    sscanf_s(buf_, format_, ##__VA_ARGS__)
+
+#else /* other C/C++ compilers (GNU, etc.) */
+
+#define SNPRINTF_S(buf_, len_, format_, ...) \
+    snprintf(buf_, len_, format_, ##__VA_ARGS__)
+
+#define STRNCPY_S(dest_, src_, len_) strncpy(dest_, src_, len_)
+
+#define FOPEN_S(fp_, fName_, mode_) \
+    (fp_ = fopen(fName_, mode_))
+
+#define CTIME_S(buf_, len_, time_) \
+    strncpy((char *)buf_, ctime(time_), len_)
+
+#define SSCANF_S(buf_, format_, ...) \
+    sscanf(buf_, format_, ##__VA_ARGS__)
+
+#endif /* _MSC_VER */
+
 
 /* NOTES: ********************************************************************
 *

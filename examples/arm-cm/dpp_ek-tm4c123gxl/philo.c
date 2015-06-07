@@ -118,7 +118,7 @@ static QState Philo_thinking_e(Philo * const me) {
 }
 /* ${AOs::Philo::SM::thinking} */
 static QState Philo_thinking_x(Philo * const me) {
-    QActive_disarm(&me->super);
+    QActive_disarmX(&me->super, 0U);
     return QM_EXIT(&Philo_thinking_s);
 }
 /* ${AOs::Philo::SM::thinking} */
@@ -203,7 +203,7 @@ static QState Philo_eating_e(Philo * const me) {
 }
 /* ${AOs::Philo::SM::eating} */
 static QState Philo_eating_x(Philo * const me) {
-    QActive_disarm(&me->super);
+    QActive_disarmX(&me->super, 0U);
     QACTIVE_POST(QF_ACTIVE_CAST(&AO_Table), DONE_SIG, me->super.prio);
     return QM_EXIT(&Philo_eating_s);
 }

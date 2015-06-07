@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: Comp ("Orthogonal Component) example
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,7 +33,7 @@
 *****************************************************************************/
 #include "qpn.h"     /* QP-nano API */
 #include "bsp.h"     /* Board Support Package */
-#include "comp.h"    /* Application interface */
+#include "clock.h"   /* Application interface */
 
 /* Local-scope objects -----------------------------------------------------*/
 static QEvt l_clockQueue[3];

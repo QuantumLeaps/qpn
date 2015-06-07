@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Deferred Event" state pattern example
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-24
+* Last Updated for Version: 5.4.2
+* Date of the Last Update:  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -46,16 +46,16 @@ typedef struct TServerTag { /* Transaction Server active object */
 } TServer;
 
 /* hierarchical state machine ... */
-static QState TServer_initial    (TServer *me);
-static QState TServer_operational(TServer *me);
-static QState TServer_idle       (TServer *me);
-static QState TServer_receiving  (TServer *me);
-static QState TServer_authorizing(TServer *me);
-static QState TServer_final      (TServer *me);
+static QState TServer_initial    (TServer * const me);
+static QState TServer_operational(TServer * const me);
+static QState TServer_idle       (TServer * const me);
+static QState TServer_receiving  (TServer * const me);
+static QState TServer_authorizing(TServer * const me);
+static QState TServer_final      (TServer * const me);
 
 /* helper functions */
-void TServer_deferRequest(TServer *me);
-void TServer_recallRequest(TServer *me);
+void TServer_deferRequest(TServer * const me);
+void TServer_recallRequest(TServer * const me);
 
 /* Global objects ----------------------------------------------------------*/
 TServer AO_TServer; /* the single instance of the TServer active object */
@@ -65,85 +65,116 @@ void TServer_ctor(void) {
     QActive_ctor((QActive *)&AO_TServer, Q_STATE_CAST(&TServer_initial));
 }
 /* HSM definition ----------------------------------------------------------*/
-QState TServer_initial(TServer *me) {
-    me->deferredRequest.sig = 0; /* no deferred requests */
+QState TServer_initial(TServer * const me) {
+    me->deferredRequest.sig = 0U; /* no deferred requests */
     return Q_TRAN(&TServer_operational);
 }
 /*..........................................................................*/
-QState TServer_final(TServer *me) {
+QState TServer_final(TServer * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             QF_stop(); /* terminate the application */
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
     }
     return Q_SUPER(&QHsm_top);
 }
 /*..........................................................................*/
-QState TServer_operational(TServer *me) {
+QState TServer_operational(TServer * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_INIT_SIG: {
-            return Q_TRAN(&TServer_idle);
+            status = Q_TRAN(&TServer_idle);
+            break;
         }
         case NEW_REQUEST_SIG: {
             TServer_deferRequest(me); /* defer the request */
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case TERMINATE_SIG: {
-            return Q_TRAN(&TServer_final);
+            status = Q_TRAN(&TServer_final);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&QHsm_top);
+            break;
         }
     }
-    return Q_SUPER(&QHsm_top);
+    return status;
 }
 /*..........................................................................*/
-QState TServer_idle(TServer *me) {
+QState TServer_idle(TServer * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             printf("-> idle\n");
             TServer_recallRequest(me); /* recall the request */
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case NEW_REQUEST_SIG: {
             printf("Processing request #%d\n", (int)Q_PAR(me));
-            return Q_TRAN(&TServer_receiving);
+            status = Q_TRAN(&TServer_receiving);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&TServer_operational);
+            break;
         }
     }
-    return Q_SUPER(&TServer_operational);
+    return status;
 }
 /*..........................................................................*/
-QState TServer_receiving(TServer *me) {
+QState TServer_receiving(TServer * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             printf("-> receiving\n");
 
             /* one-shot timeout in 1 second */
             QActive_armX(&me->super, 0U, BSP_TICKS_PER_SEC, 0U);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&TServer_authorizing);
+            status = Q_TRAN(&TServer_authorizing);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&TServer_operational);
+            break;
         }
     }
-    return Q_SUPER(&TServer_operational);
+    return status;
 }
 /*..........................................................................*/
-QState TServer_authorizing(TServer *me) {
+QState TServer_authorizing(TServer * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             printf("-> authorizing\n");
             /* one-shot timeout in 2 seconds */
             QActive_armX(&me->super, 0U, 2U*BSP_TICKS_PER_SEC, 0U);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case Q_TIMEOUT_SIG: {
-            return Q_TRAN(&TServer_idle);
+            status = Q_TRAN(&TServer_idle);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&TServer_operational);
+            break;
         }
     }
-    return Q_SUPER(&TServer_operational);
+    return status;
 }
 
 /* helper functions ........................................................*/
-void TServer_deferRequest(TServer *me) {
+void TServer_deferRequest(TServer * const me) {
     if (me->deferredRequest.sig == 0U) { /* the request NOT deferred yet? */
         me->deferredRequest.sig = Q_SIG(me);
         me->deferredRequest.par = Q_PAR(me);
@@ -153,10 +184,10 @@ void TServer_deferRequest(TServer *me) {
         printf("!!! cannot defer request #%d\n", (int)Q_PAR(me));
     }
 }
-void TServer_recallRequest(TServer *me) {
+void TServer_recallRequest(TServer * const me) {
     if (me->deferredRequest.sig != 0U) { /* the request already deferred? */
         printf("recalling request #%d\n", (int)me->deferredRequest.par);
-        QActive_post((QActive *)me,
+        QACTIVE_POST(&me->super,
                      me->deferredRequest.sig, me->deferredRequest.par);
 
         me->deferredRequest.sig = 0U; /* request no longer deferred */

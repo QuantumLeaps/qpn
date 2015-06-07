@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: Orthogonal Component state pattern example
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,7 +33,7 @@
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"
-#include "comp.h"
+#include "clock.h"
 
 #include <stdio.h>
 
@@ -48,65 +48,78 @@ void Alarm_ctor(Alarm * const me) {
 }
 
 /* HSM definition ----------------------------------------------------------*/
-QState Alarm_initial(Alarm *me) {
-    me->alarm_time = 12*60;
+QState Alarm_initial(Alarm * const me) {
+    me->alarm_time = 12U*60U;
     return Q_TRAN(&Alarm_off);
 }
 /*..........................................................................*/
-QState Alarm_off(Alarm *me) {
+QState Alarm_off(Alarm * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             /* while in the off state, the alarm is kept in decimal format */
-            me->alarm_time = (me->alarm_time/60)*100 + me->alarm_time%60;
+            me->alarm_time = (me->alarm_time/60U)*100U + me->alarm_time%60U;
             printf("*** Alarm OFF %02d:%02d\n",
-                   me->alarm_time/100, me->alarm_time%100);
+                   me->alarm_time/100U, me->alarm_time%100);
             fflush(stdout);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case Q_EXIT_SIG: {
             /* upon exit, the alarm is converted to binary format */
-            me->alarm_time = (me->alarm_time/100)*60 + me->alarm_time%100;
-            return Q_HANDLED();
+            me->alarm_time = (me->alarm_time/100U)*60U + me->alarm_time%100U;
+            status = Q_HANDLED();
+            break;
         }
         case ALARM_ON_SIG: {
             /* alarm in range? */
-            if ((me->alarm_time / 100 < 24) && (me->alarm_time % 100 < 60)) {
-                return Q_TRAN(&Alarm_on);
+            if ((me->alarm_time / 100U < 24U) && (me->alarm_time % 100U < 60U)) {
+                status = Q_TRAN(&Alarm_on);
             }
             else { /* alarm out of range -- clear and don't transition */
-                me->alarm_time = 0;
+                me->alarm_time = 0U;
                 printf("*** Alarm reset %02d:%02d\n",
-                       me->alarm_time/100, me->alarm_time%100);
-                return Q_HANDLED();
+                       me->alarm_time/100U, me->alarm_time%100U);
+                status = Q_HANDLED();
             }
+            break;
         }
         case ALARM_SET_SIG: {
             /* while setting, the alarm is kept in decimal format */
-            me->alarm_time = (10 * me->alarm_time + Q_PAR(me)) % 10000;
+            me->alarm_time = (10U * me->alarm_time + Q_PAR(me)) % 10000U;
             printf("*** Alarm SET %02d:%02d\n",
-                   me->alarm_time/100, me->alarm_time%100);
+                   me->alarm_time/100U, me->alarm_time%100U);
             fflush(stdout);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
+        }
+        default: {
+            status = Q_IGNORED();
+            break;
         }
     }
-    return Q_IGNORED();
+    return status;
 }
 /*..........................................................................*/
-QState Alarm_on(Alarm *me) {
+QState Alarm_on(Alarm * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             printf("*** Alarm ON %02d:%02d\n",
                    me->alarm_time/60, me->alarm_time%60);
             fflush(stdout);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case ALARM_SET_SIG: {
             printf("*** Cannot set Alarm when it is ON\n");
             fflush(stdout);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case ALARM_OFF_SIG: {
-            return Q_TRAN(&Alarm_off);
+            status = Q_TRAN(&Alarm_off);
+            break;
         }
         case TIME_SIG: {
             if (Q_PAR(me) == me->alarm_time) {
@@ -114,8 +127,13 @@ QState Alarm_on(Alarm *me) {
                 /* asynchronously post the event to the container AO */
                 QACTIVE_POST((QMActive *)&AO_AlarmClock, ALARM_SIG, 0);
             }
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
+        }
+        default: {
+            status = Q_IGNORED();
+            break;
         }
     }
-    return Q_IGNORED();
+    return status;
 }

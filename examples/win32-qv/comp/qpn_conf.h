@@ -41,6 +41,5 @@
 
 #define QF_TIMEEVT_CTR_SIZE     2
 #define QF_TIMEEVT_PERIODIC
-#define QF_TIMEEVT_USAGE
 
 #endif  /* qpn_conf_h */

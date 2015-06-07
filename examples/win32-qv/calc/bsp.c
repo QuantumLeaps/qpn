@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: Board Support Package (BSP) for the Calculator example
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -92,7 +92,7 @@ double BSP_get_value(void) {
 /*..........................................................................*/
 int BSP_eval(double operand1, int oper, double operand2) {
     int ok = 1;
-    double result;
+    double result = 0.0;
     switch (oper) {
         case KEY_PLUS: {
             result = operand1 + operand2;

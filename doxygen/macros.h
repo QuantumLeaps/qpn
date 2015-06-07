@@ -57,3 +57,8 @@
 /*! @deprecated macro to  enable keeping track of QF time event usage;
 * instead use: #QF_TIMEEVT_USAGE */
 #define Q_TIMERSET
+
+/*! Macro that should be defined (typically on the compiler's command line)
+in the Win32-GUI applications that use the @ref win32-qv port.
+*/
+#define WIN32_GUI

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: BSP for QP-nano example, Win32
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -66,7 +66,7 @@ void QF_onClockTickISR(void) {
         uint8_t key = _getch();
         switch (key) {
             case '\33': {  /* ESC pressed? */
-                QActive_postISR((QMActive *)&AO_Sensor, TERMINATE_SIG, 0U);
+                QACTIVE_POST_ISR((QMActive *)&AO_Sensor, TERMINATE_SIG, 0U);
                 break;
             }
         }

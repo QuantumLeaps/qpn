@@ -7,15 +7,14 @@ a QP application.
 IAR Project File
 ----------------
 The IAR EWARM project file provided with this example uses relative paths
-to the QP/C framework location (includes, port, and libraries. These
-relative paths must be modified when the project is moved to different
-relative location.
+to the QP-nano framework location. These relative paths must be modified
+when the project is moved to different relative location.
 
 
 Stack Size and Heap Size
 ------------------------
 In this project, the size of the C stack and heap are determined in
-the linker script pelican-qk.icf (see the next section). 
+the linker script pelican-qv.icf (see the next section). 
 
 
 Linker Script

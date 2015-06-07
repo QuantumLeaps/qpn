@@ -12,7 +12,7 @@
     </initial>
     <state name="thinking">
      <entry>QActive_armX(&amp;me-&gt;super, 0U, THINK_TIME, 0U);</entry>
-     <exit>QActive_disarm(&amp;me-&gt;super);</exit>
+     <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
      <tran trig="Q_TIMEOUT" target="../../2">
       <tran_glyph conn="2,12,3,1,20,13,-3">
        <action box="0,-2,6,2"/>
@@ -48,7 +48,7 @@
     </state>
     <state name="eating">
      <entry>QActive_armX(&amp;me-&gt;super, 0U, EAT_TIME, 0U);</entry>
-     <exit>QActive_disarm(&amp;me-&gt;super);
+     <exit>QActive_disarmX(&amp;me-&gt;super, 0U);
 QACTIVE_POST(QF_ACTIVE_CAST(&amp;AO_Table), DONE_SIG, me-&gt;super.prio);</exit>
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,51,3,1,22,-41,-5">

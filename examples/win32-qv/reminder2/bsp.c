@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: BSP for QP-nano example, Win32
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -52,6 +52,12 @@ void BSP_init(void) {
 /*..........................................................................*/
 void BSP_echo(double sum) {
     printf("Echo! pi=%16.14f\n", 4.0*sum);
+    fflush(stdout);
+}
+/*..........................................................................*/
+void BSP_result(double sum) {
+    printf("pi=%16.14f\n", 4.0*sum);
+    fflush(stdout);
 }
 
 /*--------------------------------------------------------------------------*/

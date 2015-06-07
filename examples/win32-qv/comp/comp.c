@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Orthogonal Component" state pattern example
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,7 +33,7 @@
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"
-#include "comp.h"
+#include "clock.h"
 
 #include <stdio.h>
 
@@ -44,63 +44,77 @@ typedef struct AlarmClockTag { /* the AlarmClock active object */
     uint32_t current_time;     /* the current time in seconds */
 } AlarmClock;
 
-static QState AlarmClock_initial    (AlarmClock *me);
-static QState AlarmClock_timekeeping(AlarmClock *me);
-static QState AlarmClock_mode12hr   (AlarmClock *me);
-static QState AlarmClock_mode24hr   (AlarmClock *me);
-static QState AlarmClock_final      (AlarmClock *me);
+static QState AlarmClock_initial    (AlarmClock * const me);
+static QState AlarmClock_timekeeping(AlarmClock * const me);
+static QState AlarmClock_mode12hr   (AlarmClock * const me);
+static QState AlarmClock_mode24hr   (AlarmClock * const me);
+static QState AlarmClock_final      (AlarmClock * const me);
 
 /* Global objects ----------------------------------------------------------*/
 AlarmClock AO_AlarmClock; /* the single instance of the AlarmClock AO */
 
 /*..........................................................................*/
 void AlarmClock_ctor(void) {
-    QActive_ctor((QMActive *)&AO_AlarmClock,
+    QActive_ctor((QActive *)&AO_AlarmClock,
                  Q_STATE_CAST(&AlarmClock_initial));
     Alarm_ctor(&AO_AlarmClock.alarm); /* orthogonal component ctor */
 }
 /* HSM definition ----------------------------------------------------------*/
-QState AlarmClock_initial(AlarmClock *me) {
-    me->current_time = 0;
+QState AlarmClock_initial(AlarmClock * const me) {
+    me->current_time = 0U;
     /* take the initial transition in the alarm component... */
     QMSM_INIT(&me->alarm.super);
     return Q_TRAN(&AlarmClock_timekeeping);
 }
 /*..........................................................................*/
-QState AlarmClock_final(AlarmClock *me) {
+QState AlarmClock_final(AlarmClock * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
+            printf("-> final\n");
             QF_stop(); /* terminate the application */
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
+        }
+        default: {
+            status = Q_SUPER(&QHsm_top);
+            break;
         }
     }
-    return Q_SUPER(&QHsm_top);
+    return status;
 }
 /*..........................................................................*/
-QState AlarmClock_timekeeping(AlarmClock *me) {
+QState AlarmClock_timekeeping(AlarmClock * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             /* timeout in one second and every second */
             QActive_armX(&me->super, 0U,
                          BSP_TICKS_PER_SEC, BSP_TICKS_PER_SEC);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case Q_EXIT_SIG: {
-            QActive_disarm(&me->super);
-            return Q_HANDLED();
+            QActive_disarmX(&me->super, 0U);
+            status = Q_HANDLED();
+            break;
         }
         case Q_INIT_SIG: {
-            return Q_TRAN(&AlarmClock_mode24hr);
+            status = Q_TRAN(&AlarmClock_mode24hr);
+            break;
         }
         case CLOCK_12H_SIG: {
-            return Q_TRAN(&AlarmClock_mode12hr);
+            status = Q_TRAN(&AlarmClock_mode12hr);
+            break;
         }
         case CLOCK_24H_SIG: {
-            return Q_TRAN(&AlarmClock_mode24hr);
+            status = Q_TRAN(&AlarmClock_mode24hr);
+            break;
         }
         case ALARM_SIG: {
             printf("Wake up!!!\n");
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case ALARM_SET_SIG:
         case ALARM_ON_SIG:
@@ -109,20 +123,28 @@ QState AlarmClock_timekeeping(AlarmClock *me) {
             Q_SIG(&me->alarm) = Q_SIG(me);
             Q_PAR(&me->alarm) = Q_PAR(me);
             QMSM_DISPATCH(&me->alarm.super);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case TERMINATE_SIG: {
-            return Q_TRAN(&AlarmClock_final);
+            status = Q_TRAN(&AlarmClock_final);
+            break;
+        }
+        default: {
+            status = Q_SUPER(&QHsm_top);
+            break;
         }
     }
-    return Q_SUPER(&QHsm_top);
+    return status;
 }
 /*..........................................................................*/
-QState AlarmClock_mode24hr(AlarmClock *me) {
+QState AlarmClock_mode24hr(AlarmClock * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             printf("*** 24-hour mode\n");
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case Q_TIMEOUT_SIG: {
             /* roll over in 24-hr mode? */
@@ -130,39 +152,51 @@ QState AlarmClock_mode24hr(AlarmClock *me) {
                 me->current_time = 0U;
             }
             printf("%02d:%02d\n",
-                   me->current_time/60, me->current_time%60);
+                   me->current_time / 60U, me->current_time % 60U);
 
             /* synchronously dispatch to the orthogonal component */
             Q_SIG(&me->alarm) = TIME_SIG;
             Q_PAR(&me->alarm) = me->current_time;
             QMSM_DISPATCH(&me->alarm.super);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
+        }
+        default: {
+            status = Q_SUPER(&AlarmClock_timekeeping);
+            break;
         }
     }
-    return Q_SUPER(&AlarmClock_timekeeping);
+    return status;
 }
 /*..........................................................................*/
-QState AlarmClock_mode12hr(AlarmClock *me) {
+QState AlarmClock_mode12hr(AlarmClock * const me) {
+    QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             printf("*** 12-hour mode\n");
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
         }
         case Q_TIMEOUT_SIG: {
             uint32_t h; /* temporary variable to hold hour */
-            if (++me->current_time == 12*60) {  /* roll over in 12-hr mode? */
-                me->current_time = 0;
+            if (++me->current_time == 12U * 60U) {  /* roll over in 12-hr mode? */
+                me->current_time = 0U;
             }
-            h = me->current_time/60;
-            printf("%02d:%02d %s\n", (h % 12) ? (h % 12) : 12,
-                   me->current_time % 60, (h / 12) ? "PM" : "AM");
+            h = me->current_time / 60U;
+            printf("%02d:%02d %s\n", (h % 12U) ? (h % 12U) : 12U,
+                   me->current_time % 60U, (h / 12U) ? "PM" : "AM");
 
             /* synchronously dispatch to the orthogonal component */
             Q_SIG(&me->alarm) = TIME_SIG;
             Q_PAR(&me->alarm) = me->current_time;
             QMSM_DISPATCH(&me->alarm.super);
-            return Q_HANDLED();
+            status = Q_HANDLED();
+            break;
+        }
+        default: {
+            status = Q_SUPER(&AlarmClock_timekeeping);
+            break;
         }
     }
-    return Q_SUPER(&AlarmClock_timekeeping);
+    return status;
 }

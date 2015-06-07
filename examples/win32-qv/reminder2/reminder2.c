@@ -70,7 +70,7 @@ QState Cruncher_processing(Cruncher * const me) {
         case CRUNCH_SIG: {
             uint32_t i = Q_PAR(me);
             uint32_t n = i;
-            i += 100;
+            i += 100U;
             for (; n < i; ++n) {
                 if ((n & 1) == 0) {
                     me->sum += 1.0/(2*n + 1);
@@ -79,12 +79,12 @@ QState Cruncher_processing(Cruncher * const me) {
                     me->sum -= 1.0/(2*n + 1);
                 }
             }
-            if (i < 0x07000000) {
+            if (i < 0x07000000U) {
                 QACTIVE_POST(&me->super, CRUNCH_SIG, i);
                 status = Q_HANDLED();
             }
             else {
-                BSP_echo(me->sum);
+                BSP_result(me->sum);
                 status = Q_TRAN(&Cruncher_processing);
             }
             break;

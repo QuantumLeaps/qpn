@@ -43,7 +43,7 @@ All ports are located in sub-directories of the <span class="img folder">ports</
       </ul>  
     </ul>  
     <ul class="tag">
-      <li><span class="img folder">qk</span> &mdash; Port to the @ref comp_qv "cooperative QV kernel" 
+      <li><span class="img folder">qv</span> &mdash; Port to the @ref comp_qv "cooperative QV kernel" 
       </li>
       <ul class="tag">
         <li><span class="img folder">arm</span> &mdash; Port to ARM-KEIL toolset

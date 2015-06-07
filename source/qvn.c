@@ -86,7 +86,7 @@ int_t QF_run(void) {
     for (;;) {
         QF_INT_DISABLE();
         if (QF_readySet_ != (uint_fast8_t)0) {
-            QActiveCB const Q_ROM *acb;
+            QMActiveCB const Q_ROM *acb;
 
 #ifdef QF_LOG2
             p = QF_LOG2(QF_readySet_);

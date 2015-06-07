@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -420,7 +420,7 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
 void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks, QTimeEvtCtr const interval)
 #else
-void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
+void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks)
 #endif
 {

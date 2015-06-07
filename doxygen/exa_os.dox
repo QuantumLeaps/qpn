@@ -5,7 +5,7 @@
 
 */
 /*##########################################################################*/
-/*! @page exa_posix-qv POSIX (Linux, etc.)
+/*! @page exa_posix-qv POSIX-QV (Linux, etc.)
 
 @image html under_construction.jpg
 
@@ -29,6 +29,7 @@
 - <span class="img folder">game-gui</span> "Fly 'n' Shoot" game from Chapter 1 of PSiCC2
 - <span class="img folder">history</span> Transition-to-History design pattern (hand-coded)
 - <span class="img folder">history_qm</span> Transition-to-History with QM model
+- <span class="img folder">pelican</span> PEdestrian LIgth CONtrolled Crossing (command line)
 - <span class="img folder">qmsmtst</span> Test State Machine based on ::QMsm with QM model
 - <span class="img folder">qhsmtst</span> Test State Machine based on ::QHsm with QM model
 - <span class="img folder">reminder</span> Reminder design pattern from Chapter 5 of PSiCC2

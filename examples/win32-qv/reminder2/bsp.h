@@ -38,5 +38,6 @@
 
 void BSP_init(void);
 void BSP_echo(double sum);
+void BSP_result(double sum);
 
 #endif /* bsp_h */

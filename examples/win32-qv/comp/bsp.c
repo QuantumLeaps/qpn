@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: BSP for QP-nano Comp example, Win32
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last updated for version 5.4.2
+* Last updated on  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,7 +33,7 @@
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"
-#include "comp.h"
+#include "clock.h"
 
 #include <conio.h>
 #include <stdlib.h>
@@ -88,7 +88,7 @@ void QF_onClockTickISR(void) {
             case '8':   /* '8' */
             case '9': { /* '9' */
                 QACTIVE_POST_ISR((QMActive *)&AO_AlarmClock,
-                                  ALARM_SET_SIG, key - 1U);
+                                  ALARM_SET_SIG, key - '0');
                 break;
             }
             case '0': { /* '0' */

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
 * Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-21
+* Date of the Last Update:  2015-06-02
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -52,7 +52,12 @@ QActiveCB const Q_ROM QF_active[] = {
 Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 /*..........................................................................*/
-int_t main () {
+#ifdef WIN32
+int main_gui()
+#else
+int_t main()
+#endif
+{
     Tunnel_ctor();
     Ship_ctor();
     Missile_ctor(GAME_MISSILE_SPEED_X);

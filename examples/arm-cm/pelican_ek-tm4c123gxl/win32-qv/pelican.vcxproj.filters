@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="QP">
+      <UniqueIdentifier>{fb4d7069-573e-4e27-9f5c-298291a9c32e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bsp.c" />
+    <ClCompile Include="..\pelican.c" />
+    <ClCompile Include="..\main.c" />
+    <ClCompile Include="..\..\..\..\source\qepn.c">
+      <Filter>QP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ports\win32-qv\qfn_win32.c">
+      <Filter>QP</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\pelican.h" />
+    <ClInclude Include="..\bsp.h" />
+    <ClInclude Include="..\qpn_conf.h" />
+    <ClInclude Include="..\..\..\..\ports\win32-qv\qfn_port.h">
+      <Filter>QP</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

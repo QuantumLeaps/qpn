@@ -40,7 +40,8 @@ BSP_signalPeds(PEDS_DONT_WALK);</entry>
       </initial>
       <state name="carsGreen">
        <entry brief="CARS_GREEN">BSP_signalCars(CARS_GREEN);
-QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT);</entry>
+/* one-shot timeout in CARS_GREEN_MIN_TOUT ticks */
+QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT, 0U);</entry>
        <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
        <initial target="../1">
         <initial_glyph conn="7,31,5,1,17,3,-2">
@@ -93,7 +94,9 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_GREEN_MIN_TOUT);</entry>
       <state name="carsYellow">
        <entry brief="CARS_YELLOW">BSP_showState(&quot;carsYellow&quot;);
 BSP_signalCars(CARS_YELLOW);
-QActive_armX(&amp;me-&gt;super, 0U, CARS_YELLOW_TOUT);</entry>
+
+/* one-shot timeout in CARS_YELLOW_TOUT ticks */
+QActive_armX(&amp;me-&gt;super, 0U, CARS_YELLOW_TOUT, 0U);</entry>
        <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
        <tran trig="Q_TIMEOUT" target="../../../4">
         <tran_glyph conn="6,71,3,3,33">
@@ -119,7 +122,8 @@ QActive_armX(&amp;me-&gt;super, 0U, CARS_YELLOW_TOUT);</entry>
       <state name="pedsWalk">
        <entry brief="PEDS_WALK">BSP_showState(&quot;pedsWalk&quot;);
 BSP_signalPeds(PEDS_WALK);
-QActive_armX(&amp;me-&gt;super, 0U, PEDS_WALK_TOUT);</entry>
+/* one-shot timeout in PEDS_WALK_TOUT ticks */
+QActive_armX(&amp;me-&gt;super, 0U, PEDS_WALK_TOUT, 0U);</entry>
        <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
        <tran trig="Q_TIMEOUT" target="../../2">
         <tran_glyph conn="41,31,3,1,27,7,-2">
@@ -133,14 +137,14 @@ QActive_armX(&amp;me-&gt;super, 0U, PEDS_WALK_TOUT);</entry>
       </state>
       <state name="pedsFlash">
        <entry>BSP_showState(&quot;pedsFlash&quot;);
-QActive_armX(&amp;me-&gt;super, 0U, PEDS_FLASH_TOUT);
+/* periodic timeout in PEDS_FLASH_TOUT and every PEDS_FLASH_TOUT ticks */
+QActive_armX(&amp;me-&gt;super, 0U, PEDS_FLASH_TOUT, PEDS_FLASH_TOUT);
 me-&gt;flashCtr = (PEDS_FLASH_NUM * 2U) + 1U;</entry>
        <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
        <tran trig="Q_TIMEOUT">
         <choice>
          <guard>me-&gt;flashCtr != 0U</guard>
-         <action>--me-&gt;flashCtr;
-QActive_arm(&amp;me-&gt;super, PEDS_FLASH_TOUT);</action>
+         <action>--me-&gt;flashCtr;</action>
          <choice>
           <guard>(me-&gt;flashCtr &amp; 1U) == 0U</guard>
           <action>BSP_signalPeds(PEDS_DONT_WALK);</action>
@@ -184,12 +188,12 @@ QActive_arm(&amp;me-&gt;super, PEDS_FLASH_TOUT);</action>
     </state>
     <state name="offline">
      <entry>BSP_showState(&quot;offline&quot;);
-QActive_armX(&amp;me-&gt;super, 0U, OFF_FLASH_TOUT);
+/* periodic timeout in OFF_FLASH_TOUT and every OFF_FLASH_TOUT ticks */
+QActive_armX(&amp;me-&gt;super, 0U, OFF_FLASH_TOUT, OFF_FLASH_TOUT);
 me-&gt;flashCtr = 0U;</entry>
      <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
      <tran trig="Q_TIMEOUT">
-      <action>QActive_arm(&amp;me-&gt;super, OFF_FLASH_TOUT);
-me-&gt;flashCtr ^= 1U;</action>
+      <action>me-&gt;flashCtr ^= 1U;</action>
       <choice>
        <guard>(me-&gt;flashCtr &amp; 1U) == 0U</guard>
        <action brief="\CARS_RED; PEDS_DONT_WALK;">BSP_signalCars(CARS_RED);

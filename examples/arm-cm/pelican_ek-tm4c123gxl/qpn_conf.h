@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano configuration for the PELICAN example
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-18
+* Last Updated for Version: 5.4.2
+* Date of the Last Update:  2015-06-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -40,5 +40,6 @@
 #define Q_PARAM_SIZE            4
 #define QF_MAX_TICK_RATE        1
 #define QF_TIMEEVT_CTR_SIZE     2
+#define QF_TIMEEVT_PERIODIC
 
 #endif  /* qpn_conf_h */

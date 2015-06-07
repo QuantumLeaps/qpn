@@ -245,7 +245,7 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
 void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks, QTimeEvtCtr const interval)
 #else
-void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
+void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks)
 #endif
 {
@@ -263,7 +263,7 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 }
 
 /****************************************************************************/
-void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
+void QActive_disarmX(QMActive * const me, uint_fast8_t const tickRate) {
     QF_INT_DISABLE();
     me->tickCtr[tickRate].nTicks = (QTimeEvtCtr)0;
 #ifdef QF_TIMEEVT_PERIODIC
