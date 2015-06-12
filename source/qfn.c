@@ -193,7 +193,7 @@ bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
                     enum_t const sig)
 #endif
 {
-    QActiveCB const Q_ROM *acb = &QF_active[me->prio];
+    QMActiveCB const Q_ROM *acb = &QF_active[me->prio];
     uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
 
     QF_INT_DISABLE();
@@ -280,7 +280,7 @@ bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
     QF_ISR_STAT_TYPE stat;
 #endif
 #endif
-    QActiveCB const Q_ROM *acb = &QF_active[me->prio];
+    QMActiveCB const Q_ROM *acb = &QF_active[me->prio];
     uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
 
 #ifdef QF_ISR_NEST

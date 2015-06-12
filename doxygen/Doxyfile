@@ -763,19 +763,19 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT = \
-    modules.dox \
-    about.dox \
-    design.dox \
-    exa.dox \
-    exa_apps.dox \
-    exa_native.dox \
-    exa_os.dox \
-    ports.dox \
-    ports_native.dox \
-    ports_os.dox \
-    history.dox \
+    modules.cc \
+    about.cc \
+    design.cc \
+    exa.cc \
+    exa_apps.cc \
+    exa_native.cc \
+    exa_os.cc \
+    ports.cc \
+    ports_native.cc \
+    ports_os.cc \
+    history.cc \
     macros.h \
-    metrics.dox \
+    metrics.cc \
     ../include \
     ../source \
     ../ports/lint \
@@ -801,7 +801,7 @@ INPUT_ENCODING = UTF-8
 # *.qsf, *.as and *.js.
 
 FILE_PATTERNS = \
-    *.dox \
+    *.cc \
     *.h \
     *.c \
     *.cpp \

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32 with cooperative QV kernel
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -323,7 +323,7 @@ int_t QF_run(void) {
     while (l_isRunning) {
         QF_INT_DISABLE();
         if (QF_readySet_ != (uint_fast8_t)0) {
-            QActiveCB const Q_ROM *acb;
+            QMActiveCB const Q_ROM *acb;
 
 #if (QF_MAX_ACTIVE > 4)
             /* hi nibble non-zero? */

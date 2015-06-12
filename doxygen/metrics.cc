@@ -9,7 +9,7 @@
   License Type: Windows Single User License
   Licensed To : Quantum Leaps, LLC
   License No. : WS2975                          License Date: Dec 15, 2013
-  Build Date  : Sep  2 2009                         Run Date: Jun 07, 2015
+  Build Date  : Sep  2 2009                         Run Date: Jun 12, 2015
   (C)1996-2009 M Squared Technologies LLC
   ________________________________________________________________________
 
@@ -61,7 +61,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 77       eLOC 76       lLOC 2        Comment 119      Lines      223
+  LOC 78       eLOC 77       lLOC 3        Comment 122      Lines      228
   ________________________________________________________________________
   End of File: ..\include\qpn.h
 
@@ -455,9 +455,9 @@
 
                          ~~ Total Project Summary ~~
 
-  LOC 1254     eLOC 1117     lLOC 490      Comment 2143     Lines     3586
+  LOC 1255     eLOC 1118     lLOC 491      Comment 2146     Lines     3591
   Average per File, metric/11 files
-  LOC 114      eLOC 101      lLOC 44       Comment 194      Lines      326
+  LOC 114      eLOC 101      lLOC 44       Comment 195      Lines      326
 
   ------------------------------------------------------------------------
 

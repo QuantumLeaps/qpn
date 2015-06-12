@@ -3,8 +3,8 @@
 * @brief QP-nano public interface including backwards-compatibility layer
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -79,6 +79,11 @@ extern "C" {
 
 /****************************************************************************/
 #if (QP_API_VERSION < 540)
+
+/*! @deprecated QActive Control Block;
+* instead use: ::QMActiveCB.
+*/
+typedef QMActiveCB QActiveCB;
 
 #if (!defined(Q_NFSM)) && (!defined(Q_NHSM))
 

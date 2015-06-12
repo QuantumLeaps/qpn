@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.4.2
+* Last updated on  2015-06-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -421,7 +421,7 @@ void QF_stop(void);
 * QF port. In most cases, QF_onStartup() is called from QF_run(), right
 * before starting any multitasking kernel or the background loop.
 *
-* @sa QF initialization example for ::QActiveCB.
+* @sa QF initialization example for ::QMActiveCB.
 */
 void QF_onStartup(void);
 
@@ -430,10 +430,10 @@ int_t QF_run(void);
 
 
 /****************************************************************************/
-/*! QActive Control Block
+/*! QMActive Control Block
 *
-* QActiveCB represents the read-only information that the QF-nano needs to
-* manage the active object. QActiveCB objects are grouped in the array
+* QMActiveCB represents the read-only information that the QF-nano needs to
+* manage the active object. QMActiveCB objects are grouped in the array
 * QF_active[], which typically can be placed in ROM.
 *
 * @usage
@@ -445,11 +445,11 @@ typedef struct {
     QMActive *act;   /*!< pointer to the active object structure */
     QEvt     *queue; /*!< pointer to the event queue buffer */
     uint8_t   qlen;  /*!< the length of the queue ring buffer */
-} QActiveCB;
+} QMActiveCB;
 
 /** active object control blocks */
 /*lint -save -e960    MISRA-C:2004 8.12, extern array declared without size */
-extern QActiveCB const Q_ROM QF_active[];
+extern QMActiveCB const Q_ROM QF_active[];
 /*lint -restore */
 
 /*! Ready set of QF-nano. */

@@ -4,8 +4,8 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-15
+* Last updated for version 5.4.2
+* Last updated on  2015-06-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------

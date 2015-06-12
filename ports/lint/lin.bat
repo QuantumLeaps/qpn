@@ -1,8 +1,8 @@
 @echo off
 :: ===========================================================================
 :: Product: QP-nano build script for PC-Lint(TM), Standard C compiler
-:: Last Updated for Version: 5.4.0
-:: Date of the Last Update:  2015-03-13
+:: Last Updated for Version: 5.4.3
+:: Date of the Last Update:  2015-06-12
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
@@ -50,12 +50,8 @@ if NOT exist "%PC_LINT%" (
 set LINTFLAGS=..\..\include\std.lnt options.lnt %1 %2 %3 %4
 
 :: do the linting...
-%PC_LINT%\lint-nt -os(lint_qepn.txt) %LINTFLAGS% -iqkn ..\..\source\qepn.c
+%PC_LINT%\lint-nt -os(lint_qpn.log) %LINTFLAGS% -iqkn ..\..\source\qepn.c ..\..\source\qfn.c ..\..\source\qkn.c
 
-%PC_LINT%\lint-nt -os(lint_qfn.txt)  %LINTFLAGS% -iqkn ..\..\source\qfn.c
-
-%PC_LINT%\lint-nt -os(lint_qkn.txt)  %LINTFLAGS% -iqkn ..\..\source\qkn.c
-
-%PC_LINT%\lint-nt -os(lint_qvn.txt)  %LINTFLAGS% -iqvn ..\..\source\qvn.c
+%PC_LINT%\lint-nt -os(lint_qvn.log)  %LINTFLAGS% -iqvn ..\..\source\qvn.c
 
 endlocal

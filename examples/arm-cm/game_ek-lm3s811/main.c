@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-06-02
+* Last updated for version 5.4.2
+* Last updated on  2015-06-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -41,7 +41,7 @@ static QEvt l_shipQueue[3];
 static QEvt l_missileQueue[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM QF_active[] = {
+QMActiveCB const Q_ROM QF_active[] = {
     { (QMActive *)0,           (QEvt *)0,      0U                    },
     { (QMActive *)&AO_Tunnel,  l_tunnelQueue,  Q_DIM(l_tunnelQueue)  },
     { (QMActive *)&AO_Ship,    l_shipQueue,    Q_DIM(l_shipQueue)    },

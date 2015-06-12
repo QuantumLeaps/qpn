@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP example
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-06-02
+* Last updated for version 5.4.2
+* Last updated on  2015-06-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -40,7 +40,7 @@ static QEvt l_philoQueue[N_PHILO][N_PHILO];
 static QEvt l_tableQueue[2];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QActiveCB const Q_ROM QF_active[] = {
+QMActiveCB const Q_ROM QF_active[] = {
     { (QMActive *)0,           (QEvt *)0,        0U                      },
     { (QMActive *)&AO_Philo0,  l_philoQueue[0],  Q_DIM(l_philoQueue[0])  },
     { (QMActive *)&AO_Philo1,  l_philoQueue[1],  Q_DIM(l_philoQueue[1])  },

@@ -2,7 +2,7 @@
 :: ==========================================================================
 :: Product: QP-nano script for generating Doxygen documentation
 :: Last Updated for Version: 5.4.2
-:: Date of the Last Update:  2015-06-03
+:: Date of the Last Update:  2015-06-08
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
@@ -44,7 +44,7 @@ set VERSION=5.4.2
 set DOXHOME="C:\tools\doxygen\bin"
 set RCMHOME="C:\tools\MSquared\M2 RSM"
 
-set RSM_OUTPUT=qpn_metrics.dox
+set RSM_OUTPUT=metrics.cc
 set RSM_INPUT=..\include\*.h ..\source\*.h ..\source\*.c
 
 echo /** @page metrics Code Metrics > %RSM_OUTPUT%

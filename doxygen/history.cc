@@ -9,9 +9,9 @@ This release makes it possible to use exactly the **same** application code, mai
 
 The support for "dual targeting" in this QP-nano release works both for Win32 console and Win32 GUI applications. The Win32-GUI support enables developers to easily emulate the front-panels of the embedded devices, with LCD-screens (graphical and segmented), LEDs, buttons, switches, sliders, etc.
 
-Changes in detal:
+Changes in detail:
 
-1. Modified the QP-nano port to Windows (@ref win32-qv) so that it supports both Win32 console and Win32-GUI applications. The newly introduced pre-processor #WIN32_GUI macro is now requierd to use the Win32-GUI facilities.
+1. Modified the QP-nano port to Windows (@ref win32-qv) so that it supports both Win32 console and Win32-GUI applications. The newly introduced pre-processor #WIN32_GUI macro is now required to use the Win32-GUI facilities.
 
 2. Added portable "safe" macros from `<stdio.h>` and `<string.h>` to the QP-nano port to Windows. These macros encapsulate the differences between Microsoft Visual C++ and other compilers (such as MinGW).
 
@@ -25,7 +25,9 @@ Changes in detal:
 
 7. Moved several examples from the `examples/win32/` and examples/win32-qv directories to `examples/arm-cm/` directory with native embedded examples for ARM Cortex-M. This co-location of the Win32 emulation with the embedded code running on the actual board demonstrates better the "dual targeting" development approach.
 
-8. Updated all Windows examples to the latest QP API by compiling the code with the macro #QP_API_VERSION set to 9999 (latest API without backwards compatibility)
+8. Made the ::QActiveCB (::QActive Control Block) to the QP-nano backwards-compatibility layer as deprecated. Instead, the newer QP-nano applications should use ::QMActiveCB. 
+
+9. Updated all Windows examples to the latest QP API by compiling the code with the macro #QP_API_VERSION set to 9999 (latest API without backwards compatibility)
 
 
 ------------------------------------------------------------------------------
