@@ -5,14 +5,14 @@
 * @cond
 ******************************************************************************
 * Product: QEP-nano
-* Last updated for version 5.4.2
-* Last updated on  2015-06-07
+* Last updated for version 5.5.1
+* Last updated on  2015-10-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -33,8 +33,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -56,13 +56,13 @@
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      542
+#define QP_VERSION      551
 
 /*! The current QP version string */
-#define QP_VERSION_STR  "5.4.2"
+#define QP_VERSION_STR  "5.5.1"
 
-/*! Tamperproof current QP release (5.4.2) and date (15-06-07) */
-#define QP_RELEASE      0xA63B2FF1U
+/*! Tamperproof current QP release (5.5.1) and date (15-10-05) */
+#define QP_RELEASE      0xA5FE7508U
 
 /****************************************************************************/
 /* typedefs for basic numerical types; MISRA-C 2004 rule 6.3(req). */
@@ -281,6 +281,12 @@ void QMsm_ctor(QMsm * const me, QStateHandler initial);
 /*! Obtain the current active state from a MSM (read only). */
 #define QMsm_stateObj(me_) (Q_MSM_UPCAST(me_)->state.obj)
 
+#ifndef Q_NMSM_HIST
+/*! Obtain the current active child state of a given parent (read only) */
+QMState const *QMsm_childStateObj(QMsm const * const me,
+                                  QMState const * const parent);
+#endif /* Q_NMSM_HIST */
+
 /*! Implementation of the top-most initial transition in QMsm. */
 void QMsm_init_(QMsm * const me);
 
@@ -325,6 +331,10 @@ void QHsm_ctor(QHsm * const me, QStateHandler initial);
 * @returns the current active state of a HSM
 */
 #define QHsm_state(me_) (Q_STATE_CAST(Q_MSM_UPCAST(me_)->state.fun))
+
+/*! Obtain the current active child state of a given parent (read only) */
+QStateHandler QHsm_childState(QHsm * const me,
+                              QStateHandler const parent);
 
 /*! Implementation of the top-most initial transition in QHsm. */
 void QHsm_init_(QHsm * const me);

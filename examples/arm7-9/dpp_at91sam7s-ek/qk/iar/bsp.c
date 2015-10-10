@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: DPP on AT91SAM7S-EK board, preemptive QK kernel
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-31
+* Last Updated for Version: 5.5.1
+* Date of the Last Update:  2015-10-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
 #include "dpp.h"
@@ -236,9 +236,19 @@ void QK_onIdle(void) {
 #endif
 }
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+void Q_onAssert(char const Q_ROM * const Q_ROM_VAR module, int loc) {
     QF_INT_DISABLE(); /* disable all interrupts */
-    for (;;) {        /* hang here in the for-ever loop */
+    /*
+    * NOTE: add here your application-specific error handling
+    */
+    (void)module;
+    (void)loc;
+
+    /* trip the Watchdog to reset the system */
+    AT91C_BASE_WDTC->WDTC_WDCR = (0xA5U << 24) | AT91C_WDTC_WDRSTT;
+
+    /* hang in here until the reset occurrs */
+    for (;;) {
     }
 }
 

@@ -4,8 +4,8 @@
 * @ingroup qep
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.5.1
+* Last updated on  2015-10-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -310,6 +310,46 @@ static QState QMsm_enterHistory_(QMsm * const me,
         r = (QState)Q_RET_NULL;
     }
     return r;
+}
+
+/****************************************************************************/
+/**
+* @description
+* Finds the child state of the given @c parent, such that this child state
+* is an ancestor of the currently active state. The main purpose of this
+* function is to support **shallow history** transitions in state machines
+* derived from QMsm.
+*
+* @param[in] me     pointer (see @ref oop)
+* @param[in] parent pointer to the state-handler object
+*
+* @returns the child of a given @c parent state, which is an ancestor of
+* the currently active state
+*/
+QMState const *QMsm_childStateObj(QMsm const * const me,
+                                  QMState const * const parent)
+{
+    QMState const *child = me->state.obj;
+    bool isConfirmed = false; /* start with the child not confirmed */
+    QMState const *s;
+
+    for (s = me->state.obj->superstate;
+         s != (QMState const *)0;
+         s = s->superstate)
+    {
+        if (s == parent) {
+            isConfirmed = true; /* child is confirmed */
+            break;
+        }
+        else {
+            child = s;
+        }
+    }
+
+    /** @post the child must be confirmed */
+    Q_ENSURE_ID(610, isConfirmed != false);
+
+    return child; /* return the child */
 }
 #endif /* Q_NMSM_HIST */
 #endif /* Q_NMSM */
@@ -693,5 +733,52 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
         }
     }
     return ip;
+}
+
+/****************************************************************************/
+/**
+* @description
+* Finds the child state of the given @c parent, such that this child state
+* is an ancestor of the currently active state. The main purpose of this
+* function is to support **shallow history** transitions in state machines
+* derived from QHsm.
+*
+* @param[in] me     pointer (see @ref oop)
+* @param[in] parent pointer to the state-handler function
+*
+* @returns the child of a given @c parent state, which is an ancestor of
+* the currently active state
+*
+* @note this function is designed to be called during state transitions,
+* so it does not necessarily start in a stable state configuration.
+* However, the function establishes stable state configuration upon exit.
+*/
+QStateHandler QHsm_childState(QHsm * const me,
+                              QStateHandler const parent)
+{
+    QStateHandler child = me->state.fun; /* start with the current state */
+    bool isConfirmed = false; /* start with the child not confirmed */
+    QState r;
+
+    /* establish stable state configuration */
+    me->temp.fun = me->state.fun;
+    do {
+        /* is this the parent of the current child? */
+        if (me->temp.fun == parent) {
+            isConfirmed = true; /* child is confirmed */
+            r = (QState)Q_RET_IGNORED; /* break out of the loop */
+        }
+        else {
+            child = me->temp.fun;
+            Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
+            r = (*me->temp.fun)(me); /* find the superstate */
+        }
+    } while (r != (QState)Q_RET_IGNORED); /* QHsm_top() state not reached */
+    me->temp.fun = me->state.fun; /* establish stable state configuration */
+
+    /** @post the child must be confirmed */
+    Q_ENSURE_ID(910, isConfirmed != false);
+
+    return child; /* return the child */
 }
 #endif /* Q_NHSM */

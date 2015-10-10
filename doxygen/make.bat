@@ -1,8 +1,8 @@
 @echo off
 :: ==========================================================================
 :: Product: QP-nano script for generating Doxygen documentation
-:: Last Updated for Version: 5.4.2
-:: Date of the Last Update:  2015-06-08
+:: Last Updated for Version: 5.5.1
+:: Date of the Last Update:  2015-10-06
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
@@ -29,8 +29,8 @@
 :: along with this program. If not, see <http://www.gnu.org/licenses/>.
 ::
 :: Contact information:
-:: Web:   http://www.state-machine.com
-:: Email: info@state-machine.com
+:: http://www.state-machine.com
+:: mailto:info@state-machine.com
 :: ==========================================================================
 setlocal
 
@@ -38,7 +38,7 @@ echo usage:
 echo make
 echo make -CHM
 
-set VERSION=5.4.2
+set VERSION=5.5.1
 
 :: Generate Resource Standard Metrics for QP-nano ............................ 
 set DOXHOME="C:\tools\doxygen\bin"
@@ -73,16 +73,17 @@ if "%1"=="-CHM" (
     
     echo Cleanup...
     rmdir /S /Q  tmp
-    echo CHM file generated in ..\doc\
+    echo CHM file generated in ..\..\html\qpn\
+
 
 ) else (
     echo Cleanup...
-    rmdir /S /Q  ..\..\doc\qpn
+    rmdir /S /Q  ..\..\html\qpn
     
     echo Adding custom images...
-    xcopy preview.js ..\..\doc\qpn\
-    xcopy img ..\..\doc\qpn\img\
-    copy images\favicon.ico ..\..\doc\qpn
+    xcopy preview.js ..\..\html\qpn\
+    xcopy img ..\..\html\qpn\img\
+    copy images\favicon.ico ..\..\html\qpn
 
     echo Generating HTML...
     %DOXHOME%\doxygen.exe Doxyfile

@@ -1,6 +1,29 @@
 /**
 @page history Revision History
 
+@section qpn_5_5_1 Version 5.5.1, 2015-10-06
+
+This release adds state machine operations for implementing the shallow history mechanism. The operations are called QMsm_childStateObj() and QHsm_childState(), for QMsm and QHsm classes, respectively, because they compute a child state of a given parent, such that the child belongs to the same state hierarchy as the current state.
+
+This release also improves the AAPCS compliance of the ARM Cortex-M port to the QK preemptive kernel. Specifically, the PendSV handler in assembly did not always maintain the 8-byte stack alignment, which is required by AAPCS. This version corrects the stack misalignment in the qk_port.s files for all supported ARM compilers (ARM-Keil, GNU, IAR, and TI CCS). All these ports should also be ready for ARM Cortex-M7.
+
+Also, this release adds support for the TI CCS ARM compiler. Specifically, a new ARM Cortex-M ports have been added (in directories `qpn\ports\arm-cm\qk\ti\` and `qpn\ports\arm-cm\qk\ti\`) and TI CCS example projects have been provided (in directories `qpn\examples\arm-cm\dpp_ek-tm4c123gxl\qk\ti\` and `qpn\examples\arm-cm\dpp_ek-tm4c123gxl\qv\ti\`).
+
+
+Changes in detail:
+
+1. Added the new prototypes QMsm_childStateObj() and QHsm_childState() to qepn.h
+
+2. Added implementation of QMsm_childStateObj() and QHsm_childState() to qepn.c
+
+3. Modified the qk_port.s assembly implementation for all supported ARM Cortex-M toolsets (ARM-Keil, GNU, IAR, and TI CCS)
+
+4. Added QP-nano Cortex-M port to TI CCS.
+
+5. Added CCS example projects in `qpn\ports\arm-cm\qk\ti\` and `qpn\ports\arm-cm\qk\ti\
+
+
+------------------------------------------------------------------------------
 @section qpn_5_4_2 Version 5.4.2, 2015-06-07
 
 The main focus of this release is to improve the support for "dual targeting" of QP-nano applications, which is developing of deeply embedded code as much as possible on the desktop OS, such as Windows. Experience shows that "dual targeting" dramatically improves productivity of embedded systems developers, perhaps more than any other technique.

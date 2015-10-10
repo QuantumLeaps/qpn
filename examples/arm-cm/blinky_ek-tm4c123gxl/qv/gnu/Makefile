@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: Makefile for QP-nano, Blinky on EK-TM4C123GXL, QV kernel, GNU-ARM
-# Last Updated for Version: 5.4.0
-# Date of the Last Update:  2015-05-21
+# Last Updated for Version: 5.5.1
+# Date of the Last Update:  2015-10-05
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -170,11 +170,11 @@ ASFLAGS = $(ARM_CPU) $(ASM_FPU)
 
 CFLAGS = $(ARM_CPU) $(ARM_FPU) $(FLOAT_ABI) -mthumb -Wall \
 	-ffunction-sections -fdata-sections \
-	-Os -fno-strict-aliasing $(INCLUDES) $(DEFINES) -DNDEBUG
+	-O1 -fno-strict-aliasing $(INCLUDES) $(DEFINES) -DNDEBUG
 
 CPPFLAGS = $(ARM_CPU) $(ARM_FPU) $(FLOAT_ABI) -mthumb -Wall \
 	-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions \
-	-Os -fno-strict-aliasing $(INCLUDES) $(DEFINES) -DNDEBUG
+	-O1 -fno-strict-aliasing $(INCLUDES) $(DEFINES) -DNDEBUG
 
 else # default Debug configuration ...........................................
 

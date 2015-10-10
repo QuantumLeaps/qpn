@@ -38,7 +38,7 @@
 #include <iom328p.h>   /* the AVR MCU variant used */
 /* add other drivers if necessary... */
 
-Q_DEFINE_THIS_FILE
+//Q_DEFINE_THIS_FILE
 
 /* Local-scope objects -----------------------------------------------------*/
 /* Arduino-UNO runs off the 16MHz oscillator */
