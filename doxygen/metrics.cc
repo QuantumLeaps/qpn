@@ -9,7 +9,7 @@
   License Type: Windows Single User License
   Licensed To : Quantum Leaps, LLC
   License No. : WS2975                          License Date: Dec 15, 2013
-  Build Date  : Sep  2 2009                         Run Date: Oct 06, 2015
+  Build Date  : Sep  2 2009                         Run Date: Jan 11, 2016
   (C)1996-2009 M Squared Technologies LLC
   ________________________________________________________________________
 
@@ -31,7 +31,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 150      eLOC 146      lLOC 51       Comment 403      Lines      596
+  LOC 150      eLOC 146      lLOC 51       Comment 397      Lines      589
   ________________________________________________________________________
   End of File: ..\include\qepn.h
 
@@ -51,7 +51,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 32       eLOC 32       lLOC 14       Comment 101      Lines      146
+  LOC 32       eLOC 32       lLOC 14       Comment 101      Lines      147
   ________________________________________________________________________
   End of File: ..\include\qkn.h
 
@@ -368,7 +368,7 @@
       Function Base           : 1
       Conditional if / else if: 3     
   Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
-  LOC 29       eLOC 22       lLOC 7        Comment 21       Lines       38
+  LOC 29       eLOC 22       lLOC 7        Comment 24       Lines       38
 
   Function: QK_sched_
   Parameters: (uint_fast8_t p)
@@ -385,7 +385,7 @@
       Function Base           : 1
       Conditional if / else if: 1     
   Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
-  LOC 10       eLOC 8        lLOC 6        Comment 18       Lines       10
+  LOC 10       eLOC 8        lLOC 6        Comment 17       Lines       10
 
   Function: QK_mutexUnlock
   Parameters: (QMutex mutex)
@@ -399,7 +399,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 154      eLOC 127      lLOC 67       Comment 173      Lines      337
+  LOC 157      eLOC 130      lLOC 67       Comment 177      Lines      341
   ------------------------------------------------------------------------
 
                         ~~ File Functional Summary ~~
@@ -440,7 +440,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 65       eLOC 54       lLOC 29       Comment 77       Lines      148
+  LOC 68       eLOC 57       lLOC 29       Comment 79       Lines      153
   ------------------------------------------------------------------------
 
                         ~~ File Functional Summary ~~
@@ -473,9 +473,9 @@
 
                          ~~ Total Project Summary ~~
 
-  LOC 1304     eLOC 1157     lLOC 515      Comment 2196     Lines     3688
+  LOC 1310     eLOC 1163     lLOC 515      Comment 2196     Lines     3691
   Average per File, metric/11 files
-  LOC 118      eLOC 105      lLOC 46       Comment 199      Lines      335
+  LOC 119      eLOC 105      lLOC 46       Comment 199      Lines      335
 
   ------------------------------------------------------------------------
 
@@ -603,7 +603,7 @@
   Function: QK_schedPrio_
   Parameters: (void)
   Complexity   Param 0       Return 1      Cyclo Vg 4       Total        5
-  LOC 29       eLOC 22       lLOC 7        Comment 21       Lines       38
+  LOC 29       eLOC 22       lLOC 7        Comment 24       Lines       38
 
   Function: QK_sched_
   Parameters: (uint_fast8_t p)
@@ -613,7 +613,7 @@
   Function: QK_mutexLock
   Parameters: (uint_fast8_t const prioCeiling)
   Complexity   Param 1       Return 1      Cyclo Vg 2       Total        4
-  LOC 10       eLOC 8        lLOC 6        Comment 18       Lines       10
+  LOC 10       eLOC 8        lLOC 6        Comment 17       Lines       10
 
   Function: QK_mutexUnlock
   Parameters: (QMutex mutex)
@@ -639,13 +639,13 @@
   Total lLOC.............:        384  Total Function Pts lLOC:        3.0
   Total Cyclomatic Comp. :        116  Total Interface Comp. .:         72
   Total Parameters ......:         44  Total Return Points ...:         28
-  Total Comment Lines ...:        679  Total Blank Lines .....:        122
+  Total Comment Lines ...:        681  Total Blank Lines .....:        122
          ------     -----     -----     ------     ------     -----       
   Avg Physical Lines ....:      35.29
   Avg LOC ...............:      26.39  Avg eLOC ..............:      21.46
   Avg lLOC ..............:      13.71  Avg Cyclomatic Comp. ..:       4.14
   Avg Interface Comp. ...:       2.57  Avg Parameters ........:       1.57
-  Avg Return Points .....:       1.00  Avg Comment Lines .....:      24.25
+  Avg Return Points .....:       1.00  Avg Comment Lines .....:      24.32
          ------     -----     -----     ------     ------     -----       
   Max LOC ...............:         98
   Max eLOC ..............:         78  Max lLOC ..............:         57

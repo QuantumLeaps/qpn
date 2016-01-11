@@ -5,8 +5,8 @@
 * @cond
 ******************************************************************************
 * Product: QEP-nano
-* Last updated for version 5.5.1
-* Last updated on  2015-10-05
+* Last updated for version 5.6.1
+* Last updated on  2016-01-08
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -41,13 +41,6 @@
 #ifndef qepn_h
 #define qepn_h
 
-/**
-* @description
-* This header file must be included in all modules that use QEP-nano.
-* Typically, this header file is included indirectly through the
-* header file qpn_port.h.
-*/
-
 /****************************************************************************/
 /*! The current QP version number */
 /**
@@ -56,13 +49,13 @@
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      551
+#define QP_VERSION      561
 
 /*! The current QP version string */
-#define QP_VERSION_STR  "5.5.1"
+#define QP_VERSION_STR  "5.6.1"
 
-/*! Tamperproof current QP release (5.5.1) and date (15-10-05) */
-#define QP_RELEASE      0xA5FE7508U
+/*! Tamperproof current QP release (5.6.1) and date (16-01-11) */
+#define QP_RELEASE      0xA090FDDEU
 
 /****************************************************************************/
 /* typedefs for basic numerical types; MISRA-C 2004 rule 6.3(req). */

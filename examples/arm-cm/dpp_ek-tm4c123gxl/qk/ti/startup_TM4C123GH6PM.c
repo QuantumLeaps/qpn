@@ -2,7 +2,7 @@
  * Purpose: startup file for TM4C123GH6PM Cortex-M4 device.
  *          Should be used with TI CCS-ARM Compiler
  * Version: CMSIS 4.3.0
- * Date: 5 October 2015
+ * Date: 2015-Nov-10
  *
  * Created from the CMSIS template for the specified device
  * Quantum Leaps, www.state-machine.com
@@ -193,7 +193,7 @@ int const g_pfnVectors[] = {
     0,                            /* Reserved                        */
     0,                            /* Reserved                        */
     0,                            /* Reserved                        */
-    (int)&SVC_Handler,            /* SVCall handler                  */
+    (int)&Default_Handler, //(int)&SVC_Handler,            /* SVCall handler                  */
     (int)&DebugMon_Handler,       /* Debug monitor handler           */
     0,                            /* Reserved                        */
     (int)&PendSV_Handler,         /* The PendSV handler              */

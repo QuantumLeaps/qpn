@@ -4,14 +4,14 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+* Last updated for version 5.6.1
+* Last updated on  2015-12-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -32,8 +32,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -61,16 +61,16 @@ void QK_init(void);
 
 /*! Find the highest-priority task ready to run
 *
-* @note QK_schedPrio_() must be always called with interrupts locked
-* and returns with interrupts locked.
+* @note QK_schedPrio_() must be always called with interrupts disabled
+* and returns with interrupts disabled.
 */
 uint_fast8_t QK_schedPrio_(void);
 
 /*! QK-nano scheduler
 *
-* @note QK_sched_() must be always called with interrupts locked.
+* @note QK_sched_() must be always called with interrupts disaled.
 * The scheduler might unlock the interrupts internally, but always
-* returns with interrupts locked.
+* returns with interrupts disabled.
 */
 void QK_sched_(uint_fast8_t p);
 
@@ -104,13 +104,14 @@ extern uint_fast8_t volatile QK_currPrio_;  /*!< current QK priority */
 * gives the application an opportunity to enter a power-saving CPU mode,
 * or perform some other idle processing.
 *
-* @note QK_onIdle() is invoked with interrupts unlocked and must also
-* return with interrupts unlocked. This is in contrast to the callback
+* @note QK_onIdle() is invoked with interrupts enabled and must also
+* return with interrupts enabled. This is in contrast to the callback
 * QF_onIdle(), which is used by the non-preemptive QF-nano scheduler.
 */
 void QK_onIdle(void);
 
-#ifndef QK_NO_MUTEX
+
+#ifdef QK_MUTEX
 
     /*! QK Mutex type.
     *
@@ -141,6 +142,6 @@ void QK_onIdle(void);
     /*! current ceiling priority of a mutex */
     extern uint_fast8_t volatile QK_ceilingPrio_;
 
-#endif /* QK_NO_MUTEX */
+#endif /* QK_MUTEX */
 
 #endif /* qkn_h */

@@ -1,6 +1,22 @@
 /**
 @page history Revision History
 
+@section qpn_5_6_1 Version 5.6.1, 2016-01-11
+
+This QP-nano release provides a new version of the QK-nano ports to ARM Cortex-M, which do not use the SVC_Handler (Supervisor Call). This is done to make the QK-nano ports compatible with various "hypervisors" (such as mbed uVisor or Nordic SoftDevice), which use the SVC exception. This release contains the updated QK-nano ports to ARM Cortex-M for all supported compilers: ARM-Keil, GNU-ARM, IAR EWARM, and TI-CCS-ARM.
+
+Changes in detail:
+
+1. Modified the ARM Cortex-M QK-nano ports to not use the SVC_Handler.
+
+2. Modified the GNU-ARM ports of QK for ARM Cortex-M, to use the __ARM_ARCH macro to distinguish among different architectures (ARCHv6 vs ARCHv7).
+
+3. Added error directives to source files from different built-in kernels (QV and QK) to generate meaningful error messages when these files are mixed in one project. For example, a project based on QV will report errors when source files for QK-nano are included in it.
+
+4. Updated CMSIS from 4.2 to 4.3 in qpn/3rd-party/CMSIS
+
+
+------------------------------------------------------------------------------
 @section qpn_5_5_1 Version 5.5.1, 2015-10-06
 
 This release adds state machine operations for implementing the shallow history mechanism. The operations are called QMsm_childStateObj() and QHsm_childState(), for QMsm and QHsm classes, respectively, because they compute a child state of a given parent, such that the child belongs to the same state hierarchy as the current state.
@@ -40,7 +56,7 @@ Changes in detail:
 
 3. Simplified the structure of the QP-nano Windows port by eliminating one level of directories for the compilers used. Both VC++ and MinGW builds can now be run in the same port directory.
 
-4. Modified the QF_stop() function in the QP-nano port to @ref win32-qv, so that it unblocks the QV event-loop and thus lets the application terminate. 
+4. Modified the QF_stop() function in the QP-nano port to @ref win32-qv, so that it unblocks the QV event-loop and thus lets the application terminate.
 
 5. Modified all examples for Windows to use the new port structure.
 
@@ -48,7 +64,7 @@ Changes in detail:
 
 7. Moved several examples from the `examples/win32/` and examples/win32-qv directories to `examples/arm-cm/` directory with native embedded examples for ARM Cortex-M. This co-location of the Win32 emulation with the embedded code running on the actual board demonstrates better the "dual targeting" development approach.
 
-8. Made the ::QActiveCB (::QActive Control Block) to the QP-nano backwards-compatibility layer as deprecated. Instead, the newer QP-nano applications should use ::QMActiveCB. 
+8. Made the ::QActiveCB (::QActive Control Block) to the QP-nano backwards-compatibility layer as deprecated. Instead, the newer QP-nano applications should use ::QMActiveCB.
 
 9. Updated all Windows examples to the latest QP API by compiling the code with the macro #QP_API_VERSION set to 9999 (latest API without backwards compatibility)
 
@@ -63,7 +79,7 @@ This release also changes the active object class hierarchy so that ::QMActive i
 @note
 Because the types ::QMActive and ::QActive are equivalent in QP-nano, this change has minimal impact on the applications, but it is now more correct to use ::QMActive as the base class for all "opaque" active object pointers.
 
-Additionally, this release alignes the QP-nano framework better with the rest of the QP framework family (QP/C and QP/C++), so that fewer changes are needed to move applications between QP-nano and QP/C. 
+Additionally, this release alignes the QP-nano framework better with the rest of the QP framework family (QP/C and QP/C++), so that fewer changes are needed to move applications between QP-nano and QP/C.
 
 Finally, this release adds periodic time events (timers) to QP-nano. The feature is demonstrated by many provided examples (e.g., "Blinky", "Fly 'n' Shoot" game, PELICAN crossing).
 
@@ -77,8 +93,8 @@ The aforementioned changes have also the following ripple effects:
 3. The actual port (e.g., the interrupt disabling policy for tasks and interrupts, interrupt entry/exit code, etc.) is included from the <span class="img folder">@ref ports</span> folder. This <span class="img folder">@ref ports</span> folder has been reorganized to contain all currently available QP-nano ports. The ports are organized into two categories: @ref ports_native "native QP-nano ports" ("bare-metal") and @ref ports_os "ports to big operating systems" (Windows and Linux).(**NOTE**: the ports are now documented in the this <strong>QP-nano Reference Manual</strong>. Each port sub-directory contains a <span class="img qp_link">README</span> link to the corresponding page in the online documentation)
 
 4. Expanded the QP-nano time events (timers) with the ability to fire periodically. The feature is controlled by the preprocessor switch #QF_TIMEEVT_PERIODIC. When this macro is defined (in the `qpn_config.h` header file), the signature of the QActive_armX() function contains one more `interval` parameter. The `interval` parameter allows you to specify the interval of the periodic timeout. If the `interval` is zero, the time event is one-shot.
-    
-5. It is no longer necessary to define the **QPN environment variable** to build the QP-nano examples. All directories and files referenced by example projects are **relative** to the project folder. This change reflects the fact that most development tools add source files to the project using relative paths.   
+
+5. It is no longer necessary to define the **QPN environment variable** to build the QP-nano examples. All directories and files referenced by example projects are **relative** to the project folder. This change reflects the fact that most development tools add source files to the project using relative paths.
 
 6. The QP-nano <span class="img folder">@ref exa</span> folder has been reorganized to reduce the repetitions and contains all currently available QP-nano examples. The folder includes four categories of examples: @ref exa_native "native QP-nano examples" ("bare-metal") and @ref exa_os "examples for big operating systems" (Windows and Linux). The <span class="img folder">examples</span> folder has been expanded to contain all currently available QP-nano examples, many of them are new in this release. (**NOTE**: the currently available examples are now documented in the <strong>QP-nano Reference Manual</strong>. Each example sub-directory contains a <span class="img qp_link">README</span> link to the corresponding page in the online documentation)
 
@@ -97,7 +113,7 @@ Changes in detail:
 
 4. Added the native @ref arm7-9 "port" and @ref exa_arm7-9 "examples" to the @ref arm7-9 "classic ARM7/9" with AT91SAM7S-EK board and the IAR-ARM toolset.
 
-5. Added the native @ref avr "port" and @ref exa_avr "examples" to the AVR (AVRmega) with GNU-AVR and IAR-AVR toolsets. The @ref exa_avr "examples" are provided for the Arduino-UNO board. 
+5. Added the native @ref avr "port" and @ref exa_avr "examples" to the AVR (AVRmega) with GNU-AVR and IAR-AVR toolsets. The @ref exa_avr "examples" are provided for the Arduino-UNO board.
 
 6. Added the native @ref msp430 "port" and @ref exa_msp430 "examples" to MSP430 with TI CCS-430 and IAR-430 toolsets. The @ref exa_msp430 "examples" are provided for the MSP430 LauchPad boards (the MSP-EXP430G2 and MSP-EXP430F5529LP for the "classic" MSP430 and "extened" MSP430X, respectively).
 

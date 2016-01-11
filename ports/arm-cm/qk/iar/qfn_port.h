@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, preemptive QK kernel, IAR-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.5.1
-* Date of the Last Update:  2015-10-05
+* Last Updated for Version: 5.6.1
+* Date of the Last Update:  2016-01-10
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -40,26 +40,26 @@
 #define qfn_port_h
 
 /* QF interrupt disable/enable and log2()... */
-#if (__CORE__ == __ARM6M__) /* Cortex-M0/M0+/M1 ?, see NOTE1 */
+#if (__CORE__ == __ARM6M__)  /* Cortex-M0/M0+/M1 ?, see NOTE1 */
 
     #define QF_INT_DISABLE()    __disable_interrupt()
     #define QF_INT_ENABLE()     __enable_interrupt()
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE1 */
-    #define QF_AWARE_ISR_CMSIS_PRI  0
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
+    #define QF_AWARE_ISR_CMSIS_PRI 0
 
-#else /* Cortex-M3/M4/M4F, see NOTE2 */
+#else /* Cortex-M3/M4/M7, see NOTE3 */
 
     #define QF_INT_DISABLE()    __set_BASEPRI(QF_BASEPRI)
     #define QF_INT_ENABLE()     __set_BASEPRI(0U)
 
     /* NOTE: keep in synch with the value defined in "qk_port.s", see NOTE3 */
-    #define QF_BASEPRI  (0xFF >> 2)
+    #define QF_BASEPRI          (0xFFU >> 2)
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4 */
-    #define QF_AWARE_ISR_CMSIS_PRI  (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
+    #define QF_AWARE_ISR_CMSIS_PRI (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
-    /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
+    /* Cortex-M3/M4/M7 provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint8_t)(32U - __CLZ(n_)))
 #endif
 
@@ -69,12 +69,22 @@
 /* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    \
-    (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U)
+#define QK_ISR_EXIT()    do { \
+    uint_fast8_t nextPrio_; \
+    QF_INT_DISABLE(); \
+    nextPrio_ = QK_schedPrio_(); \
+    if (nextPrio_ != (uint_fast8_t)0) { \
+        QK_nextPrio_ = nextPrio_; \
+        (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)); \
+    } \
+    QF_INT_ENABLE(); \
+} while (0)
 
 #include <intrinsics.h> /* intrinsic IAR functions */
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
+
+extern uint_fast8_t QK_nextPrio_; /* priority of the next task to execute */
 
 #include "qepn.h"       /* QEP-nano platform-independent public interface */
 #include "qfn.h"        /* QF-nano platform-independent public interface */
@@ -88,7 +98,7 @@
 * "kernel-aware".
 *
 * NOTE2:
-* On Cortex-M3/M4/M4F, the interrupt disable/enable policy uses the BASEPRI
+* On Cortex-M3/M4/M7, the interrupt disable/enable policy uses the BASEPRI
 * register (which is not implemented in Cortex-M0/M0+/M1) to disable
 * interrupts only with priority lower than the level specified by the
 * QF_BASEPRI macro. The interrupts with priorities above QF_BASEPRI (i.e.,
@@ -99,7 +109,7 @@
 * higher than QF_BASEPRI, can call QF services.
 *
 * NOTE3:
-* For Cortex-M3/M4/M4F, the macro QF_BASEPRI leaves the top 2 priority bits
+* For Cortex-M3/M4/M7, the macro QF_BASEPRI leaves the top 2 priority bits
 * empty for QF-aware interrupts. This is the highest-possible priority
 * (lowest possible numerical value) for the guaranteed 3 priority bits
 * implemented in the NVIC.

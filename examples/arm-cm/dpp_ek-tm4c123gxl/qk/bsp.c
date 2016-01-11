@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on EK-TM4C123GXL board, preemptive QK kernel
-* Last Updated for Version: 5.5.1
-* Date of the Last Update:  2015-10-05
+* Last Updated for Version: 5.6.1
+* Date of the Last Update:  2016-01-10
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -184,16 +184,22 @@ void BSP_displayPaused(uint8_t paused) {
 }
 /*..........................................................................*/
 uint32_t BSP_random(void) { /* a very cheap pseudo-random-number generator */
+    uint32_t rnd;
+    QMutex mutex;
+
     /* The flating point code is to exercise the FPU... */
     float volatile x = 3.1415926F;
     x = x + 2.7182818F;
 
+    mutex = QK_mutexLock(5U);  /* lock the mutex for the static l_rnd */
     /* "Super-Duper" Linear Congruential Generator (LCG)
     * LCG(2^32, 3*7*11*13*23, 0, seed)
     */
-    l_rnd = l_rnd * (3U*7U*11U*13U*23U);
+    rnd = l_rnd * (3U*7U*11U*13U*23U);
+    l_rnd = rnd;
+    QK_mutexUnlock(mutex);    /* unlock the mutex for th static l_rnd */
 
-    return l_rnd >> 8;
+    return rnd >> 8;
 }
 /*..........................................................................*/
 void BSP_randomSeed(uint32_t seed) {

@@ -3,8 +3,8 @@
 * @brief QF-nano port ARM Cortex-M, QK-nano kernel, GNU-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.5.1
-* Date of the Last Update:  2015-10-05
+* Last Updated for Version: 5.6.1
+* Date of the Last Update:  2016-01-10
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -40,30 +40,31 @@
 #define qfn_port_h
 
 /* QF interrupt disable/enable and log2()... */
-#ifdef ARM_ARCH_V6M /* Cortex-M0/M0+/M1 ?, see NOTE02 */
+#if (__ARM_ARCH == 6) /* Cortex-M0/M0+/M1 ?, see NOTE1 */
 
-    #define QF_INT_DISABLE()        __asm volatile ("cpsid i")
-    #define QF_INT_ENABLE()         __asm volatile ("cpsie i")
+    #define QF_INT_DISABLE()    __asm volatile ("cpsid i")
+    #define QF_INT_ENABLE()     __asm volatile ("cpsie i")
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
     #define QF_AWARE_ISR_CMSIS_PRI  0
 
-#else /* Cortex-M3/M4/M4F, see NOTE03 */
+#else /* Cortex-M3/M4/M7, see NOTE3 */
 
-    #define QF_SET_BASEPRI(val_)    __asm volatile (\
+    #define QF_SET_BASEPRI(val_) __asm volatile (\
         "movs r0,%0 \n\t" \
         "msr  BASEPRI,r0" :: "I" (val_) : "cc", "r0")
-    #define QF_INT_DISABLE()        QF_SET_BASEPRI(QF_BASEPRI)
-    #define QF_INT_ENABLE()         QF_SET_BASEPRI(0U)
+    #define QF_INT_DISABLE()    QF_SET_BASEPRI(QF_BASEPRI)
+    #define QF_INT_ENABLE()     QF_SET_BASEPRI(0U)
 
-    /* BASEPRI limit for QF-aware ISR priorities, see NOTE4 */
-    #define QF_BASEPRI  (0xFF >> 2)
+    /* NOTE: keep in synch with the value defined in "qk_port.s", NOTE3 */
+    #define QF_BASEPRI          (0xFFU >> 2)
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE5 */
-    #define QF_AWARE_ISR_CMSIS_PRI  (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4 */
+    #define QF_AWARE_ISR_CMSIS_PRI (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
     /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint8_t)(32U - __builtin_clz(n_)))
+
 #endif
 
 /* interrupt nesting policy for ISR level (ISRs can nest) */
@@ -72,25 +73,35 @@
 /* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
 #define QK_ISR_ENTRY()   ((void)0)
-#define QK_ISR_EXIT()    \
-    (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)0x10000000U)
+#define QK_ISR_EXIT()    do { \
+    uint_fast8_t nextPrio_; \
+    QF_INT_DISABLE(); \
+    nextPrio_ = QK_schedPrio_(); \
+    if (nextPrio_ != (uint_fast8_t)0) { \
+        QK_nextPrio_ = nextPrio_; \
+        (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)); \
+    } \
+    QF_INT_ENABLE(); \
+} while (0)
 
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
+
+extern uint_fast8_t QK_nextPrio_; /* priority of the next task to execute */
 
 #include "qepn.h"       /* QEP-nano platform-independent public interface */
 #include "qfn.h"        /* QF-nano platform-independent public interface */
 #include "qkn.h"        /* QK-nano platform-independent public interface */
 
 /*****************************************************************************
-* NOTE2:
+* NOTE1:
 * On Cortex-M0/M0+/M1 (architecture v6-M, v6S-M), the interrupt disabling
 * policy uses the PRIMASK register to disable interrupts globally. The
 * QF_AWARE_ISR_CMSIS_PRI level is zero, meaning that all interrupts are
 * "kernel-aware".
 *
-* NOTE3:
-* On Cortex-M3/M4/M4F, the interrupt disable/enable policy uses the BASEPRI
+* NOTE2:
+* On Cortex-M3/M4/M7, the interrupt disable/enable policy uses the BASEPRI
 * register (which is not implemented in Cortex-M0/M0+/M1) to disable
 * interrupts only with priority lower than the level specified by the
 * QF_BASEPRI macro. The interrupts with priorities above QF_BASEPRI (i.e.,
@@ -100,13 +111,13 @@
 * "QF-aware" interrupts, with numerical values of priorities eqal to or
 * higher than QF_BASEPRI, can call QF services.
 *
-* NOTE4:
-* For Cortex-M3/M4/M4F, the macro QF_BASEPRI leaves the top 2 priority bits
+* NOTE3:
+* For Cortex-M3/M4/M7, the macro QF_BASEPRI leaves the top 2 priority bits
 * empty for QF-aware interrupts. This is the highest-possible priority
 * (lowest possible numerical value) for the guaranteed 3 priority bits
 * implemented in the NVIC.
 *
-* NOTE5:
+* NOTE4:
 * The QF_AWARE_ISR_CMSIS_PRI macro is useful as an offset for enumerating
 * the QF-aware interrupt priority levels in the applications, whereas the
 * numerical values of the QF-aware interrupts must be greater or equal to

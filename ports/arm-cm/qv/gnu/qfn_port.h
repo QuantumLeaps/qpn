@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, cooperative QV kernel, GNU-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.5.1
-* Date of the Last Update:  2015-10-05
+* Last Updated for Version: 5.6.1
+* Date of the Last Update:  2016-01-10
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -40,10 +40,10 @@
 #define qfn_port_h
 
 /* QF interrupt disable/enable and log2()... */
-#ifdef ARM_ARCH_V6M /* Cortex-M0/M0+/M1 ?, see NOTE02 */
+#ifdef ARM_ARCH_V6M /* Cortex-M0/M0+/M1 ?, see NOTE2 */
 
-    #define QF_INT_DISABLE()        __asm volatile ("cpsid i")
-    #define QF_INT_ENABLE()         __asm volatile ("cpsie i")
+    #define QF_INT_DISABLE()    __asm volatile ("cpsid i")
+    #define QF_INT_ENABLE()     __asm volatile ("cpsie i")
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
     #define QF_AWARE_ISR_CMSIS_PRI  0
@@ -54,19 +54,19 @@
         QF_INT_ENABLE(); \
     } while (0)
 
-#else /* Cortex-M3/M4/M4F, see NOTE03 */
+#else /* Cortex-M3/M4/M4F, see NOTE3 */
 
-    #define QF_SET_BASEPRI(val_)    __asm volatile (\
+    #define QF_SET_BASEPRI(val_) __asm volatile (\
         "movs r0,%0 \n\t" \
         "msr  BASEPRI,r0" :: "I" (val_) : "cc", "r0")
-    #define QF_INT_DISABLE()        QF_SET_BASEPRI(QF_BASEPRI)
-    #define QF_INT_ENABLE()         QF_SET_BASEPRI(0U)
+    #define QF_INT_DISABLE()    QF_SET_BASEPRI(QF_BASEPRI)
+    #define QF_INT_ENABLE()     QF_SET_BASEPRI(0U)
 
     /* BASEPRI limit for QF-aware ISR priorities, see NOTE4 */
-    #define QF_BASEPRI  (0xFF >> 2)
+    #define QF_BASEPRI          (0xFFU >> 2)
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE5 */
-    #define QF_AWARE_ISR_CMSIS_PRI  (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
+    #define QF_AWARE_ISR_CMSIS_PRI (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
     /* macro to put the CPU to sleep inside QV_onIdle() */
     #define QV_CPU_SLEEP() do { \

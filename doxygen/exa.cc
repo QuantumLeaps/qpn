@@ -15,7 +15,7 @@ The QP-nano distribution contains many @subpage exa_ref "example projects" to de
 - **to provide you with a starting point for your own projects** &mdash; the examples are complete working projects, with correctly pre-configured tools, such as compiler options, linker script, debugger setup, etc.
 
 @note
-It is highly recommended that you create your own projects by **copying and modifying** existing example projects rather than starting your QP-nano projects from scratch. 
+It is highly recommended that you create your own projects by **copying and modifying** existing example projects rather than starting your QP-nano projects from scratch.
 
 
 ------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ All examples are located in sub-directories of the <span class="img folder">exam
   <li><span class="img folder">examples</span>
   </li>
   <ul class="tag">
-    <li><span class="img folder">arm-cm</span> &mdash; Native examples for ARM-Cortex-M (bare-metal) <span class="tag">A</span>
+    <li><span class="img folder">arm-cm</span> &mdash; Native examples for ARM-Cortex-M (bare-metal) [A]
     </li>
     <ul class="tag">
       <li><span class="img folder">blinky_ek-tm4c123gxl</span> &mdash; Blinky example for EK-TM4C123GXL board
@@ -46,12 +46,12 @@ All examples are located in sub-directories of the <span class="img folder">exam
             </li>
             <li><span class="img folder">spy</span> &mdash; Spy build configuration
             </li>
-          </ul>  
+          </ul>
           <li><span class="img folder">gnu</span> &mdash; build with GNU toolset
           </li>
           <li><span class="img folder">iar</span> &mdash; build with IAR toolset
           </li>
-        </ul>  
+        </ul>
         <li><span class="img folder">qv</span> &mdash;  Version for the @ref comp_qv "cooperative QV kernel"
         </li>
         <ul class="tag">
@@ -64,25 +64,25 @@ All examples are located in sub-directories of the <span class="img folder">exam
             </li>
             <li><span class="img folder">spy</span> &mdash; Spy build configuration
             </li>
-          </ul>  
+          </ul>
           <li><span class="img folder">gnu</span> &mdash; build with GNU toolset
           </li>
           <li><span class="img folder">iar</span> &mdash; build with IAR toolset
           </li>
-        </ul>  
+        </ul>
         <li><span class="img file_c">...</span> &mdash; source code independent on the toolset
         </li>
       </ul>
-    </ul>  
+    </ul>
 
-    <li><span class="img folder">posix-qv</span> &mdash; Examples for POSIX (3rd-party OS) with cooperative QV scheduler <span class="tag">B</span>
-    </li>  
+    <li><span class="img folder">posix-qv</span> &mdash; Examples for POSIX (3rd-party OS) with cooperative QV scheduler [B]
+    </li>
     <ul class="tag">
       <li><span class="img folder">blinky</span> &mdash; Blinky example for POSIX-QV (console app)</li>
       <li><span class="img folder">dpp</span> &mdash; DPP example for POSIX-QV (console app)</li>
     </ul>
-    
-    <li><span class="img folder">win32-qv</span> &mdash; Examples for Win32 (Windows OS) with cooperative QV scheduler <span class="tag">B</span>
+
+    <li><span class="img folder">win32-qv</span> &mdash; Examples for Win32 (Windows OS) with cooperative QV scheduler [B]
     </li>
     <ul class="tag">
       <li><span class="img folder">blinky</span> &mdash; Blinky example for Win32-QV (console app)</li>
@@ -91,20 +91,20 @@ All examples are located in sub-directories of the <span class="img folder">exam
       <li><span class="img folder">game-gui</span> &mdash; "Fly 'n' Shoot" game example for Win32-QV (GUI app)</li>
     </ul>
 
-  </ul>    
+  </ul>
 </ul>
 
 <ul class="tag">
   <li><span class="tag">A</span> @subpage exa_native "Native examples" are located in sub-directories named after the CPU architecture, such as <span class="img folder">arm-cm</span> for ARM Cortex-M. Under that directory, the sub-directories <span class="img folder">blinky_ek-tm4c123gxl</span> contain the specific example on the specified board, such as "Blinky" on the EK-TM4C123GXL board here. In the specific example folder, you find sub-folders for the @ref comp_qk "QK" and @ref comp_qv "QV" kernels, respectively.
   </li>
-  
+
   <li><span class="tag">B</span> @subpage exa_os "Examples for 3rd-party OS" are located in sub-directories named after the OS, such as <span class="img folder">win32-qv</span> for Win32 API (Windows) with QV directory and <span class="img folder">posix-qv</span> for POSIX API (e.g., Linux) with QV directory.
   </li>
 
 </ul>
 
 @note
-Because the QP distribution contains *all* examples, the number of sub-directories and files in the <span class="img folder">examples</span> folder may seem daunting. However, knowing the structure of the <span class="img folder">examples</span> folder, you can simply **delete** the sub-directories that are not interesting to you. 
+Because the QP distribution contains *all* examples, the number of sub-directories and files in the <span class="img folder">examples</span> folder may seem daunting. However, knowing the structure of the <span class="img folder">examples</span> folder, you can simply **delete** the sub-directories that are not interesting to you.
 
 
 ------------------------------------------------------------------------------
@@ -118,7 +118,10 @@ To demonstrate QP-nano features on an embedded board, you need to create an appl
 
 With the exception of the game application, all other example applications can be implemented on a board with just a couple of LEDs. The @ref game application is a bit more involved and requires a small graphic display on the board.
 
-Beyond these basic applications for demonstrating and testing the various @ref ports "QP-nano ports", the QP-nano distribution contains all examples described in the book <a class="extern" target="_blank" href="http://www.state-machine.com/psicc2" >Practical UML Statecharts in C/C++, 2nd Edition</a> (@sa exa_win32).
+Beyond these basic applications for demonstrating and testing the various @ref ports "QP-nano ports", the QP-nano distribution contains all examples described in the book <a class="extern" target="_blank" href="http://www.state-machine.com/psicc2" >Practical UML Statecharts in C/C++, 2nd Edition</a>
+
+@sa
+@ref exa_win32-qv
 
 
 ------------------------------------------------------------------------------
@@ -128,7 +131,7 @@ While some provided examples can run on your @ref exa_os "desktop computer", mos
 
 ------------------------------------------------------------------------------
 @subsection exa_sec_tools Development Tools
-Most provided examples require special embedded cross-development tools, such as embedded compilers, linkers, debuggers and IDEs, which you need to acquire independently from the QP-nano distribution. Generally, the examples work with the free (size limited) evaluation versions of the commercial tools. The examples list the versions of tools they were developed and tested with. Please refer to the @ref exa_ref "cross-reference section" @ref exa_sec_tools to see which embedded toolsets are used.  
+Most provided examples require special embedded cross-development tools, such as embedded compilers, linkers, debuggers and IDEs, which you need to acquire independently from the QP-nano distribution. Generally, the examples work with the free (size limited) evaluation versions of the commercial tools. The examples list the versions of tools they were developed and tested with. Please refer to the @ref exa_ref "cross-reference section" @ref exa_sec_tools to see which embedded toolsets are used.
 
 
 ------------------------------------------------------------------------------
@@ -157,7 +160,7 @@ The auto-generated files are saved as **read-only**. This protects them from ina
 The QP-nano example projects often need to use various additional code, such as MCU register definition files, startup code, device drivers, etc., which are provided by Third-Party vendors. All such code is located in the <span class="img folder">3rd_party</span> @ref qpn_files "top-level folder".
 
 @note
-As far as possible, the code in the <span class="img folder">3rd_party</span> folder has been left unchanged from the original source. (Any modified code is clearly identified by top-level comments that detail the applied changes.) For that reason, the Third-Party code might produce **compilation warnings** in your builds. 
+As far as possible, the code in the <span class="img folder">3rd_party</span> folder has been left unchanged from the original source. (Any modified code is clearly identified by top-level comments that detail the applied changes.) For that reason, the Third-Party code might produce **compilation warnings** in your builds.
 
 The code in the <span class="img folder">3rd_party</span> folder comes from various sources, and Quantum
 Leaps, LLC expressly makes **no claims of ownership** to any of this code, even though some of the code might be customized or modified by Quantum Leaps.
@@ -247,9 +250,9 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
 
 - PIC24 /dsPIC (coming soon...)
 - PIC32 (coming soon...)
-- Renesas RX (coming soon...) 
-- TI TMS320C28x (C28x) (coming soon...) 
-- TI TMS320C55x (C55x) (coming soon...) 
+- Renesas RX (coming soon...)
+- TI TMS320C28x (C28x) (coming soon...)
+- TI TMS320C55x (C55x) (coming soon...)
 
 
 ------------------------------------------------------------------------------

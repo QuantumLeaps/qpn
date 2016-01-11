@@ -4,14 +4,14 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.2
-* Last updated on  2015-06-07
+* Last updated for version 5.6.1
+* Last updated on  2015-12-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -32,8 +32,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -42,6 +42,11 @@
 #include "qassert.h"  /* embedded systems-friendly assertions */
 
 Q_DEFINE_THIS_MODULE("qkn")
+
+/* protection against including this source file in a wrong project */
+#ifndef qkn_h
+    #error "Source file included in a project NOT based on the QK-nano kernel"
+#endif /* qkn_h */
 
 #if (!defined(QK_PREEMPTIVE)) || defined(QV_COOPERATIVE)
     #error "The preemptive QK-nano kernel is not configured properly"
@@ -56,7 +61,7 @@ uint_fast8_t volatile QK_currPrio_ = (uint_fast8_t)(QF_MAX_ACTIVE + 1);
 uint_fast8_t volatile QK_intNest_; /* interrupt nesting for QK kernel */
 #endif
 
-#ifndef QK_NO_MUTEX
+#ifdef QK_MUTEX
 uint_fast8_t volatile QK_ceilingPrio_; /* ceiling priority of a mutex */
 #endif
 
@@ -164,17 +169,17 @@ uint_fast8_t QK_schedPrio_(void) {
     }
     /* hi nibble of QF_readySet_ is zero */
     else
-#endif
+#endif /* (QF_MAX_ACTIVE > 4) */
     {
         p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
     }
-#endif
+#endif /* #ifdef QF_LOG2 */
 
     /* below the current preemption threshold? */
     if (p <= QK_currPrio_) {
         p = (uint_fast8_t)0;
     }
-#ifndef QK_NO_MUTEX
+#ifdef QK_MUTEX
     /* below the mutex ceiling? */
     else if (p <= QK_ceilingPrio_) {
         p = (uint_fast8_t)0;
@@ -182,7 +187,7 @@ uint_fast8_t QK_schedPrio_(void) {
     else {
         /* empty */
     }
-#endif
+#endif /* QK_MUTEX */
     return p;
 }
 
@@ -260,7 +265,7 @@ void QK_sched_(uint_fast8_t p) {
         if (p <= pin) {
             p = (uint_fast8_t)0;
         }
-#ifndef QK_NO_MUTEX
+#ifdef QK_MUTEX
         /* below the mutex ceiling? */
         else if (p <= QK_ceilingPrio_) {
             p = (uint_fast8_t)0;
@@ -277,9 +282,8 @@ void QK_sched_(uint_fast8_t p) {
 
 /****************************************************************************/
 /****************************************************************************/
-#ifndef QK_NO_MUTEX
+#ifdef QK_MUTEX
 
-/****************************************************************************/
 /**
 * @description
 * Lock the QK scheduler up to the given priority level.

@@ -4,14 +4,14 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last updated for version 5.6.0
+* Last updated on  2015-12-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -32,8 +32,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -42,6 +42,11 @@
 #include "qassert.h"  /* embedded systems-friendly assertions */
 
 Q_DEFINE_THIS_MODULE("qvn")
+
+/* protection against including this source file in a wrong project */
+#ifndef qvn_h
+    #error "Source file included in a project NOT based on the QV-nano kernel"
+#endif /* qvn_h */
 
 #if (!defined(QV_COOPERATIVE)) || defined(QK_PREEMPTIVE)
     #error "The cooperative QV kernel is not configured properly"

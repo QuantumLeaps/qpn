@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: Makefile for QP-nano, DPP on EK-TM4C123GXL, QV kernel, GNU-ARM
-# Last Updated for Version: 5.5.1
-# Date of the Last Update:  2015-10-05
+# Product: Makefile for QP-nano, DPP on mbed-LPC1768, QV kernel, GNU-ARM
+# Last Updated for Version: 5.6.1
+# Date of the Last Update:  2016-01-10
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -28,8 +28,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact information:
-# Web:   http://www.state-machine.com
-# Email: info@state-machine.com
+# http://www.state-machine.com
+# mailto:info@state-machine.com
 ##############################################################################
 # examples of invoking this Makefile:
 # building configurations: Debug (default), Release, and Spy
@@ -116,8 +116,14 @@ LIBS      :=
 # defines
 DEFINES   :=
 
-# ARM CPU, FPU, and Float-ABI types
+# ARM CPU, ARCH, FPU, and Float-ABI types...
+# ARM_CPU:   [cortex-m0 | cortex-m0plus | cortex-m1 | cortex-m3 | cortex-m4]
+# ARM_ARCH:  [6 | 7] (NOTE: must match ARM_CPU!)
+# ARM_FPU:   [ | vfp]
+# FLOAT_ABI: [ | soft | softfp | hard]
+#
 ARM_CPU   := -mcpu=cortex-m3
+ARM_ARCH  := 7   # NOTE: must match the ARM_CPU!
 ARM_FPU   :=
 FLOAT_ABI :=
 
@@ -157,6 +163,10 @@ RM    := rm
 C_SRCS += $(QP_SRCS)
 ASM_SRCS += $(QP_ASMS)
 
+# add the pre-defined symbol for ARM architecture
+DEFINES += -D__ARM_ARCH=$(ARM_ARCH)
+ASM_CPU += -defsym=__ARM_ARCH=$(ARM_ARCH)
+
 # add the pre-defined symbol __FPU_PRESENT if needed...
 ifneq (,$(ARM_FPU))
 DEFINES += -D__FPU_PRESENT
@@ -167,21 +177,21 @@ ifeq (rel, $(CONF)) # Release configuration ..................................
 
 BIN_DIR := rel
 
-ASFLAGS = $(ARM_CPU) $(ASM_FPU)
+ASFLAGS = $(ARM_CPU) $(ARM_FPU) $(ASM_CPU) $(ASM_FPU)
 
 CFLAGS = $(ARM_CPU) $(ARM_FPU) $(FLOAT_ABI) -mthumb -Wall \
 	-ffunction-sections -fdata-sections \
-	-O1 -fno-strict-aliasing $(INCLUDES) $(DEFINES) -DNDEBUG
+	-O1 $(INCLUDES) $(DEFINES) -DNDEBUG
 
 CPPFLAGS = $(ARM_CPU) $(ARM_FPU) $(FLOAT_ABI) -mthumb -Wall \
 	-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions \
-	-O1 -fno-strict-aliasing $(INCLUDES) $(DEFINES) -DNDEBUG
+	-O1 $(INCLUDES) $(DEFINES) -DNDEBUG
 
 else # default Debug configuration ...........................................
 
 BIN_DIR := dbg
 
-ASFLAGS = -g $(ARM_CPU) $(ASM_FPU)
+ASFLAGS = -g $(ARM_CPU) $(ARM_FPU) $(ASM_CPU) $(ASM_FPU)
 
 CFLAGS = -g $(ARM_CPU) $(ARM_FPU) $(FLOAT_ABI) -mthumb -Wall \
 	-ffunction-sections -fdata-sections \
@@ -227,7 +237,8 @@ $(TARGET_BIN): $(TARGET_ELF)
 	$(BIN) -O binary $< $@
 
 $(TARGET_ELF) : $(ASM_OBJS_EXT) $(C_OBJS_EXT) $(CPP_OBJS_EXT)
-	$(LINK) $(LINKFLAGS) -o $@ $^ $(LIBS)
+	$(CC) $(CFLAGS) -c $(QPN)/include/qstamp.c -o $(BIN_DIR)/qstamp.o
+	$(LINK) $(LINKFLAGS) -o $@ $^ $(BIN_DIR)/qstamp.o $(LIBS)
 
 $(BIN_DIR)/%.d : %.c
 	$(CC) -MM -MT $(@:.d=.o) $(CFLAGS) $< > $@
