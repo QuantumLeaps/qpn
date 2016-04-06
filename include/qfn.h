@@ -4,14 +4,14 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last updated for version 5.6.2
+* Last updated on  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -32,8 +32,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -46,11 +46,6 @@
 * Typically, this header file is included indirectly through the
 * header file qpn_port.h.
 */
-
-/****************************************************************************/
-#if (QF_MAX_ACTIVE < 1) || (8 < QF_MAX_ACTIVE)
-    #error "QF_MAX_ACTIVE not defined or out of range. Valid range is 1..8"
-#endif
 
 /****************************************************************************/
 #ifndef QF_TIMEEVT_CTR_SIZE
@@ -132,7 +127,7 @@ typedef struct {
     QTimer tickCtr[QF_MAX_TICK_RATE];
 #endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
 
-    /*! priority of the active object (1..QF_MAX_ACTIVE) */
+    /*! priority of the active object (1..8) */
     uint_fast8_t prio;
 
     /*! offset to where next event will be inserted into the buffer */
@@ -397,12 +392,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
 /* QF-nano protected methods ...*/
 
 /*! QF-nano initialization. */
-/*
-* @note Function QF_init() is defined in the separate module qfn_init.c,
-* which needs to be included in the build only if the non-standard
-* initialization is required.
-*/
-void QF_init(void);
+void QF_init(uint_fast8_t maxActive);
 
 /*! QF-nano termination. */
 /**
@@ -451,6 +441,9 @@ typedef struct {
 /*lint -save -e960    MISRA-C:2004 8.12, extern array declared without size */
 extern QMActiveCB const Q_ROM QF_active[];
 /*lint -restore */
+
+/*! number of active objects in the application (# elements in QF_active[]) */
+extern uint_fast8_t QF_maxActive_;
 
 /*! Ready set of QF-nano. */
 extern uint_fast8_t volatile QF_readySet_;

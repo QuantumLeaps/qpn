@@ -3,14 +3,14 @@
 * @brief QP-nano configuration file, generic C compiler
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,24 +31,13 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * \endcond
 */
 #ifndef qpn_conf_h
 #define qpn_conf_h
-
-/*! The maximum number of active objects in the application. */
-/**
-* \description
-* This macro should be defined in the QP-nano port header file qpn_port.h
-* and should be in range of 1..8, inclusive. In QF-nano, the value of
-* QF_MAX_ACTIVE does not incur bigger RAM or ROM overhead, but if you
-* use less than 5 active objects, the algorithm used in QF-nano scheduler
-* is slightly more efficient.
-*/
-#define QF_MAX_ACTIVE           8
 
 /*! The size (in bytes) of the single scalar parameter representation
 * in the QEvent struct. Valid values: none (0), 1, 2, or 4; default none (0).

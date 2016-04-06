@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.1
-* Last updated on  2015-12-30
+* Last updated for version 5.6.2
+* Last updated on  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -55,14 +55,14 @@ Q_DEFINE_THIS_MODULE("qkn")
 /* Global-scope objects *****************************************************/
 
 /* start with the QK scheduler locked */
-uint_fast8_t volatile QK_currPrio_ = (uint_fast8_t)(QF_MAX_ACTIVE + 1);
+uint_fast8_t volatile QK_currPrio_ = (uint_fast8_t)8;
 
 #ifdef QF_ISR_NEST
 uint_fast8_t volatile QK_intNest_; /* interrupt nesting for QK kernel */
 #endif
 
 #ifdef QK_MUTEX
-uint_fast8_t volatile QK_ceilingPrio_; /* ceiling priority of a mutex */
+uint_fast8_t volatile QK_lockPrio_; /* ceiling priority of a mutex */
 #endif
 
 static void initialize(void); /* prototype required by MISRA */
@@ -87,8 +87,21 @@ static void initialize(void) {
     QK_INIT(); /* initialize the QK-nano kernel */
 #endif
 
+#ifdef QF_MAX_ACTIVE /* deprecated constant provided? */
+#if (QF_MAX_ACTIVE < 1) || (8 < QF_MAX_ACTIVE)
+    #error "QF_MAX_ACTIVE not defined or out of range. Valid range is 1..8"
+#endif
+    QF_maxActive_ = (uint_fast8_t)QF_MAX_ACTIVE;
+#else
+    /** @pre the number of active objects must be initialized by calling:
+    * QF_init(Q_DIM(QF_active));
+    */
+    Q_REQUIRE_ID(100, ((uint_fast8_t)1 <= QF_maxActive_)
+                      && (QF_maxActive_ <= (uint_fast8_t)8));
+#endif
+
     /* set priorities all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
@@ -98,7 +111,7 @@ static void initialize(void) {
     }
 
     /* trigger initial transitions in all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
         QMSM_INIT(&a->super); /* take the initial transition in the SM */
     }
@@ -159,21 +172,16 @@ uint_fast8_t QK_schedPrio_(void) {
 #ifdef QF_LOG2
     p = (uint_fast8_t)QF_LOG2(QF_readySet_);
 #else
-
-#if (QF_MAX_ACTIVE > 4)
     /* hi nibble used? */
     if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
         p = (uint_fast8_t)(
                 (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
                 + (uint_fast8_t)4);
     }
-    /* hi nibble of QF_readySet_ is zero */
-    else
-#endif /* (QF_MAX_ACTIVE > 4) */
-    {
+    else { /* hi nibble of QF_readySet_ is zero */
         p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
     }
-#endif /* #ifdef QF_LOG2 */
+#endif
 
     /* below the current preemption threshold? */
     if (p <= QK_currPrio_) {
@@ -181,7 +189,7 @@ uint_fast8_t QK_schedPrio_(void) {
     }
 #ifdef QK_MUTEX
     /* below the mutex ceiling? */
-    else if (p <= QK_ceilingPrio_) {
+    else if (p <= QK_lockPrio_) {
         p = (uint_fast8_t)0;
     }
     else {
@@ -241,39 +249,13 @@ void QK_sched_(uint_fast8_t p) {
 
         QF_INT_DISABLE();
 
-        /* determine the highest-priority AO ready to run... */
-#ifdef QF_LOG2
-        p = QF_LOG2(QF_readySet_);
-#else
-
-#if (QF_MAX_ACTIVE > 4)
-        /* hi nibble not zero? */
-        if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
-            p = (uint_fast8_t)(
-                    (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
-                    + (uint_fast8_t)4);
-        }
-        /* hi nibble of QF_readySet_ is zero */
-        else
-#endif
-        {
-            p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
-        }
-#endif
+        /* determine the highest-priority AO ready to run */
+        p = QK_schedPrio_();
 
         /* below the current preemption threshold? */
         if (p <= pin) {
             p = (uint_fast8_t)0;
         }
-#ifdef QK_MUTEX
-        /* below the mutex ceiling? */
-        else if (p <= QK_ceilingPrio_) {
-            p = (uint_fast8_t)0;
-        }
-        else {
-            /* empty */
-        }
-#endif
     } while (p != (uint_fast8_t)0);
 
     QK_currPrio_ = pin; /* restore the initial priority */
@@ -302,9 +284,9 @@ void QK_sched_(uint_fast8_t p) {
 QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
     uint_fast8_t mutex;
     QF_INT_DISABLE();
-    mutex = QK_ceilingPrio_; /* the original QK priority ceiling to return */
-    if (QK_ceilingPrio_ < prioCeiling) {
-        QK_ceilingPrio_ = prioCeiling; /* raise the QK priority ceiling */
+    mutex = QK_lockPrio_; /* the original QK priority ceiling to return */
+    if (QK_lockPrio_ < prioCeiling) {
+        QK_lockPrio_ = prioCeiling; /* raise the QK priority ceiling */
     }
     QF_INT_ENABLE();
     return mutex;
@@ -327,8 +309,8 @@ QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
 */
 void QK_mutexUnlock(QMutex mutex) {
     QF_INT_DISABLE();
-    if (QK_ceilingPrio_ > mutex) {
-        QK_ceilingPrio_ = mutex; /* restore the saved priority ceiling */
+    if (QK_lockPrio_ > mutex) {
+        QK_lockPrio_ = mutex; /* restore the saved priority ceiling */
         mutex = QK_schedPrio_(); /* reuse 'mutex' to hold priority */
         if (mutex != (uint_fast8_t)0) {
             QK_sched_(mutex);

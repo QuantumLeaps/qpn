@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.1
-* Last updated on  2015-12-30
+* Last updated for version 5.6.2
+* Last updated on  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -139,8 +139,8 @@ void QK_onIdle(void);
     */
     void QK_mutexUnlock(QMutex mutex);
 
-    /*! current ceiling priority of a mutex */
-    extern uint_fast8_t volatile QK_ceilingPrio_;
+    /*! scheduler lock level for priority-ceiling mutexes */
+    extern uint_fast8_t volatile QK_lockPrio_;
 
 #endif /* QK_MUTEX */
 

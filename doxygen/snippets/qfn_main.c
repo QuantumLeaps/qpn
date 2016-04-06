@@ -13,15 +13,13 @@ QMActiveCB const Q_ROM QF_active[] = {
     { (QActive *)&AO_Ped,     l_pedQueue,     Q_DIM(l_pedQueue)     }
 };
 
-/* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */
-Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
-
 /*..........................................................................*/
 int_t main (void) {
     Pelican_ctor();  /* instantiate the  Pelican AO */
     Ped_ctor();      /* instantiate the  Ped     AO */
 
-    BSP_init();      /* initialize the board */
+    QF_init(Q_DIM(QF_active)); /* initialize the QF-nano framework */
+    BSP_init();      /* initialize the Board Support Package */
 
     return QF_run(); /* transfer control to QF-nano */
 }

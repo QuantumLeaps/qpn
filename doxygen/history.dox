@@ -1,6 +1,34 @@
 /**
 @page history Revision History
 
+@section qpn_5_6_2 Version 5.6.2, 2016-04-06
+
+The main purpose of this release is to eliminate the need to define the QF_MAX_ACTIVE macro (the number of active objects) in qpn_conf.h header file and match it with the dimension of the QF_active[] global array.
+
+Instead, starting with this QP-nano version, the dimension of the QF_active[] array can be passed as the argument to the QF_init() function, as follows: QF_init(Q_DIM(QF_active));
+
+@note For backwards compatibility the QF_MAX_ACTIVE macro, if defined, is still recognized and calling QF_init(Q_DIM(QF_active)) from main() is not necessary.
+
+Changes in detail:
+
+1. Added internal variable QF_maxActive_ to store the number of active objects and replaced all occurrences of QF_MAX_ACTIVE with it.
+
+2. Moved the implementation of QF_init() from qfn_init.c to qfn.c and changed it to take the maxActive argument.
+
+3. Eliminated the source file qfn_init.c.
+
+4. Modified the POSIX-QV port to use the new initialization strategy
+
+5. Modified the WIN32-QV port to use the new initialization strategy
+
+6. Removed the macro QF_MAX_ACTIVE from all examples and added call to QF_init(Q_DIM(QF_active)) instead.
+
+7. Fixed the 3rd-party file startup_stm32l32l1xx.c to include exceptions for Cortex-M3 (MemManage_Handler, BusFault_Handler, and UsageFault_Handler).
+
+8. Updated the 3rd-party files for the EK-TM4C123GXL board (TivaC LaunchPad).
+
+
+------------------------------------------------------------------------------
 @section qpn_5_6_1 Version 5.6.1, 2016-01-11
 
 This QP-nano release provides a new version of the QK-nano ports to ARM Cortex-M, which do not use the SVC_Handler (Supervisor Call). This is done to make the QK-nano ports compatible with various "hypervisors" (such as mbed uVisor or Nordic SoftDevice), which use the SVC exception. This release contains the updated QK-nano ports to ARM Cortex-M for all supported compilers: ARM-Keil, GNU-ARM, IAR EWARM, and TI-CCS-ARM.
@@ -221,7 +249,7 @@ to 15 by breaking up the QHsm_dispatch_() function. The code metrics
 report, including cyclomatic complexity by function as well as other
 standard code metrics (e.g., lines of code), is now included in the
 "QP-nano Reference Manual", see
-http://www.state-machine.com/qp/qpn/metrics.html
+http://www.state-machine.com/qpn/metrics.html
 
 Finally, this release demonstrates safer stack allocation and safer
 exception handlers in all ARM Cortex-M examples. The techniques are

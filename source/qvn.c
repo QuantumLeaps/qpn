@@ -4,8 +4,8 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.0
-* Last updated on  2015-12-30
+* Last updated for version 5.6.2
+* Last updated on  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -69,8 +69,21 @@ int_t QF_run(void) {
     uint_fast8_t p;
     QMActive *a;
 
+#ifdef QF_MAX_ACTIVE /* deprecated constant provided? */
+#if (QF_MAX_ACTIVE < 1) || (8 < QF_MAX_ACTIVE)
+    #error "QF_MAX_ACTIVE not defined or out of range. Valid range is 1..8"
+#endif
+    QF_maxActive_ = (uint_fast8_t)QF_MAX_ACTIVE;
+#else
+    /** @pre the number of active objects must be initialized by calling:
+    * QF_init(Q_DIM(QF_active));
+    */
+    Q_REQUIRE_ID(100, ((uint_fast8_t)1 <= QF_maxActive_)
+                      && (QF_maxActive_ <= (uint_fast8_t)8));
+#endif
+
     /* set priorities all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
@@ -80,7 +93,7 @@ int_t QF_run(void) {
     }
 
     /* trigger initial transitions in all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
         QMSM_INIT(&a->super); /* take the initial transition in the SM */
     }
@@ -96,21 +109,17 @@ int_t QF_run(void) {
 #ifdef QF_LOG2
             p = QF_LOG2(QF_readySet_);
 #else
-
-#if (QF_MAX_ACTIVE > 4)
             /* hi nibble non-zero? */
             if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
                 p = (uint_fast8_t)(
                       (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
                       + (uint_fast8_t)4);
             }
-            /* hi nibble of QF_readySet_ is zero */
-            else
-#endif
-            {
+            else { /* hi nibble of QF_readySet_ is zero */
                 p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
             }
-#endif
+#endif /* QF_LOG2 */
+
             acb = &QF_active[p];
             a = QF_ROM_ACTIVE_GET_(p);
 

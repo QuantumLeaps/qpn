@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32 with cooperative QV kernel
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 
 #include "qpn.h" /* QP-nano */
@@ -45,6 +45,7 @@ Q_DEFINE_THIS_MODULE("qfn_posix")
 
 /* Global objects ==========================================================*/
 uint_fast8_t volatile QF_readySet_; /* ready-set of QF-nano */
+uint_fast8_t QF_maxActive_; /* # active objects that QF-nano must manage */
 
 #ifdef QF_TIMEEVT_USAGE
 uint_fast8_t volatile QF_timerSetX_[QF_MAX_TICK_RATE]; /* timer-set */
@@ -80,7 +81,7 @@ static bool l_isRunning;  /* flag indicating when QF is running */
 
 /* "fudged" event queues for AOs, see NOTE2 */
 #define QF_FUDGED_QUEUE_LEN  0xFFU
-static QEvt l_fudgedQueue[QF_MAX_ACTIVE][QF_FUDGED_QUEUE_LEN];
+static QEvt l_fudgedQueue[8][QF_FUDGED_QUEUE_LEN];
 #define QF_FUDGED_QUEUE_AT_(ao_, i_) (l_fudgedQueue[(ao_)->prio - 1U][(i_)])
 
 static void *tickerThread(void *par); /* the expected P-Thread signature */
@@ -209,7 +210,7 @@ bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
 #if (QF_TIMEEVT_CTR_SIZE != 0)
 
 void QF_tickXISR(uint_fast8_t const tickRate) {
-    uint_fast8_t p = (uint_fast8_t)QF_MAX_ACTIVE;
+    uint_fast8_t p = QF_maxActive_;
     do {
         QMActive *a = QF_ROM_ACTIVE_GET_(p);
         QTimer *t = &a->tickCtr[tickRate];
@@ -290,6 +291,70 @@ void QF_leaveCriticalSection_(void) {
     pthread_mutex_unlock(&l_pThreadMutex_);
 }
 /****************************************************************************/
+/**
+* @description
+* The function QF_init() initializes the number of active objects to be
+* managed by the framework and clears the internal QF-nano variables as well
+* as all registered active objects to zero, which is needed in case when
+* the startup code does not clear the uninitialized data (in violation of
+* the C Standard).
+*
+* @note
+* The intended use of the function is to call as follows:
+* QF_init(Q_DIM(QF_active));
+*/
+void QF_init(uint_fast8_t maxActive) {
+    QMActive *a;
+    uint_fast8_t p;
+    uint_fast8_t n;
+
+    /** @pre the number of active objects must be in range */
+    Q_REQUIRE_ID(100, ((uint_fast8_t)1 < maxActive)
+                      && (maxActive <= (uint_fast8_t)9));
+    QF_maxActive_ = (uint_fast8_t)maxActive - (uint_fast8_t)1;
+
+#ifdef QF_TIMEEVT_USAGE
+    for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
+        QF_timerSetX_[n] = (uint_fast8_t)0;
+    }
+#endif /* QF_TIMEEVT_USAGE */
+
+    QF_readySet_ = (uint_fast8_t)0;
+
+#ifdef QK_PREEMPTIVE
+    QK_currPrio_ = (uint_fast8_t)8; /* QK-nano scheduler locked */
+
+#ifdef QF_ISR_NEST
+    QK_intNest_ = (uint_fast8_t)0;
+#endif
+
+#ifdef QK_MUTEX
+    QK_lockPrio_ = (uint_fast8_t)0;
+#endif
+
+#endif /* #ifdef QK_PREEMPTIVE */
+
+    /* clear all registered active objects... */
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
+        a = QF_ROM_ACTIVE_GET_(p);
+
+        /* QF_active[p] must be initialized */
+        Q_ASSERT_ID(110, a != (QMActive *)0);
+
+        a->head    = (uint_fast8_t)0;
+        a->tail    = (uint_fast8_t)0;
+        a->nUsed   = (uint_fast8_t)0;
+#if (QF_TIMEEVT_CTR_SIZE != 0)
+        for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
+            a->tickCtr[n].nTicks   = (QTimeEvtCtr)0;
+#ifdef QF_TIMEEVT_PERIODIC
+            a->tickCtr[n].interval = (QTimeEvtCtr)0;
+#endif /* def QF_TIMEEVT_PERIODIC */
+        }
+#endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
+    }
+}
+/****************************************************************************/
 int_t QF_run(void) {
     uint_fast8_t p;
     QMActive *a;
@@ -298,7 +363,7 @@ int_t QF_run(void) {
     pthread_cond_init(&l_condVar, 0);
 
     /* set priorities all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
@@ -308,7 +373,7 @@ int_t QF_run(void) {
     }
 
     /* trigger initial transitions in all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= (uint_fast8_t)QF_MAX_ACTIVE; ++p) {
+    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
         QMSM_INIT(&a->super); /* take the initial transition in the SM */
     }
@@ -323,23 +388,17 @@ int_t QF_run(void) {
     while (l_isRunning) {
         QF_INT_DISABLE();
         if (QF_readySet_ != (uint_fast8_t)0) {
-            QMActiveCB const Q_ROM *acb;
 
-#if (QF_MAX_ACTIVE > 4)
             /* hi nibble non-zero? */
             if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
                 p = (uint_fast8_t)(
                       (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
                       + (uint_fast8_t)4);
             }
-            /* hi nibble of QF_readySet_ is zero */
-            else
-#endif
-            {
+            else { /* hi nibble of QF_readySet_ is zero */
                 p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
             }
 
-            acb = &QF_active[p];
             a = QF_ROM_ACTIVE_GET_(p);
 
             /* some unsuded events must be available */

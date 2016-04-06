@@ -49,13 +49,13 @@
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      561
+#define QP_VERSION      562
 
 /*! The current QP version string */
-#define QP_VERSION_STR  "5.6.1"
+#define QP_VERSION_STR  "5.6.2"
 
-/*! Tamperproof current QP release (5.6.1) and date (16-01-11) */
-#define QP_RELEASE      0xA090FDDEU
+/*! Tamperproof current QP release (5.6.2) and date (16-04-06) */
+#define QP_RELEASE      0xA063FA6DU
 
 /****************************************************************************/
 /* typedefs for basic numerical types; MISRA-C 2004 rule 6.3(req). */

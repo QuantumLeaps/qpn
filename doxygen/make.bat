@@ -1,8 +1,8 @@
 @echo off
 :: ==========================================================================
 :: Product: QP-nano script for generating Doxygen documentation
-:: Last Updated for Version: 5.5.1
-:: Date of the Last Update:  2015-10-06
+:: Last Updated for Version: 5.6.2
+:: Date of the Last Update:  2016-04-06
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
@@ -38,13 +38,13 @@ echo usage:
 echo make
 echo make -CHM
 
-set VERSION=5.5.1
+set VERSION=5.6.2
 
 :: Generate Resource Standard Metrics for QP-nano ............................ 
 set DOXHOME="C:\tools\doxygen\bin"
 set RCMHOME="C:\tools\MSquared\M2 RSM"
 
-set RSM_OUTPUT=metrics.cc
+set RSM_OUTPUT=metrics.dox
 set RSM_INPUT=..\include\*.h ..\source\*.h ..\source\*.c
 
 echo /** @page metrics Code Metrics > %RSM_OUTPUT%

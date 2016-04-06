@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano port for PELICAN example, POSIX emulation
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #ifndef qpn_port_h
 #define qpn_port_h
@@ -38,9 +38,6 @@
 #define Q_NHSM
 #define Q_PARAM_SIZE            4
 #define QF_TIMEEVT_CTR_SIZE     2
-
-/* maximum # active objects--must match EXACTLY the QF_active[] definition  */
-#define QF_MAX_ACTIVE           1
 
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */

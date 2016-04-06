@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: History Example for QP-nano, Win32
-* Last Updated for Version: 5.3.0
-* Date of the Last Update:  Feb 10, 2014
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,9 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Quantum Leaps Web sites: http://www.quantum-leaps.com
-*                          http://www.state-machine.com
-* e-mail:                  info@quantum-leaps.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"     /* QP-nano */
 #include "bsp.h"     /* Board Support Package */

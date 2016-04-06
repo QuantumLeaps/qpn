@@ -1,4 +1,4 @@
-/*! @page struct Structure and Concepts
+/*! @page struct Structure and Features
 
 @tableofcontents
 
@@ -34,24 +34,6 @@ QV-nano is a simple **cooperative** kernel (previously called "Vanilla" kernel).
 <div class="separate"></div>
 @subsection comp_qk QK-nano Preemptive Kernel
 QK-nano is a tiny **preemptive**, priority-based, non-blocking, real-time kernel designed specifically for executing active objects. QK-nano meets all the requirement of the <a class="extern" target="_blank" href="http://en.wikipedia.org/wiki/Rate-monotonic_scheduling"><strong>Rate Monotonic Scheduling</strong></a> (a.k.a. Rate Monotonic Analysis &mdash; RMA) and can be used in hard real-time systems. (See also @ref qkn).
-
-
-------------------------------------------------------------------------------
-@section oop Object-Orientation
-
-Even though QP/C is implemented in standard ANSI-C, it extensively uses object-oriented design principles such as **encapsulation** (classes), single **inheritance**, and, starting with QP5, **polymorphism** (late binding). At the C language level, these proven ways of software design become **design-patterns** and coding idioms.
-
-@htmlonly
-<div class="image">
-<a target="_blank" href="http://www.state-machine.com/doc/AN_OOP_in_C.pdf"><img border="0" src="img/AN_OOP_in_C.jpg" title="Download PDF"></a>
-<div class="caption">
-Application Note: Object-Oriented Programming in C
-</div>
-</div>
-@endhtmlonly
-
-The Quantum Leaps Application Note <a class="extern" target="_blank" href="http://www.state-machine.com/doc/AN_OOP_in_C.pdf"><strong>Object-Oriented Programming in C</strong></a> describes how the OOP design patterns are implemented in QP/C and how you should code them in your own applications.
-<div class="clear"></div>
 
 
 ------------------------------------------------------------------------------

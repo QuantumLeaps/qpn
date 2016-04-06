@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product:  Calculator Example, QP-nano
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano configuration for the Blinky example
-* Last Updated for Version: 5.6.1
-* Date of the Last Update:  2016-01-20
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,9 +33,6 @@
 *****************************************************************************/
 #ifndef qpn_conf_h
 #define qpn_conf_h
-
-/* maximum # active objects--must match EXACTLY the QF_active[] definition  */
-#define QF_MAX_ACTIVE           6
 
 #define Q_PARAM_SIZE            4
 #define QF_MAX_TICK_RATE        1

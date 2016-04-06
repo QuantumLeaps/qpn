@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP example
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last Updated for Version: 5.6.2
+* Date of the Last Update:  2016-04-05
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web  : http://www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"  /* QP-nano */
 #include "bsp.h"  /* Board Support Package */
@@ -50,15 +50,13 @@ QMActiveCB const Q_ROM QF_active[] = {
     { (QMActive *)&AO_Table,   l_tableQueue,     Q_DIM(l_tableQueue)     }
 };
 
-/* make sure that the QF_active[] array matches QF_MAX_ACTIVE in qpn_port.h */
-Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
-
 /*..........................................................................*/
 int_t main() {
-    Philo_ctor();  /* instantiate all Philo AOs */
-    Table_ctor();  /* instantiate the Table AO */
+    Philo_ctor();    /* instantiate all Philo AOs */
+    Table_ctor();    /* instantiate the Table AO */
 
-    BSP_init();
+    QF_init(Q_DIM(QF_active)); /* initialize the QF-nano framework */
+    BSP_init();      /* initialize the Board Support Package */
 
     return QF_run(); /* transfer control to QF-nano */
 }
