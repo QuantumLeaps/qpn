@@ -1,8 +1,14 @@
 /**
 @page history Revision History
 
-@section qpn_5_6_2 Version 5.6.2, 2016-04-06
+@section qpn_5_6_4 Version 5.6.4, 2016-04-25
+This release fixes two serious bugs:
+- Bug #126 (https://sourceforge.net/p/qpc/bugs/126 ) in the QK preemptive scheduler introduced in QP 5.6.2.
+- Bug #128 (https://sourceforge.net/p/qpc/bugs/128 ) in the QK port to ARM Cortex-M introduced back in QP 5.6.1
 
+
+------------------------------------------------------------------------------
+@section qpn_5_6_2 Version 5.6.2, 2016-04-06
 The main purpose of this release is to eliminate the need to define the QF_MAX_ACTIVE macro (the number of active objects) in qpn_conf.h header file and match it with the dimension of the QF_active[] global array.
 
 Instead, starting with this QP-nano version, the dimension of the QF_active[] array can be passed as the argument to the QF_init() function, as follows: QF_init(Q_DIM(QF_active));

@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.2
-* Last updated on  2016-04-05
+* Last updated for version 5.6.4
+* Last updated on  2016-04-25
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -193,7 +193,7 @@ uint_fast8_t QK_schedPrio_(void) {
         p = (uint_fast8_t)0;
     }
     else {
-        /* empty */
+        Q_ASSERT_ID(610, p <= QF_maxActive_);
     }
 #endif /* QK_MUTEX */
     return p;
@@ -249,13 +249,34 @@ void QK_sched_(uint_fast8_t p) {
 
         QF_INT_DISABLE();
 
-        /* determine the highest-priority AO ready to run */
-        p = QK_schedPrio_();
+        /* determine the priority of the highest-priority AO ready to run */
+#ifdef QF_LOG2
+        p = (uint_fast8_t)QF_LOG2(QF_readySet_);
+#else
+        /* hi nibble used? */
+        if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
+            p = (uint_fast8_t)(
+                    (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
+                    + (uint_fast8_t)4);
+        }
+        else { /* hi nibble of QF_readySet_ is zero */
+            p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
+        }
+#endif
 
         /* below the current preemption threshold? */
         if (p <= pin) {
             p = (uint_fast8_t)0;
         }
+#ifdef QK_MUTEX
+        /* below the mutex ceiling? */
+        else if (p <= QK_lockPrio_) {
+            p = (uint_fast8_t)0;
+        }
+        else {
+            Q_ASSERT_ID(710, p <= QF_maxActive_);
+        }
+#endif /* QK_MUTEX */
     } while (p != (uint_fast8_t)0);
 
     QK_currPrio_ = pin; /* restore the initial priority */

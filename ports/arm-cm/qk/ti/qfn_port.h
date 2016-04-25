@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, preemptive QK kernel, TI-ARM CCS toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.6.1
-* Date of the Last Update:  2016-01-10
+* Last Updated for Version: 5.6.4
+* Date of the Last Update:  2016-04-24
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -82,12 +82,15 @@
 
 /* QK-nano initialization and ISR entry/exit */
 #define QK_INIT()        QK_init()
-void QK_ISR_ENTRY(void);
-void QK_ISR_EXIT(void);
-
+#define QK_ISR_ENTRY() ((void)0)
+#define QK_ISR_EXIT()  \
+    ((*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)))
 
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
+
+/* get the IPSR (defined in assembly) */
+uint32_t QK_get_IPSR(void);
 
 #include "qepn.h"       /* QEP-nano platform-independent public interface */
 #include "qfn.h"        /* QF-nano platform-independent public interface */
