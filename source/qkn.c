@@ -264,7 +264,7 @@ void QK_sched_(uint_fast8_t p) {
         }
 #endif
 
-        /* below the current preemption threshold? */
+        /* below the initial preemption threshold? */
         if (p <= pin) {
             p = (uint_fast8_t)0;
         }

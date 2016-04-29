@@ -1,7 +1,11 @@
-/*****************************************************************************
-* Product: QF-nano emulation for Win32 with cooperative QV kernel
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+/**
+* @file
+* @brief QF-nano port to POSIX/P-threads, GNU-C compiler
+* @ingroup ports
+* @cond
+******************************************************************************
+* Last Updated for Version: 5.6.4
+* Date of the Last Update:  2016-04-25
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -30,12 +34,12 @@
 * Contact information:
 * http://www.state-machine.com
 * mailto:info@state-machine.com
-*****************************************************************************/
-
+******************************************************************************
+* @endcond
+*/
 #include "qpn.h" /* QP-nano */
 
 #include <pthread.h>    /* POSIX-thread API */
-#include <sys/select.h> /* for the select() API */
 
 #ifdef QK_PREEMPTIVE
     #error "This QP-nano port does not support QK_PREEMPTIVE configuration"
@@ -76,8 +80,9 @@ static uint8_t const Q_ROM l_pow2Lkup[] = {
 /* mutex for QF critical section */
 static pthread_mutex_t l_pThreadMutex_ = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t l_condVar; /* cond var to signal when AOs are ready */
-static long int l_tickUsec = 10000UL; /* clock tick in usec (for tv_usec) */
 static bool l_isRunning;  /* flag indicating when QF is running */
+static struct timespec l_tick;
+enum { NANOSLEEP_NSEC_PER_SEC = 1000000000 }; /* see NOTE1 */
 
 /* "fudged" event queues for AOs, see NOTE2 */
 #define QF_FUDGED_QUEUE_LEN  0xFFU
@@ -313,6 +318,9 @@ void QF_init(uint_fast8_t maxActive) {
                       && (maxActive <= (uint_fast8_t)9));
     QF_maxActive_ = (uint_fast8_t)maxActive - (uint_fast8_t)1;
 
+    l_tick.tv_sec = 0;
+    l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC/100L; /* default clock tick */
+
 #ifdef QF_TIMEEVT_USAGE
     for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
         QF_timerSetX_[n] = (uint_fast8_t)0;
@@ -444,21 +452,19 @@ void QF_stop(void) {
 }
 /****************************************************************************/
 void QF_setTickRate(uint32_t ticksPerSec) {
-    l_tickUsec = 1000000UL / ticksPerSec;
+    l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC / ticksPerSec;
 }
 
 /*..........................................................................*/
 static void *tickerThread(void *par) { /* the expected P-Thread signature */
-    struct timeval timeout = { 0U, 0U }; /* timeout for select() */
     (void)par; /* unused parameter */
 
     while (l_isRunning) {
-        timeout.tv_usec = l_tickUsec; /* set the desired tick interval */
-        select(0, 0, 0, 0, &timeout); /* sleep for the desired tick, NOTE1 */
-
         QF_INT_DISABLE();
-        QF_onClockTickISR(); /* call back to the app, see NOTE02 */
+        QF_onClockTickISR(); /* call back to the app, see NOTE2 */
         QF_INT_ENABLE();
+
+        nanosleep(&l_tick, NULL); /* sleep for the number of ticks, NOTE1 */
     }
     return (void *)0; /* return success */
 }
@@ -466,24 +472,9 @@ static void *tickerThread(void *par) { /* the expected P-Thread signature */
 /* NOTES: ********************************************************************
 *
 * NOTE1:
-* The select() system call seems to deliver the finest time granularity of
-* 1 clock tick. The timeout value passed to select() is rounded up to the
-* nearest tick (10 ms on desktop Linux). The timeout cannot be too short,
-* because the system might choose to busy-wait for very short timeouts.
-* An alternative, POSIX nanosleep() system call seems to deliver only 20ms
-* granularity.
-*
-* Here the select() call is used not just as a fairly portable way to sleep
-* with subsecond precision. The select() call is also used to detect any
-* characters typed on the console.
-*
-* Also according to man pages, on Linux, the function select() modifies
-* timeout to reflect the amount of time not slept; most other implementations
-* do not do this. This causes problems both when Linux code which reads
-* timeout is ported to other operating systems, and when code is ported to
-* Linux that reuses a struct timeval for multiple selects in a loop without
-* reinitializing it. Here the microsecond part of the structure is re-
-* initialized before each select() call.
+* In some (older) Linux kernels, the POSIX nanosleep() system call might
+* deliver only 2*actual-system-tick granularity. To compensate for this,
+* you would need to reduce (by 2) the constant NANOSLEEP_NSEC_PER_SEC.
 *
 * NOTE2:
 * POSIX is not necessariliy a deterministic real-time system, which means
