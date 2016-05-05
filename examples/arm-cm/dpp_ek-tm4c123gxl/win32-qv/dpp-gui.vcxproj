@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -64,7 +64,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>.;..;../../../../include;../../../../ports/win32-qv</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32_GUI;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QWIN_GUI;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -112,7 +112,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;..;../../../../include;../../../../ports/win32-qv</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32_GUI;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QWIN_GUI;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\ports\win32-qv\qfn_win32.c" />
-    <ClCompile Include="..\..\..\..\ports\win32-qv\win32_gui.c" />
+    <ClCompile Include="..\..\..\..\ports\win32-qv\qwin_gui.c" />
     <ClCompile Include="..\..\..\..\source\qepn.c" />
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\philo.c" />
@@ -177,7 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\ports\win32-qv\qfn_port.h" />
-    <ClInclude Include="..\..\..\..\ports\win32-qv\win32_gui.h" />
+    <ClInclude Include="..\..\..\..\ports\win32-qv\qwin_gui.h" />
     <ClInclude Include="..\bsp.h" />
     <ClInclude Include="..\dpp.h" />
     <ClInclude Include="..\qpn_conf.h" />

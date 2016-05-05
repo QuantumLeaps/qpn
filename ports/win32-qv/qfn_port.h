@@ -3,8 +3,8 @@
 * @brief QF-nano emulation for Win32 with cooperative QV kernel
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.2
-* Last updated on  2015-06-03
+* Last updated for version 5.6.4
+* Last updated on  2016-05-04
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -65,8 +65,8 @@ void QF_onClockTickISR(void);
 /* application-level callback to cleanup the application */
 void QF_onCleanup(void);
 
-/* special adaptations for Win32 GUI applications */
-#ifdef WIN32_GUI
+/* special adaptations for QWIN GUI applications */
+#ifdef QWIN_GUI
     /* replace main() with main_gui() as the entry point to a GUI app. */
     #define main() main_gui()
     int_t main_gui(); /* prototype of the GUI application entry point */

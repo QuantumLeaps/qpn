@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: Makefile for QP-nano, History for QHsm console, Win32-QV, MinGW
-# Last updated for version 5.4.2
-# Last updated on  2015-06-07
+# Last updated for version 5.6.4
+# Last updated on  2016-05-04
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -28,8 +28,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact information:
-# Web:   www.state-machine.com
-# Email: info@state-machine.com
+# http://www.state-machine.com
+# mailto:info@state-machine.com
 ##############################################################################
 # examples of invoking this Makefile:
 # building configurations: Debug (default), Release, and Spy
@@ -158,8 +158,8 @@ LINKFLAGS := -Wl,-Map,$(BIN_DIR)/$(PROJECT).map,--cref,--gc-sections
 # is it a GUI application? (any GUI resources provided?) ...
 ifneq (,$(RC_SRCS))
 LINKFLAGS += -mwindows
-C_SRCS    += win32_gui.c
-DEFINES   += -DWIN32_GUI
+C_SRCS    += qwin_gui.c
+DEFINES   += -DQWIN_GUI
 endif
 
 #-----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QF-nano emulation for Win32 with cooperative QV kernel
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 5.6.4
+* Date of the Last Update:  2016-05-04
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -305,7 +305,9 @@ void QF_leaveCriticalSection_(void) {
 void QF_init(uint_fast8_t maxActive) {
     QMActive *a;
     uint_fast8_t p;
+#if (defined(QF_TIMEEVT_USAGE) || (QF_TIMEEVT_CTR_SIZE != 0))
     uint_fast8_t n;
+#endif /* QF_TIMEEVT_USAGE */
 
     /** @pre the number of active objects must be in range */
     Q_REQUIRE_ID(100, ((uint_fast8_t)1 < maxActive)
