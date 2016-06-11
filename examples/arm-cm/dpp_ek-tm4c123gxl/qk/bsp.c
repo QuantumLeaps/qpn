@@ -93,7 +93,6 @@ void SysTick_Handler(void) {
 
     QF_tickXISR(0U); /* process time events for rate 0 */
 
-
     /* Perform the debouncing of buttons. The algorithm for debouncing
     * adapted from the book "Embedded Systems Dictionary" by Jack Ganssle
     * and Michael Barr, page 71.

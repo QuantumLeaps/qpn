@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="3.3.0">
+ <documentation>&quot;Fly 'n' Shoot&quot; game model from Chapters 1 &amp; 9 of PSiCC2
+
+NOTE: Requries QP5.</documentation>
+ <framework name="qpn"/>
+ <package name="AOs" stereotype="0x02">
+  <class name="Tunnel" superclass="qpn::QMActive">
+   <documentation>Tunnel Active Object</documentation>
+   <attribute name="mines[GAME_MINES_MAX]" type="QMsm *" visibility="0x02" properties="0x00"/>
+   <attribute name="mine1_pool[GAME_MINES_MAX]" type="QMsm *" visibility="0x02" properties="0x00"/>
+   <attribute name="mine2_pool[GAME_MINES_MAX]" type="QMsm *" visibility="0x02" properties="0x00"/>
+   <attribute name="blink_ctr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="last_mine_x" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="last_mine_y" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="wall_thickness_top" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="wall_thickness_bottom" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="wall_gap" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <operation name="advance" type="void" visibility="0x02" properties="0x00">
+    <code>uint32_t rnd;
+
+rnd = (BSP_random() &amp; 0xFFU);
+
+/* reduce the top wall thickness 18.75% of the time */
+if ((rnd &lt; 48U) &amp;&amp; (me-&gt;wall_thickness_top &gt; 0U)) {
+    --me-&gt;wall_thickness_top;
+}
+
+/* reduce the bottom wall thickness 18.75% of the time */
+if ((rnd &gt; 208U) &amp;&amp; (me-&gt;wall_thickness_bottom &gt; 0U)) {
+    --me-&gt;wall_thickness_bottom;
+}
+
+rnd = (BSP_random() &amp; 0xFFU);
+
+/* grow the bottom wall thickness 19.14% of the time */
+if ((rnd &lt; 49U)
+    &amp;&amp; ((GAME_TUNNEL_HEIGHT
+         - me-&gt;wall_thickness_top
+         - me-&gt;wall_thickness_bottom) &gt; me-&gt;wall_gap))
+{
+    ++me-&gt;wall_thickness_bottom;
+}
+
+/* grow the top wall thickness 19.14% of the time */
+if ((rnd &gt; 207U)
+    &amp;&amp; ((GAME_TUNNEL_HEIGHT
+         - me-&gt;wall_thickness_top
+         - me-&gt;wall_thickness_bottom) &gt; me-&gt;wall_gap))
+{
+    ++me-&gt;wall_thickness_top;
+}
+
+/* advance the Tunnel by 1 game step to the left
+* and copy the Tunnel layer to the main frame buffer
+*/
+BSP_advanceWalls(me-&gt;wall_thickness_top, me-&gt;wall_thickness_bottom);</code>
+   </operation>
+   <operation name="plantMine" type="void" visibility="0x02" properties="0x00">
+    <code>uint32_t rnd = (BSP_random() &amp; 0xFFU);
+
+if (me-&gt;last_mine_x &gt; 0U) {
+    --me-&gt;last_mine_x; /* shift the last Mine 1 position to the left */
+}
+/* last mine far enough? */
+if ((me-&gt;last_mine_x + GAME_MINES_DIST_MIN &lt; GAME_TUNNEL_WIDTH)
+    &amp;&amp; (rnd &lt; 8U)) /* place the mines only 5% of the time */
+{
+    uint8_t n;
+    for (n = 0U; n &lt; Q_DIM(me-&gt;mines); ++n) { /*look for disabled mines */
+        if (me-&gt;mines[n] == (QMsm *)0) {
+            break;
+        }
+    }
+    if (n &lt; Q_DIM(me-&gt;mines)) { /* a disabled Mine found? */
+        rnd = (BSP_random() &amp; 0xFFFFU);
+
+        if ((rnd &amp; 1U) == 0U) { /* choose the type of the mine */
+            me-&gt;mines[n] = me-&gt;mine1_pool[n];
+        }
+        else {
+            me-&gt;mines[n] = me-&gt;mine2_pool[n];
+        }
+
+        /* new Mine is planted by the end of the tunnel */
+        me-&gt;last_mine_x = GAME_TUNNEL_WIDTH - 8U;
+
+        /* choose a random y-position for the Mine in the Tunnel */
+        rnd %= (GAME_TUNNEL_HEIGHT
+                - me-&gt;wall_thickness_top
+                - me-&gt;wall_thickness_bottom - 4U);
+        me-&gt;last_mine_y = (uint8_t)(me-&gt;wall_thickness_top + 2U + rnd);
+
+        Q_SIG(me-&gt;mines[n]) = MINE_PLANT_SIG;
+        Q_PAR(me-&gt;mines[n]) = (me-&gt;last_mine_x | (me-&gt;last_mine_y &lt;&lt; 8));
+        QMSM_DISPATCH(me-&gt;mines[n]); /* direct dispatch */
+    }
+}</code>
+   </operation>
+   <operation name="dispatchToAllMines" type="void" visibility="0x02" properties="0x00">
+    <parameter name="sig" type="QSignal"/>
+    <parameter name="par" type="QParam"/>
+    <code>uint8_t n;
+
+for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
+    if (me-&gt;mines[n] != (QMsm *)0) { /* is the mine used? */
+        Q_SIG(me-&gt;mines[n]) = sig;
+        Q_PAR(me-&gt;mines[n]) = par;
+        QMSM_DISPATCH(me-&gt;mines[n]);
+    }
+}</code>
+   </operation>
+   <statechart>
+    <initial target="../1/2">
+     <action>uint8_t n;
+for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
+    QMSM_INIT(me-&gt;mine1_pool[n]); /* initial tran. for Mine1 */
+    QMSM_INIT(me-&gt;mine2_pool[n]); /* initial tran. for Mine2 */
+}
+BSP_randomSeed(1234U); /* seed the pseudo-random generator */</action>
+     <initial_glyph conn="3,2,5,1,25,14,-2">
+      <action box="1,-2,11,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="active">
+     <tran trig="MINE_DISABLED">
+      <action>Q_ASSERT((Q_PAR(me) &lt; GAME_MINES_MAX)
+         &amp;&amp; (me-&gt;mines[Q_PAR(me)] != (QMsm *)0));
+me-&gt;mines[Q_PAR(me)] = (QMsm *)0;</action>
+      <tran_glyph conn="2,9,3,-1,14">
+       <action box="0,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="PLAYER_QUIT" target="../../2">
+      <tran_glyph conn="2,12,3,1,64,76,-40">
+       <action box="0,-2,11,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="show_logo">
+      <entry>QActive_armX(&amp;me-&gt;super, 0U,
+    BSP_TICKS_PER_SEC/2U, BSP_TICKS_PER_SEC/2U); /* periodic */
+me-&gt;blink_ctr = 10U;
+BSP_paintString(24U, (GAME_TUNNEL_HEIGHT / 2U) - 8U, &quot;Quantum LeAps&quot;);
+BSP_paintString(16U, (GAME_TUNNEL_HEIGHT / 2U) + 0U, &quot;state-machine.com&quot;);
+
+BSP_paintString(1U, GAME_TUNNEL_HEIGHT - 18U, &quot;Fire missile: BTN0&quot;);
+BSP_paintString(1U, GAME_TUNNEL_HEIGHT - 10U, &quot;Fly ship up:  BTN1&quot;);
+
+BSP_updateScreen();</entry>
+      <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
+      <tran trig="Q_TIMEOUT">
+       <action>--me-&gt;blink_ctr; /* toggle the blink couner */</action>
+       <choice target="../../../3">
+        <guard>me-&gt;blink_ctr == 0U</guard>
+        <choice_glyph conn="18,26,5,1,10,6,-2">
+         <action box="1,0,15,2"/>
+        </choice_glyph>
+       </choice>
+       <choice>
+        <guard brief="else"/>
+        <choice>
+         <guard>else</guard>
+         <action>BSP_paintString(24U + 8U*6U, (GAME_TUNNEL_HEIGHT / 2U) - 8U,
+                &quot;LeaPs&quot;);
+BSP_updateScreen();</action>
+         <choice_glyph conn="18,22,5,-1,6">
+          <action box="2,0,6,2"/>
+         </choice_glyph>
+        </choice>
+        <choice>
+         <guard>(me-&gt;blink_ctr &amp; 1U) != 0U</guard>
+         <action>BSP_paintString(24U + 8U*6U, (GAME_TUNNEL_HEIGHT / 2U) - 8U,
+                &quot;LeAps&quot;);
+BSP_updateScreen();</action>
+         <choice_glyph conn="18,22,4,-1,-4,6">
+          <action box="2,-3,15,2"/>
+         </choice_glyph>
+        </choice>
+        <choice_glyph conn="18,26,4,-1,-4">
+         <action box="-4,-3,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="4,26,3,-1,14">
+        <action box="0,-2,12,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,14,22,14">
+       <entry box="1,2,5,2"/>
+       <exit box="1,4,5,2"/>
+      </state_glyph>
+     </state>
+     <state name="demo">
+      <entry>me-&gt;last_mine_x = 0U; /* last mine at right edge of the tunnel */
+me-&gt;last_mine_y = 0U;
+/* set the tunnel properties... */
+me-&gt;wall_thickness_top = 0U;
+me-&gt;wall_thickness_bottom = 0U;
+me-&gt;wall_gap = GAME_WALLS_GAP_Y;
+
+/* clear the tunnel walls */
+BSP_clearWalls();
+
+QActive_armX(&amp;me-&gt;super, 0U,
+    BSP_TICKS_PER_SEC/2U, BSP_TICKS_PER_SEC/2U); /* periodic */
+me-&gt;blink_ctr = 20U*2U; /* 20s timeout total */</entry>
+      <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
+      <tran trig="TIME_TICK">
+       <action>Tunnel_advance(me);
+if (me-&gt;blink_ctr != 0U) {
+    /* add the text bitmap into the frame buffer */
+    BSP_paintString((GAME_TUNNEL_WIDTH - 10U*6U)/2U,
+                    (GAME_TUNNEL_HEIGHT - 4U)/2U,
+                    &quot;Press BTN0&quot;);
+}
+BSP_updateScreen();</action>
+       <tran_glyph conn="4,39,3,-1,14">
+        <action box="0,-2,12,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="PLAYER_TRIGGER" target="../../4">
+       <tran_glyph conn="4,48,3,1,24,7,-2">
+        <action box="0,-2,13,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="Q_TIMEOUT">
+       <action>--me-&gt;blink_ctr;</action>
+       <choice target="../../../6">
+        <guard>me-&gt;blink_ctr == 0</guard>
+        <choice_glyph conn="18,42,5,3,14">
+         <action box="1,0,14,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="4,42,3,-1,14">
+        <action box="0,-2,12,4"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,30,22,20">
+       <entry box="1,2,6,2"/>
+       <exit box="1,4,5,2"/>
+      </state_glyph>
+     </state>
+     <state name="playing">
+      <entry>me-&gt;wall_gap = GAME_WALLS_GAP_Y;
+QACTIVE_POST(&amp;AO_Ship, TAKE_OFF_SIG, 0);</entry>
+      <exit>Tunnel_dispatchToAllMines(me, MINE_RECYCLE_SIG, 0);</exit>
+      <tran trig="TIME_TICK">
+       <action>/* render this frame on the display */
+BSP_updateScreen();
+Tunnel_advance(me);
+Tunnel_plantMine(me);
+Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
+       <tran_glyph conn="4,62,3,-1,14">
+        <action box="0,-2,9,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="SHIP_IMG">
+       <action>uint8_t x   = (uint8_t)Q_PAR(me);
+uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
+uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);
+
+/* did the Ship/Missile hit the tunnel wall? */
+if (BSP_isWallHit(bmp, x, y)) {
+    QACTIVE_POST(&amp;AO_Ship, HIT_WALL_SIG, 0);
+}
+BSP_paintBitmap(x, y, bmp);
+Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
+       <tran_glyph conn="4,65,3,-1,14">
+        <action box="0,-2,9,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MISSILE_IMG">
+       <action>uint8_t x   = (uint8_t)Q_PAR(me);
+uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
+uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);
+
+/* did the Ship/Missile hit the tunnel wall? */
+if (BSP_isWallHit(bmp, x, y)) {
+    QACTIVE_POST(&amp;AO_Missile, HIT_WALL_SIG, 0);
+}
+BSP_paintBitmap(x, y, bmp);
+Tunnel_dispatchToAllMines(me, Q_SIG(me), Q_PAR(me));</action>
+       <tran_glyph conn="4,68,3,-1,14">
+        <action box="0,-2,12,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MINE_IMG">
+       <action>BSP_paintBitmap((uint8_t)Q_PAR(me),
+                (uint8_t)(Q_PAR(me) &gt;&gt; 8),
+                (uint8_t)(Q_PAR(me) &gt;&gt; 16));</action>
+       <tran_glyph conn="4,71,3,-1,14">
+        <action box="0,-2,9,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="EXPLOSION">
+       <action>BSP_paintBitmap((uint8_t)Q_PAR(me),
+                (uint8_t)(Q_PAR(me) &gt;&gt; 8),
+                (uint8_t)(Q_PAR(me) &gt;&gt; 16));</action>
+       <tran_glyph conn="4,74,3,-1,14">
+        <action box="0,-2,11,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="SCORE">
+       <action>BSP_updateScore((uint16_t)Q_PAR(me));
+/* increase difficulty of the game:
+* the tunnel gets narrower as the score goes up
+*/
+me-&gt;wall_gap = (uint8_t)(GAME_WALLS_GAP_Y
+                  - (uint16_t)Q_PAR(me)/100U);
+if (me-&gt;wall_gap &lt; GAME_WALLS_MIN_GAP_Y) {
+    me-&gt;wall_gap = GAME_WALLS_MIN_GAP_Y;
+}</action>
+       <tran_glyph conn="4,77,3,-1,14">
+        <action box="0,-2,6,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="GAME_OVER" target="../../5">
+       <action>BSP_clearWalls();
+BSP_updateScore((uint16_t)Q_PAR(me));
+BSP_updateScreen();</action>
+       <tran_glyph conn="4,80,3,3,26,-10,2">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,52,22,30">
+       <entry box="1,2,6,2"/>
+       <exit box="1,4,5,2"/>
+      </state_glyph>
+     </state>
+     <state name="game_over">
+      <entry>QActive_armX(&amp;me-&gt;super, 0U,
+    BSP_TICKS_PER_SEC/2U, BSP_TICKS_PER_SEC/2U); /* periodic */
+me-&gt;blink_ctr = 5U*2U; /* 5s timeout */
+BSP_paintString((GAME_TUNNEL_WIDTH - 6U * 9U) / 2U,
+                (GAME_TUNNEL_HEIGHT / 2U) - 4U,
+                &quot;Game Over&quot;);
+BSP_updateScreen();</entry>
+      <exit>QActive_disarmX(&amp;me-&gt;super, 0U);
+BSP_updateScore(0); /* update the score on the display */</exit>
+      <tran trig="Q_TIMEOUT">
+       <action>--me-&gt;blink_ctr;
+BSP_paintString((GAME_TUNNEL_WIDTH - 6U*9U) / 2U,
+                (GAME_TUNNEL_HEIGHT / 2U) - 4U,
+                (((me-&gt;blink_ctr &amp; 1) != 0)
+                 ? &quot;Game Over&quot;
+                 : &quot;         &quot;));
+BSP_updateScreen();</action>
+       <choice target="../../../3">
+        <guard>me-&gt;blink_ctr == 0</guard>
+        <choice_glyph conn="45,78,5,1,17,-12,-32,-20,-4">
+         <action box="1,0,17,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="32,78,3,-1,13">
+        <action box="0,-2,12,4"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="32,68,28,14">
+       <entry box="1,2,6,2"/>
+       <exit box="1,4,5,2"/>
+      </state_glyph>
+     </state>
+     <state name="screen_saver">
+      <initial target="../2">
+       <initial_glyph conn="36,34,5,1,20,8,-2">
+        <action box="1,-2,6,2"/>
+       </initial_glyph>
+      </initial>
+      <tran trig="PLAYER_TRIGGER" target="../../3">
+       <tran_glyph conn="32,38,3,1,30,-10,-32,6,-4">
+        <action box="0,-2,13,2"/>
+       </tran_glyph>
+      </tran>
+      <state name="screen_saver_hide">
+       <entry>BSP_displayOff();  /* power down the display */
+QActive_armX(&amp;me-&gt;super, 0U, BSP_TICKS_PER_SEC*3U, 0U); /* 3 sec */</entry>
+       <exit>QActive_disarmX(&amp;me-&gt;super, 0U);
+BSP_displayOn(); /* power up the display */</exit>
+       <tran trig="Q_TIMEOUT" target="../../3">
+        <tran_glyph conn="36,48,3,1,20,6,-2">
+         <action box="0,-2,13,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="36,40,18,10">
+        <entry box="1,2,5,2"/>
+        <exit box="1,4,5,2"/>
+       </state_glyph>
+      </state>
+      <state name="screen_saver_show">
+       <entry>uint32_t rnd = BSP_random();
+/* clear the screen frame buffer */
+BSP_clearFB();
+BSP_paintString((uint8_t)(rnd % (GAME_TUNNEL_WIDTH - 10U*6U)),
+                (uint8_t) (rnd % (GAME_TUNNEL_HEIGHT - 8U)),
+                &quot;Press BTN0&quot;);
+BSP_updateScreen();
+QActive_armX(&amp;me-&gt;super, 0U, BSP_TICKS_PER_SEC/3U, 0U);/* 1/3 sec */</entry>
+       <exit>QActive_disarmX(&amp;me-&gt;super, 0U);
+BSP_clearFB();
+BSP_updateScreen();</exit>
+       <tran trig="Q_TIMEOUT" target="../../2">
+        <tran_glyph conn="36,60,3,1,22,-15,-4">
+         <action box="0,-2,13,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="36,52,18,10">
+        <entry box="1,2,6,2"/>
+        <exit box="1,4,5,2"/>
+       </state_glyph>
+      </state>
+      <state_glyph node="32,30,28,34"/>
+     </state>
+     <state_glyph node="2,4,62,80"/>
+    </state>
+    <state name="final">
+     <entry>/* clear the screen */
+BSP_clearFB();
+BSP_updateScreen();
+QF_stop(); /* stop QF and cleanup */</entry>
+     <state_glyph node="2,86,24,6">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="68,94"/>
+   </statechart>
+  </class>
+  <class name="Ship" superclass="qpn::QMActive">
+   <documentation>Ship Active Object</documentation>
+   <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="y" type="uint16_t" visibility="0x02" properties="0x00">
+    <documentation>fixed point in 14s2 representation</documentation>
+   </attribute>
+   <attribute name="exp_ctr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="score" type="uint16_t" visibility="0x02" properties="0x00"/>
+   <statechart>
+    <initial target="../1">
+     <initial_glyph conn="2,2,5,1,38,5,-2">
+      <action box="0,-2,6,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="active">
+     <initial target="../1">
+      <initial_glyph conn="3,8,5,1,31,6,-2">
+       <action box="-8,-2,6,2"/>
+      </initial_glyph>
+     </initial>
+     <state name="parked">
+      <tran trig="TAKE_OFF" target="../../2">
+       <tran_glyph conn="4,18,3,1,30,6,-2">
+        <action box="0,-2,8,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,12,28,8"/>
+     </state>
+     <state name="flying">
+      <entry>me-&gt;score = 0; /* reset the score */
+QACTIVE_POST(&amp;AO_Tunnel, SCORE_SIG, me-&gt;score);</entry>
+      <tran trig="TIME_TICK">
+       <action>/* move the Ship up or down depending on the button state */
+if (BSP_isThrottle()) {
+    if (me-&gt;y &gt; 0) {
+        me-&gt;y -= 1U;
+    }
+}
+else {
+    if (me-&gt;y &lt; (GAME_TUNNEL_HEIGHT &lt;&lt; 2)) {
+        me-&gt;y += 1U;
+    }
+}
+
+/* tell the Tunnel to draw the Ship and test for hits */
+QACTIVE_POST(&amp;AO_Tunnel, SHIP_IMG_SIG,
+             (SHIP_BMP &lt;&lt; 16)
+             | me-&gt;x
+             | ((me-&gt;y &gt;&gt; 2) &lt;&lt; 8));
+
+++me-&gt;score;  /* increment the score for surviving another tick */
+
+if ((me-&gt;score % 10) == 0) { /* is the score &quot;round&quot;? */
+    QACTIVE_POST(&amp;AO_Tunnel, SCORE_SIG, me-&gt;score);
+}</action>
+       <tran_glyph conn="4,29,3,-1,16">
+        <action box="0,-2,9,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="PLAYER_TRIGGER">
+       <action>QACTIVE_POST(&amp;AO_Missile, MISSILE_FIRE_SIG,
+             me-&gt;x | (((me-&gt;y &gt;&gt; 2) - 1 + SHIP_HEIGHT) &amp; 0xFFU) &lt;&lt; 8);</action>
+       <tran_glyph conn="4,32,3,-1,16">
+        <action box="0,-2,13,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="DESTROYED_MINE">
+       <action>me-&gt;score += (uint16_t)Q_PAR(me);
+/* the score will be sent to the Tunnel by the next TIME_TICK */</action>
+       <tran_glyph conn="4,35,3,-1,16">
+        <action box="0,-2,13,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="HIT_WALL" target="../../3">
+       <tran_glyph conn="4,38,3,1,30,10,-2">
+        <action box="0,-2,8,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="HIT_MINE" target="../../3">
+       <tran_glyph conn="4,41,3,1,30,7,-2">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,22,28,22">
+       <entry box="1,2,5,2"/>
+      </state_glyph>
+     </state>
+     <state name="exploding">
+      <entry>me-&gt;exp_ctr = 0;</entry>
+      <tran trig="TIME_TICK">
+       <choice>
+        <guard>me-&gt;exp_ctr &lt; 15</guard>
+        <action>++me-&gt;exp_ctr;
+
+  /* tell the Tunnel to draw the current stage of Explosion */
+QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
+         ((EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
+         | me-&gt;x
+         | ((((me-&gt;y &gt;&gt; 2) - 4U + SHIP_HEIGHT) &amp; 0xFFU) &lt;&lt; 8));</action>
+        <choice_glyph conn="15,55,5,-1,15">
+         <action box="1,0,15,2"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../1">
+        <guard>else</guard>
+        <action>QACTIVE_POST(&amp;AO_Tunnel, GAME_OVER_SIG, me-&gt;score);</action>
+        <choice_glyph conn="15,55,4,1,4,21,-43,-4">
+         <action box="1,4,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="4,55,3,-1,11">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,46,28,16">
+       <entry box="1,2,13,4"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="2,4,36,60"/>
+    </state>
+    <state_diagram size="42,68"/>
+   </statechart>
+  </class>
+  <class name="Missile" superclass="qpn::QMActive">
+   <documentation>Missile Active Object</documentation>
+   <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="y" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="exp_ctr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="speed" type="uint8_t" visibility="0x00" properties="0x00"/>
+   <statechart>
+    <initial target="../1">
+     <initial_glyph conn="3,3,5,1,36,4,-3">
+      <action box="0,-2,6,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="armed">
+     <tran trig="MISSILE_FIRE" target="../../2">
+      <action>me-&gt;x = (uint8_t)Q_PAR(me); /* init position from the Ship */
+me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
+      <tran_glyph conn="3,11,3,1,36,8,-2">
+       <action box="0,-2,11,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="3,5,33,8"/>
+    </state>
+    <state name="flying">
+     <tran trig="TIME_TICK">
+      <choice>
+       <guard>me-&gt;x + GAME_MISSILE_SPEED_X &lt; GAME_TUNNEL_WIDTH</guard>
+       <action>me-&gt;x += me-&gt;speed;
+/*tell the Tunnel to draw the Missile and test for wall hits*/
+QACTIVE_POST(&amp;AO_Tunnel, MISSILE_IMG_SIG,
+             (MISSILE_BMP &lt;&lt; 16)
+             | me-&gt;x
+             | (me-&gt;y &lt;&lt; 8));</action>
+       <choice_glyph conn="15,23,5,-1,18">
+        <action box="1,0,22,4"/>
+       </choice_glyph>
+      </choice>
+      <choice target="../../../1">
+       <guard>else</guard>
+       <choice_glyph conn="15,23,4,1,5,26,-19,-5">
+        <action box="1,5,6,2"/>
+       </choice_glyph>
+      </choice>
+      <tran_glyph conn="3,23,3,-1,12">
+       <action box="0,-2,9,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="HIT_WALL" target="../../3">
+      <tran_glyph conn="3,35,3,1,36,6,-2">
+       <action box="0,-2,9,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="DESTROYED_MINE" target="../../1">
+      <action>/* tell the Ship the score for destroing this Mine */
+QACTIVE_POST(&amp;AO_Ship, Q_SIG(me), Q_PAR(me));
+/* re-arm immediately &amp; let the destroyed Mine do the exploding */</action>
+      <tran_glyph conn="3,32,3,1,40,-23,-7">
+       <action box="0,-2,15,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="3,17,34,20"/>
+    </state>
+    <state name="exploding">
+     <entry>me-&gt;exp_ctr = 0;</entry>
+     <tran trig="TIME_TICK">
+      <choice>
+       <guard>(me-&gt;x &gt;= GAME_SPEED_X) &amp;&amp; (me-&gt;exp_ctr &lt; 15)</guard>
+       <action>++me-&gt;exp_ctr;             /* advance the explosion counter */
+me-&gt;x -= me-&gt;speed;       /* move the explosion by one step */
+
+/* tell the Tunnel to render the current stage of Explosion */
+QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
+         ((EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
+         | (me-&gt;x + 3)
+         | ((int)me-&gt;y - 4) &lt;&lt; 8);</action>
+       <choice_glyph conn="15,48,5,-1,20">
+        <action box="1,0,19,4"/>
+       </choice_glyph>
+      </choice>
+      <choice target="../../../1">
+       <guard>else</guard>
+       <action>/* explosion finished or moved outside the game */</action>
+       <choice_glyph conn="15,48,4,1,4,30,-43,-9">
+        <action box="1,4,6,2"/>
+       </choice_glyph>
+      </choice>
+      <tran_glyph conn="3,48,3,-1,12">
+       <action box="0,-2,8,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="3,39,34,15">
+      <entry box="1,2,13,4"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="47,56"/>
+   </statechart>
+  </class>
+  <class name="Mine1" superclass="qpn::QMsm">
+   <documentation>The Mine1 orthogonal component</documentation>
+   <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="y" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="exp_ctr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <statechart>
+    <initial target="../1">
+     <initial_glyph conn="3,2,5,1,29,4,-4">
+      <action box="0,-2,7,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="unused">
+     <tran trig="MINE_PLANT" target="../../2/1">
+      <action>me-&gt;x = (uint8_t)Q_PAR(me);
+me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
+      <tran_glyph conn="3,10,3,1,41,15,-6">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="3,4,25,8"/>
+    </state>
+    <state name="used">
+     <exit brief="...">/* tell the Tunnel that this mine is becoming disabled */
+QACTIVE_POST(&amp;AO_Tunnel, MINE_DISABLED_SIG, MINE_ID(me));</exit>
+     <tran trig="MINE_RECYCLE" target="../../1">
+      <tran_glyph conn="3,21,3,1,43,-13,-18">
+       <action box="0,-2,12,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="planted">
+      <tran trig="TIME_TICK">
+       <choice>
+        <guard>me-&gt;x &gt;= GAME_SPEED_X</guard>
+        <action>me-&gt;x -= GAME_SPEED_X;  /* move the mine 1 step */
+
+/* tell the Tunnel to draw the Mine */
+QACTIVE_POST(&amp;AO_Tunnel, MINE_IMG_SIG,
+             (MINE1_BMP &lt;&lt; 16)
+             | me-&gt;x
+             | (me-&gt;y &lt;&lt; 8));</action>
+        <choice_glyph conn="16,30,5,-1,20">
+         <action box="1,0,20,2"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../1">
+        <guard>else</guard>
+        <choice_glyph conn="16,30,4,1,4,32,-26,-20">
+         <action box="1,4,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,30,3,-1,11">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="SHIP_IMG">
+       <action>uint8_t x   = (uint8_t)Q_PAR(me);
+uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
+uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
+       <choice target="../../../../1">
+        <guard>BSP_doBitmapsOverlap(MINE1_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
+        <action>QACTIVE_POST(&amp;AO_Ship, HIT_MINE_SIG,  1);
+
+/* go straight to 'disabled' and let the Ship do
+* the exploding
+*/</action>
+        <choice_glyph conn="16,37,5,1,34,-29,-22">
+         <action box="1,0,22,4"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,37,3,-1,11">
+        <action box="0,-2,8,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MISSILE_IMG">
+       <action>uint8_t x   = (uint8_t)Q_PAR(me);
+uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
+uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
+       <choice target="../../../2">
+        <guard>BSP_doBitmapsOverlap(MINE1_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
+        <action>/* post the score for destroying Mine type-1 */
+QACTIVE_POST(&amp;AO_Missile, DESTROYED_MINE_SIG, 25);</action>
+        <choice_glyph conn="16,42,5,1,24,9,-2">
+         <action box="1,0,21,4"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,42,3,-1,11">
+        <action box="0,-2,11,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="5,23,33,24"/>
+     </state>
+     <state name="exploding">
+      <entry>me-&gt;exp_ctr = 0;</entry>
+      <tran trig="TIME_TICK">
+       <choice>
+        <guard>(me-&gt;x &gt;= GAME_SPEED_X) &amp;&amp; (me-&gt;exp_ctr &lt; 15)</guard>
+        <action>++me-&gt;exp_ctr;  /* advance the explosion counter */
+me-&gt;x -= GAME_SPEED_X; /* move explosion by 1 step */
+
+/* tell the Game to render the current stage of Explosion */
+QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
+         ((EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
+         | (me-&gt;x + 1)
+         | (((int)me-&gt;y - 4 + 2)) &lt;&lt; 8);</action>
+        <choice_glyph conn="16,56,5,-1,20">
+         <action box="1,0,20,4"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../1">
+        <guard>else</guard>
+        <choice_glyph conn="16,56,4,1,5,36,-53,-24">
+         <action box="1,5,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,56,3,-1,11">
+        <action box="0,-2,9,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="5,49,33,14">
+       <entry box="1,2,5,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="3,14,39,51">
+      <exit box="1,2,5,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="54,67"/>
+   </statechart>
+  </class>
+  <class name="Mine2" superclass="qpn::QMsm">
+   <documentation>The Mine2 orthogonal component</documentation>
+   <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="y" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="exp_ctr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <statechart>
+    <initial target="../1">
+     <initial_glyph conn="3,2,5,1,31,4,-3">
+      <action box="0,-2,6,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="unused">
+     <tran trig="MINE_PLANT" target="../../2/1">
+      <action>me-&gt;x = (uint8_t)Q_PAR(me);
+me-&gt;y = (uint8_t)(Q_PAR(me) &gt;&gt; 8);</action>
+      <tran_glyph conn="3,10,3,1,40,15,-6">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="3,4,28,8"/>
+    </state>
+    <state name="used">
+     <exit brief="...">/* tell the Tunnel that this mine is becoming disabled */
+QACTIVE_POST(&amp;AO_Tunnel, MINE_DISABLED_SIG, MINE_ID(me));</exit>
+     <tran trig="MINE_RECYCLE" target="../../1">
+      <tran_glyph conn="3,21,3,1,42,-13,-14">
+       <action box="0,-2,13,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="planted">
+      <tran trig="TIME_TICK">
+       <choice>
+        <guard>me-&gt;x &gt;= GAME_SPEED_X</guard>
+        <action>me-&gt;x -= GAME_SPEED_X;              /* move the mine 1 step */
+
+/* tell the Tunnel to draw the Mine */
+QACTIVE_POST(&amp;AO_Tunnel, MINE_IMG_SIG,
+             (MINE2_BMP &lt;&lt; 16)
+             | me-&gt;x
+             | (me-&gt;y &lt;&lt; 8));</action>
+        <choice_glyph conn="17,30,5,-1,18">
+         <action box="1,0,20,4"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../1">
+        <guard>else</guard>
+        <choice_glyph conn="17,30,4,1,4,30,-26,-16">
+         <action box="1,4,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,30,3,-1,12">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="SHIP_IMG">
+       <action>uint8_t x   = (uint8_t)Q_PAR(me);
+uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
+uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
+       <choice target="../../../../1">
+        <guard>BSP_doBitmapsOverlap(MINE2_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
+        <action>QACTIVE_POST(&amp;AO_Ship, HIT_MINE_SIG,  2);
+/* go straight to 'disabled' and let the Ship do the exploding */</action>
+        <choice_glyph conn="17,37,5,1,32,-29,-18">
+         <action box="1,0,21,4"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,37,3,-1,12">
+        <action box="0,-2,8,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="MISSILE_IMG">
+       <action>uint8_t x   = (uint8_t)Q_PAR(me);
+uint8_t y   = (uint8_t)(Q_PAR(me) &gt;&gt; 8);
+uint8_t bmp = (uint8_t)(Q_PAR(me) &gt;&gt; 16);</action>
+       <choice target="../../../2">
+        <guard>BSP_doBitmapsOverlap(MINE2_MISSILE_BMP, me-&gt;x, me-&gt;y, bmp, x, y)</guard>
+        <action>/* NOTE: Mine type-2 is nastier than Mine type-1.
+* The type-2 mine can hit the Ship with any of its
+* &quot;tentacles&quot;. However, it can be destroyed by the
+* Missile only by hitting its center, defined as
+* a smaller bitmap MINE2_MISSILE_BMP.
+*/
+/* post the score for destroying Mine type-2 */
+QACTIVE_POST(&amp;AO_Missile, DESTROYED_MINE_SIG, 45);</action>
+        <choice_glyph conn="17,43,5,1,22,9,-2">
+         <action box="1,0,26,4"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,43,3,-1,12">
+        <action box="0,-2,11,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="5,24,32,24"/>
+     </state>
+     <state name="exploding">
+      <entry>me-&gt;exp_ctr = 0;</entry>
+      <tran trig="TIME_TICK">
+       <choice>
+        <guard>(me-&gt;x &gt;= GAME_SPEED_X) &amp;&amp; (me-&gt;exp_ctr &lt; 15)</guard>
+        <action>++me-&gt;exp_ctr; /* advance the explosion counter */
+me-&gt;x -= GAME_SPEED_X; /* move explosion by 1 step */
+
+/* tell the Game to render the current stage of Explosion */
+QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
+         ((EXPLOSION0_BMP + (me-&gt;exp_ctr &gt;&gt; 2)) &lt;&lt; 16)
+         | (me-&gt;x + 1)
+         | (((int)me-&gt;y - 4 + 2)) &lt;&lt; 8);</action>
+        <choice_glyph conn="17,57,5,-1,18">
+         <action box="1,0,20,4"/>
+        </choice_glyph>
+       </choice>
+       <choice target="../../../../1">
+        <guard>else</guard>
+        <choice_glyph conn="17,57,4,1,5,34,-54,-20">
+         <action box="1,5,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="5,57,3,-1,12">
+        <action box="0,-2,9,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="5,50,32,14">
+       <entry box="1,2,5,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="3,14,38,52">
+      <exit box="1,2,5,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="53,68"/>
+   </statechart>
+  </class>
+  <attribute name="AO_Tunnel" type="struct Tunnel" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Ship" type="struct Ship" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_Missile" type="struct Missile" visibility="0x00" properties="0x00"/>
+  <operation name="Tunnel_ctor" type="void" visibility="0x00" properties="0x01">
+   <code>uint8_t n;
+Tunnel *me = &amp;AO_Tunnel;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Tunnel_initial));
+for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
+    me-&gt;mine1_pool[n] = Mine1_ctor(n); /* instantiate Mine1 in the pool */
+    me-&gt;mine2_pool[n] = Mine2_ctor(n); /* instantiate Mine2 in the pool */
+    me-&gt;mines[n] = (QMsm *)0;                     /* mine 'n' is unused */
+}
+me-&gt;last_mine_x = 0;   /* the last mine at the right edge of the tunnel */
+me-&gt;last_mine_y = 0;</code>
+  </operation>
+  <operation name="Ship_ctor" type="void" visibility="0x00" properties="0x01">
+   <code>Ship *me = &amp;AO_Ship;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Ship_initial));
+me-&gt;x = GAME_SHIP_X;
+me-&gt;y = (GAME_SHIP_Y &lt;&lt; 2);</code>
+  </operation>
+  <operation name="Missile_ctor" type="void" visibility="0x00" properties="0x01">
+   <parameter name="speed" type="uint8_t"/>
+   <code>Missile *me = &amp;AO_Missile;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Missile_initial));
+me-&gt;speed = speed;</code>
+  </operation>
+  <operation name="Mine1_ctor" type="QMsm *" visibility="0x00" properties="0x01">
+   <parameter name="id" type="uint8_t"/>
+   <code>Mine1 *me;
+Q_REQUIRE(id &lt; GAME_MINES_MAX);
+
+me = &amp;l_mine1[id];
+QMsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Mine1_initial));
+return (QMsm *)me;</code>
+  </operation>
+  <operation name="Mine2_ctor" type="QMsm *" visibility="0x00" properties="0x01">
+   <parameter name="id" type="uint8_t"/>
+   <code>Mine2 *me;
+Q_REQUIRE(id &lt; GAME_MINES_MAX);
+
+me = &amp;l_mine2[id];
+QMsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Mine2_initial));
+return (QMsm *)me;</code>
+  </operation>
+ </package>
+ <directory name=".">
+  <file name="game.h">
+   <text>#ifndef game_h
+#define game_h
+
+enum GameSignals { /* signals used in the game */
+    TIME_TICK_SIG = Q_USER_SIG, /* published from tick ISR */
+    PLAYER_TRIGGER_SIG, /* posted by Player (ISR) to trigger the Missile */
+    PLAYER_QUIT_SIG,  /* posted by Player (ISR) to quit the game */
+    GAME_OVER_SIG,    /* posted by Ship when it finishes exploding */
+    PLAYER_SHIP_MOVE_SIG, /* posted by Player (ISR) to the Ship to move it */
+    TAKE_OFF_SIG,     /* from Tunnel to Ship to grant permission to take off */
+    HIT_WALL_SIG,     /* from Tunnel to Ship when Ship hits the wall */
+    HIT_MINE_SIG,     /* from Mine to Ship or Missile when it hits the mine */
+    SHIP_IMG_SIG,     /* from Ship to the Tunnel to draw and check for hits */
+    MISSILE_IMG_SIG,  /* from Missile the Tunnel to draw and check for hits */
+    MINE_IMG_SIG,     /* posted by Mine to the Tunnel to draw the mine */
+    MISSILE_FIRE_SIG, /* posted by Ship to the Missile to fire */
+    DESTROYED_MINE_SIG, /* from Missile to Ship when Missile destroyed Mine */
+    EXPLOSION_SIG,    /* from any exploding object to render the explosion */
+    MINE_PLANT_SIG,   /* from Tunnel to the Mine to plant it */
+    MINE_DISABLED_SIG,/* from Mine to Tunnel when it becomes disabled */
+    MINE_RECYCLE_SIG, /* posted by Tunnel to Mine to recycle the mine */
+    SCORE_SIG /* from Ship to Tunnel to adjust game level based on score */
+};
+
+/* active objects ..........................................................*/
+extern struct Tunnel  AO_Tunnel;
+extern struct Ship    AO_Ship;
+extern struct Missile AO_Missile;
+
+$declare(AOs::Tunnel_ctor)
+$declare(AOs::Ship_ctor)
+$declare(AOs::Missile_ctor)
+
+/* common constants and shared helper functions ............................*/
+#define GAME_TUNNEL_WIDTH          BSP_SCREEN_WIDTH
+#define GAME_TUNNEL_HEIGHT         (BSP_SCREEN_HEIGHT - 10U)
+#define GAME_MINES_MAX             5U
+#define GAME_MINES_DIST_MIN        10U
+#define GAME_SPEED_X               1U
+#define GAME_MISSILE_SPEED_X       2U
+#define GAME_SHIP_X                10U
+#define GAME_SHIP_Y                (GAME_TUNNEL_HEIGHT / 2U)
+#define GAME_WALLS_GAP_Y           50U
+#define GAME_WALLS_MIN_GAP_Y       20U
+
+enum GameBitmapIds {
+    SHIP_BMP,
+    MISSILE_BMP,
+    MINE1_BMP,
+    MINE2_BMP,
+    MINE2_MISSILE_BMP,
+    EXPLOSION0_BMP,
+    EXPLOSION1_BMP,
+    EXPLOSION2_BMP,
+    EXPLOSION3_BMP,
+    MAX_BMP
+};
+
+/* instantiation of the Mines orthogonal components */
+$declare(AOs::Mine1_ctor)
+$declare(AOs::Mine2_ctor)
+
+#endif  /* game_h */</text>
+  </file>
+  <file name="missile.c">
+   <text>#include &quot;qpn.h&quot;
+#include &quot;game.h&quot;
+#include &quot;bsp.h&quot;
+
+/* Q_DEFINE_THIS_MODULE(&quot;missile&quot;) */
+
+/* encapsulated delcaration of the Missile active object -------------------*/
+$declare(AOs::Missile)
+
+/* global objects ----------------------------------------------------------*/
+Missile AO_Missile;
+
+/* Active object definition ------------------------------------------------*/
+$define(AOs::Missile_ctor)
+$define(AOs::Missile)</text>
+  </file>
+  <file name="ship.c">
+   <text>#include &quot;qpn.h&quot;
+#include &quot;game.h&quot;
+#include &quot;bsp.h&quot;
+
+/* Q_DEFINE_THIS_MODULE(ship) */
+
+#define SHIP_WIDTH  5U
+#define SHIP_HEIGHT 3U
+
+/* encapsulated delcaration of the Ship active object ----------------------*/
+$declare(AOs::Ship)
+
+/* global objects ----------------------------------------------------------*/
+Ship AO_Ship;
+
+/* Active object definition ------------------------------------------------*/
+$define(AOs::Ship_ctor)
+$define(AOs::Ship)</text>
+  </file>
+  <file name="tunnel.c">
+   <text>#include &quot;qpn.h&quot;
+#include &quot;game.h&quot;
+#include &quot;bsp.h&quot;
+
+Q_DEFINE_THIS_MODULE(&quot;tunnel&quot;)
+
+/* local objects -----------------------------------------------------------*/
+$declare(AOs::Tunnel)
+
+/* global objects ----------------------------------------------------------*/
+Tunnel AO_Tunnel;
+
+/* Active object definition ================================================*/
+$define(AOs::Tunnel_ctor)
+$define(AOs::Tunnel)</text>
+  </file>
+  <file name="mine1.c">
+   <text>#include &quot;qpn.h&quot;
+#include &quot;game.h&quot;
+#include &quot;bsp.h&quot;
+
+Q_DEFINE_THIS_MODULE(&quot;mine1&quot;)
+
+/* encapsulated delcaration of the Mine1 HSM -------------------------------*/
+$declare(AOs::Mine1)
+
+/* local objects -----------------------------------------------------------*/
+static Mine1 l_mine1[GAME_MINES_MAX]; /* a pool of type-1 mines */
+
+/* helper macro to provide the ID of this mine */
+#define MINE_ID(me_)    ((me_) - l_mine1)
+
+/* Mine1 class definition --------------------------------------------------*/
+$define(AOs::Mine1_ctor)
+$define(AOs::Mine1)</text>
+  </file>
+  <file name="mine2.c">
+   <text>#include &quot;qpn.h&quot;
+#include &quot;game.h&quot;
+#include &quot;bsp.h&quot;
+
+Q_DEFINE_THIS_MODULE(&quot;mine2&quot;)
+
+/* encapsulated delcaration of the Mine2 HSM -------------------------------*/
+$declare(AOs::Mine2)
+
+/* local objects -----------------------------------------------------------*/
+static Mine2 l_mine2[GAME_MINES_MAX]; /* a pool of type-2 mines */
+
+/* helper macro to provide the ID of this mine */
+#define MINE_ID(me_)    ((me_) - l_mine2)
+
+/* Mine2 class definition --------------------------------------------------*/
+$define(AOs::Mine2_ctor)
+$define(AOs::Mine2)</text>
+  </file>
+ </directory>
+</model>

@@ -144,7 +144,7 @@ QP examples @ref ports "QP ports" are provided in the following three **build co
 
 @remark
 <strong>Why do you need multiple build configurations?</strong>@n
-The different phases of embedded software life-cycle pose different challenges. During the development and maintenance phase, for example, the emphasis is on the ease of debugging and verifying the correctness of the code, which require lower levels of optimization and special scaffolding code. In contrast, for releasing the code in the final product, the emphasis is on small memory footprint and CPU time efficiency, which require high-level of optimization and removal of any scaffolding code. To address these conflicting needs, the same source code is compiled into multiple **build configurations** that differ in the use of compiler options and activation of the scaffolding code.
+The different phases of embedded software life cycle pose different challenges. During the development and maintenance phase, for example, the emphasis is on the ease of debugging and verifying the correctness of the code, which require lower levels of optimization and special scaffolding code. In contrast, for releasing the code in the final product, the emphasis is on small memory footprint and CPU time efficiency, which require high-level of optimization and removal of any scaffolding code. To address these conflicting needs, the same source code is compiled into multiple **build configurations** that differ in the use of compiler options and activation of the scaffolding code.
 
 
 -----------------------------------------------------------------------------
@@ -170,6 +170,32 @@ The Third-Party software components included in the <span class="img folder">3rd
 sub-folders.
 
 
+------------------------------------------------------------------------------
+@section exa_own Creating your Own QP-nano Projects
+
+Perhaps the most important fact of life to remember is that in embedded systems nothing works until everything works. This means that you should always start with a <strong>working system</strong> and gradually evolve it, changing one thing at a time and making sure that it keeps working every step of the way.
+
+Keeping this in mind, the provided QP-nano application examples, such as the super-simple Blinky, or a bit more advanced @ref dpp or @ref game, allow you to get started with a working project rather than starting from scratch. You should also always try one of the provided example projects on the same evaluation board that it was designed for, before making any changes.
+
+Only after convincing yourself that the example project works "as is", you can think about creating your own projects. At this point, the easiest and recommended way is to copy the existing working example project folder (such as the Blinky example) and rename it.
+
+After copying the project folder, you still need to change the name of the project/workspace. The easiest and safest way to do this is to open the project/workspace in the corresponding IDE and use the Save As... option to save the project under a different name. You can do this also with the QM model file, which you can open in QM and "Save As" a different model.
+
+@note
+By copying and re-naming an existing, working project, as opposed to creating a new one from scratch, you inherit the correct compiler and linker options an other project settings, which will help you get started much faster.
+
+
+------------------------------------------------------------------------------
+@section exa_doc Next Steps and Further Reading About QP and QM
+
+To work with QP-nano effectively, you need to learn a bit more about active objects and state machines. Below is a list of links to enable you to further your knowledge:
+
+1. The book “Practical UML Statecharts in C/C++, 2nd Edition” [PSiCC2] and the companion web-page to the book (http://www.state-machine.com/psicc2/
+2. Free Support Forum for QP/QM (https://sourceforge.net/p/qpc/discussion/668726 )
+3. QP Code Downloads summary (http://www.state-machine.com/downloads )
+4. QP Application Notes (http://www.state-machine.com/doc/an.html )
+5. "State Space" Blog (http://embeddedgurus.com/state-space/ )
+
 @next{exa_ref}
 */
 
@@ -184,11 +210,16 @@ sub-folders.
 
 
 ------------------------------------------------------------------------------
-@section exa_ref_native Native Examples (Bare-Metal)
+@section exa_ref_native Native Examples (by Built-in Kernel)
+- @ref exa_qv
+- @ref exa_qk
+
+------------------------------------------------------------------------------
+@section exa_ref_native Native Examples (by Processor)
 - @ref exa_arm-cm (Cortex-M0/M0+/M3/M4/M4F)
 - @ref exa_arm7-9 ("classic ARM")
-- @ref exa_avr (8-bit megaAVR)
 - @ref exa_msp430 ("classic" MSP430 and "extended" MSP430x)
+- @ref exa_avr (8-bit megaAVR)
 
 
 ------------------------------------------------------------------------------
@@ -206,21 +237,22 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
 
 - ARM Cortex-M Boards:
     - <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL">EK-TM4C123GXL</a> (TivaC LaunchPad)
+    - <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A">EFM32-SLSTK3401A</a>
     - <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768">mbed-LPC1768</a>
     - <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8">NUCLEO-L053R8</a>
     - <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE">NUCLEO-L152RE</a>
-    - <a class="preview board" href="bd_EK-LM3S811.jpg" title="EK-LM3S811">EK-LM3S811</a>
+    - <a class="preview board" href="bd_EK-LM3S6965.jpg" title="EK-LM3S6965">EK-LM3S6965</a>
     - <a class="preview board" href="bd_STM32F4-Discovery.jpg" title="STM32F4-Discovery">STM32F4-Discovery</a>
 
 - ARM7 Boards:
     - <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK">AT91SAM7S-EK</a>
 
-- AVR (megaAVR) Boards:
-    - <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO">Arduino-UNO</a>
-
 - MSP430 Boards:
     - <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2">MSP-EXP430G2</a> (MSP430 LaunchPad)
     - <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP">MSP-EXP430F5529LP</a> (MSP430X LaunchPad)
+
+- AVR (megaAVR) Boards:
+    - <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO">Arduino-UNO</a>
 
 
 ------------------------------------------------------------------------------
@@ -229,24 +261,23 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
     - @ref arm-cm_dpp_nucleo-l053r8  <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
 - ARM Cortex-M3
     - @ref arm-cm_dpp_nucleo-l152re  <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
-    - @ref arm-cm_game_ek-lm3s811  <a class="preview board" href="bd_EK-LM3S811.jpg" title="EK-LM3S811"></a>
     - @ref arm-cm_dpp_mbed-lpc1768  <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768"></a>
 - ARM Cortex-M4F (with hardware FPU)
     - @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+    - @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
     - @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+    - @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+    - @ref arm-cm_game_efm32-slstk3401a  <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
 - ARM7 / ARM9
     - @ref arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
-
-- AVRmega
-    - @ref avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
-    - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
-
-- AVR32UC (coming soon...)
 
 - MSP430
     - @ref msp430_blinky_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
     - @ref msp430_blinky_msp-exp430f5529lp <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP"></a>
     - @ref msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+- AVRmega
+    - @ref avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+    - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
 
 - PIC24 /dsPIC (coming soon...)
 - PIC32 (coming soon...)
@@ -260,35 +291,34 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
 - ARM architecture
     - ARM (ARM-Keil)
         - @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+        - @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
-        - @ref arm-cm_dpp_mbed-lpc1768  <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768"></a>
+        - @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm-cm_dpp_nucleo-l053r8  <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
         - @ref arm-cm_dpp_nucleo-l152re  <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
-        - @ref arm-cm_game_ek-lm3s811  <a class="preview board" href="bd_EK-LM3S811.jpg" title="EK-LM3S811"></a>
+        - @ref arm-cm_game_efm32-slstk3401a  <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
     - GNU-ARM
         - @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+        - @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+        - @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm-cm_dpp_mbed-lpc1768  <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768"></a>
         - @ref arm-cm_dpp_nucleo-l053r8  <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
         - @ref arm-cm_dpp_nucleo-l152re  <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
-        - @ref arm-cm_game_ek-lm3s811  <a class="preview board" href="bd_EK-LM3S811.jpg" title="EK-LM3S811"></a>
+        - @ref arm-cm_game_efm32-slstk3401a  <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
     - IAR EWARM
         - @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+        - @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+        - @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm-cm_dpp_mbed-lpc1768  <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768"></a>
         - @ref arm-cm_dpp_nucleo-l053r8  <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
         - @ref arm-cm_dpp_nucleo-l152re  <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
-        - @ref arm-cm_game_ek-lm3s811  <a class="preview board" href="bd_EK-LM3S811.jpg" title="EK-LM3S811"></a>
+        - @ref arm-cm_game_efm32-slstk3401a  <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
         - @ref arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
-
-- AVR architecture
-    - GNU-AVR (WinAVR)
-        - @ref avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
-        - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
-    - IAR EWAVR
-        - @ref avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
-        - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+    - TI ARM
+        - @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
 
 - MSP430 architecture
     - CCS-430
@@ -300,6 +330,16 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
         - @ref msp430_blinky_msp-exp430f5529lp <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP"></a>
         - @ref msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
 
+- AVR architecture
+    - GNU-AVR (WinAVR)
+        - @ref avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+        - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+    - IAR EWAVR
+        - @ref avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+        - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+
+
+
 
 ------------------------------------------------------------------------------
 @section exa_ref_vendor Examples by MCU Vendor
@@ -309,13 +349,17 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
     - @ref avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
 - NXP
     - @ref arm-cm_dpp_mbed-lpc1768  <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768"></a>
+- Silicon Labs
+    - @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+    - @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+    - @ref arm-cm_game_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
 - STMicroelectronics
     - @ref arm-cm_dpp_nucleo-l053r8  <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
     - @ref arm-cm_dpp_nucleo-l152re  <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
 - Texas Instruments
     - @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
     - @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
-    - @ref arm-cm_game_ek-lm3s811  <a class="preview board" href="bd_EK-LM3S811.jpg" title="EK-LM3S811"></a>
+    - @ref arm-cm_game_efm32-slstk3401a  <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
 
 @next{exa_native}
 */

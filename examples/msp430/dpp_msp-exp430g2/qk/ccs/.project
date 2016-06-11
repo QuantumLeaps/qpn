@@ -28,7 +28,12 @@
 		<link>
 			<name>QP</name>
 			<type>2</type>
-			<location>D:/qp/qpn/source</location>
+			<locationURI>PARENT-5-PROJECT_LOC/source</locationURI>
+		</link>
+		<link>
+			<name>QP_port</name>
+			<type>2</type>
+			<locationURI>PARENT-5-PROJECT_LOC/ports/msp430/qk/ccs</locationURI>
 		</link>
 		<link>
 			<name>bsp.c</name>

@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: Generic Makefile for QP-nano application, POSIX, GNU compiler
-# Last updated for version 5.4.0
-# Last updated on  2015-04-07
+# Product: Makefile for QP/C, Blinky console, POSIX, GNU compiler
+# Last updated for version 5.6.5
+# Last updated on  2016-06-07
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -28,8 +28,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact information:
-# Web:   www.state-machine.com
-# Email: info@state-machine.com
+# http://www.state-machine.com
+# mailto:info@state-machine.com
 ##############################################################################
 # examples of invoking this Makefile:
 # building configurations: Debug (default), Release, and Spy
@@ -39,13 +39,7 @@
 # cleaning configurations: Debug (default), Release, and Spy
 # make clean
 # make CONF=rel clean
-
-##############################################################################
-#
-# NOTE: Typically, you should have no need to change anything in this Makefile
-#
-##############################################################################
-
+# make CONF=spy clean
 
 #-----------------------------------------------------------------------------
 # location of the QP-nano framework (if not provided in an environemnt var.)
@@ -62,7 +56,7 @@ LINK  := gcc   # for C programs
 #LINK  := g++  # for C++ programs
 
 MKDIR := mkdir -p
-RM    := rm
+RM    := rm -f
 
 
 #-----------------------------------------------------------------------------
@@ -188,10 +182,7 @@ endif
 
 .PHONY : clean
 clean:
-	-$(RM) $(BIN_DIR)/*.o \
-	$(BIN_DIR)/*.d \
-	$(BIN_DIR)/*. \
-	$(BIN_DIR)/*.map
+	-$(RM) $(BIN_DIR)/*
 	
 show:
 	@echo PROJECT  = $(PROJECT)

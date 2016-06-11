@@ -4,8 +4,8 @@
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.6.4
-* Date of the Last Update:  2016-04-25
+* Last Updated for Version: 5.6.5
+* Date of the Last Update:  2016-06-09
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -78,7 +78,7 @@ static uint8_t const Q_ROM l_pow2Lkup[] = {
 };
 
 /* mutex for QF critical section */
-static pthread_mutex_t l_pThreadMutex_ = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t l_pThreadMutex_;
 static pthread_cond_t l_condVar; /* cond var to signal when AOs are ready */
 static bool l_isRunning;  /* flag indicating when QF is running */
 static struct timespec l_tick;
@@ -317,6 +317,9 @@ void QF_init(uint_fast8_t maxActive) {
     Q_REQUIRE_ID(100, ((uint_fast8_t)1 < maxActive)
                       && (maxActive <= (uint_fast8_t)9));
     QF_maxActive_ = (uint_fast8_t)maxActive - (uint_fast8_t)1;
+
+    /* init the global mutex with the default non-recursive initializer */
+    pthread_mutex_init(&l_pThreadMutex_, NULL);
 
     l_tick.tv_sec = 0;
     l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC/100L; /* default clock tick */
