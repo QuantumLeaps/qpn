@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.4
-* Last updated on  2016-04-25
+* Last updated for version 5.7.0
+* Last updated on  2016-08-31
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -52,19 +52,10 @@ Q_DEFINE_THIS_MODULE("qkn")
     #error "The preemptive QK-nano kernel is not configured properly"
 #endif
 
-/* Global-scope objects *****************************************************/
+/* Public-scope objects *****************************************************/
+QK_Attr QK_attr_; /* global attributes of the QK-nano kernel */
 
-/* start with the QK scheduler locked */
-uint_fast8_t volatile QK_currPrio_ = (uint_fast8_t)8;
-
-#ifdef QF_ISR_NEST
-uint_fast8_t volatile QK_intNest_; /* interrupt nesting for QK kernel */
-#endif
-
-#ifdef QK_MUTEX
-uint_fast8_t volatile QK_lockPrio_; /* ceiling priority of a mutex */
-#endif
-
+/* Local-scope objects ******************************************************/
 static void initialize(void); /* prototype required by MISRA */
 
 /****************************************************************************/
@@ -117,7 +108,7 @@ static void initialize(void) {
     }
 
     QF_INT_DISABLE();
-    QK_currPrio_ = (uint_fast8_t)0; /* the priority for the QK idle loop */
+    QK_attr_.curr = (uint_fast8_t)0; /* the priority for QK idle loop */
     p = QK_schedPrio_();
     if (p != (uint_fast8_t)0) {
         QK_sched_(p); /* process all events produced so far */
@@ -184,12 +175,12 @@ uint_fast8_t QK_schedPrio_(void) {
 #endif
 
     /* below the current preemption threshold? */
-    if (p <= QK_currPrio_) {
+    if (p <= QK_attr_.curr) {
         p = (uint_fast8_t)0;
     }
 #ifdef QK_MUTEX
     /* below the mutex ceiling? */
-    else if (p <= QK_lockPrio_) {
+    else if (p <= QK_attr_.lockPrio) {
         p = (uint_fast8_t)0;
     }
     else {
@@ -201,8 +192,8 @@ uint_fast8_t QK_schedPrio_(void) {
 
 /****************************************************************************/
 /**
-* @param[in]  p  priority of the next AO to schedule, typically obtained
-*                from QK_schedPrio_().
+* @param[in] p  priority of the next AO to schedule, typically obtained
+*               from QK_schedPrio_().
 *
 * @attention QK_sched_() must be always called with interrupts
 * __disabled__  and returns with interrupts __disabled__.
@@ -211,13 +202,13 @@ uint_fast8_t QK_schedPrio_(void) {
 * returns with interrupts __disabled__.
 */
 void QK_sched_(uint_fast8_t p) {
-    uint_fast8_t pin = QK_currPrio_; /* save the initial priority */
+    uint_fast8_t pin = QK_attr_.curr; /* save the initial priority */
 
     do {
         QMActive *a;
         QMActiveCB const Q_ROM *acb;
 
-        QK_currPrio_ = p; /* new priority becomes the current priority */
+        QK_attr_.curr = p; /* new priority becomes the current priority */
         QF_INT_ENABLE();  /* it's safe to leave critical section */
 
         acb = &QF_active[p];
@@ -270,7 +261,7 @@ void QK_sched_(uint_fast8_t p) {
         }
 #ifdef QK_MUTEX
         /* below the mutex ceiling? */
-        else if (p <= QK_lockPrio_) {
+        else if (p <= QK_attr_.lockPrio) {
             p = (uint_fast8_t)0;
         }
         else {
@@ -279,7 +270,7 @@ void QK_sched_(uint_fast8_t p) {
 #endif /* QK_MUTEX */
     } while (p != (uint_fast8_t)0);
 
-    QK_currPrio_ = pin; /* restore the initial priority */
+    QK_attr_.curr = pin; /* restore the initial priority */
 }
 
 
@@ -305,9 +296,9 @@ void QK_sched_(uint_fast8_t p) {
 QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
     uint_fast8_t mutex;
     QF_INT_DISABLE();
-    mutex = QK_lockPrio_; /* the original QK priority ceiling to return */
-    if (QK_lockPrio_ < prioCeiling) {
-        QK_lockPrio_ = prioCeiling; /* raise the QK priority ceiling */
+    mutex = QK_attr_.lockPrio; /* original QK priority ceiling to return */
+    if (QK_attr_.lockPrio < prioCeiling) {
+        QK_attr_.lockPrio = prioCeiling; /* raise the QK priority ceiling */
     }
     QF_INT_ENABLE();
     return mutex;
@@ -330,8 +321,8 @@ QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
 */
 void QK_mutexUnlock(QMutex mutex) {
     QF_INT_DISABLE();
-    if (QK_lockPrio_ > mutex) {
-        QK_lockPrio_ = mutex; /* restore the saved priority ceiling */
+    if (QK_attr_.lockPrio > mutex) {
+        QK_attr_.lockPrio = mutex; /* restore the saved priority ceiling */
         mutex = QK_schedPrio_(); /* reuse 'mutex' to hold priority */
         if (mutex != (uint_fast8_t)0) {
             QK_sched_(mutex);

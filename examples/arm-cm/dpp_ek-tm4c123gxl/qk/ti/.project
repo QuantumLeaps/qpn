@@ -28,17 +28,17 @@
 		<link>
 			<name>QP</name>
 			<type>2</type>
-			<location>C:/qp/qpn/source</location>
+			<location>PARENT-5-PROJECT_LOC/source</location>
 		</link>
 		<link>
 			<name>QP_include</name>
 			<type>2</type>
-			<location>C:/qp/qpn/include</location>
+			<location>PARENT-5-PROJECT_LOC/include</location>
 		</link>
 		<link>
 			<name>QP_port</name>
 			<type>2</type>
-			<location>C:/qp/qpn/ports/arm-cm/qk/ti</location>
+			<location>PARENT-5-PROJECT_LOC/ports/arm-cm/qk/ti</location>
 		</link>
 		<link>
 			<name>bsp.c</name>

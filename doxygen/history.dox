@@ -1,6 +1,13 @@
 /**
 @page history Revision History
 
+@section qpn_5_7_0 Version 5.7.0, 2016-08-31
+This release release changes once more the QK-nano port to ARM Cortex-M, to reduce the interrupt latecy. This has been achieved by shortening the critical section in the PendSV exception. Also, this QK port to Cortex-M no longer uses the NMI exception.
+
+Finally, this release replaces all absolute paths with relative paths in all CCS-Eclipse project files (for TivaC, Hercules, and MSP430).
+
+
+------------------------------------------------------------------------------
 @section qpn_5_6_5 Version 5.6.5, 2016-06-09
 This release adds support for the new board: EFM32-SLSTK3401A (Pearl Gecko Starter Kit from Silicon Labs). This board replaces the Stellaris EK-LM3S811 board, which has been discontinued. (The Stellaris EK-LM3S811 board had been used in the "Fly 'n' Shoot" game example accompanying the PSiCC2 book).
 

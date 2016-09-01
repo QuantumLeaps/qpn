@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.2
-* Last updated on  2016-04-05
+* Last updated for version 5.7.0
+* Last updated on  2016-08-31
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -39,6 +39,24 @@
 */
 #ifndef qkn_h
 #define qkn_h
+
+/****************************************************************************/
+/*! attributes of the QK kernel */
+typedef struct {
+    uint_fast8_t volatile curr;  /*!< priority of the current executing AO */
+    uint_fast8_t volatile next;  /*!< priority of the next AO to execute */
+    void volatile        *aux;   /*!< auxiliary attribute used in the port */
+#ifdef QK_MUTEX
+    uint_fast8_t volatile lockPrio;   /*!< lock prio (0 == no-lock) */
+    uint_fast8_t volatile lockHolder; /*!< prio of the lock holder */
+#endif /* QK_MUTEX */
+#ifdef QF_ISR_NEST
+    uint_fast8_t volatile intNest;    /*!< ISR nesting level */
+#endif /* QF_ISR_NEST */
+} QK_Attr;
+
+/*! global attributes of the QK kernel */
+extern QK_Attr QK_attr_;
 
 /*! Preprocessor switch for configuring preemptive real-time kernel
 * (QK-nano). The macro is automatically defined by including the qkn.h file
@@ -74,8 +92,6 @@ uint_fast8_t QK_schedPrio_(void);
 */
 void QK_sched_(uint_fast8_t p);
 
-extern uint_fast8_t volatile QK_currPrio_;  /*!< current QK priority */
-
 #ifndef QF_ISR_NEST
     #define QK_SCHEDULE_() do { \
         uint_fast8_t p = QK_schedPrio_(); \
@@ -86,14 +102,12 @@ extern uint_fast8_t volatile QK_currPrio_;  /*!< current QK priority */
 #else
     /*! The macro to invoke the QK scheduler in the QK_ISR_EXIT() */
     #define QK_SCHEDULE_() \
-        if (QK_intNest_ == (uint_fast8_t)0) { \
+        if (QK_attr_.intNest == (uint_fast8_t)0) { \
             uint_fast8_t p = QK_schedPrio_(); \
             if (p != (uint_fast8_t)0) { \
                 QK_sched_(p); \
             } \
         } else ((void)0)
-
-    extern uint_fast8_t volatile QK_intNest_; /*!< interrupt nesting level */
 
 #endif
 
@@ -138,9 +152,6 @@ void QK_onIdle(void);
     * to the minimum.
     */
     void QK_mutexUnlock(QMutex mutex);
-
-    /*! scheduler lock level for priority-ceiling mutexes */
-    extern uint_fast8_t volatile QK_lockPrio_;
 
 #endif /* QK_MUTEX */
 

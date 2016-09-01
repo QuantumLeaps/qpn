@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: PC-Lint 9.x option file for linting QP-nano
-// Last updated for version 5.4.0
-// Last updated on  2015-05-19
+// Last updated for version 5.7.0
+// Last updated on  2016-08-31
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
@@ -28,8 +28,8 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 // Contact information:
-// Web:   www.state-machine.com
-// Email: info@state-machine.com
+// http://www.state-machine.com
+// mailto:info@state-machine.com
 //////////////////////////////////////////////////////////////////////////////
 
 // library headers
@@ -79,4 +79,5 @@ qpn.lnt           // QP-nano options
  QF_active,
  QF_readySet_,
  QF_log2Lkup,
- QF_invPow2Lkup)
+ QF_invPow2Lkup,
+ QF_maxActive_)

@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.2
-* Last updated on  2016-04-05
+* Last updated for version 5.7.0
+* Last updated on  2016-08-31
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -368,14 +368,15 @@ void QF_init(uint_fast8_t maxActive) {
     QF_readySet_ = (uint_fast8_t)0;
 
 #ifdef QK_PREEMPTIVE
-    QK_currPrio_ = (uint_fast8_t)8; /* QK-nano scheduler locked */
+    QK_attr_.curr = (uint_fast8_t)8; /* QK-nano scheduler locked */
 
 #ifdef QF_ISR_NEST
-    QK_intNest_ = (uint_fast8_t)0;
+    QK_attr_.intNest = (uint_fast8_t)0;
 #endif
 
 #ifdef QK_MUTEX
-    QK_lockPrio_ = (uint_fast8_t)0;
+    QK_attr_.lockPrio   = (uint_fast8_t)0;
+    QK_attr_.lockHolder = (uint_fast8_t)0;
 #endif
 
 #endif /* #ifdef QK_PREEMPTIVE */
