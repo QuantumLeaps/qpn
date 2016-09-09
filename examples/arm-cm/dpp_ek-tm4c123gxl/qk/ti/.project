@@ -58,7 +58,7 @@
 		<link>
 			<name>ek-tm4c123gxl</name>
 			<type>2</type>
-			<location>C:/qp/qpn/3rd_party/ek-tm4c123gxl</location>
+			<location>PARENT-5-PROJECT_LOC/3rd_party/ek-tm4c123gxl</location>
 		</link>
 		<link>
 			<name>main.c</name>
