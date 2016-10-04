@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.7.0
-* Last updated on  2016-08-31
+* Last updated for version 5.7.2
+* Last updated on  2016-09-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -223,14 +223,12 @@ bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
         /* is this the first event? */
         if (me->nUsed == (uint_fast8_t)1) {
 #ifdef QK_PREEMPTIVE
-            uint_fast8_t p;
 
             /* set the corresponding bit in the ready set */
             QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
 
-            p = QK_schedPrio_();  /* find the new priority */
-            if (p != (uint_fast8_t)0) {
-                QK_sched_(p); /* check for synchronous preemption */
+            if (QK_sched_() != (uint_fast8_t)0) {
+                QK_activate_(); /* activate the next active object */
             }
 #else
             /* set the bit */
@@ -368,7 +366,7 @@ void QF_init(uint_fast8_t maxActive) {
     QF_readySet_ = (uint_fast8_t)0;
 
 #ifdef QK_PREEMPTIVE
-    QK_attr_.curr = (uint_fast8_t)8; /* QK-nano scheduler locked */
+    QK_attr_.actPrio = (uint_fast8_t)8; /* QK-nano scheduler locked */
 
 #ifdef QF_ISR_NEST
     QK_attr_.intNest = (uint_fast8_t)0;

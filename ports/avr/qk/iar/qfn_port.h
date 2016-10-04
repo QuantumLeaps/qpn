@@ -3,8 +3,8 @@
 * @brief QF-nano port AVR ATmega, QK-nano kernel, IAR-AVR toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-28
+* Last Updated for Version: 5.7.2
+* Date of the Last Update:  2016-09-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -31,8 +31,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -52,9 +52,8 @@
 /* QK-nano interrupt entry/exit */
 #define QK_ISR_ENTRY()   ((void)0)
 #define QK_ISR_EXIT()    do { \
-    uint_fast8_t p = QK_schedPrio_(); \
-    if (p != (uint_fast8_t)0) { \
-        QK_sched_(p); \
+    if (QK_sched_() != (uint_fast8_t)0) { \
+        QK_activate_(); \
     } \
 } while (0)
 

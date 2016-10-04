@@ -1,6 +1,15 @@
 /**
 @page history Revision History
 
+@section qpn_5_7_2 Version 5.7.2, 2016-10-07
+This release changes the internal QK-nano implementation to match the QK
+kernel implementation used in QP/C and QP/C++. (e.g., QK_sched_() has been
+renamed to QK_activate_() and QK_schedPrio_() to QK_sched_()). These
+changes fall into the category of refactoring and have no impact on the API
+or performance.
+
+
+------------------------------------------------------------------------------
 @section qpn_5_7_0 Version 5.7.0, 2016-08-31
 This release release changes once more the QK-nano port to ARM Cortex-M, to reduce the interrupt latecy. This has been achieved by shortening the critical section in the PendSV exception. Also, this QK port to Cortex-M no longer uses the NMI exception.
 

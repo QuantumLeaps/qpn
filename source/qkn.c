@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.7.0
-* Last updated on  2016-08-31
+* Last updated for version 5.7.2
+* Last updated on  2016-09-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -107,11 +107,11 @@ static void initialize(void) {
         QMSM_INIT(&a->super); /* take the initial transition in the SM */
     }
 
+    /* process all events posted during initialization... */
     QF_INT_DISABLE();
-    QK_attr_.curr = (uint_fast8_t)0; /* the priority for QK idle loop */
-    p = QK_schedPrio_();
-    if (p != (uint_fast8_t)0) {
-        QK_sched_(p); /* process all events produced so far */
+    QK_attr_.actPrio = (uint_fast8_t)0; /* prio of the QK-nano idle loop */
+    if (QK_sched_() != (uint_fast8_t)0) {
+        QK_activate_(); /* activate AOs to process events posted so far */
     }
     QF_INT_ENABLE();
 }
@@ -145,21 +145,21 @@ int_t QF_run(void) {
 /****************************************************************************/
 /**
 * @description
-* This function finds out the priority of the highest-priority active object
-* that (1) has events to process, and (2) has priority that is above the
-* current priority, and (3) has priority that is above the mutex ceiling,
-* if mutex is configured in the port.
+* The QK-nano scheduler finds out the priority of the highest-priority AO
+* that (1) has events to process and (2) has priority that is above the
+* current priority.
 *
 * @returns the 1-based priority of the the active object, or zero if
 * no eligible active object is ready to run.
 *
-* @attention QK_schedPrio_() must be always called with interrupts
-* __disabled__  and returns with interrupts __disabled__.
+* @attention
+* QK_sched_() must be always called with interrupts **disabled** and
+* returns with interrupts **disabled**.
 */
-uint_fast8_t QK_schedPrio_(void) {
-    uint_fast8_t p; /* highest-priority active object ready to run */
+uint_fast8_t QK_sched_(void) {
+    uint_fast8_t p; /* for priority */
 
-    /* determine the priority of the highest-priority AO ready to run */
+    /* find the highest-prio AO with non-empty event queue */
 #ifdef QF_LOG2
     p = (uint_fast8_t)QF_LOG2(QF_readySet_);
 #else
@@ -174,17 +174,18 @@ uint_fast8_t QK_schedPrio_(void) {
     }
 #endif
 
-    /* below the current preemption threshold? */
-    if (p <= QK_attr_.curr) {
-        p = (uint_fast8_t)0;
+    /* is the highest-prio below the active priority? */
+    if (p <= QK_attr_.actPrio) {
+        p = (uint_fast8_t)0; /* active object not eligible */
     }
 #ifdef QK_MUTEX
     /* below the mutex ceiling? */
     else if (p <= QK_attr_.lockPrio) {
-        p = (uint_fast8_t)0;
+        p = (uint_fast8_t)0; /* active object not eligible */
     }
     else {
         Q_ASSERT_ID(610, p <= QF_maxActive_);
+        QK_attr_.nextPrio = p; /* next AO to run */
     }
 #endif /* QK_MUTEX */
     return p;
@@ -192,23 +193,29 @@ uint_fast8_t QK_schedPrio_(void) {
 
 /****************************************************************************/
 /**
-* @param[in] p  priority of the next AO to schedule, typically obtained
-*               from QK_schedPrio_().
+* @description
+* QK_activate_() activates ready-to run AOs that are above the initial
+* active priority (QK_attr_.actPrio).
 *
-* @attention QK_sched_() must be always called with interrupts
-* __disabled__  and returns with interrupts __disabled__.
-*
-* @note The scheduler might enable interrupts internally, but always
-* returns with interrupts __disabled__.
+* @note
+* The activator might enable interrupts internally, but always returns with
+* interrupts **disabled**.
 */
-void QK_sched_(uint_fast8_t p) {
-    uint_fast8_t pin = QK_attr_.curr; /* save the initial priority */
+void QK_activate_(void) {
+    uint_fast8_t pin = QK_attr_.actPrio;  /* save the active priority */
+    uint_fast8_t p   = QK_attr_.nextPrio; /* the next prio to run */
 
+    /* QK_attr_.nextPrio must be non-zero upon entry to QK_activate_() */
+    Q_REQUIRE_ID(800, p != (uint_fast8_t)0);
+
+    QK_attr_.nextPrio = (uint_fast8_t)0; /* clear for the next time */
+
+    /* loop until no more ready-to-run AOs of higher prio than the initial */
     do {
         QMActive *a;
         QMActiveCB const Q_ROM *acb;
 
-        QK_attr_.curr = p; /* new priority becomes the current priority */
+        QK_attr_.actPrio = p; /* this becomes the active priority */
         QF_INT_ENABLE();  /* it's safe to leave critical section */
 
         acb = &QF_active[p];
@@ -217,7 +224,7 @@ void QK_sched_(uint_fast8_t p) {
         QF_INT_DISABLE(); /* get ready to access the queue */
 
         /* some unused events must be available */
-        Q_ASSERT_ID(410, a->nUsed > (uint_fast8_t)0);
+        Q_ASSERT_ID(810, a->nUsed > (uint_fast8_t)0);
         --a->nUsed;
 
         /* queue becoming empty? */
@@ -240,7 +247,7 @@ void QK_sched_(uint_fast8_t p) {
 
         QF_INT_DISABLE();
 
-        /* determine the priority of the highest-priority AO ready to run */
+        /* find new highest-prio AO ready to run... */
 #ifdef QF_LOG2
         p = (uint_fast8_t)QF_LOG2(QF_readySet_);
 #else
@@ -255,14 +262,14 @@ void QK_sched_(uint_fast8_t p) {
         }
 #endif
 
-        /* below the initial preemption threshold? */
+        /* is the new priority below the initial preemption threshold? */
         if (p <= pin) {
-            p = (uint_fast8_t)0;
+            p = (uint_fast8_t)0; /* active object not eligible */
         }
 #ifdef QK_MUTEX
         /* below the mutex ceiling? */
         else if (p <= QK_attr_.lockPrio) {
-            p = (uint_fast8_t)0;
+            p = (uint_fast8_t)0; /* active object not eligible */
         }
         else {
             Q_ASSERT_ID(710, p <= QF_maxActive_);
@@ -270,7 +277,7 @@ void QK_sched_(uint_fast8_t p) {
 #endif /* QK_MUTEX */
     } while (p != (uint_fast8_t)0);
 
-    QK_attr_.curr = pin; /* restore the initial priority */
+    QK_attr_.actPrio = pin; /* restore the active priority */
 }
 
 
@@ -323,9 +330,8 @@ void QK_mutexUnlock(QMutex mutex) {
     QF_INT_DISABLE();
     if (QK_attr_.lockPrio > mutex) {
         QK_attr_.lockPrio = mutex; /* restore the saved priority ceiling */
-        mutex = QK_schedPrio_(); /* reuse 'mutex' to hold priority */
-        if (mutex != (uint_fast8_t)0) {
-            QK_sched_(mutex);
+        if (QK_sched_() != (uint_fast8_t)0) {
+            QK_activate_();
         }
     }
     QF_INT_ENABLE();

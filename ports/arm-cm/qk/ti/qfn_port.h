@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, preemptive QK kernel, TI-ARM CCS toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.7.0
-* Date of the Last Update:  2016-08-31
+* Last Updated for Version: 5.7.2
+* Date of the Last Update:  2016-09-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -54,14 +54,8 @@
     #define QF_INT_DISABLE()    QF_set_BASEPRI(QF_BASEPRI)
     #define QF_INT_ENABLE()     QF_set_BASEPRI(0U)
 
-    /* the intrinsic function _norm() generates the CLZ instruction */
-    #define QF_LOG2(n_) ((uint8_t)(32U - _norm(n_)))
-
-    /* assembly function for setting the BASEPRI register */
-    //__attribute__((always_inline))
-    //static inline void __set_BASEPRI(unsigned basePri) {
-    //    __asm ("  msr basepri, basePri");
-    //}
+    /* Cortex-M3/M4/M7 provide the CLZ instruction for fast LOG2 */
+    #define QF_LOG2(n_) ((uint_fast8_t)(32U - __clz(n_)))
 
     void QF_set_BASEPRI(unsigned basePri);
 
@@ -81,14 +75,12 @@
 #define QF_ISR_NEST
 
 /* QK-nano initialization and ISR entry/exit */
-#define QK_INIT()        QK_init()
+#define QK_INIT()      QK_init()
 #define QK_ISR_ENTRY() ((void)0)
 #define QK_ISR_EXIT()  do { \
     uint_fast8_t nextPrio_; \
     QF_INT_DISABLE(); \
-    nextPrio_ = QK_schedPrio_(); \
-    if (nextPrio_ != (uint_fast8_t)0) { \
-        QK_attr_.next = nextPrio_; \
+    if (QK_sched_() != (uint_fast8_t)0) { \
         (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)); \
     } \
     QF_INT_ENABLE(); \

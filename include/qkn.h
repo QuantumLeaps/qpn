@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.7.0
-* Last updated on  2016-08-31
+* Last updated for version 5.7.2
+* Last updated on  2016-09-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -43,9 +43,8 @@
 /****************************************************************************/
 /*! attributes of the QK kernel */
 typedef struct {
-    uint_fast8_t volatile curr;  /*!< priority of the current executing AO */
-    uint_fast8_t volatile next;  /*!< priority of the next AO to execute */
-    void volatile        *aux;   /*!< auxiliary attribute used in the port */
+    uint_fast8_t volatile actPrio;  /*!< prio of the active AO */
+    uint_fast8_t volatile nextPrio; /*!< prio of the next AO to execute */
 #ifdef QK_MUTEX
     uint_fast8_t volatile lockPrio;   /*!< lock prio (0 == no-lock) */
     uint_fast8_t volatile lockHolder; /*!< prio of the lock holder */
@@ -77,35 +76,27 @@ extern QK_Attr QK_attr_;
 */
 void QK_init(void);
 
-/*! Find the highest-priority task ready to run
-*
-* @note QK_schedPrio_() must be always called with interrupts disabled
-* and returns with interrupts disabled.
-*/
-uint_fast8_t QK_schedPrio_(void);
+/****************************************************************************/
+/*! QK-nano scheduler finds the highest-priority thread ready to run */
+uint_fast8_t QK_sched_(void);
 
-/*! QK-nano scheduler
-*
-* @note QK_sched_() must be always called with interrupts disaled.
-* The scheduler might unlock the interrupts internally, but always
-* returns with interrupts disabled.
+/*! QK activator activates the next active object. The activated AO preempts
+* the currently executing AOs.
 */
-void QK_sched_(uint_fast8_t p);
+void QK_activate_(void);
 
 #ifndef QF_ISR_NEST
     #define QK_SCHEDULE_() do { \
-        uint_fast8_t p = QK_schedPrio_(); \
-        if (p != (uint_fast8_t)0) { \
-            QK_sched_(p); \
+        if (QK_sched_() != (uint_fast8_t)0) { \
+            QK_activate_(); \
         } \
     } while(0)
 #else
     /*! The macro to invoke the QK scheduler in the QK_ISR_EXIT() */
     #define QK_SCHEDULE_() \
         if (QK_attr_.intNest == (uint_fast8_t)0) { \
-            uint_fast8_t p = QK_schedPrio_(); \
-            if (p != (uint_fast8_t)0) { \
-                QK_sched_(p); \
+            if (QK_sched_() != (uint_fast8_t)0) { \
+                QK_activate_(); \
             } \
         } else ((void)0)
 
