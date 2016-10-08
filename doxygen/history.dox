@@ -1,7 +1,13 @@
 /**
 @page history Revision History
 
-@section qpn_5_7_2 Version 5.7.2, 2016-10-07
+@section qpn_5_7_3 Version 5.7.3, 2016-10-07
+This release fixes the following bugs:
+- bug#140 (PendSV_Handler() exception stacked PC not halfword aligned).
+
+
+------------------------------------------------------------------------------
+@section qpn_5_7_2 Version 5.7.2, 2016-09-30
 This release changes the internal QK-nano implementation to match the QK
 kernel implementation used in QP/C and QP/C++. (e.g., QK_sched_() has been
 renamed to QK_activate_() and QK_schedPrio_() to QK_sched_()). These

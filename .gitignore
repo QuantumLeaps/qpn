@@ -9,7 +9,6 @@
 *.exe
 *.EXE
 *.map
-*.ewd
 *.dep
 *.pdf
 *.PDF
@@ -33,6 +32,7 @@
 lint*.txt
 *.Miro
 *.bak
+JLink*.*
 
 eclipse/
 test/
@@ -42,6 +42,7 @@ rel/
 spy/
 settings/
 .settings/
+targetConfigs/
 
 Debug/
 Release/
@@ -50,6 +51,7 @@ Spy/
 lib/
 obj/
 output/
+
 
 doxygen/html/
 lint/*.txt
