@@ -1,6 +1,27 @@
 /**
 @page history Revision History
 
+@section qpn_5_8_0 Version 5.8.0, 2016-11-07
+This release simplifies the QP-nano framework by removing the QMsm-style
+state machine implementation strategy introduced in version 5.0.0. Moving
+forward, the only supported state machine implementation strategy in
+QP-nano will be the QHsm-strategy and the upcoming QM 4.x will provide
+only the QHsm-strategy for QP-nano applications.
+
+Specifically, the QMsm base class, and QMActive base class have been
+removed, along with the accompanying macros. The QP-nano compatibility
+layer (file qpn.h) provides some of these macros for backwards-
+compatibility, but the underlying implementation must be, in fact,
+based on QHsm.
+
+All examples and QM models have been consistently updated to use only
+the QHsm-style implementation strategy.
+
+Additionally, this release fixes the following bugs:
+-bug#144 Obsolete Win32 API in qwin_gui.c
+
+
+------------------------------------------------------------------------------
 @section qpn_5_7_3 Version 5.7.3, 2016-10-07
 This release fixes the following bugs:
 - bug#140 (PendSV_Handler() exception stacked PC not halfword aligned).

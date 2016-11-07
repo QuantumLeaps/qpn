@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: BSP for QHsmTst example, Win32
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"
@@ -43,8 +43,8 @@ Q_DEFINE_THIS_FILE
 
 /*..........................................................................*/
 /* dummy definition of the QF_active[] array (not used in this example) */
-QMActiveCB const Q_ROM QF_active[] = {
-    { (QMActive *)0,  (QEvt *)0, 0U }
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,  (QEvt *)0, 0U }
 };
 
 static FILE *l_outFile;
@@ -70,7 +70,7 @@ void BSP_init(char const *fname) {
                QP_getVersion());
     }
 
-    QMSM_INIT(the_hsm); /* the top-most initial tran. */
+    QHSM_INIT(the_hsm); /* the top-most initial tran. */
 }
 /*..........................................................................*/
 void BSP_exit(void) {
@@ -91,7 +91,7 @@ void BSP_dispatch(QSignal sig) {
     Q_REQUIRE((A_SIG <= sig) && (sig <= I_SIG));
     fprintf(l_outFile, "\n%c:", 'A' + sig - A_SIG);
     Q_SIG(the_hsm) = sig;
-    QMSM_DISPATCH(the_hsm); /* dispatch the event */
+    QHSM_DISPATCH(the_hsm); /* dispatch the event */
 }
 
 

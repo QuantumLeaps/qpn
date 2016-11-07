@@ -3,7 +3,7 @@
  <documentation>Dining Philosopher Problem example with QMActive</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
-  <class name="Philo" superclass="qpn::QMActive">
+  <class name="Philo" superclass="qpn::QActive">
    <statechart>
     <initial target="../1">
      <initial_glyph conn="2,3,5,1,20,5,-3">
@@ -12,7 +12,7 @@
     </initial>
     <state name="thinking">
      <entry>QActive_armX(&amp;me-&gt;super, 0U, THINK_TIME, 0U);</entry>
-     <exit>QActive_disarm(&amp;me-&gt;super);</exit>
+     <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
      <tran trig="Q_TIMEOUT" target="../../2">
       <tran_glyph conn="2,12,3,1,20,13,-3">
        <action box="0,-2,6,2"/>
@@ -48,7 +48,7 @@
     </state>
     <state name="eating">
      <entry>QActive_armX(&amp;me-&gt;super, 0U, EAT_TIME, 0U);</entry>
-     <exit>QActive_disarm(&amp;me-&gt;super);
+     <exit>QActive_disarmX(&amp;me-&gt;super, 0U);
 QACTIVE_POST(QF_ACTIVE_CAST(&amp;AO_Table), DONE_SIG, me-&gt;super.prio);</exit>
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,51,3,1,22,-41,-5">
@@ -69,7 +69,7 @@ QACTIVE_POST(QF_ACTIVE_CAST(&amp;AO_Table), DONE_SIG, me-&gt;super.prio);</exit>
     <state_diagram size="37,61"/>
    </statechart>
   </class>
-  <class name="Table" superclass="qpn::QMActive">
+  <class name="Table" superclass="qpn::QActive">
    <attribute name="fork[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="isHungry[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
    <statechart>
@@ -104,7 +104,7 @@ for (n = 0U; n &lt; N_PHILO; ++n) { /* give permissions to eat... */
         &amp;&amp; (me-&gt;fork[LEFT(n)] == FREE)
         &amp;&amp; (me-&gt;fork[n] == FREE))
     {
-        QMActive *philo;
+        QActive *philo;
 
         me-&gt;fork[LEFT(n)] = USED;
         me-&gt;fork[n] = USED;
@@ -116,7 +116,7 @@ for (n = 0U; n &lt; N_PHILO; ++n) { /* give permissions to eat... */
 }</entry>
       <tran trig="HUNGRY">
        <action>uint8_t n, m;
-QMActive *philo;
+QActive *philo;
 
 n = (uint8_t)(Q_PAR(me) - PHILO_0_PRIO);
 /* phil ID must be in range and he must be not hungry */
@@ -148,7 +148,7 @@ BSP_displayPhilStat(n, &quot;eating  &quot;);</action>
       </tran>
       <tran trig="DONE">
        <action>uint8_t n, m;
-QMActive *philo;
+QActive *philo;
 
 n = (uint8_t)(Q_PAR(me) - PHILO_0_PRIO);
 /* phil ID must be in range and he must be not hungry */
@@ -253,18 +253,18 @@ me-&gt;fork[n] = FREE;</action>
   <attribute name="AO_Philo4" type="struct Philo" visibility="0x00" properties="0x00"/>
   <attribute name="AO_Table" type="struct Table" visibility="0x00" properties="0x00"/>
   <operation name="Philo_ctor" type="void" visibility="0x00" properties="0x00">
-   <code>QMActive_ctor(&amp;AO_Philo0.super, Q_STATE_CAST(&amp;Philo_initial));
-QMActive_ctor(&amp;AO_Philo1.super, Q_STATE_CAST(&amp;Philo_initial));
-QMActive_ctor(&amp;AO_Philo2.super, Q_STATE_CAST(&amp;Philo_initial));
-QMActive_ctor(&amp;AO_Philo3.super, Q_STATE_CAST(&amp;Philo_initial));
-QMActive_ctor(&amp;AO_Philo4.super, Q_STATE_CAST(&amp;Philo_initial));
+   <code>QActive_ctor(&amp;AO_Philo0.super, Q_STATE_CAST(&amp;Philo_initial));
+QActive_ctor(&amp;AO_Philo1.super, Q_STATE_CAST(&amp;Philo_initial));
+QActive_ctor(&amp;AO_Philo2.super, Q_STATE_CAST(&amp;Philo_initial));
+QActive_ctor(&amp;AO_Philo3.super, Q_STATE_CAST(&amp;Philo_initial));
+QActive_ctor(&amp;AO_Philo4.super, Q_STATE_CAST(&amp;Philo_initial));
 BSP_randomSeed(123U);</code>
   </operation>
   <operation name="Table_ctor" type="void" visibility="0x00" properties="0x00">
    <code>uint8_t n;
 Table *me = &amp;AO_Table;
 
-QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Table_initial));
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Table_initial));
 for (n = 0U; n &lt; N_PHILO; ++n) {
     me-&gt;fork[n] = FREE;
     me-&gt;isHungry[n] = 0U;

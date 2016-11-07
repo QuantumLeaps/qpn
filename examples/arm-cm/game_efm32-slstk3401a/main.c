@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example
-* Last Updated for Version: 5.6.5
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -41,20 +41,15 @@ static QEvt l_shipQueue[3];
 static QEvt l_missileQueue[3];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QMActiveCB const Q_ROM QF_active[] = {
-    { (QMActive *)0,           (QEvt *)0,      0U                    },
-    { (QMActive *)&AO_Tunnel,  l_tunnelQueue,  Q_DIM(l_tunnelQueue)  },
-    { (QMActive *)&AO_Ship,    l_shipQueue,    Q_DIM(l_shipQueue)    },
-    { (QMActive *)&AO_Missile, l_missileQueue, Q_DIM(l_missileQueue) }
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,           (QEvt *)0,      0U                    },
+    { (QActive *)&AO_Tunnel,  l_tunnelQueue,  Q_DIM(l_tunnelQueue)  },
+    { (QActive *)&AO_Ship,    l_shipQueue,    Q_DIM(l_shipQueue)    },
+    { (QActive *)&AO_Missile, l_missileQueue, Q_DIM(l_missileQueue) }
 };
 
 /*..........................................................................*/
-#ifdef WIN32
-int main_gui()
-#else
-int_t main()
-#endif
-{
+int_t main() {
     Tunnel_ctor();
     Ship_ctor();
     Missile_ctor(GAME_MISSILE_SPEED_X);

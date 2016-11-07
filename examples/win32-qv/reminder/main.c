@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Reminder" design pattern example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -41,7 +41,7 @@
 static QEvt l_sensorQueue[2];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QMActiveCB const Q_ROM QF_active[] = {
+QActiveCB const Q_ROM QF_active[] = {
     { (QActive *)0,          (QEvt *)0,     0U                   },
     { (QActive *)&AO_Sensor, l_sensorQueue, Q_DIM(l_sensorQueue) }
 };

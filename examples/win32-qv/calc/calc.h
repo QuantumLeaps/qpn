@@ -33,6 +33,6 @@ enum CalcSignals {
 void Calc_ctor(void);
 
 
-extern QMsm * const the_calc;  /* "opaque" pointer to calculator MSM */
+extern QHsm * const the_calc;  /* "opaque" pointer to calculator HSM */
 
 #endif /* calc_h */

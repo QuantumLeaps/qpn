@@ -4,8 +4,8 @@
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.6.5
-* Date of the Last Update:  2016-06-09
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -95,16 +95,16 @@ static void *tickerThread(void *par); /* the expected P-Thread signature */
 /****************************************************************************/
 #ifndef Q_NMSM
 
-void QMActive_ctor(QMActive * const me, QStateHandler initial) {
-    static QMActiveVtbl const vtbl = { /* QMActive virtual table */
-        { &QMsm_init_,
-          &QMsm_dispatch_ },
+void QActive_ctor(QActive * const me, QStateHandler initial) {
+    static QActiveVtbl const vtbl = { /* QActive virtual table */
+        { &QHsm_init_,
+          &QHsm_dispatch_ },
         &QActive_postX_,
         &QActive_postXISR_
     };
 
-    QMsm_ctor(&me->super, initial);
-    me->super.vptr = &vtbl.super;/* hook the vptr to QMActive virtual table */
+    QHsm_ctor(&me->super, initial);
+    me->super.vptr = &vtbl.super;/* hook the vptr to QActive virtual table */
 }
 
 #endif /* Q_NMSM */
@@ -128,10 +128,10 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
 
 /****************************************************************************/
 #if (Q_PARAM_SIZE != 0)
-bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                     enum_t const sig, QParam const par)
 #else
-bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                     enum_t const sig)
 #endif
 {
@@ -172,10 +172,10 @@ bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
 
 /****************************************************************************/
 #if (Q_PARAM_SIZE != 0)
-bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig, QParam const par)
 #else
-bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig)
 #endif
 {
@@ -217,7 +217,7 @@ bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
 void QF_tickXISR(uint_fast8_t const tickRate) {
     uint_fast8_t p = QF_maxActive_;
     do {
-        QMActive *a = QF_ROM_ACTIVE_GET_(p);
+        QActive *a = QF_ROM_ACTIVE_GET_(p);
         QTimer *t = &a->tickCtr[tickRate];
 
         if (t->nTicks != (QTimeEvtCtr)0) {
@@ -249,7 +249,7 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
 
 /****************************************************************************/
 #ifdef QF_TIMEEVT_PERIODIC
-void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
+void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks, QTimeEvtCtr const interval)
 #else
 void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
@@ -309,7 +309,7 @@ void QF_leaveCriticalSection_(void) {
 * QF_init(Q_DIM(QF_active));
 */
 void QF_init(uint_fast8_t maxActive) {
-    QMActive *a;
+    QActive *a;
     uint_fast8_t p;
     uint_fast8_t n;
 
@@ -350,7 +350,7 @@ void QF_init(uint_fast8_t maxActive) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(110, a != (QMActive *)0);
+        Q_ASSERT_ID(110, a != (QActive *)0);
 
         a->head    = (uint_fast8_t)0;
         a->tail    = (uint_fast8_t)0;
@@ -368,7 +368,7 @@ void QF_init(uint_fast8_t maxActive) {
 /****************************************************************************/
 int_t QF_run(void) {
     uint_fast8_t p;
-    QMActive *a;
+    QActive *a;
     pthread_t thread;
 
     pthread_cond_init(&l_condVar, 0);
@@ -378,7 +378,7 @@ int_t QF_run(void) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(810, a != (QMActive *)0);
+        Q_ASSERT_ID(810, a != (QActive *)0);
 
         a->prio = p; /* set the priority of the active object */
     }
@@ -386,7 +386,7 @@ int_t QF_run(void) {
     /* trigger initial transitions in all registered active objects... */
     for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
-        QMSM_INIT(&a->super); /* take the initial transition in the SM */
+        QHSM_INIT(&a->super); /* take the initial transition in the HSM */
     }
 
     QF_onStartup(); /* invoke startup callback */
@@ -431,7 +431,7 @@ int_t QF_run(void) {
             --a->tail;
             QF_INT_ENABLE();
 
-            QMSM_DISPATCH(&a->super); /* dispatch to the SM */
+            QHSM_DISPATCH(&a->super); /* dispatch to the HSM */
         }
         else {
             /* yield the CPU until new event(s) arrive */

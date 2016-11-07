@@ -1,7 +1,7 @@
 ##############################################################################
-# Product: Makefile for QP-nano, QMsmTst console, Win32-QV, MinGW
-# Last updated for version 5.6.4
-# Last updated on  2016-05-04
+# Product: Makefile for QP-nano, History for QHsm console, Win32-QV, MinGW
+# Last updated for version 5.8.0
+# Last updated on  2016-11-06
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -49,7 +49,7 @@
 #-----------------------------------------------------------------------------
 # project name
 #
-PROJECT     := qmsmtst
+PROJECT     := history
 
 #-----------------------------------------------------------------------------
 # project directories
@@ -85,7 +85,7 @@ RCINCLUDES = \
 C_SRCS := \
 	bsp.c \
 	main.c \
-	qmsmtst.c
+	history.c
 
 # C++ source files
 CPP_SRCS :=	

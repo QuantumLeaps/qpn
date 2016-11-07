@@ -47,7 +47,7 @@ static QState ToastOven_final(ToastOven * const me);
 static ToastOven l_oven; /* the only instance of the ToastOven class */
 
 /* global-scope definitions -----------------------------------------*/
-QMsm * const the_oven = (QMsm *)&l_oven; /* the opaque pointer */
+QHsm * const the_oven = (QHsm *)&l_oven; /* the opaque pointer */
 
 /*${SMs::ToastOven_ctor} ...................................................*/
 void ToastOven_ctor(void) {

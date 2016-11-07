@@ -1,7 +1,7 @@
 /*****************************************************************************
-* Product: QP-nano configuration for the QMsmTst example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Product: History Example for QP-nano, Win32
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -31,9 +31,40 @@
 * http://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
-#ifndef qpn_conf_h
-#define qpn_conf_h
+#include "qpn.h"     /* QP-nano */
+#include "bsp.h"     /* Board Support Package */
+#include "history.h" /* Application interface */
 
-#define Q_PARAM_SIZE            0
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#endif  /* qpn_conf_h */
+/*..........................................................................*/
+int main() {
+    ToastOven_ctor(); /* instantiate the ToasterOven object */
+
+    BSP_init();       /* initialize the Board Support Package */
+
+    QHSM_INIT(the_oven); /* trigger the initial transition */
+
+    for (;;) {
+        uint8_t c;
+
+        printf("\n");
+        c = (uint8_t)_getch();  /* read one character from the console */
+        printf("%c: ", c);
+
+        switch (c) {
+            case 'o':   Q_SIG(the_oven) = OPEN_SIG;      break;
+            case 'c':   Q_SIG(the_oven) = CLOSE_SIG;     break;
+            case 't':   Q_SIG(the_oven) = TOAST_SIG;     break;
+            case 'b':   Q_SIG(the_oven) = BAKE_SIG;      break;
+            case 'f':   Q_SIG(the_oven) = OFF_SIG;       break;
+            case '\33': Q_SIG(the_oven) = TERMINATE_SIG; break;
+        }
+
+        /* dispatch the event into the state machine */
+        QHSM_DISPATCH(the_oven);
+    }
+    return 0;
+}

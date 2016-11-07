@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on MSP-EXP430G2 board, preemptive QK-nano kernel
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-28
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-07
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -93,10 +93,10 @@ static uint32_t l_rnd;
     tmp ^= buttons.depressed;     /* changed debounced depressed */
     if ((tmp & BTN1) != 0U) {     /* debounced BTN1 state changed? */
         if ((buttons.depressed & BTN1) != 0U) { /* is BTN1 depressed? */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, PAUSE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, PAUSE_SIG, 0U);
         }
         else {            /* the button is released */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, SERVE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, SERVE_SIG, 0U);
         }
     }
 

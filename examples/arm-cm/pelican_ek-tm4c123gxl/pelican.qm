@@ -3,7 +3,7 @@
  <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing example</documentation>
  <framework name="qpn"/>
  <package name="components" stereotype="0x02">
-  <class name="Pelican" superclass="qpn::QMActive">
+  <class name="Pelican" superclass="qpn::QActive">
    <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing</documentation>
    <attribute name="flashCtr" type="uint8_t" visibility="0x02" properties="0x00"/>
    <statechart>
@@ -236,7 +236,7 @@ BSP_signalPeds(PEDS_BLANK);</action>
   <attribute name="AO_Pelican" type="QActive * const" visibility="0x00" properties="0x00"/>
   <operation name="Pelican_ctor" type="void" visibility="0x00" properties="0x01">
    <documentation>constructor</documentation>
-   <code>QMActive_ctor(&amp;AO_Pelican.super, Q_STATE_CAST(&amp;Pelican_initial));</code>
+   <code>QActive_ctor(&amp;AO_Pelican.super, Q_STATE_CAST(&amp;Pelican_initial));</code>
   </operation>
  </package>
  <directory name=".">

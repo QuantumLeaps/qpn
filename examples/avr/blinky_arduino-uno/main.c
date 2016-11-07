@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Blinky" example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -39,9 +39,9 @@
 static QEvt l_blinkyQSto[10]; /* Event queue storage for Blinky */
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QMActiveCB const Q_ROM QF_active[] = {
-    { (QMActive *)0,           (QEvt *)0,        0U                      },
-    { (QMActive *)&AO_Blinky,  l_blinkyQSto,     Q_DIM(l_blinkyQSto)     }
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,           (QEvt *)0,        0U                      },
+    { (QActive *)&AO_Blinky,  l_blinkyQSto,     Q_DIM(l_blinkyQSto)     }
 };
 
 /*..........................................................................*/

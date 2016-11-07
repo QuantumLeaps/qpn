@@ -4,8 +4,8 @@
 * @ingroup qep
 * @cond
 ******************************************************************************
-* Last updated for version 5.5.1
-* Last updated on  2015-10-05
+* Last updated for version 5.8.0
+* Last updated on  2015-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -48,317 +48,6 @@ char_t const Q_ROM QP_versionStr[6] = QP_VERSION_STR;
 
 /****************************************************************************/
 /****************************************************************************/
-#ifndef Q_NMSM
-
-/*! Internal QEP macro to increment the given action table @a act_ */
-/**
-* @description
-* Incrementing a pointer violates the MISRA-C 2004 Rule 17.4(req),
-* pointer arithmetic other than array indexing. Encapsulating this violation
-* in a macro allows to selectively suppress this specific deviation.
-*/
-#define QEP_ACT_PTR_INC_(act_) (++(act_))
-
-/*! Helper function to exit the current state up to the transition source */
-static void QMsm_exitToTranSource_(QMsm * const me, QMState const *s,
-                                   QMState const * const ts);
-
-/*! Helper functionn to exectue a transition-action table. */
-static QState QMsm_execTatbl_(QMsm * const me, QMTranActTable const *tatbl);
-
-#ifndef Q_NMSM_HIST
-/*! Helper function to execute a transition to history */
-static QState QMsm_enterHistory_(QMsm * const me, QMState const * const hist);
-#endif /* Q_NMSM_HIST */
-
-/*! Maximum depth of entry levels in a MSM for transition to history. */
-#define QMSM_MAX_ENTRY_DEPTH_  ((int_fast8_t)4)
-
-/****************************************************************************/
-/**
-* @description
-* Performs the first step of QMsm initialization by assigning the initial
-* pseudostate to the currently active state of the state machine.
-*
-* @param[in,out] me       pointer (see @ref oop)
-* @param[in]     initial  the top-most initial transition for the MSM.
-*
-* @note Must be called only by the "constructors" of the derived state
-* machines.
-*
-* @note Must be called only ONCE before QMsm_init_().
-*/
-void QMsm_ctor(QMsm * const me, QStateHandler initial) {
-    static QMsmVtbl const vtbl = { /* QMsm virtual table */
-        &QMsm_init_,
-        &QMsm_dispatch_
-    };
-    me->vptr = &vtbl; /* hook the vptr to QMsm virtual table */
-    me->state.obj = (void *)0;
-    me->temp.fun  = initial;
-}
-
-/****************************************************************************/
-/**
-* @description
-* Executes the top-most initial transition in a MSM.
-*
-* @param[in,out] me pointer (see @ref oop)
-*
-* @note Must be called only ONCE after the QMsm_ctor().
-*/
-void QMsm_init_(QMsm * const me) {
-    QState r;
-
-    /** @pre the virtual pointer must be initialized, the top-most initial
-    * transition must be initialized, and the initial transition must not
-    * be taken yet.
-    */
-    Q_REQUIRE_ID(100, (me->vptr != (QMsmVtbl const *)0)
-                      && (me->temp.fun != Q_STATE_CAST(0))
-                      && (me->state.obj == (void *)0));
-
-    r = (*me->temp.fun)(me); /* execute the top-most initial transition */
-
-    /* the top-most initial transition must be taken */
-    Q_ASSERT_ID(110, r == (QState)Q_RET_TRAN_INIT);
-
-    /* drill down into the state hierarchy with initial transitions... */
-    do {
-        r = QMsm_execTatbl_(me, me->temp.tatbl);
-    } while (r >= (QState)Q_RET_TRAN_INIT);
-}
-
-/****************************************************************************/
-/**
-* @description
-* Dispatches an event for processing to a meta state machine (MSM).
-* The processing of an event represents one run-to-completion (RTC) step.
-*
-* @param[in,out] me pointer (see @ref oop)
-*
-* @note
-* This function should be called only via the virtual table (see
-* QMSM_DISPATCH()) and should NOT be called directly in the applications.
-*/
-void QMsm_dispatch_(QMsm * const me) {
-    QMState const *s = me->state.obj; /* store the current state */
-    QMState const *t;
-    QState r = (QState)Q_RET_SUPER;
-
-    /** @pre current state must be initialized */
-    Q_REQUIRE_ID(200, s != (QMState const *)0);
-
-    /* scan the state hierarchy up to the top state... */
-    for (t = s; t != (QMState const *)0; t = t->superstate) {
-        r = (*t->stateHandler)(me); /* call state handler function */
-
-        if (r >= (QState)Q_RET_HANDLED) {
-            break; /* done scanning the state hierarchy */
-        }
-    }
-
-    /* any kind of transition taken? */
-    if (r >= (QState)Q_RET_TRAN) {
-        do {
-            /* save the transition-action table before it gets clobbered */
-            QMTranActTable const *tatbl = me->temp.tatbl;
-
-            /* was a regular state transition segment taken? */
-            if (r == (QState)Q_RET_TRAN) {
-                QMsm_exitToTranSource_(me, s, t);
-                r = QMsm_execTatbl_(me, tatbl);
-            }
-            /* was an initial transition segment taken? */
-            else if (r == (QState)Q_RET_TRAN_INIT) {
-                r = QMsm_execTatbl_(me, tatbl);
-            }
-#ifndef Q_NMSM_HIST
-            /* was a transition segment to history taken? */
-            else if (r == (QState)Q_RET_TRAN_HIST) {
-                QMState const *hist = me->state.obj; /* save history */
-                me->state.obj = s; /* restore the original state */
-                QMsm_exitToTranSource_(me, s, t);
-                (void)QMsm_execTatbl_(me, tatbl);
-                r = QMsm_enterHistory_(me, hist);
-            }
-#endif /* Q_NMSM_HIST */
-            else {
-                /* no other return value should be produced */
-                Q_ERROR_ID(210);
-            }
-            s = me->state.obj;
-            t = s;
-
-        } while (r >= (QState)Q_RET_TRAN);
-    }
-}
-
-/****************************************************************************/
-/**
-* @description
-* Helper function to execute transition sequence in a transition-action table.
-*
-* @param[in,out] me    pointer (see @ref oop)
-* @param[in]     tatbl pointer to the transition-action table
-*
-* @returns status of the last action from the transition-action table.
-*
-* @note
-* This function is for internal use inside the QEP and should NOT be called
-* directly in the applications.
-*/
-static QState QMsm_execTatbl_(QMsm * const me, QMTranActTable const *tatbl) {
-    QActionHandler const *a;
-    QState r = (QState)Q_RET_NULL;
-
-    /** @pre the transition-action table pointer must not be NULL */
-    Q_REQUIRE_ID(300, tatbl != (QMTranActTable const *)0);
-
-    for (a = &tatbl->act[0]; *a != Q_ACTION_CAST(0); QEP_ACT_PTR_INC_(a)) {
-        r = (*(*a))(me); /* call the action through the 'a' pointer */
-    }
-    if (r >= (QState)Q_RET_TRAN_INIT) {
-        me->state.obj = me->temp.tatbl->target; /* the tran. target */
-    }
-    else {
-        me->state.obj = tatbl->target; /* the tran. target */
-    }
-
-    return r;
-}
-
-/****************************************************************************/
-/**
-* @description
-* Static helper function to exit the current state configuration to the
-* source of the transition, which is a hierarchical state machine might
-* be a superstate of the current state.
-*
-* @param[in,out] me   pointer (see @ref oop)
-* @param[in]     s    pointer to the current state
-* @param[in]     ts   pointer to the transition source
-*/
-static void QMsm_exitToTranSource_(QMsm * const me, QMState const *s,
-                                   QMState const * const ts)
-{
-    /* exit states from the current state to the tran. source state */
-    while (s != ts) {
-        /* exit action provided in state 's'? */
-        if (s->exitAction != Q_ACTION_CAST(0)) {
-            QState r = (*s->exitAction)(me); /* execute the exit action */
-
-            /*  is it a regular exit? */
-            if (r == (QState)Q_RET_EXIT) {
-                s = s->superstate; /* advance to the superstate */
-            }
-            else {
-                Q_ERROR_ID(410);
-            }
-        }
-        else {
-            s = s->superstate; /* advance to the superstate */
-        }
-    }
-}
-
-#ifndef Q_NMSM_HIST
-/****************************************************************************/
-/**
-* @description
-* Static helper function to execute the segment of transition to history
-* after entering the composite state and
-*
-* @param[in,out] me   pointer (see @ref oop)
-* @param[in]     hist pointer to the history substate
-*
-* @returns Q_RET_INITIAL, if an initial transition has been executed in the
-* last entered state or 0 if no initial transition was taken.
-*
-*/
-static QState QMsm_enterHistory_(QMsm * const me,
-                                 QMState const * const hist)
-{
-    QMState const *s;
-    QMState const *ts = me->state.obj; /* transition source */
-    QMState const *entry[QMSM_MAX_ENTRY_DEPTH_];
-    QState r;
-    uint_fast8_t i = (uint_fast8_t)0;  /* transition entry path index */
-
-    for (s = hist; s != ts; s = s->superstate) {
-        Q_ASSERT_ID(510, s != (QMState const *)0);
-        if (s->entryAction != (QActionHandler)0) {
-            entry[i] = s;
-            ++i;
-            Q_ASSERT_ID(520, i <= (uint_fast8_t)Q_DIM(entry));
-        }
-    }
-
-    /* retrace the entry path in reverse (desired) order... */
-    while (i > (uint_fast8_t)0) {
-        --i;
-        r = (*entry[i]->entryAction)(me); /* run entry action in entry[i] */
-    }
-
-    me->state.obj = hist; /* set current state to the transition target */
-
-    /* initial tran. present? */
-    if (hist->initAction != (QActionHandler)0) {
-        r = (*hist->initAction)(me); /* execute the transition action */
-    }
-    else {
-        r = (QState)Q_RET_NULL;
-    }
-    return r;
-}
-
-/****************************************************************************/
-/**
-* @description
-* Finds the child state of the given @c parent, such that this child state
-* is an ancestor of the currently active state. The main purpose of this
-* function is to support **shallow history** transitions in state machines
-* derived from QMsm.
-*
-* @param[in] me     pointer (see @ref oop)
-* @param[in] parent pointer to the state-handler object
-*
-* @returns the child of a given @c parent state, which is an ancestor of
-* the currently active state
-*/
-QMState const *QMsm_childStateObj(QMsm const * const me,
-                                  QMState const * const parent)
-{
-    QMState const *child = me->state.obj;
-    bool isConfirmed = false; /* start with the child not confirmed */
-    QMState const *s;
-
-    for (s = me->state.obj->superstate;
-         s != (QMState const *)0;
-         s = s->superstate)
-    {
-        if (s == parent) {
-            isConfirmed = true; /* child is confirmed */
-            break;
-        }
-        else {
-            child = s;
-        }
-    }
-
-    /** @post the child must be confirmed */
-    Q_ENSURE_ID(610, isConfirmed != false);
-
-    return child; /* return the child */
-}
-#endif /* Q_NMSM_HIST */
-#endif /* Q_NMSM */
-
-
-/****************************************************************************/
-/****************************************************************************/
-#ifndef Q_NHSM
-
 /*! empty signal for internal use only */
 #define QEP_EMPTY_SIG_        ((QSignal)0)
 
@@ -384,15 +73,15 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 * @note Must be called only by the constructors of the derived state
 * machines.
 *
-* @note Must be called only ONCE before QMSM_INIT().
+* @note Must be called only ONCE before QHSM_INIT().
 *
 * @note
-* QHsm inherits QMsm, so by the @ref oop convention it should call the
-* constructor of the superclass, i.e., QMsm_ctor(). However, this would pull
-* in the QMsmVtbl, which in turn will pull in the code for QMsm_init_() and
-* QMsm_dispatch_() implemetations. To avoid this code size penalty, in case
-* ::QMsm is not used in a given project, the QHsm_ctor() performs direct
-* intitialization of the Vtbl, which avoids pulling in the code for QMsm.
+* QHsm inherits QHsm, so by the @ref oop convention it should call the
+* constructor of the superclass, i.e., QHsm_ctor(). However, this would pull
+* in the QHsmVtbl, which in turn will pull in the code for QHsm_init_() and
+* QHsm_dispatch_() implemetations. To avoid this code size penalty, in case
+* ::QHsm is not used in a given project, the QHsm_ctor() performs direct
+* intitialization of the Vtbl, which avoids pulling in the code for QHsm.
 *
 * @usage
 * The following example illustrates how to invoke QHsm_ctor() in the
@@ -400,14 +89,14 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 * @include qepn_qhsm_ctor.c
 */
 void QHsm_ctor(QHsm * const me, QStateHandler initial) {
-    static QMsmVtbl const vtbl = { /* QHsm virtual table */
+    static QHsmVtbl const vtbl = { /* QHsm virtual table */
         &QHsm_init_,
         &QHsm_dispatch_
     };
-    /* do not call the QMsm_ctor() here */
+    /* do not call the QHsm_ctor() here */
     me->vptr = &vtbl;
-    me->state.fun = Q_STATE_CAST(&QHsm_top);
-    me->temp.fun  = initial;
+    me->state = Q_STATE_CAST(&QHsm_top);
+    me->temp  = initial;
 }
 
 /****************************************************************************/
@@ -439,18 +128,18 @@ QState QHsm_top(void const * const me) {
 * @note Must be called only ONCE after the QHsm_ctor().
 */
 void QHsm_init_(QHsm * const me) {
-    QStateHandler t = me->state.fun;
+    QStateHandler t = me->state;
     QState r;
 
     /** @pre the virtual pointer must be initialized, the top-most initial
     * transition must be initialized, and the initial transition must not
     * be taken yet.
     */
-    Q_REQUIRE_ID(600, (me->vptr != (QMsmVtbl const *)0)
-                      && (me->temp.fun != Q_STATE_CAST(0))
+    Q_REQUIRE_ID(600, (me->vptr != (QHsmVtbl const *)0)
+                      && (me->temp != Q_STATE_CAST(0))
                       && (t == Q_STATE_CAST(&QHsm_top)));
 
-    r = (*me->temp.fun)(me); /* execute the top-most initial transition */
+    r = (*me->temp)(me); /* execute the top-most initial transition */
 
     /* the top-most initial transition must be taken */
     Q_ASSERT_ID(610, r == (QState)Q_RET_TRAN);
@@ -460,16 +149,16 @@ void QHsm_init_(QHsm * const me) {
         QStateHandler path[QHSM_MAX_NEST_DEPTH_];
         int_fast8_t ip = (int_fast8_t)0; /* transition entry path index */
 
-        path[0] = me->temp.fun;
+        path[0] = me->temp;
         Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-        (void)(*me->temp.fun)(me);
-        while (me->temp.fun != t) {
+        (void)(*me->temp)(me);
+        while (me->temp != t) {
             ++ip;
             Q_ASSERT_ID(620, ip < (int_fast8_t)Q_DIM(path));
-            path[ip] = me->temp.fun;
-            (void)(*me->temp.fun)(me);
+            path[ip] = me->temp;
+            (void)(*me->temp)(me);
         }
-        me->temp.fun = path[0];
+        me->temp = path[0];
 
         /* retrace the entry path in reverse (desired) order... */
         Q_SIG(me) = (QSignal)Q_ENTRY_SIG;
@@ -484,8 +173,8 @@ void QHsm_init_(QHsm * const me) {
         r = (*t)(me);
     } while (r == (QState)Q_RET_TRAN);
 
-    me->state.fun = t; /* change the current active state */
-    me->temp.fun  = t; /* mark the configuration as stable */
+    me->state = t; /* change the current active state */
+    me->temp  = t; /* mark the configuration as stable */
 }
 
 /****************************************************************************/
@@ -498,20 +187,20 @@ void QHsm_init_(QHsm * const me) {
 *
 * @note
 * This function should be called only via the virtual table (see
-* QMSM_DISPATCH()) and should NOT be called directly in the applications.
+* QHSM_DISPATCH()) and should NOT be called directly in the applications.
 */
 void QHsm_dispatch_(QHsm * const me) {
-    QStateHandler t = me->state.fun;
+    QStateHandler t = me->state;
     QStateHandler s;
     QState r;
     int_fast8_t iq; /* helper transition entry path index */
 
     /** @pre the state configuration must be stable */
-    Q_REQUIRE_ID(700, t == me->temp.fun);
+    Q_REQUIRE_ID(700, t == me->temp);
 
     /* process the event hierarchically... */
     do {
-        s = me->temp.fun;
+        s = me->temp;
         r = (*s)(me); /* invoke state handler s */
 
         /* unhandled due to a guard? */
@@ -528,12 +217,12 @@ void QHsm_dispatch_(QHsm * const me) {
         QStateHandler path[QHSM_MAX_NEST_DEPTH_]; /* transition entry path */
         int_fast8_t ip; /* transition entry path index */
 
-        path[0] = me->temp.fun; /* save the target of the transition */
+        path[0] = me->temp; /* save the target of the transition */
         path[1] = t;
         path[2] = s;
 
         /* exit current state to transition source s... */
-        for (; t != s; t = me->temp.fun) {
+        for (; t != s; t = me->temp) {
             Q_SIG(me) = (QSignal)Q_EXIT_SIG; /* find superstate of t */
 
             /* take the exit action and check if it was handled? */
@@ -551,22 +240,22 @@ void QHsm_dispatch_(QHsm * const me) {
             (void)(*path[ip])(me); /* enter path[ip] */
         }
         t = path[0];      /* stick the target into register */
-        me->temp.fun = t; /* update the current state */
+        me->temp = t; /* update the current state */
 
         /* drill into the target hierarchy... */
         Q_SIG(me) = (QSignal)Q_INIT_SIG;
         while ((*t)(me) == (QState)Q_RET_TRAN) {
             ip = (int_fast8_t)0;
 
-            path[0] = me->temp.fun;
+            path[0] = me->temp;
             Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-            (void)(*me->temp.fun)(me); /* find the superstate */
-            while (me->temp.fun != t) {
+            (void)(*me->temp)(me); /* find the superstate */
+            while (me->temp != t) {
                 ++ip;
-                path[ip] = me->temp.fun;
-                (void)(*me->temp.fun)(me); /* find the superstate */
+                path[ip] = me->temp;
+                (void)(*me->temp)(me); /* find the superstate */
             }
-            me->temp.fun = path[0];
+            me->temp = path[0];
 
             /* entry path must not overflow */
             Q_ASSERT_ID(710, ip < QHSM_MAX_NEST_DEPTH_);
@@ -583,8 +272,8 @@ void QHsm_dispatch_(QHsm * const me) {
         }
     }
 
-    me->state.fun = t; /* change the current active state */
-    me->temp.fun  = t; /* mark the configuration as stable */
+    me->state = t; /* change the current active state */
+    me->temp  = t; /* mark the configuration as stable */
 }
 
 /****************************************************************************/
@@ -616,7 +305,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
     else {
         Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
         (void)(*t)(me); /* find superstate of target */
-        t = me->temp.fun;
+        t = me->temp;
 
         /* (b) check source==target->super */
         if (s == t) {
@@ -627,14 +316,14 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
             (void)(*s)(me); /* find superstate of source */
 
             /* (c) check source->super==target->super */
-            if (me->temp.fun == t) {
+            if (me->temp == t) {
                 Q_SIG(me) = (QSignal)Q_EXIT_SIG;
                 (void)(*s)(me);     /* exit the source */
                 ip = (int_fast8_t)0; /* enter the target */
             }
             else {
                 /* (d) check source->super==target */
-                if (me->temp.fun == path[0]) {
+                if (me->temp == path[0]) {
                     Q_SIG(me) = (QSignal)Q_EXIT_SIG;
                     (void)(*s)(me); /* exit the source */
                 }
@@ -645,15 +334,15 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                     iq = (int_fast8_t)0; /* indicate that LCA not found */
                     ip = (int_fast8_t)1; /* enter target and its superstate */
                     path[1] = t; /* save the superstate of target */
-                    t = me->temp.fun; /* save source->super */
+                    t = me->temp; /* save source->super */
 
                     /* find target->super->super... */
                     Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
                     r = (*path[1])(me);
                     while (r == (QState)Q_RET_SUPER) {
                         ++ip;
-                        path[ip] = me->temp.fun; /* store the entry path */
-                        if (me->temp.fun == s) { /* is it the source? */
+                        path[ip] = me->temp; /* store the entry path */
+                        if (me->temp == s) { /* is it the source? */
                             iq = (int_fast8_t)1; /* indicate that LCA found */
 
                             /* entry path must not overflow */
@@ -663,7 +352,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                         }
                         /* it is not the source, keep going up */
                         else {
-                            r = (*me->temp.fun)(me); /* superstate of t */
+                            r = (*me->temp)(me); /* superstate of t */
                         }
                     }
 
@@ -709,7 +398,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                                     Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
                                     (void)(*t)(me); /* find super of t */
                                 }
-                                t = me->temp.fun; /*  set to super of t */
+                                t = me->temp; /*  set to super of t */
                                 iq = ip;
                                 do {
                                     s = path[iq];
@@ -756,29 +445,28 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 QStateHandler QHsm_childState(QHsm * const me,
                               QStateHandler const parent)
 {
-    QStateHandler child = me->state.fun; /* start with the current state */
+    QStateHandler child = me->state; /* start with the current state */
     bool isConfirmed = false; /* start with the child not confirmed */
     QState r;
 
     /* establish stable state configuration */
-    me->temp.fun = me->state.fun;
+    me->temp = me->state;
     do {
         /* is this the parent of the current child? */
-        if (me->temp.fun == parent) {
+        if (me->temp == parent) {
             isConfirmed = true; /* child is confirmed */
             r = (QState)Q_RET_IGNORED; /* break out of the loop */
         }
         else {
-            child = me->temp.fun;
+            child = me->temp;
             Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
-            r = (*me->temp.fun)(me); /* find the superstate */
+            r = (*me->temp)(me); /* find the superstate */
         }
     } while (r != (QState)Q_RET_IGNORED); /* QHsm_top() state not reached */
-    me->temp.fun = me->state.fun; /* establish stable state configuration */
+    me->temp = me->state; /* establish stable state configuration */
 
     /** @post the child must be confirmed */
     Q_ENSURE_ID(910, isConfirmed != false);
 
     return child; /* return the child */
 }
-#endif /* Q_NHSM */

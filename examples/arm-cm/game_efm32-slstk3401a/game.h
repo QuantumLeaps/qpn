@@ -81,10 +81,10 @@ enum GameBitmapIds {
 
 /* instantiation of the Mines orthogonal components */
 /*${AOs::Mine1_ctor} .......................................................*/
-QMsm * Mine1_ctor(uint8_t id);
+QHsm * Mine1_ctor(uint8_t id);
 
 /*${AOs::Mine2_ctor} .......................................................*/
-QMsm * Mine2_ctor(uint8_t id);
+QHsm * Mine2_ctor(uint8_t id);
 
 
 #endif  /* game_h */

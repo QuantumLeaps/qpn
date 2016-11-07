@@ -3,8 +3,8 @@
 * @brief QP-nano configuration file, generic C compiler
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -77,7 +77,7 @@
 * This macro determines if the QF-nano timer is capable of firing
 * periodically or is limited to one-shot only. The reason for not allowing
 * periodic time events is that they require additional storage (inside
-* QMActive) for the timeout interval.@n
+* QActive) for the timeout interval.@n
 * @n
 * When the macro QF_TIMEEVT_PERIODIC is not defined, the function
 * QActive_armX() takes 3 arguments: the active object pointer, the tick

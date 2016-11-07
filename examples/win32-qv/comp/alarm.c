@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: Orthogonal Component state pattern example
-* Last updated for version 5.4.2
-* Last updated on  2015-06-07
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"
@@ -44,7 +44,7 @@ static QState Alarm_off    (Alarm *me);
 
 /*..........................................................................*/
 void Alarm_ctor(Alarm * const me) {
-    QFsm_ctor(&me->super, Q_STATE_CAST(&Alarm_initial));
+    QHsm_ctor(&me->super, Q_STATE_CAST(&Alarm_initial));
 }
 
 /* HSM definition ----------------------------------------------------------*/
@@ -94,7 +94,7 @@ QState Alarm_off(Alarm * const me) {
             break;
         }
         default: {
-            status = Q_IGNORED();
+            status = Q_SUPER(&QHsm_top);
             break;
         }
     }
@@ -125,13 +125,13 @@ QState Alarm_on(Alarm * const me) {
             if (Q_PAR(me) == me->alarm_time) {
                 printf("ALARM!!!\n");
                 /* asynchronously post the event to the container AO */
-                QACTIVE_POST((QMActive *)&AO_AlarmClock, ALARM_SIG, 0);
+                QACTIVE_POST((QActive *)&AO_AlarmClock, ALARM_SIG, 0);
             }
             status = Q_HANDLED();
             break;
         }
         default: {
-            status = Q_IGNORED();
+            status = Q_SUPER(&QHsm_top);
             break;
         }
     }

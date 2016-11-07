@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example, EFM32-SLSTK3401A board, QK kernel
-* Last updated for version 5.6.5
-* Last updated on  2016-06-02
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -97,9 +97,9 @@ void SysTick_Handler(void) {
     QF_tickXISR(0U); /* process time events for rate 0 */
 
     /* post TIME_TICK events to all interested active objects... */
-    QACTIVE_POST_ISR((QMActive *)&AO_Tunnel,  TIME_TICK_SIG, 0);
-    QACTIVE_POST_ISR((QMActive *)&AO_Ship,    TIME_TICK_SIG, 0);
-    QACTIVE_POST_ISR((QMActive *)&AO_Missile, TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel,  TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Ship,    TIME_TICK_SIG, 0);
+    QACTIVE_POST_ISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0);
 
     {
         /* state of the button debouncing, see below */
@@ -122,8 +122,8 @@ void SysTick_Handler(void) {
        tmp ^= buttons.depressed;     /* changed debounced depressed */
        if ((tmp & (1U << PB0_PIN)) != 0U) {  /* debounced PB0 state changed? */
            if ((buttons.depressed & (1U << PB0_PIN)) != 0U) {/*PB0 depressed?*/
-               QACTIVE_POST_ISR((QMActive *)&AO_Ship,   PLAYER_TRIGGER_SIG, 0U);
-               QACTIVE_POST_ISR((QMActive *)&AO_Tunnel, PLAYER_TRIGGER_SIG, 0U);
+               QACTIVE_POST_ISR((QActive *)&AO_Ship,   PLAYER_TRIGGER_SIG, 0U);
+               QACTIVE_POST_ISR((QActive *)&AO_Tunnel, PLAYER_TRIGGER_SIG, 0U);
            }
        }
     }
@@ -133,7 +133,7 @@ void SysTick_Handler(void) {
 /*..........................................................................*/
 void GPIO_EVEN_IRQHandler(void) {
     QK_ISR_ENTRY(); /* inform QK about entering an ISR */
-    QACTIVE_POST_ISR((QMActive *)&AO_Tunnel, TAKE_OFF_SIG, 0U);
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel, TAKE_OFF_SIG, 0U);
     QK_ISR_EXIT();  /* inform QK about exiting an ISR */
 }
 

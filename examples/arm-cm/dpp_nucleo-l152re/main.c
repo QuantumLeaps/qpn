@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -40,20 +40,20 @@ static QEvt l_philoQueue[N_PHILO][N_PHILO];
 static QEvt l_tableQueue[2];
 
 /* QF_active[] array defines all active object control blocks --------------*/
-QMActiveCB const Q_ROM QF_active[] = {
-    { (QMActive *)0,           (QEvt *)0,        0U                      },
-    { (QMActive *)&AO_Philo0,  l_philoQueue[0],  Q_DIM(l_philoQueue[0])  },
-    { (QMActive *)&AO_Philo1,  l_philoQueue[1],  Q_DIM(l_philoQueue[1])  },
-    { (QMActive *)&AO_Philo2,  l_philoQueue[2],  Q_DIM(l_philoQueue[2])  },
-    { (QMActive *)&AO_Philo3,  l_philoQueue[3],  Q_DIM(l_philoQueue[3])  },
-    { (QMActive *)&AO_Philo4,  l_philoQueue[4],  Q_DIM(l_philoQueue[4])  },
-    { (QMActive *)&AO_Table,   l_tableQueue,     Q_DIM(l_tableQueue)     }
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,           (QEvt *)0,        0U                      },
+    { (QActive *)&AO_Philo0,  l_philoQueue[0],  Q_DIM(l_philoQueue[0])  },
+    { (QActive *)&AO_Philo1,  l_philoQueue[1],  Q_DIM(l_philoQueue[1])  },
+    { (QActive *)&AO_Philo2,  l_philoQueue[2],  Q_DIM(l_philoQueue[2])  },
+    { (QActive *)&AO_Philo3,  l_philoQueue[3],  Q_DIM(l_philoQueue[3])  },
+    { (QActive *)&AO_Philo4,  l_philoQueue[4],  Q_DIM(l_philoQueue[4])  },
+    { (QActive *)&AO_Table,   l_tableQueue,     Q_DIM(l_tableQueue)     }
 };
 
 /*..........................................................................*/
 int_t main() {
-    Philo_ctor();  /* instantiate all Philo AOs */
-    Table_ctor();  /* instantiate the Table AO */
+    Philo_ctor();    /* instantiate all Philo AOs */
+    Table_ctor();    /* instantiate the Table AO */
 
     QF_init(Q_DIM(QF_active)); /* initialize the QF-nano framework */
     BSP_init();      /* initialize the Board Support Package */

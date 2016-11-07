@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP example, Arduino-UNO board, preemptive QK kernel, IAR-AVR
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-04-08
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -80,10 +80,10 @@ __interrupt void timer2_ISR(void) {
     tmp ^= buttons.depressed;     /* changed debounced depressed */
     if ((tmp & BTN_EXT) != 0U) {  /* debounced BTN_EXT state changed? */
         if ((buttons.depressed & BTN_EXT) != 0U) { /* is BTN_EXT depressed? */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, PAUSE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, PAUSE_SIG, 0U);
         }
         else {            /* the button is released */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, SERVE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, SERVE_SIG, 0U);
         }
     }
 

@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product:  Calculator Example, QP-nano
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -56,7 +56,7 @@ int main() {
            "Press <Esc>          to quit.\n\n",
            QP_getVersion());
 
-    QMSM_INIT(the_calc);  /* trigger initial transition */
+    QHSM_INIT(the_calc);  /* trigger initial transition */
 
     for (;;) { /* event loop */
         uint8_t sig;
@@ -125,7 +125,7 @@ int main() {
         if (sig != 0) { /* valid event generated? */
             Q_SIG(the_calc) = sig;
             Q_PAR(the_calc) = par;
-            QMSM_DISPATCH(the_calc); /* dispatch event */
+            QHSM_DISPATCH(the_calc); /* dispatch event */
         }
     }
     return 0;

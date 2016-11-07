@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.7.2
-* Last updated on  2016-09-30
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -108,42 +108,6 @@ static uint8_t const Q_ROM l_pow2Lkup[] = {
 };
 
 /****************************************************************************/
-/****************************************************************************/
-#ifndef Q_NMSM
-
-/****************************************************************************/
-/**
-* @description
-* Performs the first step of active object initialization by assigning
-* the virtual pointer and calling the superclass constructor.
-*
-* @param[in,out] me       pointer (see @ref oop)
-* @param[in]     initial  pointer to the event to be dispatched to the MSM
-*
-* @note  Must be called only ONCE before QMSM_INIT().
-*
-* @sa QMsm_ctor()
-*
-* @usage
-* @include qfn_qmactive.c
-*/
-void QMActive_ctor(QMActive * const me, QStateHandler initial) {
-    static QMActiveVtbl const vtbl = { /* QMActive virtual table */
-        { &QMsm_init_,
-          &QMsm_dispatch_ },
-        &QActive_postX_,
-        &QActive_postXISR_
-    };
-
-    QMsm_ctor(&me->super, initial);
-    me->super.vptr = &vtbl.super;/* hook the vptr to QMActive virtual table */
-}
-
-#endif /* Q_NMSM */
-
-/****************************************************************************/
-#ifndef Q_NHSM
-
 void QActive_ctor(QActive * const me, QStateHandler initial) {
     static QActiveVtbl const vtbl = { /* QActive virtual table */
         { &QHsm_init_,
@@ -153,20 +117,17 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
     };
 
     /**
-    * @note QActive inherits QMActive, so by the @ref oop convention
-    * it should call the constructor of the superclass, i.e., QMActive_ctor().
-    * However, this would pull in the QMActiveVtbl, which in turn will pull
-    * in the code for QMsm_init_() and QMsm_dispatch_() implemetations,
-    * which is expensive. To avoid this code size penalty, in case ::QMsm is
+    * @note QActive inherits QActive, so by the @ref oop convention
+    * it should call the constructor of the superclass, i.e., QActive_ctor().
+    * However, this would pull in the QActiveVtbl, which in turn will pull
+    * in the code for QHsm_init_() and QHsm_dispatch_() implemetations,
+    * which is expensive. To avoid this code size penalty, in case ::QHsm is
     * not used in a given project, the call to QHsm_ctor() avoids pulling
-    * in the code for QMsm.
+    * in the code for QHsm.
     */
     QHsm_ctor(&me->super, initial);
     me->super.vptr = &vtbl.super; /* hook the vptr to QActive virtual table */
 }
-
-#endif /* Q_NHSM */
-
 
 /****************************************************************************/
 /**
@@ -194,14 +155,14 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
 * @include qfn_postx.c
 */
 #if (Q_PARAM_SIZE != 0)
-bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                     enum_t const sig, QParam const par)
 #else
-bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                     enum_t const sig)
 #endif
 {
-    QMActiveCB const Q_ROM *acb = &QF_active[me->prio];
+    QActiveCB const Q_ROM *acb = &QF_active[me->prio];
     uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
 
     QF_INT_DISABLE();
@@ -274,10 +235,10 @@ bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
 * @include qfn_postx.c
 */
 #if (Q_PARAM_SIZE != 0)
-bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig, QParam const par)
 #else
-bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
+bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig)
 #endif
 {
@@ -286,7 +247,7 @@ bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
     QF_ISR_STAT_TYPE stat;
 #endif
 #endif
-    QMActiveCB const Q_ROM *acb = &QF_active[me->prio];
+    QActiveCB const Q_ROM *acb = &QF_active[me->prio];
     uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
 
 #ifdef QF_ISR_NEST
@@ -348,7 +309,7 @@ bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
 * QF_init(Q_DIM(QF_active));
 */
 void QF_init(uint_fast8_t maxActive) {
-    QMActive *a;
+    QActive *a;
     uint_fast8_t p;
     uint_fast8_t n;
 
@@ -384,7 +345,7 @@ void QF_init(uint_fast8_t maxActive) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(110, a != (QMActive *)0);
+        Q_ASSERT_ID(110, a != (QActive *)0);
 
         a->head    = (uint_fast8_t)0;
         a->tail    = (uint_fast8_t)0;
@@ -427,7 +388,7 @@ void QF_init(uint_fast8_t maxActive) {
 void QF_tickXISR(uint_fast8_t const tickRate) {
     uint_fast8_t p = QF_maxActive_;
     do {
-        QMActive *a = QF_ROM_ACTIVE_GET_(p);
+        QActive *a = QF_ROM_ACTIVE_GET_(p);
         QTimer *t = &a->tickCtr[tickRate];
 
         if (t->nTicks != (QTimeEvtCtr)0) {
@@ -488,10 +449,10 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
 * @include qfn_armx.c
 */
 #ifdef QF_TIMEEVT_PERIODIC
-void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
+void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks, QTimeEvtCtr const interval)
 #else
-void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
+void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks)
 #endif
 {
@@ -520,7 +481,7 @@ void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
 * arrive after you disarm the time event. The timeout event could be
 * already in the event queue.
 */
-void QActive_disarmX(QMActive * const me, uint_fast8_t const tickRate) {
+void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
     QF_INT_DISABLE();
     me->tickCtr[tickRate].nTicks = (QTimeEvtCtr)0;
 #ifdef QF_TIMEEVT_PERIODIC

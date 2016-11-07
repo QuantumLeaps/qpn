@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.7.2
-* Last updated on  2016-09-30
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -72,7 +72,7 @@ static void initialize(void); /* prototype required by MISRA */
 */
 static void initialize(void) {
     uint_fast8_t p;
-    QMActive *a;
+    QActive *a;
 
 #ifdef QK_INIT /* initialization of the QK-nano kernel defined? */
     QK_INIT(); /* initialize the QK-nano kernel */
@@ -96,7 +96,7 @@ static void initialize(void) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(110, a != (QMActive *)0);
+        Q_ASSERT_ID(110, a != (QActive *)0);
 
         a->prio = p; /* set the priority of the active object */
     }
@@ -104,7 +104,7 @@ static void initialize(void) {
     /* trigger initial transitions in all registered active objects... */
     for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
-        QMSM_INIT(&a->super); /* take the initial transition in the SM */
+        QHSM_INIT(&a->super); /* take the initial transition in the SM */
     }
 
     /* process all events posted during initialization... */
@@ -212,8 +212,8 @@ void QK_activate_(void) {
 
     /* loop until no more ready-to-run AOs of higher prio than the initial */
     do {
-        QMActive *a;
-        QMActiveCB const Q_ROM *acb;
+        QActive *a;
+        QActiveCB const Q_ROM *acb;
 
         QK_attr_.actPrio = p; /* this becomes the active priority */
         QF_INT_ENABLE();  /* it's safe to leave critical section */
@@ -243,7 +243,7 @@ void QK_activate_(void) {
         --a->tail;
         QF_INT_ENABLE(); /* enable interrupts to launch a task */
 
-        QMSM_DISPATCH(&a->super); /* dispatch to the SM (execute RTC step) */
+        QHSM_DISPATCH(&a->super); /* dispatch to the SM (execute RTC step) */
 
         QF_INT_DISABLE();
 

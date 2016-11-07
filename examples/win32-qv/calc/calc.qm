@@ -3,7 +3,7 @@
  <documentation>Calc is the model of the Calculator described in Chapter 4 of PSiCC2</documentation>
  <framework name="qpn"/>
  <package name="SMs" stereotype="0x02">
-  <class name="Calc" superclass="qpn::QMsm">
+  <class name="Calc" superclass="qpn::QHsm">
    <documentation>Calculator state machine</documentation>
    <attribute name="operand1" type="double" visibility="0x02" properties="0x00"/>
    <attribute name="operator" type="uint8_t" visibility="0x02" properties="0x00"/>
@@ -491,7 +491,7 @@ BSP_exit();</entry>
   <operation name="Calc_ctor" type="void" visibility="0x00" properties="0x00">
    <documentation>constructor</documentation>
    <code>Calc *me = &amp;l_calc;
-QMsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Calc_initial));</code>
+QHsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Calc_initial));</code>
   </operation>
  </package>
  <directory name=".">
@@ -512,7 +512,7 @@ enum CalcSignals {
 
 $declare(SMs::Calc_ctor)
 
-extern QMsm * const the_calc;  /* &quot;opaque&quot; pointer to calculator MSM */
+extern QHsm * const the_calc;  /* &quot;opaque&quot; pointer to calculator HSM */
 
 #endif /* calc_h */</text>
   </file>
@@ -526,7 +526,7 @@ $declare(SMs::Calc)
 static Calc l_calc;    /* the only instance of the Calc class */
 
 /* global-scope definitions ---------------------------------------*/
-QMsm * const the_calc = &amp;l_calc.super; /* &quot;opaque&quot; pointer to MSM */
+QHsm * const the_calc = &amp;l_calc.super; /* &quot;opaque&quot; pointer to HSM */
 
 $define(SMs::Calc_ctor)
 $define(SMs::Calc)</text>

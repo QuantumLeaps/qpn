@@ -3,8 +3,8 @@
 * @brief QP-nano public interface including backwards-compatibility layer
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -78,44 +78,30 @@ extern "C" {
 #endif  /* QP_API_VERSION */
 
 /****************************************************************************/
-#if (QP_API_VERSION < 540)
+#if (QP_API_VERSION < 580)
 
-/*! @deprecated QActive Control Block;
-* instead use: ::QMActiveCB.
+/*! @deprecated QMActive Control Block; instead use: ::QActiveCB. */
+typedef QActiveCB QMActiveCB;
+
+/*! @deprecated QMActive; instead use: ::QActive. */
+typedef QActive QMActive;
+
+/*! @deprecated QMsm state machine; instead use: ::QHsm. */
+typedef QHsm QMsm;
+
+/*! @deprecated QMActive constructor; instead use: QActive_ctor() */
+#define QMActive_ctor QActive_ctor
+
+/*! @deprecated QMsm state machine constructor; instead use: QHsm_ctor() */
+#define QMsm_ctor     QHsm_ctor
+
+/*! @deprecated execute the top-most initial transition in QMsm;
+* instead use QHSM_INIT()
 */
-typedef QMActiveCB QActiveCB;
+#define QMSM_INIT(me_)      QHSM_INIT((me_))
 
-#if (!defined(Q_NFSM)) && (!defined(Q_NHSM))
-
-/*! @deprecated QFsm state machine;
-* instead use: ::QHsm. Legacy state machines coded in the "QFsm-style" will
-* continue to work, but will use the ::QHsm implementation internally.
-* There is no longer any efficiency advantage in using the "QFsm-style"
-* state machines.
-*
-* @note
-* For efficiency, the recommended migration path is to use the ::QMsm
-* state machine and the QM modeling tool.
-*/
-typedef QHsm        QFsm;
-
-/*! @deprecated QFsm state machine constructor; instead use: QHsm_ctor() */
-#define QFsm_ctor   QHsm_ctor
-
-/*! @deprecated execute the top-most initial transition in QFsm;
-* instead use QMSM_INIT()
-*/
-#define QFsm_init(me_)      QMSM_INIT((me_))
-
-/*! @deprecated dispatch an event to QFsm; instead use QMSM_DISPATCH() */
-#define QFsm_dispatch(me_)  QMSM_DISPATCH((me_))
-
-/*! deprecated macro to call in QFsm state-handler when it
-* ignores (does not handle) an event (instead use Q_SUPER())
-*/
-#define Q_IGNORED() (Q_SUPER(&QHsm_top))
-
-#endif /* (!defined(Q_NFSM)) && (!defined(Q_NHSM)) */
+/*! @deprecated dispatch an event to QMsm; instead use QHSM_DISPATCH() */
+#define QMSM_DISPATCH(me_)  QHSM_DISPATCH((me_))
 
 /*! @deprecated macro for cooperativew "Vanilla" kernel;
 * instead use: QV_onIdle() */
@@ -137,18 +123,10 @@ typedef QHsm        QFsm;
 /*! @deprecated execute the top-most initial transition in QMsm;
 * instead use QMSM_INIT()
 */
-#define QMsm_init(me_)      QMSM_INIT((me_))
+#define QMsm_init(me_)      QHSM_INIT((me_))
 
 /*! @deprecated dispatch an event to QMsm; instead use QMSM_DISPATCH() */
 #define QMsm_dispatch(me_)  QMSM_DISPATCH((me_))
-
-/*! @deprecated execute the top-most initial transition in QHsm;
-* instead use QMSM_INIT()
-*/
-#define QHsm_init(me_)      QMSM_INIT((me_))
-
-/*! @deprecated dispatch an event to QHsm; instead use QMSM_DISPATCH() */
-#define QHsm_dispatch(me_)  QMSM_DISPATCH((me_))
 
 #if (Q_PARAM_SIZE != 0)
     /*! Deprecated API defined for backwards-compatibility */

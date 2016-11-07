@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example, EFM32-SLSTK3401A, Win32-GUI
-* Last updated for version 5.6.5
-* Last updated on  2016-06-02
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -76,8 +76,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg,
 
 /*..........................................................................*/
 static void playerTrigger(void) {
-    QACTIVE_POST((QMActive *)&AO_Ship, PLAYER_TRIGGER_SIG, 0U);
-    QACTIVE_POST((QMActive *)&AO_Tunnel, PLAYER_TRIGGER_SIG, 0U);
+    QACTIVE_POST((QActive *)&AO_Ship, PLAYER_TRIGGER_SIG, 0U);
+    QACTIVE_POST((QActive *)&AO_Tunnel, PLAYER_TRIGGER_SIG, 0U);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -92,9 +92,9 @@ void QF_onClockTickISR(void) {
     QF_tickXISR(0U); /* perform the QF-nano clock tick processing */
 
     /* post TIME_TICK events to all interested active objects... */
-    QACTIVE_POST_ISR((QMActive *)&AO_Tunnel, TIME_TICK_SIG, 0U);
-    QACTIVE_POST_ISR((QMActive *)&AO_Ship, TIME_TICK_SIG, 0U);
-    QACTIVE_POST_ISR((QMActive *)&AO_Missile, TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QActive *)&AO_Tunnel, TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QActive *)&AO_Ship, TIME_TICK_SIG, 0U);
+    QACTIVE_POST_ISR((QActive *)&AO_Missile, TIME_TICK_SIG, 0U);
 }
 
 /*..........................................................................*/

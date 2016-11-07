@@ -4,8 +4,8 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.2
-* Last updated on  2016-04-05
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -67,7 +67,7 @@ Q_DEFINE_THIS_MODULE("qvn")
 */
 int_t QF_run(void) {
     uint_fast8_t p;
-    QMActive *a;
+    QActive *a;
 
 #ifdef QF_MAX_ACTIVE /* deprecated constant provided? */
 #if (QF_MAX_ACTIVE < 1) || (8 < QF_MAX_ACTIVE)
@@ -87,7 +87,7 @@ int_t QF_run(void) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
-        Q_ASSERT_ID(810, a != (QMActive *)0);
+        Q_ASSERT_ID(810, a != (QActive *)0);
 
         a->prio = p; /* set the priority of the active object */
     }
@@ -95,7 +95,7 @@ int_t QF_run(void) {
     /* trigger initial transitions in all registered active objects... */
     for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
-        QMSM_INIT(&a->super); /* take the initial transition in the SM */
+        QHSM_INIT(&a->super); /* take the initial transition in the SM */
     }
 
     QF_onStartup(); /* invoke startup callback */
@@ -104,7 +104,7 @@ int_t QF_run(void) {
     for (;;) {
         QF_INT_DISABLE();
         if (QF_readySet_ != (uint_fast8_t)0) {
-            QMActiveCB const Q_ROM *acb;
+            QActiveCB const Q_ROM *acb;
 
 #ifdef QF_LOG2
             p = QF_LOG2(QF_readySet_);
@@ -142,7 +142,7 @@ int_t QF_run(void) {
             --a->tail;
             QF_INT_ENABLE();
 
-            QMSM_DISPATCH(&a->super); /* dispatch to the SM */
+            QHSM_DISPATCH(&a->super); /* dispatch to the HSM */
         }
         else {
             /* QV_onIdle() must be called with interrupts DISABLED because

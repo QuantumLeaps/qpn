@@ -1,7 +1,8 @@
 /*****************************************************************************
 * Product: BSP for DPP example, Win32
-* Last updated for version 5.4.0
-* Last updated on  2015-05-24
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
+*
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
@@ -27,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
 #include "dpp.h"
@@ -98,13 +99,13 @@ void QF_onClockTickISR(void) {
     if (_kbhit()) { /* any key pressed? */
         int ch = _getch();
         if (ch == 0x1B) { /* see if the ESC key pressed */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, TERMINATE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, TERMINATE_SIG, 0U);
         }
         else if (ch == 'p') {
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, PAUSE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, PAUSE_SIG, 0U);
         }
         else if (ch == 's') {
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, SERVE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, SERVE_SIG, 0U);
         }
     }
 }

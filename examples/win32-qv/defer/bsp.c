@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: BSP for QP-nano "Deferred Event" state pattern example, Win32
-* Last Updated for Version: 5.4.0
-* Date of the Last Update:  2015-05-24
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web  : http://www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"     /* QP-nano API */
 #include "bsp.h"     /* Board Support Package */
@@ -67,12 +67,12 @@ void QF_onClockTickISR(void) {
         switch (key) {
             case 'n': { /* 'n': new request? */
                 static uint8_t reqCtr = 0U; /* count the requests */
-                QACTIVE_POST_ISR((QMActive *)&AO_TServer,
+                QACTIVE_POST_ISR((QActive *)&AO_TServer,
                                  NEW_REQUEST_SIG, ++reqCtr);
                 break;
             }
             case '\33': { /* ESC pressed? */
-                QACTIVE_POST_ISR((QMActive *)&AO_TServer,
+                QACTIVE_POST_ISR((QActive *)&AO_TServer,
                                  TERMINATE_SIG, 0U);
                 break;
             }

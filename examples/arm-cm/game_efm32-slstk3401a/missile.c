@@ -25,7 +25,7 @@
 /*${AOs::Missile} ..........................................................*/
 typedef struct Missile {
 /* protected: */
-    QMActive super;
+    QActive super;
 
 /* private: */
     uint8_t x;
@@ -38,31 +38,9 @@ typedef struct Missile {
 
 /* protected: */
 static QState Missile_initial(Missile * const me);
-static QState Missile_armed  (Missile * const me);
-static QMState const Missile_armed_s = {
-    (QMState const *)0, /* superstate (top) */
-    Q_STATE_CAST(&Missile_armed),
-    Q_ACTION_CAST(0), /* no entry action */
-    Q_ACTION_CAST(0), /* no exit action */
-    Q_ACTION_CAST(0)  /* no intitial tran. */
-};
-static QState Missile_flying  (Missile * const me);
-static QMState const Missile_flying_s = {
-    (QMState const *)0, /* superstate (top) */
-    Q_STATE_CAST(&Missile_flying),
-    Q_ACTION_CAST(0), /* no entry action */
-    Q_ACTION_CAST(0), /* no exit action */
-    Q_ACTION_CAST(0)  /* no intitial tran. */
-};
-static QState Missile_exploding  (Missile * const me);
-static QState Missile_exploding_e(Missile * const me);
-static QMState const Missile_exploding_s = {
-    (QMState const *)0, /* superstate (top) */
-    Q_STATE_CAST(&Missile_exploding),
-    Q_ACTION_CAST(&Missile_exploding_e),
-    Q_ACTION_CAST(0), /* no exit action */
-    Q_ACTION_CAST(0)  /* no intitial tran. */
-};
+static QState Missile_armed(Missile * const me);
+static QState Missile_flying(Missile * const me);
+static QState Missile_exploding(Missile * const me);
 
 
 /* global objects ----------------------------------------------------------*/
@@ -72,48 +50,34 @@ Missile AO_Missile;
 /*${AOs::Missile_ctor} .....................................................*/
 void Missile_ctor(uint8_t speed) {
     Missile *me = &AO_Missile;
-    QMActive_ctor(&me->super, Q_STATE_CAST(&Missile_initial));
+    QActive_ctor(&me->super, Q_STATE_CAST(&Missile_initial));
     me->speed = speed;
 }
 /*${AOs::Missile} ..........................................................*/
 /*${AOs::Missile::SM} ......................................................*/
 static QState Missile_initial(Missile * const me) {
-    static QMTranActTable const tatbl_ = { /* transition-action table */
-        &Missile_armed_s,
-        {
-            Q_ACTION_CAST(0) /* zero terminator */
-        }
-    };
     /* ${AOs::Missile::SM::initial} */
-    return QM_TRAN_INIT(&tatbl_);
+    return Q_TRAN(&Missile_armed);
 }
 /*${AOs::Missile::SM::armed} ...............................................*/
-/* ${AOs::Missile::SM::armed} */
 static QState Missile_armed(Missile * const me) {
     QState status_;
     switch (Q_SIG(me)) {
         /* ${AOs::Missile::SM::armed::MISSILE_FIRE} */
         case MISSILE_FIRE_SIG: {
-            static QMTranActTable const tatbl_ = { /* transition-action table */
-                &Missile_flying_s,
-                {
-                    Q_ACTION_CAST(0) /* zero terminator */
-                }
-            };
             me->x = (uint8_t)Q_PAR(me); /* init position from the Ship */
             me->y = (uint8_t)(Q_PAR(me) >> 8);
-            status_ = QM_TRAN(&tatbl_);
+            status_ = Q_TRAN(&Missile_flying);
             break;
         }
         default: {
-            status_ = QM_SUPER();
+            status_ = Q_SUPER(&QHsm_top);
             break;
         }
     }
     return status_;
 }
 /*${AOs::Missile::SM::flying} ..............................................*/
-/* ${AOs::Missile::SM::flying} */
 static QState Missile_flying(Missile * const me) {
     QState status_;
     switch (Q_SIG(me)) {
@@ -127,66 +91,44 @@ static QState Missile_flying(Missile * const me) {
                              (MISSILE_BMP << 16)
                              | me->x
                              | (me->y << 8));
-                status_ = QM_HANDLED();
+                status_ = Q_HANDLED();
             }
             /* ${AOs::Missile::SM::flying::TIME_TICK::[else]} */
             else {
-                static QMTranActTable const tatbl_ = { /* transition-action table */
-                    &Missile_armed_s,
-                    {
-                        Q_ACTION_CAST(0) /* zero terminator */
-                    }
-                };
-                status_ = QM_TRAN(&tatbl_);
+                status_ = Q_TRAN(&Missile_armed);
             }
             break;
         }
         /* ${AOs::Missile::SM::flying::HIT_WALL} */
         case HIT_WALL_SIG: {
-            static struct {
-                QMState const *target;
-                QActionHandler act[2];
-            } const tatbl_ = { /* transition-action table */
-                &Missile_exploding_s, /* target state */
-                {
-                    Q_ACTION_CAST(&Missile_exploding_e), /* entry */
-                    Q_ACTION_CAST(0) /* zero terminator */
-                }
-            };
-            status_ = QM_TRAN(&tatbl_);
+            status_ = Q_TRAN(&Missile_exploding);
             break;
         }
         /* ${AOs::Missile::SM::flying::DESTROYED_MINE} */
         case DESTROYED_MINE_SIG: {
-            static QMTranActTable const tatbl_ = { /* transition-action table */
-                &Missile_armed_s,
-                {
-                    Q_ACTION_CAST(0) /* zero terminator */
-                }
-            };
             /* tell the Ship the score for destroing this Mine */
             QACTIVE_POST(&AO_Ship, Q_SIG(me), Q_PAR(me));
             /* re-arm immediately & let the destroyed Mine do the exploding */
-            status_ = QM_TRAN(&tatbl_);
+            status_ = Q_TRAN(&Missile_armed);
             break;
         }
         default: {
-            status_ = QM_SUPER();
+            status_ = Q_SUPER(&QHsm_top);
             break;
         }
     }
     return status_;
 }
 /*${AOs::Missile::SM::exploding} ...........................................*/
-/* ${AOs::Missile::SM::exploding} */
-static QState Missile_exploding_e(Missile * const me) {
-    me->exp_ctr = 0;
-    return QM_ENTRY(&Missile_exploding_s);
-}
-/* ${AOs::Missile::SM::exploding} */
 static QState Missile_exploding(Missile * const me) {
     QState status_;
     switch (Q_SIG(me)) {
+        /* ${AOs::Missile::SM::exploding} */
+        case Q_ENTRY_SIG: {
+            me->exp_ctr = 0;
+            status_ = Q_HANDLED();
+            break;
+        }
         /* ${AOs::Missile::SM::exploding::TIME_TICK} */
         case TIME_TICK_SIG: {
             /* ${AOs::Missile::SM::exploding::TIME_TICK::[(me->x>=GAME_SPEED_X)&&(me->exp~} */
@@ -199,23 +141,17 @@ static QState Missile_exploding(Missile * const me) {
                          ((EXPLOSION0_BMP + (me->exp_ctr >> 2)) << 16)
                          | (me->x + 3)
                          | ((int)me->y - 4) << 8);
-                status_ = QM_HANDLED();
+                status_ = Q_HANDLED();
             }
             /* ${AOs::Missile::SM::exploding::TIME_TICK::[else]} */
             else {
-                static QMTranActTable const tatbl_ = { /* transition-action table */
-                    &Missile_armed_s,
-                    {
-                        Q_ACTION_CAST(0) /* zero terminator */
-                    }
-                };
                 /* explosion finished or moved outside the game */
-                status_ = QM_TRAN(&tatbl_);
+                status_ = Q_TRAN(&Missile_armed);
             }
             break;
         }
         default: {
-            status_ = QM_SUPER();
+            status_ = Q_SUPER(&QHsm_top);
             break;
         }
     }

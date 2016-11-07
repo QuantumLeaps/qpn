@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.2
-* Last updated on  2016-04-05
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -97,30 +97,28 @@
 #endif
 
 /****************************************************************************/
-/*! QMActive active object (based on QMsm-implementation) */
+/*! QActive active object (based on QHsm-implementation) */
 /**
 * @description
-* QMActive is the base structure for derivation of active objects. Active
+* QActive is the base structure for derivation of active objects. Active
 * objects in QF-nano are encapsulated tasks (each embedding a state machine
 * and an event queue) that communicate with one another asynchronously by
 * sending and receiving events. Within an active object, events are
 * processed sequentially in a run-to-completion (RTC) fashion, while QF
 * encapsulates all the details of thread-safe event exchange and queuing.
 *
-* @note ::QMActive is not intended to be instantiated directly, but rather
+* @note ::QActive is not intended to be instantiated directly, but rather
 * serves as the base structure for derivation of active objects in the
 * application code.
 *
-* @sa ::QActive for the description of the data members @n @ref oop
-*
 * @usage
 * The following example illustrates how to derive an active object from
-* ::QMActive. Please note that the ::QMActive member super_ is defined as
+* ::QActive. Please note that the ::QActive member super_ is defined as
 * the __first__ member of the derived struct.
-* @include qfn_qmactive.c
+* @include qfn_qactive.c
 */
 typedef struct {
-    QMsm super; /**< derives from the ::QMsm base class */
+    QHsm super; /**< derives from the ::QHsm base class */
 
 #if (QF_TIMEEVT_CTR_SIZE != 0)
     /*! Timer for the active object */
@@ -141,98 +139,36 @@ typedef struct {
     */
     uint_fast8_t volatile nUsed;
 
-} QMActive;
+} QActive;
 
-/*! Virtual table for the QMActive class */
+/*! Virtual table for the QActive class */
 typedef struct {
-    QMsmVtbl super; /*!< inherits QMsmVtbl */
+    QHsmVtbl super; /*!< inherits QHsmVtbl */
 
 #if (Q_PARAM_SIZE != 0)
     /*! virtual function to asynchronously post (FIFO) an event to an AO
     * (task context).
     */
     /** @sa QACTIVE_POST() and QACTIVE_POST_X() */
-    bool (*post)(QMActive * const me, uint_fast8_t const margin,
+    bool (*post)(QActive * const me, uint_fast8_t const margin,
                  enum_t const sig, QParam const par);
 
     /*! virtual function to asynchronously post (FIFO) an event to an AO
     * (ISR context).
     */
     /** @sa QACTIVE_POST_ISR() and QACTIVE_POST_X_ISR() */
-    bool (*postISR)(QMActive * const me, uint_fast8_t const margin,
+    bool (*postISR)(QActive * const me, uint_fast8_t const margin,
                     enum_t const sig, QParam const par);
 #else
-    bool (*post)   (QMActive * const me, uint_fast8_t const margin,
+    bool (*post)   (QActive * const me, uint_fast8_t const margin,
                     enum_t const sig);
-    bool (*postISR)(QMActive * const me, uint_fast8_t const margin,
+    bool (*postISR)(QActive * const me, uint_fast8_t const margin,
                     enum_t const sig);
 #endif
-} QMActiveVtbl;
-
-
-#ifndef Q_NMSM
-
-/*! QMActive constructor */
-/**
-* @description
-* @param[in,out] me      pointer the active object (see @ref oop)
-* @param[in]     initial is the pointer to the top-most initial transition
-*
-* @note Must be called exactly ONCE for each active object
-* in the application before calling QF_run().
-*/
-void QMActive_ctor(QMActive * const me, QStateHandler initial);
-
-#endif /* Q_NMSM */
-
-
-/****************************************************************************/
-/*! Active Object (based on QHsm-implementation) */
-/**
-* @description
-* Active objects in QP are encapsulated state machines (each embedding an
-* event queue and a thread) that communicate with one another asynchronously
-* by sending and receiving events. Within an active object, events are
-* processed sequentially in a run-to-completion (RTC) fashion, while QF
-* encapsulates all the details of thread-safe event exchange and queuing.
-* @n@n
-* QActive represents an active object that uses the QHsm-style
-* implementation strategy for state machines. This strategy is tailored
-* to manual coding, but it is also supported by the QM modeling tool.
-* The resulting code is slower than in the QMsm-style implementation
-* strategy.
-*
-* @note
-* ::QActive inherits ::QMActive exactly, without adding any new attributes
-* (or operations) and therefore, ::QActive is typedef'ed as ::QMActive.
-* ::QActive is not intended to be instantiated directly, but rather serves
-* as the base class for derivation of active objects in the application.
-*
-* @sa ::QMActive
-*
-* @usage
-* The following example illustrates how to derive an active object from
-* QActive. Please note that the QActive member @c super is defined as the
-* __first__ member of the derived struct (see @ref oop).
-* @include qfn_qactive.c
-*/
-typedef QMActive QActive;
-
-/*! Virtual Table for the ::QActive class (inherited from ::QMActiveVtbl */
-/**
-* @note
-* ::QActive inherits ::QMActive exactly, without adding any new virtual
-* functions and therefore, ::QActiveVtbl is typedef'ed as ::QMActiveVtbl.
-*/
-typedef QMActiveVtbl QActiveVtbl;
-
-
-#ifndef Q_NHSM
+} QActiveVtbl;
 
 /*! protected "constructor" of an QActive active object. */
 void QActive_ctor(QActive * const me, QStateHandler initial);
-
-#endif /* Q_NHSM */
 
 #if (Q_PARAM_SIZE != 0)
     /*! Polymorphically posts an event to an active object (FIFO)
@@ -253,7 +189,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @include qfn_post.c
     */
     #define QACTIVE_POST(me_, sig_, par_) \
-        ((void)(*((QMActiveVtbl const *)( \
+        ((void)(*((QActiveVtbl const *)( \
             QF_ACTIVE_CAST((me_))->super.vptr))->post)( \
                 QF_ACTIVE_CAST((me_)), (uint_fast8_t)0, \
                 (enum_t)(sig_), (QParam)(par_)))
@@ -279,7 +215,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @include qfn_postx.c
     */
     #define QACTIVE_POST_X(me_, margin_, sig_, par_) \
-        ((*((QMActiveVtbl const *)( \
+        ((*((QActiveVtbl const *)( \
             QF_ACTIVE_CAST((me_))->super.vptr))->post)( \
                 QF_ACTIVE_CAST((me_)), \
                 (margin_), (enum_t)(sig_), (QParam)(par_)))
@@ -301,7 +237,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @include qfn_post.c
     */
     #define QACTIVE_POST_ISR(me_, sig_, par_) \
-        ((void)(*((QMActiveVtbl const *)( \
+        ((void)(*((QActiveVtbl const *)( \
             QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
                 QF_ACTIVE_CAST((me_)), (uint_fast8_t)0, \
                 (enum_t)(sig_), (QParam)(par_)))
@@ -327,30 +263,30 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @include qfn_postx.c
     */
     #define QACTIVE_POST_X_ISR(me_, margin_, sig_, par_) \
-        ((*((QMActiveVtbl const *)( \
+        ((*((QActiveVtbl const *)( \
             QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
                 QF_ACTIVE_CAST((me_)), (margin_), \
                 (enum_t)(sig_), (QParam)(par_)))
 
     /*! Implementation of the task-level event posting */
-    bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
+    bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                         enum_t const sig, QParam const par);
 
     /*! Implementation of the ISR-level event posting */
-    bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
+    bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                            enum_t const sig, QParam const par);
 
 #else /* no event parameter */
     #define QACTIVE_POST(me_, sig_) \
-        ((void)(*((QMActiveVtbl const *)( \
+        ((void)(*((QActiveVtbl const *)( \
             QF_ACTIVE_CAST((me_))->super.vptr))->post)( \
                 QF_ACTIVE_CAST((me_)), (uint_fast8_t)0, (enum_t)(sig_)))
 
     #define QACTIVE_POST_X(me_, margin_, sig_) \
-        ((*((QMActiveVtbl const *)((me_)->super.vptr))->post)((me_), \
+        ((*((QActiveVtbl const *)((me_)->super.vptr))->post)((me_), \
                                    (margin_), (sig_)))
 
-    bool QActive_postX_(QMActive * const me, uint_fast8_t margin,
+    bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                         enum_t const sig);
 
     #define QACTIVE_POST_ISR(me_, sig_) \
@@ -363,7 +299,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
             QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
                 QF_ACTIVE_CAST((me_)), (margin_), (enum_t)(sig_)))
 
-    bool QActive_postXISR_(QMActive * const me, uint_fast8_t margin,
+    bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                            enum_t const sig);
 #endif
 
@@ -374,7 +310,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
 
 #ifdef QF_TIMEEVT_PERIODIC
     /*! Arm the QP-nano one-shot time event. */
-    void QActive_armX(QMActive * const me, uint_fast8_t const tickRate,
+    void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
                       QTimeEvtCtr const nTicks, QTimeEvtCtr const interval);
 #else
     /*! Arm the QP-nano one-shot time event. */
@@ -383,7 +319,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
 #endif
 
     /*! Disarm a time event. Since the tick counter */
-    void QActive_disarmX(QMActive * const me, uint_fast8_t const tickRate);
+    void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate);
 
 #endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
 
@@ -411,7 +347,7 @@ void QF_stop(void);
 * QF port. In most cases, QF_onStartup() is called from QF_run(), right
 * before starting any multitasking kernel or the background loop.
 *
-* @sa QF initialization example for ::QMActiveCB.
+* @sa QF initialization example for ::QActiveCB.
 */
 void QF_onStartup(void);
 
@@ -420,26 +356,26 @@ int_t QF_run(void);
 
 
 /****************************************************************************/
-/*! QMActive Control Block
+/*! QActive Control Block
 *
-* QMActiveCB represents the read-only information that the QF-nano needs to
-* manage the active object. QMActiveCB objects are grouped in the array
+* QActiveCB represents the read-only information that the QF-nano needs to
+* manage the active object. QActiveCB objects are grouped in the array
 * QF_active[], which typically can be placed in ROM.
 *
 * @usage
 * The following example illustrates how to allocate and initialize the
-* ::QMActive control blocks in the array QF_active[].
+* ::QActive control blocks in the array QF_active[].
 * @include qfn_main.c
 */
 typedef struct {
-    QMActive *act;   /*!< pointer to the active object structure */
+    QActive  *act;   /*!< pointer to the active object structure */
     QEvt     *queue; /*!< pointer to the event queue buffer */
     uint8_t   qlen;  /*!< the length of the queue ring buffer */
-} QMActiveCB;
+} QActiveCB;
 
 /** active object control blocks */
 /*lint -save -e960    MISRA-C:2004 8.12, extern array declared without size */
-extern QMActiveCB const Q_ROM QF_active[];
+extern QActiveCB const Q_ROM QF_active[];
 /*lint -restore */
 
 /*! number of active objects in the application (# elements in QF_active[]) */
@@ -482,15 +418,15 @@ extern uint8_t const Q_ROM QF_invPow2Lkup[9];
 * which violates MISRA-C 2004 rule 11.4(adv). This macro helps to localize
 * this deviation.
 */
-#define QF_ROM_ACTIVE_GET_(p_) ((QMActive *)Q_ROM_PTR(QF_active[(p_)].act))
+#define QF_ROM_ACTIVE_GET_(p_) ((QActive *)Q_ROM_PTR(QF_active[(p_)].act))
 
-/*! This macro encapsulates the upcast to QMActive*
+/*! This macro encapsulates the upcast to QActive*
 *
-* This macro encapsulates up-casting a pointer to a subclass of ::QMActive
-* to the base class ::QMActive, which violates MISRA-C 2004 rule 11.4(adv).
+* This macro encapsulates up-casting a pointer to a subclass of ::QActive
+* to the base class ::QActive, which violates MISRA-C 2004 rule 11.4(adv).
 * This macro helps to localize this deviation.
 */
-#define QF_ACTIVE_CAST(a_)     ((QMActive *)(a_))
+#define QF_ACTIVE_CAST(a_)     ((QActive *)(a_))
 
 #endif /* qfn_h */
 

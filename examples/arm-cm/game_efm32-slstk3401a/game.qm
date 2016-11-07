@@ -5,11 +5,11 @@
 NOTE: Requries QP5.</documentation>
  <framework name="qpn"/>
  <package name="AOs" stereotype="0x02">
-  <class name="Tunnel" superclass="qpn::QMActive">
+  <class name="Tunnel" superclass="qpn::QActive">
    <documentation>Tunnel Active Object</documentation>
-   <attribute name="mines[GAME_MINES_MAX]" type="QMsm *" visibility="0x02" properties="0x00"/>
-   <attribute name="mine1_pool[GAME_MINES_MAX]" type="QMsm *" visibility="0x02" properties="0x00"/>
-   <attribute name="mine2_pool[GAME_MINES_MAX]" type="QMsm *" visibility="0x02" properties="0x00"/>
+   <attribute name="mines[GAME_MINES_MAX]" type="QHsm *" visibility="0x02" properties="0x00"/>
+   <attribute name="mine1_pool[GAME_MINES_MAX]" type="QHsm *" visibility="0x02" properties="0x00"/>
+   <attribute name="mine2_pool[GAME_MINES_MAX]" type="QHsm *" visibility="0x02" properties="0x00"/>
    <attribute name="blink_ctr" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="last_mine_x" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="last_mine_y" type="uint8_t" visibility="0x02" properties="0x00"/>
@@ -68,7 +68,7 @@ if ((me-&gt;last_mine_x + GAME_MINES_DIST_MIN &lt; GAME_TUNNEL_WIDTH)
 {
     uint8_t n;
     for (n = 0U; n &lt; Q_DIM(me-&gt;mines); ++n) { /*look for disabled mines */
-        if (me-&gt;mines[n] == (QMsm *)0) {
+        if (me-&gt;mines[n] == (QHsm *)0) {
             break;
         }
     }
@@ -93,7 +93,7 @@ if ((me-&gt;last_mine_x + GAME_MINES_DIST_MIN &lt; GAME_TUNNEL_WIDTH)
 
         Q_SIG(me-&gt;mines[n]) = MINE_PLANT_SIG;
         Q_PAR(me-&gt;mines[n]) = (me-&gt;last_mine_x | (me-&gt;last_mine_y &lt;&lt; 8));
-        QMSM_DISPATCH(me-&gt;mines[n]); /* direct dispatch */
+        QHSM_DISPATCH(me-&gt;mines[n]); /* direct dispatch */
     }
 }</code>
    </operation>
@@ -103,10 +103,10 @@ if ((me-&gt;last_mine_x + GAME_MINES_DIST_MIN &lt; GAME_TUNNEL_WIDTH)
     <code>uint8_t n;
 
 for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
-    if (me-&gt;mines[n] != (QMsm *)0) { /* is the mine used? */
+    if (me-&gt;mines[n] != (QHsm *)0) { /* is the mine used? */
         Q_SIG(me-&gt;mines[n]) = sig;
         Q_PAR(me-&gt;mines[n]) = par;
-        QMSM_DISPATCH(me-&gt;mines[n]);
+        QHSM_DISPATCH(me-&gt;mines[n]);
     }
 }</code>
    </operation>
@@ -114,8 +114,8 @@ for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
     <initial target="../1/2">
      <action>uint8_t n;
 for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
-    QMSM_INIT(me-&gt;mine1_pool[n]); /* initial tran. for Mine1 */
-    QMSM_INIT(me-&gt;mine2_pool[n]); /* initial tran. for Mine2 */
+    QHSM_INIT(me-&gt;mine1_pool[n]); /* initial tran. for Mine1 */
+    QHSM_INIT(me-&gt;mine2_pool[n]); /* initial tran. for Mine2 */
 }
 BSP_randomSeed(1234U); /* seed the pseudo-random generator */</action>
      <initial_glyph conn="3,2,5,1,25,14,-2">
@@ -125,8 +125,8 @@ BSP_randomSeed(1234U); /* seed the pseudo-random generator */</action>
     <state name="active">
      <tran trig="MINE_DISABLED">
       <action>Q_ASSERT((Q_PAR(me) &lt; GAME_MINES_MAX)
-         &amp;&amp; (me-&gt;mines[Q_PAR(me)] != (QMsm *)0));
-me-&gt;mines[Q_PAR(me)] = (QMsm *)0;</action>
+         &amp;&amp; (me-&gt;mines[Q_PAR(me)] != (QHsm *)0));
+me-&gt;mines[Q_PAR(me)] = (QHsm *)0;</action>
       <tran_glyph conn="2,9,3,-1,14">
        <action box="0,-2,14,2"/>
       </tran_glyph>
@@ -423,7 +423,7 @@ QF_stop(); /* stop QF and cleanup */</entry>
     <state_diagram size="68,94"/>
    </statechart>
   </class>
-  <class name="Ship" superclass="qpn::QMActive">
+  <class name="Ship" superclass="qpn::QActive">
    <documentation>Ship Active Object</documentation>
    <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="y" type="uint16_t" visibility="0x02" properties="0x00">
@@ -546,7 +546,7 @@ QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
     <state_diagram size="42,68"/>
    </statechart>
   </class>
-  <class name="Missile" superclass="qpn::QMActive">
+  <class name="Missile" superclass="qpn::QActive">
    <documentation>Missile Active Object</documentation>
    <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="y" type="uint8_t" visibility="0x02" properties="0x00"/>
@@ -642,7 +642,7 @@ QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
     <state_diagram size="47,56"/>
    </statechart>
   </class>
-  <class name="Mine1" superclass="qpn::QMsm">
+  <class name="Mine1" superclass="qpn::QHsm">
    <documentation>The Mine1 orthogonal component</documentation>
    <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="y" type="uint8_t" visibility="0x02" properties="0x00"/>
@@ -771,7 +771,7 @@ QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
     <state_diagram size="54,67"/>
    </statechart>
   </class>
-  <class name="Mine2" superclass="qpn::QMsm">
+  <class name="Mine2" superclass="qpn::QHsm">
    <documentation>The Mine2 orthogonal component</documentation>
    <attribute name="x" type="uint8_t" visibility="0x02" properties="0x00"/>
    <attribute name="y" type="uint8_t" visibility="0x02" properties="0x00"/>
@@ -909,44 +909,44 @@ QACTIVE_POST(&amp;AO_Tunnel, EXPLOSION_SIG,
   <operation name="Tunnel_ctor" type="void" visibility="0x00" properties="0x01">
    <code>uint8_t n;
 Tunnel *me = &amp;AO_Tunnel;
-QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Tunnel_initial));
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Tunnel_initial));
 for (n = 0; n &lt; GAME_MINES_MAX; ++n) {
     me-&gt;mine1_pool[n] = Mine1_ctor(n); /* instantiate Mine1 in the pool */
     me-&gt;mine2_pool[n] = Mine2_ctor(n); /* instantiate Mine2 in the pool */
-    me-&gt;mines[n] = (QMsm *)0;                     /* mine 'n' is unused */
+    me-&gt;mines[n] = (QHsm *)0;                     /* mine 'n' is unused */
 }
 me-&gt;last_mine_x = 0;   /* the last mine at the right edge of the tunnel */
 me-&gt;last_mine_y = 0;</code>
   </operation>
   <operation name="Ship_ctor" type="void" visibility="0x00" properties="0x01">
    <code>Ship *me = &amp;AO_Ship;
-QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Ship_initial));
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Ship_initial));
 me-&gt;x = GAME_SHIP_X;
 me-&gt;y = (GAME_SHIP_Y &lt;&lt; 2);</code>
   </operation>
   <operation name="Missile_ctor" type="void" visibility="0x00" properties="0x01">
    <parameter name="speed" type="uint8_t"/>
    <code>Missile *me = &amp;AO_Missile;
-QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Missile_initial));
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Missile_initial));
 me-&gt;speed = speed;</code>
   </operation>
-  <operation name="Mine1_ctor" type="QMsm *" visibility="0x00" properties="0x01">
+  <operation name="Mine1_ctor" type="QHsm *" visibility="0x00" properties="0x01">
    <parameter name="id" type="uint8_t"/>
    <code>Mine1 *me;
 Q_REQUIRE(id &lt; GAME_MINES_MAX);
 
 me = &amp;l_mine1[id];
-QMsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Mine1_initial));
-return (QMsm *)me;</code>
+QHsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Mine1_initial));
+return &amp;me-&gt;super;</code>
   </operation>
-  <operation name="Mine2_ctor" type="QMsm *" visibility="0x00" properties="0x01">
+  <operation name="Mine2_ctor" type="QHsm *" visibility="0x00" properties="0x01">
    <parameter name="id" type="uint8_t"/>
    <code>Mine2 *me;
 Q_REQUIRE(id &lt; GAME_MINES_MAX);
 
 me = &amp;l_mine2[id];
-QMsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Mine2_initial));
-return (QMsm *)me;</code>
+QHsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Mine2_initial));
+return &amp;me-&gt;super;</code>
   </operation>
  </package>
  <directory name=".">

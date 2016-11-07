@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP example, EFM32-SLSTK3401A board, preemptive QK kernel
-* Last Updated for Version: 5.6.5
-* Date of the Last Update:  2016-05-08
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -76,7 +76,6 @@ void GPIO_EVEN_IRQHandler(void);
 #define PB1_PIN     7
 
 static uint32_t l_rnd;      /* random seed */
-
 
 /*..........................................................................*/
 void SysTick_Handler(void) {

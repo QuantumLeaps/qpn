@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: Board Support Package (BSP) for the History example
-* Last updated for version 5.4.2
-* Last updated on  2015-06-12
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,8 +28,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"     /* QP-nano */
 #include "bsp.h"     /* Board Support Package */
@@ -41,8 +41,8 @@
 
 /*..........................................................................*/
 /* dummy definition of the QF_active[] array (not used in this example) */
-QMActiveCB const Q_ROM QF_active[] = {
-    { (QMActive *)0,  (QEvt *)0, 0U }
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,  (QEvt *)0, 0U }
 };
 
 /*..........................................................................*/

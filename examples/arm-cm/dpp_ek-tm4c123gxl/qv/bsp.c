@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on EK-TM4C123GXL board, cooperative QV kernel
-* Last Updated for Version: 5.5.1
-* Date of the Last Update:  2015-10-05
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -104,16 +104,16 @@ void SysTick_Handler(void) {
     tmp ^= buttons.depressed;     /* changed debounced depressed */
     if ((tmp & BTN_SW1) != 0U) {  /* debounced SW1 state changed? */
         if ((buttons.depressed & BTN_SW1) != 0U) { /* is SW1 depressed? */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, PAUSE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, PAUSE_SIG, 0U);
         }
         else {            /* the button is released */
-            QACTIVE_POST_ISR((QMActive *)&AO_Table, SERVE_SIG, 0U);
+            QACTIVE_POST_ISR((QActive *)&AO_Table, SERVE_SIG, 0U);
         }
     }
 }
 /*..........................................................................*/
 void GPIOPortA_IRQHandler(void) {
-    QACTIVE_POST_ISR((QMActive *)&AO_Table, MAX_SIG, 0U); /* for testing */
+    QACTIVE_POST_ISR((QActive *)&AO_Table, MAX_SIG, 0U); /* for testing */
 }
 
 

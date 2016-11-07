@@ -5,14 +5,14 @@
 * @cond
 ******************************************************************************
 * Product: QV-nano
-* Last updated for version 5.4.0
-* Last updated on  2015-05-17
+* Last updated for version 5.8.0
+* Last updated on  2016-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -33,8 +33,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -52,10 +52,8 @@
 */
 #define QV_COOPERATIVE  1
 
-
 /*! Ready set of QV-nano. */
 extern uint_fast8_t volatile QV_readySet_;
-
 
 /*! QV idle callback (customized in BSPs for QK)
 *

@@ -3,7 +3,7 @@
  <documentation>QHsmTst is a contrived state machine from Chapter 2 of the PSiCC2 book for testing all possible transition topologies with up to 4-levels of state nesting.</documentation>
  <framework name="qpn"/>
  <package name="SMs" stereotype="0x02">
-  <class name="ToastOven" superclass="qpn::QMsm">
+  <class name="ToastOven" superclass="qpn::QHsm">
    <documentation>Oven state machine</documentation>
    <statechart>
     <initial target="../1">
@@ -106,7 +106,7 @@
   <attribute name="AO_ToastOven" type="ToastOven" visibility="0x00" properties="0x00"/>
   <operation name="ToastOven_ctor" type="void" visibility="0x00" properties="0x00">
    <code>ToastOven *me = &amp;l_oven;
-QMsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;ToastOven_initial));</code>
+QHsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;ToastOven_initial));</code>
   </operation>
  </package>
  <directory name=".">
@@ -145,7 +145,7 @@ $declare(SMs::ToastOven)
 static ToastOven l_oven; /* the only instance of the ToastOven class */
 
 /* global-scope definitions -----------------------------------------*/
-QMsm * const the_oven = (QMsm *)&amp;l_oven; /* the opaque pointer */
+QHsm * const the_oven = (QHsm *)&amp;l_oven; /* the opaque pointer */
 
 $define(SMs::ToastOven_ctor)
 $define(SMs::ToastOven)</text>
