@@ -19,41 +19,6 @@
 */
 #define Q_NASSERT
 
-/*! The preprocessor switch to eliminate the QMsm-style state machine
-* implementation.
-*/
-/**
-* @description
-* When defined, this macro will eliminate the following functions:
-* QMsm_ctor(), QMsm_stateObj(), QMsm_init_(), and QMsm_dispatch_(),
-* as well as QMActive_ctor().
-*
-* @note The macro will not eliminate the declaration of the QMsm class,
-* because this is a base class for derivation of QHsm and QActive.
-*
-* @sa #Q_NHSM
-*/
-#define Q_NMSM
-
-/*! The preprocessor switch to eliminate the QHsm-style state machine
-* implementation.
-*/
-/**
-* @description
-* When defined, this macro will suppress the declaration of the QHsm
-* data type and will eliminate the following functions:
-* QHsm_ctor(), QHsm_state(), QHsm_top(), QHsm_init_(), and QHsm_dispatch_(),
-* as well as QActive_ctor().
-*
-* @sa #Q_NMSM
-*/
-#define Q_NHSM
-
-/*! The preprocessor switch to eliminate the "transition-to-history" feature
-* in QMsm-style state machines.
-*/
-#define Q_NMSM_HIST
-
 /*! @deprecated macro to  enable keeping track of QF time event usage;
 * instead use: #QF_TIMEEVT_USAGE */
 #define Q_TIMERSET

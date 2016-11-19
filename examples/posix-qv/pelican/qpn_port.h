@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano port for PELICAN example, POSIX emulation
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 5.8.0
+* Date of the Last Update:  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -34,8 +34,6 @@
 #ifndef qpn_port_h
 #define qpn_port_h
 
-#define Q_NFSM
-#define Q_NHSM
 #define Q_PARAM_SIZE            4
 #define QF_TIMEEVT_CTR_SIZE     2
 

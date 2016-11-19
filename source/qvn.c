@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated on  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -101,8 +101,8 @@ int_t QF_run(void) {
     QF_onStartup(); /* invoke startup callback */
 
     /* the event loop of the cooperative QV-nano kernel... */
+    QF_INT_DISABLE();
     for (;;) {
-        QF_INT_DISABLE();
         if (QF_readySet_ != (uint_fast8_t)0) {
             QActiveCB const Q_ROM *acb;
 
@@ -127,11 +127,6 @@ int_t QF_run(void) {
             Q_ASSERT_ID(820, a->nUsed > (uint_fast8_t)0);
 
             --a->nUsed;
-            /* queue becoming empty? */
-            if (a->nUsed == (uint_fast8_t)0) {
-                /* clear the bit corresponding to 'p' */
-                QF_readySet_ &= (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[p]);
-            }
             Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
 #if (Q_PARAM_SIZE != 0)
             Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
@@ -142,7 +137,15 @@ int_t QF_run(void) {
             --a->tail;
             QF_INT_ENABLE();
 
-            QHSM_DISPATCH(&a->super); /* dispatch to the HSM */
+            QHSM_DISPATCH(&a->super); /* dispatch to the HSM (RTC step) */
+
+            QF_INT_DISABLE();
+            /* empty queue? */
+            if (a->nUsed == (uint_fast8_t)0) {
+                /* clear the bit corresponding to 'p' */
+                QF_readySet_ &=
+                    (uint_fast8_t)~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
+            }
         }
         else {
             /* QV_onIdle() must be called with interrupts DISABLED because
@@ -153,6 +156,8 @@ int_t QF_run(void) {
             * mode.
             */
             QV_onIdle();
+
+            QF_INT_DISABLE();
         }
     }
 #ifdef __GNUC__  /* GNU compiler? */

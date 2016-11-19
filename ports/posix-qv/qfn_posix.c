@@ -4,8 +4,9 @@
 * @ingroup ports
 * @cond
 ******************************************************************************
+* Product: QF-nano emulation for POSIX with cooperative QV-nano kernel
 * Last Updated for Version: 5.8.0
-* Date of the Last Update:  2016-11-06
+* Date of the Last Update:  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -64,19 +65,7 @@ uint8_t const Q_ROM QF_log2Lkup[16] = {
 };
 #endif /* QF_LOG2 */
 
-uint8_t const Q_ROM QF_invPow2Lkup[9] = {
-    (uint8_t)0xFF,
-    (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
-    (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
-};
-
 /* Local objects ===========================================================*/
-static uint8_t const Q_ROM l_pow2Lkup[] = {
-    (uint8_t)0x00,
-    (uint8_t)0x01, (uint8_t)0x02, (uint8_t)0x04, (uint8_t)0x08,
-    (uint8_t)0x10, (uint8_t)0x20, (uint8_t)0x40, (uint8_t)0x80
-};
-
 /* mutex for QF critical section */
 static pthread_mutex_t l_pThreadMutex_;
 static pthread_cond_t l_condVar; /* cond var to signal when AOs are ready */
@@ -92,26 +81,6 @@ static QEvt l_fudgedQueue[8][QF_FUDGED_QUEUE_LEN];
 static void *tickerThread(void *par); /* the expected P-Thread signature */
 
 /****************************************************************************/
-/****************************************************************************/
-#ifndef Q_NMSM
-
-void QActive_ctor(QActive * const me, QStateHandler initial) {
-    static QActiveVtbl const vtbl = { /* QActive virtual table */
-        { &QHsm_init_,
-          &QHsm_dispatch_ },
-        &QActive_postX_,
-        &QActive_postXISR_
-    };
-
-    QHsm_ctor(&me->super, initial);
-    me->super.vptr = &vtbl.super;/* hook the vptr to QActive virtual table */
-}
-
-#endif /* Q_NMSM */
-
-/****************************************************************************/
-#ifndef Q_NHSM
-
 void QActive_ctor(QActive * const me, QStateHandler initial) {
     static QActiveVtbl const vtbl = { /* QActive virtual table */
         { &QHsm_init_,
@@ -122,9 +91,6 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
     QHsm_ctor(&me->super, initial);
     me->super.vptr = &vtbl.super; /* hook the vptr to QActive virtual table */
 }
-
-#endif /* Q_NHSM */
-
 
 /****************************************************************************/
 #if (Q_PARAM_SIZE != 0)
@@ -154,7 +120,8 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
         /* is this the first event? */
         if (me->nUsed == (uint_fast8_t)1) {
             /* set the corresponding bit in the ready set */
-            QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
+            QF_readySet_ |= (uint_fast8_t)
+                ((uint_fast8_t)1U << (me->prio - (uint_fast8_t)1));
             pthread_cond_signal(&l_condVar); /* unblock the event loop */
         }
         margin = (uint_fast8_t)true; /* posting successful */
@@ -195,7 +162,8 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
         /* is this the first event? */
         if (me->nUsed == (uint_fast8_t)1) {
             /* set the bit */
-            QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
+            QF_readySet_ |= (uint_fast8_t)
+                ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
             pthread_cond_signal(&l_condVar); /* unblock the event loop */
         }
         margin = (uint_fast8_t)true; /* posting successful */
@@ -231,8 +199,8 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
 #endif /* QF_TIMEEVT_PERIODIC */
 
 #ifdef QF_TIMEEVT_USAGE
-                QF_timerSetX_[tickRate] &=
-                    (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[p]);
+                QF_timerSetX_[tickRate] &= (uint_fast8_t)
+                    ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
 #endif /* QF_TIMEEVT_USAGE */
 
 #if (Q_PARAM_SIZE != 0)
@@ -264,7 +232,8 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 
 #ifdef QF_TIMEEVT_USAGE
     /* set a bit in QF_timerSetX_[] to rememer that the timer is running */
-    QF_timerSetX_[tickRate] |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
+    QF_timerSetX_[tickRate] |=  (uint_fast8_t)
+        ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
 #endif
     QF_INT_ENABLE();
 }
@@ -279,8 +248,8 @@ void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
 
 #ifdef QF_TIMEEVT_USAGE
     /* clear a bit in QF_timerSetX_[] to rememer that timer is not running */
-    QF_timerSetX_[tickRate] &=
-        (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[me->prio]);
+    QF_timerSetX_[tickRate] &= (uint_fast8_t)
+        ~((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
 #endif
     QF_INT_ENABLE();
 }
@@ -311,7 +280,9 @@ void QF_leaveCriticalSection_(void) {
 void QF_init(uint_fast8_t maxActive) {
     QActive *a;
     uint_fast8_t p;
+#if (defined(QF_TIMEEVT_USAGE) || (QF_TIMEEVT_CTR_SIZE != 0))
     uint_fast8_t n;
+#endif /* QF_TIMEEVT_USAGE */
 
     /** @pre the number of active objects must be in range */
     Q_REQUIRE_ID(100, ((uint_fast8_t)1 < maxActive)
@@ -395,9 +366,9 @@ int_t QF_run(void) {
     Q_ALLEGE_ID(810, pthread_create(&thread, (pthread_attr_t *)0,
          &tickerThread, (void *)0) == 0); /* ticker thread must be created */
 
-    /* the event loop of the vanilla kernel... */
+    /* the event loop of the QV-nano kernel... */
+    QF_INT_DISABLE();
     while (l_isRunning) {
-        QF_INT_DISABLE();
         if (QF_readySet_ != (uint_fast8_t)0) {
 
             /* hi nibble non-zero? */
@@ -416,11 +387,6 @@ int_t QF_run(void) {
             Q_ASSERT_ID(820, a->nUsed > (uint_fast8_t)0);
 
             --a->nUsed;
-            /* queue becoming empty? */
-            if (a->nUsed == (uint_fast8_t)0) {
-                /* clear the bit corresponding to 'p' */
-                QF_readySet_ &= (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[p]);
-            }
             Q_SIG(a) = QF_FUDGED_QUEUE_AT_(a, a->tail).sig;
 #if (Q_PARAM_SIZE != 0)
             Q_PAR(a) = QF_FUDGED_QUEUE_AT_(a, a->tail).par;
@@ -431,15 +397,25 @@ int_t QF_run(void) {
             --a->tail;
             QF_INT_ENABLE();
 
-            QHSM_DISPATCH(&a->super); /* dispatch to the HSM */
+            QHSM_DISPATCH(&a->super); /* dispatch to the HSM (RTC step) */
+
+            QF_INT_DISABLE();
+            /* empty queue? */
+            if (a->nUsed == (uint_fast8_t)0) {
+                /* clear the bit corresponding to 'p' */
+                QF_readySet_ &= (uint_fast8_t)
+                    ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
+            }
         }
         else {
             /* yield the CPU until new event(s) arrive */
             pthread_cond_wait(&l_condVar, &l_pThreadMutex_);
-
             QF_INT_ENABLE();
+
+            QF_INT_DISABLE();
         }
     }
+    QF_INT_ENABLE();
     QF_onCleanup(); /* cleanup callback */
     pthread_cond_destroy(&l_condVar); /* cleanup the condition variable */
     pthread_mutex_destroy(&l_pThreadMutex_);
@@ -463,11 +439,11 @@ static void *tickerThread(void *par) { /* the expected P-Thread signature */
     (void)par; /* unused parameter */
 
     while (l_isRunning) {
+        nanosleep(&l_tick, NULL); /* sleep for the number of ticks, NOTE1 */
+
         QF_INT_DISABLE();
         QF_onClockTickISR(); /* call back to the app, see NOTE2 */
         QF_INT_ENABLE();
-
-        nanosleep(&l_tick, NULL); /* sleep for the number of ticks, NOTE1 */
     }
     return (void *)0; /* return success */
 }

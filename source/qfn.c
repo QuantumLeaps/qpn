@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated on  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -94,19 +94,6 @@ uint8_t const Q_ROM QF_log2Lkup[16] = {
 };
 #endif /* QF_LOG2 */
 
-uint8_t const Q_ROM QF_invPow2Lkup[9] = {
-    (uint8_t)0xFF,
-    (uint8_t)0xFE, (uint8_t)0xFD, (uint8_t)0xFB, (uint8_t)0xF7,
-    (uint8_t)0xEF, (uint8_t)0xDF, (uint8_t)0xBF, (uint8_t)0x7F
-};
-
-/* local objects ************************************************************/
-static uint8_t const Q_ROM l_pow2Lkup[] = {
-    (uint8_t)0x00,
-    (uint8_t)0x01, (uint8_t)0x02, (uint8_t)0x04, (uint8_t)0x08,
-    (uint8_t)0x10, (uint8_t)0x20, (uint8_t)0x40, (uint8_t)0x80
-};
-
 /****************************************************************************/
 void QActive_ctor(QActive * const me, QStateHandler initial) {
     static QActiveVtbl const vtbl = { /* QActive virtual table */
@@ -183,17 +170,15 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 
         /* is this the first event? */
         if (me->nUsed == (uint_fast8_t)1) {
-#ifdef QK_PREEMPTIVE
 
             /* set the corresponding bit in the ready set */
-            QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
+            QF_readySet_ |= (uint_fast8_t)
+                ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
 
+#ifdef QK_PREEMPTIVE
             if (QK_sched_() != (uint_fast8_t)0) {
                 QK_activate_(); /* activate the next active object */
             }
-#else
-            /* set the bit */
-            QF_readySet_ |= Q_ROM_BYTE(l_pow2Lkup[me->prio]);
 #endif
         }
         margin = (uint_fast8_t)true; /* posting successful */
@@ -274,7 +259,8 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
         /* is this the first event? */
         if (me->nUsed == (uint_fast8_t)1) {
             /* set the bit */
-            QF_readySet_ |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
+            QF_readySet_ |= (uint_fast8_t)
+                ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
         }
         margin = (uint_fast8_t)true; /* posting successful */
     }
@@ -402,8 +388,8 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
 #endif /* QF_TIMEEVT_PERIODIC */
 
 #ifdef QF_TIMEEVT_USAGE
-                QF_timerSetX_[tickRate] &=
-                    (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[p]);
+                QF_timerSetX_[tickRate] &= (uint_fast8_t)
+                    ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
 #endif /* QF_TIMEEVT_USAGE */
 
 #if (Q_PARAM_SIZE != 0)
@@ -464,7 +450,8 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 
 #ifdef QF_TIMEEVT_USAGE
     /* set a bit in QF_timerSetX_[] to rememer that the timer is running */
-    QF_timerSetX_[tickRate] |= (uint_fast8_t)Q_ROM_BYTE(l_pow2Lkup[me->prio]);
+    QF_timerSetX_[tickRate] |= (uint_fast8_t)
+        ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
 #endif
     QF_INT_ENABLE();
 }
@@ -490,8 +477,8 @@ void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
 
 #ifdef QF_TIMEEVT_USAGE
     /* clear a bit in QF_timerSetX_[] to rememer that timer is not running */
-    QF_timerSetX_[tickRate] &=
-        (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[me->prio]);
+    QF_timerSetX_[tickRate] &= (uint_fast8_t)
+        ~((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
 #endif
     QF_INT_ENABLE();
 }

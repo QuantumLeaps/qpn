@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated on  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -183,11 +183,12 @@ uint_fast8_t QK_sched_(void) {
     else if (p <= QK_attr_.lockPrio) {
         p = (uint_fast8_t)0; /* active object not eligible */
     }
+#endif /* QK_MUTEX */
     else {
         Q_ASSERT_ID(610, p <= QF_maxActive_);
         QK_attr_.nextPrio = p; /* next AO to run */
     }
-#endif /* QK_MUTEX */
+
     return p;
 }
 
@@ -227,11 +228,6 @@ void QK_activate_(void) {
         Q_ASSERT_ID(810, a->nUsed > (uint_fast8_t)0);
         --a->nUsed;
 
-        /* queue becoming empty? */
-        if (a->nUsed == (uint_fast8_t)0) {
-            /* clear the ready bit */
-            QF_readySet_ &= (uint_fast8_t)Q_ROM_BYTE(QF_invPow2Lkup[p]);
-        }
         Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
 #if (Q_PARAM_SIZE != 0)
         Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
@@ -246,6 +242,13 @@ void QK_activate_(void) {
         QHSM_DISPATCH(&a->super); /* dispatch to the SM (execute RTC step) */
 
         QF_INT_DISABLE();
+
+
+        if (a->nUsed == (uint_fast8_t)0) { /* empty queue? */
+            /* clear the ready bit */
+            QF_readySet_ &= (uint_fast8_t)
+                ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
+        }
 
         /* find new highest-prio AO ready to run... */
 #ifdef QF_LOG2

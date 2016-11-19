@@ -4,7 +4,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated on  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -50,9 +50,9 @@
 * or 4, correspond to event parameters of uint8_t, uint16_t, and uint32_t,
 * respectively.
 *
-* \sa ::QEvent, #Q_PAR(), QF_post(), QF_postNoLock()
+* \sa ::QEvt, #Q_PAR(), QF_post(), QF_postNoLock()
 */
-#define Q_PARAM_SIZE            1
+#define Q_PARAM_SIZE            4
 
 /*! The size (in bytes) of the time event-counter representation in
 * the QActive struct. Valid values: none (0), 1, 2, or 4; default none (0).
@@ -101,6 +101,6 @@ usage. */
 #define QF_TIMEEVT_USAGE
 
 /*! The preprocessor switch to eliminate the QK-nano mutex feature. */
-#define QK_NO_MUTEX
+/*#define QK_NO_MUTEX*/
 
 #endif /* qpn_conf_h */

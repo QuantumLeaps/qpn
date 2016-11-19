@@ -6,7 +6,7 @@
 ******************************************************************************
 * Product: QEP-nano
 * Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated on  2016-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -230,9 +230,19 @@ void QHsm_ctor(QHsm * const me, QStateHandler initial);
 */
 #define QHsm_state(me_) (Q_STATE_CAST(Q_HSM_UPCAST(me_)->state))
 
-/*! Obtain the current active child state of a given parent (read only) */
-QStateHandler QHsm_childState(QHsm * const me,
-                              QStateHandler const parent);
+/*! Obtain the current active child state of a given parent in QHsm */
+/**
+* @param[in] me_     pointer (see @ref oop)
+* @param[in] parent_ pointer to the parent state-handler
+* @returns the current active child state-handler of a given parent
+* @note this macro is used in QM for auto-generating code for state history
+*/
+#define QHsm_childState(me_, parent_) \
+    QHsm_childState_(Q_HSM_UPCAST(me_), Q_STATE_CAST(parent_))
+
+/*! Helper function to obtain the current active child state of a parent */
+QStateHandler QHsm_childState_(QHsm * const me,
+                               QStateHandler const parent);
 
 /*! Implementation of the top-most initial transition in QHsm. */
 void QHsm_init_(QHsm * const me);

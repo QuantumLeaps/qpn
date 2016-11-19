@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 5.8.0
-* Last updated on  2015-11-06
+* Last updated on  2015-11-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -441,9 +441,11 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 * @note this function is designed to be called during state transitions,
 * so it does not necessarily start in a stable state configuration.
 * However, the function establishes stable state configuration upon exit.
+*
+* @sa QHsm_childState()
 */
-QStateHandler QHsm_childState(QHsm * const me,
-                              QStateHandler const parent)
+QStateHandler QHsm_childState_(QHsm * const me,
+                               QStateHandler const parent)
 {
     QStateHandler child = me->state; /* start with the current state */
     bool isConfirmed = false; /* start with the child not confirmed */

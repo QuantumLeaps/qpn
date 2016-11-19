@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: PC-Lint 9.x option file for linting QP-nano applications
 // Last updated for version 5.8.0
-// Last updated on  2016-11-06
+// Last updated on  2016-11-18
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
@@ -103,10 +103,12 @@
  Q_SIG,
  Q_PAR,
  Q_HSM_UPCAST,
- QHsm_state)
+ QHsm_state,
+ QHsm_childState)
+-esym(960,            // MISRA04-19.4(req) Disallowed macro definition
+ QHsm_childState)
 -emacro(929,          // MISRA04-11.4(adv) cast pointer to pointer
  Q_HSM_UPCAST)
-
 -emacro(740,          // MISRA04-1.2(req) pointer cast
  Q_STATE_CAST,        // (incompatible indirect types)
  Q_TRAN,
