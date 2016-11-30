@@ -55,7 +55,7 @@ void BSP_init(char const *fname) {
         l_outFile = stdout;  /* use the stdout as the output file */
         printf("QHsmTst example, built on %s at %s,\n"
                "QP-nano: %s.\nPress ESC to quit...\n",
-               __DATE__, __TIME__, QP_getVersion());
+               __DATE__, __TIME__, QP_VERSION_STR);
     }
     else {
         l_outFile = fopen(fname, "w");
@@ -63,11 +63,11 @@ void BSP_init(char const *fname) {
 
         printf("QHsmTst example, built on %s at %s, QP-nano %s\n"
                "output saved to %s\n",
-               __DATE__, __TIME__, QP_getVersion(),
+               __DATE__, __TIME__, QP_VERSION_STR,
                fname);
 
         fprintf(l_outFile, "QHsmTst example, QP-nano %s\n",
-               QP_getVersion());
+               QP_VERSION_STR);
     }
 
     QHSM_INIT(the_hsm); /* the top-most initial tran. */

@@ -19,6 +19,11 @@
 #include "bsp.h"   /* Board Support Package */
 #include "calc.h"  /* this applicatin */
 
+
+#if ((QP_VERSION < 580) || (QP_VERSION != ((QP_RELEASE^4294967295) % 0x3E8)))
+#error qpn version 5.8.0 or higher required
+#endif
+
 /*${SMs::Calc} .............................................................*/
 typedef struct Calc {
 /* protected: */
@@ -33,7 +38,6 @@ typedef struct Calc {
 static QState Calc_initial(Calc * const me);
 static QState Calc_on(Calc * const me);
 static QState Calc_error(Calc * const me);
-static QState Calc_negated1(Calc * const me);
 static QState Calc_ready(Calc * const me);
 static QState Calc_result(Calc * const me);
 static QState Calc_begin(Calc * const me);
@@ -41,12 +45,13 @@ static QState Calc_operand1(Calc * const me);
 static QState Calc_zero1(Calc * const me);
 static QState Calc_int1(Calc * const me);
 static QState Calc_frac1(Calc * const me);
+static QState Calc_negated1(Calc * const me);
 static QState Calc_opEntered(Calc * const me);
-static QState Calc_negated2(Calc * const me);
 static QState Calc_operand2(Calc * const me);
 static QState Calc_zero2(Calc * const me);
 static QState Calc_int2(Calc * const me);
 static QState Calc_frac2(Calc * const me);
+static QState Calc_negated2(Calc * const me);
 static QState Calc_final(Calc * const me);
 
 
@@ -121,67 +126,6 @@ static QState Calc_error(Calc * const me) {
         case Q_EXIT_SIG: {
             BSP_message("error-EXIT;");
             status_ = Q_HANDLED();
-            break;
-        }
-        default: {
-            status_ = Q_SUPER(&Calc_on);
-            break;
-        }
-    }
-    return status_;
-}
-/*${SMs::Calc::SM::on::negated1} ...........................................*/
-static QState Calc_negated1(Calc * const me) {
-    QState status_;
-    switch (Q_SIG(me)) {
-        /* ${SMs::Calc::SM::on::negated1} */
-        case Q_ENTRY_SIG: {
-            BSP_message("negated1-ENTRY;");
-            BSP_negate();
-            status_ = Q_HANDLED();
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated1} */
-        case Q_EXIT_SIG: {
-            BSP_message("negated1-EXIT;");
-            status_ = Q_HANDLED();
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated1::DIGIT_0} */
-        case DIGIT_0_SIG: {
-            BSP_insert(Q_PAR(me));
-            status_ = Q_TRAN(&Calc_zero1);
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated1::DIGIT_1_9} */
-        case DIGIT_1_9_SIG: {
-            BSP_insert(Q_PAR(me));
-            status_ = Q_TRAN(&Calc_int1);
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated1::POINT} */
-        case POINT_SIG: {
-            BSP_insert(Q_PAR(me));
-            status_ = Q_TRAN(&Calc_frac1);
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated1::OPER} */
-        case OPER_SIG: {
-            /* ${SMs::Calc::SM::on::negated1::OPER::[e->key=='-']} */
-            if (Q_PAR(me) == KEY_MINUS) {
-                ;
-                status_ = Q_HANDLED();
-            }
-            /* ${SMs::Calc::SM::on::negated1::OPER::[else]} */
-            else {
-                status_ = Q_HANDLED();
-            }
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated1::CE} */
-        case CE_SIG: {
-            BSP_clear();
-            status_ = Q_TRAN(&Calc_begin);
             break;
         }
         default: {
@@ -461,6 +405,61 @@ static QState Calc_frac1(Calc * const me) {
     }
     return status_;
 }
+/*${SMs::Calc::SM::on::operand1::negated1} .................................*/
+static QState Calc_negated1(Calc * const me) {
+    QState status_;
+    switch (Q_SIG(me)) {
+        /* ${SMs::Calc::SM::on::operand1::negated1} */
+        case Q_ENTRY_SIG: {
+            BSP_message("negated1-ENTRY;");
+            BSP_negate();
+            status_ = Q_HANDLED();
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand1::negated1} */
+        case Q_EXIT_SIG: {
+            BSP_message("negated1-EXIT;");
+            status_ = Q_HANDLED();
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand1::negated1::DIGIT_0} */
+        case DIGIT_0_SIG: {
+            BSP_insert(Q_PAR(me));
+            status_ = Q_TRAN(&Calc_zero1);
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand1::negated1::DIGIT_1_9} */
+        case DIGIT_1_9_SIG: {
+            BSP_insert(Q_PAR(me));
+            status_ = Q_TRAN(&Calc_int1);
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand1::negated1::POINT} */
+        case POINT_SIG: {
+            BSP_insert(Q_PAR(me));
+            status_ = Q_TRAN(&Calc_frac1);
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand1::negated1::OPER} */
+        case OPER_SIG: {
+            /* ${SMs::Calc::SM::on::operand1::negated1::OPER::[e->key=='-']} */
+            if (Q_PAR(me) == KEY_MINUS) {
+                ;
+                status_ = Q_HANDLED();
+            }
+            /* ${SMs::Calc::SM::on::operand1::negated1::OPER::[else]} */
+            else {
+                status_ = Q_HANDLED();
+            }
+            break;
+        }
+        default: {
+            status_ = Q_SUPER(&Calc_operand1);
+            break;
+        }
+    }
+    return status_;
+}
 /*${SMs::Calc::SM::on::opEntered} ..........................................*/
 static QState Calc_opEntered(Calc * const me) {
     QState status_;
@@ -508,67 +507,6 @@ static QState Calc_opEntered(Calc * const me) {
             else {
                 status_ = Q_HANDLED();
             }
-            break;
-        }
-        default: {
-            status_ = Q_SUPER(&Calc_on);
-            break;
-        }
-    }
-    return status_;
-}
-/*${SMs::Calc::SM::on::negated2} ...........................................*/
-static QState Calc_negated2(Calc * const me) {
-    QState status_;
-    switch (Q_SIG(me)) {
-        /* ${SMs::Calc::SM::on::negated2} */
-        case Q_ENTRY_SIG: {
-            BSP_message("negated2-ENTRY;");
-            BSP_negate();
-            status_ = Q_HANDLED();
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated2} */
-        case Q_EXIT_SIG: {
-            BSP_message("negated2-EXIT;");
-            status_ = Q_HANDLED();
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated2::DIGIT_0} */
-        case DIGIT_0_SIG: {
-            BSP_insert(Q_PAR(me));
-            status_ = Q_TRAN(&Calc_zero2);
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated2::DIGIT_1_9} */
-        case DIGIT_1_9_SIG: {
-            BSP_insert(Q_PAR(me));
-            status_ = Q_TRAN(&Calc_int2);
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated2::POINT} */
-        case POINT_SIG: {
-            BSP_insert(Q_PAR(me));
-            status_ = Q_TRAN(&Calc_frac2);
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated2::OPER} */
-        case OPER_SIG: {
-            /* ${SMs::Calc::SM::on::negated2::OPER::[e->key=='-']} */
-            if (Q_PAR(me) == KEY_MINUS) {
-                ;
-                status_ = Q_HANDLED();
-            }
-            /* ${SMs::Calc::SM::on::negated2::OPER::[else]} */
-            else {
-                status_ = Q_HANDLED();
-            }
-            break;
-        }
-        /* ${SMs::Calc::SM::on::negated2::CE} */
-        case CE_SIG: {
-            BSP_clear();
-            status_ = Q_TRAN(&Calc_opEntered);
             break;
         }
         default: {
@@ -736,6 +674,61 @@ static QState Calc_frac2(Calc * const me) {
         case DIGIT_1_9_SIG: {
             BSP_insert(Q_PAR(me));
             status_ = Q_HANDLED();
+            break;
+        }
+        default: {
+            status_ = Q_SUPER(&Calc_operand2);
+            break;
+        }
+    }
+    return status_;
+}
+/*${SMs::Calc::SM::on::operand2::negated2} .................................*/
+static QState Calc_negated2(Calc * const me) {
+    QState status_;
+    switch (Q_SIG(me)) {
+        /* ${SMs::Calc::SM::on::operand2::negated2} */
+        case Q_ENTRY_SIG: {
+            BSP_message("negated2-ENTRY;");
+            BSP_negate();
+            status_ = Q_HANDLED();
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand2::negated2} */
+        case Q_EXIT_SIG: {
+            BSP_message("negated2-EXIT;");
+            status_ = Q_HANDLED();
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand2::negated2::DIGIT_0} */
+        case DIGIT_0_SIG: {
+            BSP_insert(Q_PAR(me));
+            status_ = Q_TRAN(&Calc_zero2);
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand2::negated2::DIGIT_1_9} */
+        case DIGIT_1_9_SIG: {
+            BSP_insert(Q_PAR(me));
+            status_ = Q_TRAN(&Calc_int2);
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand2::negated2::POINT} */
+        case POINT_SIG: {
+            BSP_insert(Q_PAR(me));
+            status_ = Q_TRAN(&Calc_frac2);
+            break;
+        }
+        /* ${SMs::Calc::SM::on::operand2::negated2::OPER} */
+        case OPER_SIG: {
+            /* ${SMs::Calc::SM::on::operand2::negated2::OPER::[e->key=='-']} */
+            if (Q_PAR(me) == KEY_MINUS) {
+                ;
+                status_ = Q_HANDLED();
+            }
+            /* ${SMs::Calc::SM::on::operand2::negated2::OPER::[else]} */
+            else {
+                status_ = Q_HANDLED();
+            }
             break;
         }
         default: {

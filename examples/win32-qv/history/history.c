@@ -25,10 +25,16 @@
 
 Q_DEFINE_THIS_FILE
 
+
+#if ((QP_VERSION < 580) || (QP_VERSION != ((QP_RELEASE^4294967295) % 0x3E8)))
+#error qpn version 5.8.0 or higher required
+#endif
+
 /*${SMs::ToastOven} ........................................................*/
 typedef struct ToastOven {
 /* protected: */
     QHsm super;
+
 /* private state histories */
     QStateHandler his_doorClosed;
 } ToastOven;
@@ -74,7 +80,8 @@ static QState ToastOven_doorClosed(ToastOven * const me) {
         }
         /* ${SMs::ToastOven::SM::doorClosed} */
         case Q_EXIT_SIG: {
-            me->his_doorClosed = QHsm_state(me); /* save history */
+            /* save deep history */
+            me->his_doorClosed = QHsm_state(me);
             status_ = Q_HANDLED();
             break;
         }
@@ -129,6 +136,11 @@ static QState ToastOven_heating(ToastOven * const me) {
         case Q_EXIT_SIG: {
             printf("heater-Off;");
             status_ = Q_HANDLED();
+            break;
+        }
+        /* ${SMs::ToastOven::SM::doorClosed::heating::initial} */
+        case Q_INIT_SIG: {
+            status_ = Q_TRAN(&ToastOven_toasting);
             break;
         }
         default: {

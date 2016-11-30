@@ -22,6 +22,11 @@
 Q_DEFINE_THIS_MODULE("mine1")
 
 /* encapsulated delcaration of the Mine1 HSM -------------------------------*/
+
+#if ((QP_VERSION < 580) || (QP_VERSION != ((QP_RELEASE^4294967295) % 0x3E8)))
+#error qpn version 5.8.0 or higher required
+#endif
+
 /*${AOs::Mine1} ............................................................*/
 typedef struct Mine1 {
 /* protected: */

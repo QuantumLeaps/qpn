@@ -29,6 +29,11 @@
 #define OFF_FLASH_TOUT      (QTimeEvtCtr)(BSP_TICKS_PER_SEC / 2U)
 
 /* Pelican class declaration -----------------------------------------------*/
+
+#if ((QP_VERSION < 580) || (QP_VERSION != ((QP_RELEASE^4294967295) % 0x3E8)))
+#error qpn version 5.8.0 or higher required
+#endif
+
 /*${components::Pelican} ...................................................*/
 typedef struct Pelican {
 /* protected: */
@@ -130,7 +135,8 @@ static QState Pelican_carsGreen(Pelican * const me) {
         /* ${components::Pelican::SM::operational::carsEnabled::carsGreen} */
         case Q_ENTRY_SIG: {
             BSP_signalCars(CARS_GREEN);
-            QActive_armX(&me->super, 0U, CARS_GREEN_MIN_TOUT);
+            /* one-shot timeout in CARS_GREEN_MIN_TOUT ticks */
+            QActive_armX(&me->super, 0U, CARS_GREEN_MIN_TOUT, 0U);
             status_ = Q_HANDLED();
             break;
         }
@@ -231,7 +237,9 @@ static QState Pelican_carsYellow(Pelican * const me) {
         case Q_ENTRY_SIG: {
             BSP_showState("carsYellow");
             BSP_signalCars(CARS_YELLOW);
-            QActive_armX(&me->super, 0U, CARS_YELLOW_TOUT);
+
+            /* one-shot timeout in CARS_YELLOW_TOUT ticks */
+            QActive_armX(&me->super, 0U, CARS_YELLOW_TOUT, 0U);
             status_ = Q_HANDLED();
             break;
         }
@@ -283,7 +291,8 @@ static QState Pelican_pedsWalk(Pelican * const me) {
         case Q_ENTRY_SIG: {
             BSP_showState("pedsWalk");
             BSP_signalPeds(PEDS_WALK);
-            QActive_armX(&me->super, 0U, PEDS_WALK_TOUT);
+            /* one-shot timeout in PEDS_WALK_TOUT ticks */
+            QActive_armX(&me->super, 0U, PEDS_WALK_TOUT, 0U);
             status_ = Q_HANDLED();
             break;
         }
@@ -312,7 +321,8 @@ static QState Pelican_pedsFlash(Pelican * const me) {
         /* ${components::Pelican::SM::operational::pedsEnabled::pedsFlash} */
         case Q_ENTRY_SIG: {
             BSP_showState("pedsFlash");
-            QActive_armX(&me->super, 0U, PEDS_FLASH_TOUT);
+            /* periodic timeout in PEDS_FLASH_TOUT and every PEDS_FLASH_TOUT ticks */
+            QActive_armX(&me->super, 0U, PEDS_FLASH_TOUT, PEDS_FLASH_TOUT);
             me->flashCtr = (PEDS_FLASH_NUM * 2U) + 1U;
             status_ = Q_HANDLED();
             break;
@@ -328,7 +338,6 @@ static QState Pelican_pedsFlash(Pelican * const me) {
             /* ${components::Pelican::SM::operational::pedsEnabled::pedsFlash::Q_TIMEOUT::[me->flashCtr!=0U]} */
             if (me->flashCtr != 0U) {
                 --me->flashCtr;
-                QActive_arm(&me->super, PEDS_FLASH_TOUT);
                 /* ${components::Pelican::SM::operational::pedsEnabled::pedsFlash::Q_TIMEOUT::[me->flashCtr!=0~::[(me->flashCtr&1U)==0U]} */
                 if ((me->flashCtr & 1U) == 0U) {
                     BSP_signalPeds(PEDS_DONT_WALK);
@@ -360,7 +369,8 @@ static QState Pelican_offline(Pelican * const me) {
         /* ${components::Pelican::SM::offline} */
         case Q_ENTRY_SIG: {
             BSP_showState("offline");
-            QActive_armX(&me->super, 0U, OFF_FLASH_TOUT);
+            /* periodic timeout in OFF_FLASH_TOUT and every OFF_FLASH_TOUT ticks */
+            QActive_armX(&me->super, 0U, OFF_FLASH_TOUT, OFF_FLASH_TOUT);
             me->flashCtr = 0U;
             status_ = Q_HANDLED();
             break;
@@ -373,7 +383,6 @@ static QState Pelican_offline(Pelican * const me) {
         }
         /* ${components::Pelican::SM::offline::Q_TIMEOUT} */
         case Q_TIMEOUT_SIG: {
-            QActive_arm(&me->super, OFF_FLASH_TOUT);
             me->flashCtr ^= 1U;
             /* ${components::Pelican::SM::offline::Q_TIMEOUT::[(me->flashCtr&1U)==0U]} */
             if ((me->flashCtr & 1U) == 0U) {

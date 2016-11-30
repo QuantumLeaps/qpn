@@ -54,7 +54,7 @@
 */
 #define QP_VERSION_STR  "5.8.0"
 
-/*! Tamperproof current QP release (5.8.0) and date (16-11-07) */
+/*! Tamperproof current QP release (5.8.0) and date (2016-11-07) */
 #define QP_RELEASE      0x9FF9038BU
 
 

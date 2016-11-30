@@ -25,6 +25,11 @@
 #define SHIP_HEIGHT 3U
 
 /* encapsulated delcaration of the Ship active object ----------------------*/
+
+#if ((QP_VERSION < 580) || (QP_VERSION != ((QP_RELEASE^4294967295) % 0x3E8)))
+#error qpn version 5.8.0 or higher required
+#endif
+
 /*${AOs::Ship} .............................................................*/
 typedef struct Ship {
 /* protected: */

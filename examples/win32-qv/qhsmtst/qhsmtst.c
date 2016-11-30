@@ -19,6 +19,11 @@
 #include "bsp.h"
 #include "qhsmtst.h"
 
+
+#if ((QP_VERSION < 580) || (QP_VERSION != ((QP_RELEASE^4294967295) % 0x3E8)))
+#error qpn version 5.8.0 or higher required
+#endif
+
 /*${HSMs::QHsmTst} .........................................................*/
 typedef struct QHsmTst {
 /* protected: */
@@ -26,6 +31,7 @@ typedef struct QHsmTst {
 
 /* private: */
     uint8_t foo;
+
 /* private state histories */
     QStateHandler his_s1;
 } QHsmTst;
@@ -127,7 +133,8 @@ static QState QHsmTst_s1(QHsmTst * const me) {
         /* ${HSMs::QHsmTst::SM::s::s1} */
         case Q_EXIT_SIG: {
             BSP_display("s1-EXIT;");
-            me->his_s1 = QHsm_state(me); /* save history */
+            /* save deep history */
+            me->his_s1 = QHsm_state(me);
             status_ = Q_HANDLED();
             break;
         }
