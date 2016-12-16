@@ -108,7 +108,8 @@ LD_SCRIPT := $(PROJECT).ld
 QP_SRCS := \
 	qepn.c \
 	qfn.c \
-	qvn.c
+	qvn.c \
+	qvn_port.c
 
 QP_ASMS := \
 

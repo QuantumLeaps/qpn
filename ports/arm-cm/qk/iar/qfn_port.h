@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, preemptive QK kernel, IAR-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.7.2
-* Date of the Last Update:  2016-09-30
+* Last Updated for Version: 5.8.1
+* Date of the Last Update:  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -67,7 +67,9 @@
 #define QF_ISR_NEST
 
 /* QK-nano initialization and ISR entry/exit */
-#define QK_INIT()        QK_init()
+#define QK_INIT() QK_init()
+void QK_init(void);
+
 #define QK_ISR_ENTRY() ((void)0)
 #define QK_ISR_EXIT()  do { \
     QF_INT_DISABLE(); \

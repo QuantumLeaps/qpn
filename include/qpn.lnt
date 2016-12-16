@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // Product: PC-Lint 9.x option file for linting QP-nano applications
-// Last updated for version 5.8.0
-// Last updated on  2016-11-18
+// Last updated for version 5.8.1
+// Last updated on  2016-12-16
 //
 //                    Q u a n t u m     L e a P s
 //                    ---------------------------
@@ -231,9 +231,11 @@
  QK_ISR_ENTRY,
  QK_ISR_EXIT)
 -esym(960,            // MISRA04-19.4(req) Disallowed macro definition
+ QV_INIT,
  QK_INIT,
  QK_SCHEDULE_)
 -estring(961,         // MISRA04-19.7(adv) function-like macro
+ QV_INIT,
  QK_INIT,
  QK_ISR_ENTRY,
  QK_ISR_EXIT,

@@ -1,6 +1,30 @@
 /**
 @page history Revision History
 
+@section qpn_5_8_1 Version 5.8.1, 2016-12-16
+This release is in response to a recent finding that many QP users of the
+ports to ARM Cortex-M3/M4 forget to explicitly set their interrupt priorities,
+as described in the AppNote <a href="http://www.state-machine.com/doc/AN_ARM-Cortex-M_Interrupt-Priorities.pdf" target="_blank" class="extern">"Setting ARM Cortex-M Interrupt Priorities in QP 5.x"</a>.
+
+Specifically, this release improves safety of QP ports to ARM Cortex-M3/M4,
+by initializing the interrupt priorities to a safe default in a generic,
+portable way. This QP port includes such a fix for QV-nano/QK-nano ports to ARM Cortex-M3/M4.
+
+Changes in detail:
+- modified the QV and QK source code to call QV_init() and QK_init(), respectively.
+- modified the ARM Cortex-M ports of QV-nano and QK-nano to initialize
+  priorities all exceptions and IRQs to the safe value #QF_BASEPRI.
+
+@note The QV-nano ports to ARM Cortex-M now have a new **qvn_port.c** module that needs to
+  be added to the build.
+
+- added the header file **cmsis_ccs.h** to qpc/3rd_party/CMSIS/Include directory
+ (used in the examples for the Code Composer Studio). The file has been
+ dropped during the upgrade to CMSIS 5.0.1, because it is not part of the
+ standard distribution.
+
+
+------------------------------------------------------------------------------
 @section qpn_5_8_0 Version 5.8.0, 2016-11-07
 This release simplifies the QP-nano framework by removing the QMsm-style
 state machine implementation strategy introduced in version 5.0.0. Moving
@@ -14,11 +38,15 @@ layer (file qpn.h) provides some of these macros for backwards-
 compatibility, but the underlying implementation must be, in fact,
 based on QHsm.
 
-All examples and QM models have been consistently updated to use only
-the QHsm-style implementation strategy.
+All examples and QM models have been updated to use only the QHsm-style
+implementation strategy. The models also require the new upcoming QM 4.0.0.
 
 Additionally, this release fixes the following bugs:
+
 -bug#144 Obsolete Win32 API in qwin_gui.c
+
+Finally, this release includes the latest CMSIS-5, which now replaces the
+older CMSIS-4.5.
 
 
 ------------------------------------------------------------------------------

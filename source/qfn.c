@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.0
-* Last updated on  2016-11-18
+* Last updated for version 5.8.1
+* Last updated on  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -345,6 +345,12 @@ void QF_init(uint_fast8_t maxActive) {
         }
 #endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
     }
+
+#ifdef QV_INIT /* initialization of the QV-nano kernel defined? */
+    QV_INIT(); /* port-specific initialization of the QV-nano kernel */
+#elif defined QK_INIT /* initialization of the QK-nano kernel defined? */
+    QK_INIT(); /* port-specific initialization of the QK-nano kernel */
+#endif
 }
 
 /****************************************************************************/

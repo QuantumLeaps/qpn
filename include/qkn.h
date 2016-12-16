@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated for version 5.8.1
+* Last updated on  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -67,14 +67,6 @@ extern QK_Attr QK_attr_;
 * real-time kernel is used.
 */
 #define QK_PREEMPTIVE   1
-
-/*! QK-nano initialization.
-*
-* This function is optional and might be used in some QK-nano ports.
-* When the function is defined, it must called exactly once before any
-* other QK function, typically from the BSP initialization function.
-*/
-void QK_init(void);
 
 /****************************************************************************/
 /*! QK-nano scheduler finds the highest-priority thread ready to run */

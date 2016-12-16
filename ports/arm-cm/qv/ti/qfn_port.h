@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, cooperative QV kernel, TI-ARM CCS toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.6.1
-* Date of the Last Update:  2016-01-10
+* Last Updated for Version: 5.8.1
+* Date of the Last Update:  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -67,6 +67,10 @@
 
     /* assembly function for setting the BASEPRI register */
     void QF_set_BASEPRI(unsigned basePri);
+
+    /* initialization of the QV kernel for Cortex-M3/M4/M4F */
+    #define QV_INIT() QV_init()
+    void QV_init(void);
 
 /* not M3/M4/M7, assuming no BASEPRI register or CLZ instruction */
 #else

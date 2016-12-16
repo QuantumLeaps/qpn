@@ -3,14 +3,14 @@
 * @brief QF-nano port for Lint, cooperative QV kernel, generic C compiler
 * @cond
 ******************************************************************************
-* Last updated for version 5.3.0
-* Last updated on  2014-04-14
+* Last updated for version 5.8.1
+* Last updated on  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,8 +31,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -49,8 +49,20 @@
 #define QF_INT_DISABLE() int_disable()
 #define QF_INT_ENABLE()  int_enable()
 
-/*! Macro to put the CPU to sleep safely in the cooperative
-* Vanilla kernel (inside QV_onIdle()).
+/*! Macro that specifies QV-nano initialization */
+/**
+* \description
+* Some QV-nano ports might need initialization (e.g., seeting the priorities
+* of exceptions PendSV and SVCall in ARM Cortex-M port). The QV_INIT() macro
+* in this case calls the initialization defined in assembly.
+*
+* \note The macro QV_INIT() can be left undefined.
+*/
+#define QV_INIT()  QV_init()
+void QV_init(void);
+
+/*! Macro to put the CPU to sleep safely in the cooperative QV kernel
+* (inside QV_onIdle()).
 */
 /**
 * @description

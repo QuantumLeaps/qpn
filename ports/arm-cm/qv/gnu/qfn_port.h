@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, cooperative QV kernel, GNU-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.6.1
-* Date of the Last Update:  2016-01-10
+* Last Updated for Version: 5.8.1
+* Date of the Last Update:  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -78,6 +78,10 @@
 
     /* Cortex-M3/M4/M4F provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint8_t)(32U - __builtin_clz(n_)))
+
+    /* initialization of the QV kernel for Cortex-M3/M4/M4F */
+    #define QV_INIT() QV_init()
+    void QV_init(void);
 
 #endif
 

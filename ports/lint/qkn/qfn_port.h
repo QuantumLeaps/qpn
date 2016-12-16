@@ -3,14 +3,14 @@
 * @brief QF-nano port for Lint, preemptive QK kernel, generic C compiler
 * @cond
 ******************************************************************************
-* Last updated for version 5.4.0
-* Last updated on  2015-05-18
+* Last updated for version 5.8.1
+* Last updated on  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,8 +31,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * \endcond
 */
@@ -142,6 +142,7 @@
 * \note The macro QK_INIT() can be left undefined.
 */
 #define QK_INIT()  QK_init()
+void QK_init(void);
 
 void int_disable(void); /*!< example of a function to disable interrupts */
 void int_enable(void);  /*!< example of a function to enable interrupts */

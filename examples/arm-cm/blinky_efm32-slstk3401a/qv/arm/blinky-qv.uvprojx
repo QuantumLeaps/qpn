@@ -471,6 +471,13 @@
         </Group>
         <Group>
           <GroupName>QP_port</GroupName>
+          <Files>
+            <File>
+              <FileName>qvn_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\ports\arm-cm\qv\arm\qvn_port.c</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>
@@ -939,6 +946,13 @@
         </Group>
         <Group>
           <GroupName>QP_port</GroupName>
+          <Files>
+            <File>
+              <FileName>qvn_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\ports\arm-cm\qv\arm\qvn_port.c</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

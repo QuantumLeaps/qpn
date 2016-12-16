@@ -82,17 +82,17 @@
         <Book>
           <Number>0</Number>
           <Title>MCB1700 Schematics (MCB1700)</Title>
-          <Path>C:\tools\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.0.0\Documents\mcb1700-schematics.pdf</Path>
+          <Path>C:\tools\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\Documents\mcb1700-schematics.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
           <Title>User Manual (MCB1700)</Title>
-          <Path>C:\tools\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.0.0\Documents\mcb1700.chm</Path>
+          <Path>C:\tools\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\Documents\mcb1700.chm</Path>
         </Book>
         <Book>
           <Number>2</Number>
           <Title>MCB1700 Quick Start Guide (MCB1700)</Title>
-          <Path>C:\tools\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.0.0\Documents\mcb1700_quickstart.pdf</Path>
+          <Path>C:\tools\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\Documents\mcb1700_quickstart.pdf</Path>
         </Book>
         <Book>
           <Number>3</Number>
@@ -122,7 +122,7 @@
         <tRSysVw>1</tRSysVw>
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
-        <nTsel>1</nTsel>
+        <nTsel>0</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -222,6 +222,10 @@
       </DebugFlag>
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
+      <bLintAuto>0</bLintAuto>
+      <Lin2Executable></Lin2Executable>
+      <Lin2ConfigFile></Lin2ConfigFile>
+      <bLin2Auto>0</bLin2Auto>
     </TargetOption>
   </Target>
 
@@ -414,6 +418,10 @@
       </DebugFlag>
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
+      <bLintAuto>0</bLintAuto>
+      <Lin2Executable></Lin2Executable>
+      <Lin2ConfigFile></Lin2ConfigFile>
+      <bLin2Auto>0</bLin2Auto>
     </TargetOption>
   </Target>
 
@@ -428,7 +436,6 @@
       <FileNumber>1</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\bsp.c</PathWithFileName>
@@ -441,7 +448,6 @@
       <FileNumber>2</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\bsp.h</PathWithFileName>
@@ -454,7 +460,6 @@
       <FileNumber>3</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\dpp.h</PathWithFileName>
@@ -467,7 +472,6 @@
       <FileNumber>4</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\main.c</PathWithFileName>
@@ -480,7 +484,6 @@
       <FileNumber>5</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\philo.c</PathWithFileName>
@@ -493,7 +496,6 @@
       <FileNumber>6</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\table.c</PathWithFileName>
@@ -514,7 +516,6 @@
       <FileNumber>7</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\3rd_party\mbed-lpc1768\system_LPC17xx.c</PathWithFileName>
@@ -527,7 +528,6 @@
       <FileNumber>8</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\3rd_party\mbed-lpc1768\arm\startup_LPC17xx.s</PathWithFileName>
@@ -548,7 +548,6 @@
       <FileNumber>9</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\source\qepn.c</PathWithFileName>
@@ -561,7 +560,6 @@
       <FileNumber>10</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\source\qfn.c</PathWithFileName>
@@ -574,11 +572,22 @@
       <FileNumber>11</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\source\qvn.c</PathWithFileName>
       <FilenameWithoutPath>qvn.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>12</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\..\..\ports\arm-cm\qv\arm\qvn_port.c</PathWithFileName>
+      <FilenameWithoutPath>qvn_port.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

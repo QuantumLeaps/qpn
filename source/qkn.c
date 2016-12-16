@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.0
-* Last updated on  2016-11-18
+* Last updated for version 5.8.1
+* Last updated on  2016-12-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -73,10 +73,6 @@ static void initialize(void); /* prototype required by MISRA */
 static void initialize(void) {
     uint_fast8_t p;
     QActive *a;
-
-#ifdef QK_INIT /* initialization of the QK-nano kernel defined? */
-    QK_INIT(); /* initialize the QK-nano kernel */
-#endif
 
 #ifdef QF_MAX_ACTIVE /* deprecated constant provided? */
 #if (QF_MAX_ACTIVE < 1) || (8 < QF_MAX_ACTIVE)
