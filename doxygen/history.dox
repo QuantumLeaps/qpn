@@ -1,6 +1,19 @@
 /**
 @page history Revision History
 
+
+@section qpn_5_8_2 Version 5.8.2, 2017-02-08
+This release improves compatibility of assertion numbering between
+QP-nano and QP/C/C++. Specifically, qepn.c file now uses the same
+assertion-IDs as qep_hsm.c (QP/C) and qep_hsm.cpp (QP/C++).
+
+This release upgrades CMSIS to version 5.0.1.
+
+Finally, this release fixes the following bugs:
+- bug#152 Typo (qpc\ports\arm7-9\qk\gnu\qk_port.s:42) prevents compilation
+
+
+------------------------------------------------------------------------------
 @section qpn_5_8_1 Version 5.8.1, 2016-12-16
 This release is in response to a recent finding that many QP users of the
 ports to ARM Cortex-M3/M4 forget to explicitly set their interrupt priorities,

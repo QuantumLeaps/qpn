@@ -24,7 +24,7 @@ of the free graphical QM modeling tool.
 The QP frameworks are used in millions of products worldwide in aerospace,
 medical devices, consumer electronics, wired and wireless telecommunications,
 industrial automation, transportation, robotics, and many more. The QP
-frameworks and the QM modeling tool receive over 40,000 downloads a year.
+frameworks and the QM modeling tool receive 60,000 downloads a year.
 
 The book, Practical UML Statecharts in C/C++, 2nd Edition provides a detailed
 design study of the QP frameworks and explains all the related concepts.

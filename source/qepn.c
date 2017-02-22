@@ -4,14 +4,14 @@
 * @ingroup qep
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.0
-* Last updated on  2015-11-18
+* Last updated for version 5.8.2
+* Last updated on  2017-02-22
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -32,8 +32,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* http://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -75,14 +75,6 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 *
 * @note Must be called only ONCE before QHSM_INIT().
 *
-* @note
-* QHsm inherits QHsm, so by the @ref oop convention it should call the
-* constructor of the superclass, i.e., QHsm_ctor(). However, this would pull
-* in the QHsmVtbl, which in turn will pull in the code for QHsm_init_() and
-* QHsm_dispatch_() implemetations. To avoid this code size penalty, in case
-* ::QHsm is not used in a given project, the QHsm_ctor() performs direct
-* intitialization of the Vtbl, which avoids pulling in the code for QHsm.
-*
 * @usage
 * The following example illustrates how to invoke QHsm_ctor() in the
 * "constructor" of a derived state machine:
@@ -93,29 +85,9 @@ void QHsm_ctor(QHsm * const me, QStateHandler initial) {
         &QHsm_init_,
         &QHsm_dispatch_
     };
-    /* do not call the QHsm_ctor() here */
-    me->vptr = &vtbl;
+    me->vptr  = &vtbl;
     me->state = Q_STATE_CAST(&QHsm_top);
     me->temp  = initial;
-}
-
-/****************************************************************************/
-/**
-* @description
-* QHsm_top() is the ultimate root of state hierarchy in all HSMs derived
-* from ::QHsm.
-*
-* @param[in] me pointer (see @ref oop)
-*
-* @returns Always returns #Q_RET_IGNORED, which means that the top state
-*          ignores all events.
-*
-* @note The parameter @p me to this state handler is not used. It is provided
-* for conformance with the state-handler function signature ::QStateHandler.
-*/
-QState QHsm_top(void const * const me) {
-    (void)me;  /* suppress the "unused parameter" compiler warning */
-    return (QState)Q_RET_IGNORED; /* the top state ignores all events */
 }
 
 /****************************************************************************/
@@ -135,14 +107,14 @@ void QHsm_init_(QHsm * const me) {
     * transition must be initialized, and the initial transition must not
     * be taken yet.
     */
-    Q_REQUIRE_ID(600, (me->vptr != (QHsmVtbl const *)0)
+    Q_REQUIRE_ID(200, (me->vptr != (QHsmVtbl const *)0)
                       && (me->temp != Q_STATE_CAST(0))
                       && (t == Q_STATE_CAST(&QHsm_top)));
 
     r = (*me->temp)(me); /* execute the top-most initial transition */
 
     /* the top-most initial transition must be taken */
-    Q_ASSERT_ID(610, r == (QState)Q_RET_TRAN);
+    Q_ASSERT_ID(210, r == (QState)Q_RET_TRAN);
 
     /* drill down into the state hierarchy with initial transitions... */
     do {
@@ -154,7 +126,7 @@ void QHsm_init_(QHsm * const me) {
         (void)(*me->temp)(me);
         while (me->temp != t) {
             ++ip;
-            Q_ASSERT_ID(620, ip < (int_fast8_t)Q_DIM(path));
+            Q_ASSERT_ID(220, ip < (int_fast8_t)Q_DIM(path));
             path[ip] = me->temp;
             (void)(*me->temp)(me);
         }
@@ -180,6 +152,25 @@ void QHsm_init_(QHsm * const me) {
 /****************************************************************************/
 /**
 * @description
+* QHsm_top() is the ultimate root of state hierarchy in all HSMs derived
+* from ::QHsm.
+*
+* @param[in] me pointer (see @ref oop)
+*
+* @returns Always returns #Q_RET_IGNORED, which means that the top state
+*          ignores all events.
+*
+* @note The parameter @p me to this state handler is not used. It is provided
+* for conformance with the state-handler function signature ::QStateHandler.
+*/
+QState QHsm_top(void const * const me) {
+    (void)me; /* suppress the "unused parameter" compiler warning */
+    return (QState)Q_RET_IGNORED; /* the top state ignores all events */
+}
+
+/****************************************************************************/
+/**
+* @description
 * Dispatches an event for processing to a hierarchical state machine (HSM).
 * The processing of an event represents one run-to-completion (RTC) step.
 *
@@ -195,16 +186,18 @@ void QHsm_dispatch_(QHsm * const me) {
     QState r;
     int_fast8_t iq; /* helper transition entry path index */
 
-    /** @pre the state configuration must be stable */
-    Q_REQUIRE_ID(700, t == me->temp);
+    /** @pre the current state must be initialized and
+    * the state configuration must be stable
+    */
+    Q_REQUIRE_ID(400, (t != Q_STATE_CAST(0))
+                      && (t == me->temp));
 
     /* process the event hierarchically... */
     do {
         s = me->temp;
         r = (*s)(me); /* invoke state handler s */
 
-        /* unhandled due to a guard? */
-        if (r == (QState)Q_RET_UNHANDLED) {
+        if (r == (QState)Q_RET_UNHANDLED) { /* unhandled due to a guard? */
             iq = (int_fast8_t)Q_SIG(me); /* save the original signal */
             Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_; /* find the superstate */
             r = (*s)(me); /* invoke state handler s */
@@ -258,7 +251,7 @@ void QHsm_dispatch_(QHsm * const me) {
             me->temp = path[0];
 
             /* entry path must not overflow */
-            Q_ASSERT_ID(710, ip < QHSM_MAX_NEST_DEPTH_);
+            Q_ASSERT_ID(410, ip < QHSM_MAX_NEST_DEPTH_);
 
             /* retrace the entry path in reverse (correct) order... */
             Q_SIG(me) = (QSignal)Q_ENTRY_SIG;
@@ -346,7 +339,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                             iq = (int_fast8_t)1; /* indicate that LCA found */
 
                             /* entry path must not overflow */
-                            Q_ASSERT_ID(810, ip < QHSM_MAX_NEST_DEPTH_);
+                            Q_ASSERT_ID(510, ip < QHSM_MAX_NEST_DEPTH_);
                             --ip; /* do not enter the source */
                             r = (QState)Q_RET_HANDLED; /* terminate loop */
                         }
@@ -360,7 +353,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                     if (iq == (int_fast8_t)0) {
 
                         /* entry path must not overflow */
-                        Q_ASSERT_ID(820, ip < QHSM_MAX_NEST_DEPTH_);
+                        Q_ASSERT_ID(520, ip < QHSM_MAX_NEST_DEPTH_);
 
                         Q_SIG(me) = (QSignal)Q_EXIT_SIG;
                         (void)(*s)(me); /* exit the source */
@@ -371,9 +364,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                         iq = ip;
                         r = (QState)Q_RET_IGNORED; /* LCA NOT found */
                         do {
-                            s = path[iq];
-                            /* is this the LCA? */
-                            if (t == s) {
+                            if (t == path[iq]) { /* is this the LCA? */
                                 r = (QState)Q_RET_HANDLED; /* LCA found */
 
                                 /* do not enter LCA */
@@ -385,7 +376,7 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                             }
                         } while (iq >= (int_fast8_t)0);
 
-                        /* LCAnot found? */
+                        /* LCA not found? */
                         if (r != (QState)Q_RET_HANDLED) {
                             /* (g) check each source->super->...
                             * for each target->super...
@@ -398,12 +389,11 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
                                     Q_SIG(me) = (QSignal)QEP_EMPTY_SIG_;
                                     (void)(*t)(me); /* find super of t */
                                 }
-                                t = me->temp; /*  set to super of t */
+                                t = me->temp; /* set to super of t */
                                 iq = ip;
                                 do {
-                                    s = path[iq];
                                     /* is this LCA? */
-                                    if (t == s) {
+                                    if (t == path[iq]) {
                                         /* do not enter LCA */
                                         ip = (int_fast8_t)(iq-(int_fast8_t)1);
                                         /* cause breaking out of inner loop */
@@ -468,7 +458,7 @@ QStateHandler QHsm_childState_(QHsm * const me,
     me->temp = me->state; /* establish stable state configuration */
 
     /** @post the child must be confirmed */
-    Q_ENSURE_ID(910, isConfirmed != false);
+    Q_ENSURE_ID(710, isConfirmed != false);
 
     return child; /* return the child */
 }
