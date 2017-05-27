@@ -27,14 +27,14 @@ QK is a tiny **preemptive**, priority-based, non-blocking kernel designed specif
 @brief
 Cooperative Run-to-Completion Kernel
 
-QV-nano is a simple **cooperative** kernel (previously called "Vanilla" kernel). This kernel executes active objects one at a time, with priority-based scheduling performed before processing of each event. Due to naturally short duration of event processing in state machines, the simple QV kernel is often adequate for many real-time systems. 
+QV-nano is a simple **cooperative** kernel (previously called "Vanilla" kernel). This kernel executes active objects one at a time, with priority-based scheduling performed before processing of each event. Due to naturally short duration of event processing in state machines, the simple QV kernel is often adequate for many real-time systems.
 */
 /*! @dir ../include
 
 Platform-independent QP-nano API
 
 @note
-The QP-nano <span class="img folder">include</span> directory needs to be added to the compiler's include path in the applications using QP-nano. 
+The QP-nano <span class="img folder">include</span> directory needs to be added to the compiler's include path in the applications using QP-nano.
 */
 /*! @dir ../source
 
@@ -46,5 +46,5 @@ Files from this directory need to be added to the project, to build the QP-nano 
 Not all QP-nano source files should be added to every project. For example, QP-nano ports to the preemptive QK-nano kernel should **not** contain the file <span class="img file_c">qvn.c</span> and conversely, QP-nano ports to the cooperative QV-nano kernel should not contain the files <span class="img file_c">qkn.c</span>.
 
 @note
-The QP-nano <span class="img folder">source</span> directory needs to be added to the compiler's include path in the applications using QP-nano, because QP-nano is built from sources. 
+The QP-nano <span class="img folder">source</span> directory needs to be added to the compiler's include path in the applications using QP-nano, because QP-nano is built from sources.
 */

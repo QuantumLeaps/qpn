@@ -9,15 +9,15 @@ assertion-IDs as qep_hsm.c (QP/C) and qep_hsm.cpp (QP/C++).
 
 This release upgrades CMSIS to version 5.0.1.
 
-Finally, this release fixes the following bugs:
+Finally, this release fixes the following bugs:
 - bug#152 Typo (qpc\ports\arm7-9\qk\gnu\qk_port.s:42) prevents compilation
-
+
 
 ------------------------------------------------------------------------------
 @section qpn_5_8_1 Version 5.8.1, 2016-12-16
 This release is in response to a recent finding that many QP users of the
 ports to ARM Cortex-M3/M4 forget to explicitly set their interrupt priorities,
-as described in the AppNote <a href="http://www.state-machine.com/doc/AN_ARM-Cortex-M_Interrupt-Priorities.pdf" target="_blank" class="extern">"Setting ARM Cortex-M Interrupt Priorities in QP 5.x"</a>.
+as described in the AppNote <a href="https://www.state-machine.com/doc/AN_ARM-Cortex-M_Interrupt-Priorities.pdf" target="_blank" class="extern">"Setting ARM Cortex-M Interrupt Priorities in QP 5.x"</a>.
 
 Specifically, this release improves safety of QP ports to ARM Cortex-M3/M4,
 by initializing the interrupt priorities to a safe default in a generic,
@@ -89,7 +89,7 @@ Finally, this release replaces all absolute paths with relative paths in all CCS
 This release adds support for the new board: EFM32-SLSTK3401A (Pearl Gecko Starter Kit from Silicon Labs). This board replaces the Stellaris EK-LM3S811 board, which has been discontinued. (The Stellaris EK-LM3S811 board had been used in the "Fly 'n' Shoot" game example accompanying the PSiCC2 book).
 
 This release also introduces a new version of the QWIN GUI Toolkit in the Windows prototypes for the "Fly 'n' Shoot" game and the DPP-GUI
-version (see http://www.state-machine.com/products/index.html#QWIN).
+version (see https://www.state-machine.com/products/index#QWIN).
 
 Additionally, this release also includes the QP-nano integration with the emWin emgedded GUI from SEGGER, which is also the same product as
 uC/GUI distributed by Micrium (@ref exa_emwin).
@@ -355,7 +355,7 @@ to 15 by breaking up the QHsm_dispatch_() function. The code metrics
 report, including cyclomatic complexity by function as well as other
 standard code metrics (e.g., lines of code), is now included in the
 "QP-nano Reference Manual", see
-http://www.state-machine.com/qpn/metrics.html
+https://www.state-machine.com/qpn/metrics.html
 
 Finally, this release demonstrates safer stack allocation and safer
 exception handlers in all ARM Cortex-M examples. The techniques are
@@ -512,7 +512,7 @@ NOTE: Leaving the interrupt priority at the default value of zero
 
 For more information, please read the short Application Note "Setting
 ARM Cortex-M Interrupt Priorities in QP 5.1" available at:
-http://www.state-machine.com/arm/AN_ARM-Cortex-M_Interrupt-Priorities.pdf.
+https://www.state-machine.com/arm/AN_ARM-Cortex-M_Interrupt-Priorities.pdf.
 
 The following list details the changes:
 
@@ -710,7 +710,7 @@ way will continue to handle the guard conditions correctly and
 in accordance with the UML specification. The new Q_UNHANDLED()
 macro is necessary only for MISRA-compliant state handler coding,
 which will be applied in the upcoming release of the QM modeling
-and code generation tool.  
+and code generation tool.
 
 Changes in detail:
 
@@ -719,7 +719,7 @@ qepn.h.
 
 2. Modified qepn.c to handle the Q_RET_UNHANDLED return value.
 
-3. Updated the QP-nano MISRA-C:2004 compliance matrix to 
+3. Updated the QP-nano MISRA-C:2004 compliance matrix to
 include the new MISRA-compliant way of coding guard conditions.
 
 4. Updated the IAR ARM compiler used in the ARM Cortex-M examples
@@ -763,17 +763,17 @@ clobbering the current state (the 'state' member) during transitons.
 This change allows keeping the current state unchanged during the
 entire transition chain, which in turn allows easy and generic access
 to the state information to store the state history in the exit
-actions from states. Additional bonus of this re-design is the 
+actions from states. Additional bonus of this re-design is the
 opportunity of testing for stable state configuration in assertions
 added to the qepn.c file.
 
 4. Added the QHsm_state() and QFsm_state() accessor macros.
 
-5. Modified the "Transition to History" pattern implementation to 
+5. Modified the "Transition to History" pattern implementation to
 use the simplified technique of obtaining the current state in the
 exit action from the superstate rather than all the exit actions from
 the substates. Modified the "State-Local Storage" (SLS) pattern as
-well, because it was using the transition to history constructs. 
+well, because it was using the transition to history constructs.
 
 6. Modified the QP-nano port to Win32 (both the MinGW and VC2008).
 
@@ -783,7 +783,7 @@ well, because it was using the transition to history constructs.
 applications (DPP and PELICAN crossing).
 
 9. Added GNU compiler option -pthread to QP ports for POSIX with
-P-threads, including QP ports and examples for Linux and Mac OS X. 
+P-threads, including QP ports and examples for Linux and Mac OS X.
 
 
 ------------------------------------------------------------------------------
@@ -805,15 +805,15 @@ QP-nano ports.
 
 2. Added the PC-Lint option files std.lnt and lib-qpn.lnt to the
 qcn/include/ directory.
- 
+
 3. Cleaned the whole QP-nano code from lint comments. All PC-Lint options
 have been moved to PC-Lint option files.
- 
+
 4. Modified QP-nano assertion macro Q_DEFINE_THIS_MODULE() to avoid
 using the # operator (MISRA rule 19.13). This macro now requires the
 argument enclosed in doble quotes "".
 
-NOTE: This modification has impact on some QP-nano ports. 
+NOTE: This modification has impact on some QP-nano ports.
 
 4. Added typedefs for char_t, int_t, float32_t, and float64_t to
 event.h header file for compliance with MISRA-C:2004 rules 6.1 and 6.3.
@@ -839,7 +839,7 @@ CodeBench 2011.09-60.
 
 11. Added documentation to QP-nano distribution in the directory
 qpn/doc/, with the following Application notes: "QP-nano MISRA-C:2004
-Compliance Matrix" and "Quantum Leaps Coding Standard",  
+Compliance Matrix" and "Quantum Leaps Coding Standard",
 
 
 ------------------------------------------------------------------------------
@@ -943,7 +943,7 @@ with Eclipse.
 The changes in detail are:
 
 1. Added sub-directory qpn/emulation with emulation code for Windows
-(win32) and POSIX (Linux, Mac OS X, etc.). 
+(win32) and POSIX (Linux, Mac OS X, etc.).
 
 2. Added Win32 examples for Visual C++ 2008 (examples/80x86/win32/
 vc2008/dpp and examples/80x86/win32/vc2008/qhsmtst). Visual Studio
@@ -955,7 +955,7 @@ are provided for all build configurations. NOTE: the Makefiles assume
 that the MinGW/bin directory is added to the PATH.
 
 4. Fixed a bug in file qfn.c, function QActive_postISR(). For special
-rare combination of configuration macros the assertion was checked 
+rare combination of configuration macros the assertion was checked
 before declaring an automatic variable QF_ISR_KEY_TYPE key. This
 declaration has been moved to the top of the function.
 
@@ -967,7 +967,7 @@ latest Sourcery G++ 2011.02-2.
 @section qpn_4_1_06 Version 4.1.06, 2011-01-07
 
 1. Made cosmetic improvements to the example QM model of the
-"Fly 'n' Shoot" game. 
+"Fly 'n' Shoot" game.
 
 2. Made improvements in make.bat files for building the examples for
 DOS/Open Watcom to run better in DosBox on Linux.
@@ -1000,7 +1000,7 @@ identical as the model in the DOS version. The LM3S811 Version needs to
 be compiled with the IAR compiler and executed on the EV-LM3S811 board.
 
 Additionally, the QP-nano baseline code has been slighlty modified for
-better conformance to the MISRA C 2004 rules and the latest PC-Lint 9.x. 
+better conformance to the MISRA C 2004 rules and the latest PC-Lint 9.x.
 
 
 ------------------------------------------------------------------------------
@@ -1014,12 +1014,12 @@ run 16-bit DOS applications anymore.
 Also, this release includes QP ports and examples for EV-LM3S811 board with
 the GNU-based Code Sourcery G++ toolset. Support for Sourcery G++ provides
 a very cost-effective option for developing QP applications for ARM Cortex
-MCUs. 
+MCUs.
 
 Finally, this release improves the Cortex Microcontroller Software Interface
 Standard (CMSIS) for the whole family of the Stellaris LM3Sxxx MCUs. The
 improvement extends the CMSIS from Sandstorm to Fury, DustDevil, and Tempest
-Stellaris families.  
+Stellaris families.
 
 
 ------------------------------------------------------------------------------
@@ -1048,7 +1048,7 @@ protects the display from burn-in. The affected file is tunnel.c.
 Finally, this release introduces the QP_Version macro, which identifies the QP
 version. Otherwise, this maintenance release does not change the QP/C API in
 any way, so the release has NO IMPACT on the QP/C applications except for the
-ARM Cortex ports and applications. 
+ARM Cortex ports and applications.
 
 
 ------------------------------------------------------------------------------
@@ -1063,7 +1063,7 @@ Cortex ports and examples are hosted in the directory tree called
 
 This maintenance release does not change the QP-nano API in any way, so the
 release has NO IMPACT on the QP-nano applications except for the ARM Cortex
-ports and applications. 
+ports and applications.
 
 
 ------------------------------------------------------------------------------
@@ -1077,7 +1077,7 @@ non-commercial use. Open Watcom can be downloaded from www.openwatcom.org.
 
 All 80x86 examples (vanilla and QK-nano) for Turbo C++ 1.01 have been replaced
 with examples for Open Watcom. The make.bat scripts are provided to build the
-examples. 
+examples.
 
 In the process of converting the examples to Open Watcom a new SLS example
 have been added to the standard QP-nano distribution. The SLS example located
@@ -1098,7 +1098,7 @@ by the QEP-nano event processor during execution of transitions.
 The bug fix is to always pass events through the ring buffer and never
 overwrite the internal event during event posting (both from the task
 level and from the ISR level). The update of the ring buffer always
-occurs within a critical section and is safe from interruptions. 
+occurs within a critical section and is safe from interruptions.
 
 This bug fix also allows posting of events from the top-most initial
 transitions of active objects during the initialization phase. Previously,
@@ -1112,7 +1112,7 @@ the internal signal.
 This release also replaces the static variables 'p' (priority) and 'a'
 (active object pointer) with automatic variables. This change results in
 more efficient code, because the frequently used variables can be kept in
-registers and do not need to be read/written from/to memory by each use.  
+registers and do not need to be read/written from/to memory by each use.
 
 Additionally, this release updates the QP-nano ARM Cortex-M3 examples for
 the EK-LM3S811 board to the latest IAR EWARM 5.40. Due to the acquisition
@@ -1123,7 +1123,7 @@ accordingly.
 Finally, this release fixes a bug in the "Fly 'n' Shoot" game example for
 QP-nano, which caused an assertion if the Ship was moved to the very top
 of the Tunnel. This was due to the y-coordinate of the ship explosion
-becomoming negative.   
+becomoming negative.
 
 NOTE: This release does not change the QP-nano API, but all event queues
 are effectively shortened by one event. Also it is no longer possible to
@@ -1135,7 +1135,7 @@ as follows:
 
 - modified functions QActive_post(), QActive_postISR(), and QF_run() in qfn.c
 to always use the ring buffer and not to count the internal event as part
-of the queue (in the assertions).   
+of the queue (in the assertions).
 - modified qfn.c to replace static variables 'p' and 'a' with automatic
 variables.
 - modified function QK_schedule_() in qkn.c to always use the ring buffer,
@@ -1157,7 +1157,7 @@ which did not work correctly for the GNU compiler family. Also, the ARM
 Cortex-M3 examples have been recompiled with the newer IAR EWARM v5.30.
 
 This maintenance release does not change the QP-nano API in any way, so the
-release has NO IMPACT on the QP-nano applications. 
+release has NO IMPACT on the QP-nano applications.
 
 The main changes in QP v4.0.04 with respect to earlier Version are as follows:
 
@@ -1179,7 +1179,7 @@ above the ceiling can run. This additional overhead is not present when
 #QK_MUTEX is not defined.
 
 This maintenance release does not change the QP-nano API in any way, so the
-release has NO IMPACT on the QP-nano applications. 
+release has NO IMPACT on the QP-nano applications.
 
 The main changes in QP v4.0.03 with respect to earlier Version are as follows:
 
@@ -1195,7 +1195,7 @@ This maintenace release is made to allow posting events from any active object
 to any active object from the top-most initial transtions.
 
 This maintenance release does not change the QP-nano API in any way, so the
-release has NO IMPACT on the QP-nano applications. 
+release has NO IMPACT on the QP-nano applications.
 
 The main changes in QP v4.0.02 with respect to earlier Version are as follows:
 
@@ -1203,7 +1203,7 @@ The main changes in QP v4.0.02 with respect to earlier Version are as follows:
 and initialize their priority attribute based on their location in the
 QF_active[] array. The second for-loop triggers only the initial transitions,
 but now all priorities are initialized, so active objects can post events to
-each others from the initial transitions.  
+each others from the initial transitions.
 - modified function QF_run() in qkn.c in identical way as in qfn.c described
 above.
 
@@ -1217,7 +1217,7 @@ accomodate the non-standard way of hanlding constant data objects allocated
 in ROM (PROGMEM) in the GNU compiler for AVR.
 
 This maintenance release does not change the QP-nano API in any way, so the
-release has NO IMPACT on the QP-nano applications. 
+release has NO IMPACT on the QP-nano applications.
 
 The main changes in QP v4.0.01 with respect to earlier Version are as follows:
 
@@ -1230,7 +1230,7 @@ contaminating the code with non-portable and non-standard extensions.
 
 - in qepn.c file, broken up expressions of the form if (t == path[iq]) ...
 into (s = path[iq]; if (t == s) ...). This was done to accommodate the
-ImageCraft ICCM8C compiler for PSoC.  
+ImageCraft ICCM8C compiler for PSoC.
 
 ------------------------------------------------------------------------------
 @section qpn_4_0_00 Version 4.0.00, 2008-04-07
@@ -1272,7 +1272,7 @@ for more information about coding state machines with QEP 4.x.
     - QF_cleanup() is now QF_onCleanup()
 - enumerating global active object priorities is no longer necessary.
 - the methods of posting events have changed:
-    - QF_post(prio, sig, par) is now void QActive_post(me, sig, par)    
+    - QF_post(prio, sig, par) is now void QActive_post(me, sig, par)
     - QF_postISR(prio, sig, par) is now void QActive_postISR(me, sig, par)
 - the global variable QF_activeNum has been eliminated
     - instead the constant #QF_MAX_ACTIVE <STRONG>must</STRONG> correspond

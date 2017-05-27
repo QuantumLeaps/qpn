@@ -9,7 +9,7 @@
 - @subpage dpp
 - @subpage game
 
-Additionally, the QP-nano distribution contains several application examples described in the <a class="extern" target="_blank" href="http://www.state-machine.com/psicc2">PSiCC2</a> book.
+Additionally, the QP-nano distribution contains several application examples described in the <a class="extern" target="_blank" href="https://www.state-machine.com/psicc2">PSiCC2</a> book.
 
 - Calculator
 - QHsmTst
@@ -49,10 +49,10 @@ The very simple state machine of the Blinky AO is shown in the figure below:
 
   <li><span class="tag">3</span> When the `TIMEOUT` event arrives in the "off" state, the "off" state transitions to the "on" state
   </li>
-  
+
   <li><span class="tag">4</span> The "on" state turns the LED on in the entry action (`BSP_ledOn()`).
   </li>
-  
+
   <li><span class="tag">5</span> When the `TIMEOUT` event arrives in the "on" state, the "on" state transitions back to "off", which cases execution of the entry action, in which the LED is turned off. From that point on the cycle repeats forever because the `TIMEOUT` events keep getting generated at the pre-determined rate.
   </li>
 </ul>
@@ -64,7 +64,7 @@ listing below. The code has been specifically organized not to access target res
 
 @note
 The Blinky source code (blinky.c) is actually the same on all platforms, including Windows
-and the embedded boards. The only difference is in the Board Support Package (bsp.c), which is 
+and the embedded boards. The only difference is in the Board Support Package (bsp.c), which is
 specific for the target.
 
 @includelineno examples/arm-cm/blinky_ek-tm4c123gxl/blinky.c

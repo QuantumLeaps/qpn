@@ -4,11 +4,11 @@
 
 The QP-nano framework brings together three **most effective techniques** of structuring embedded systems:
 
-- <a href="http://www.state-machine.com/doc/concepts.html#Active" target="_blank" class="extern">active objects</a>;
+- <a href="https://www.state-machine.com/doc/concepts#Active" target="_blank" class="extern">active objects</a>;
 
-- <a href="http://www.state-machine.com/doc/concepts.html#HSM" target="_blank" class="extern">hierarchical state machines</a> (UML statecharts); and
+- <a href="https://www.state-machine.com/doc/concepts#HSM" target="_blank" class="extern">hierarchical state machines</a> (UML statecharts); and
 
-- <a href="http://www.state-machine.com/doc/concepts.html#Modeling" target="_blank" class="extern">graphical modeling</a> and <a href="http://www.state-machine.com/doc/concepts.html#Code" target="_blank" class="extern">automatic code generation</a>.
+- <a href="https://www.state-machine.com/doc/concepts#Modeling" target="_blank" class="extern">graphical modeling</a> and <a href="https://www.state-machine.com/doc/concepts#Code" target="_blank" class="extern">automatic code generation</a>.
 
 The following sections describe the main components and structure of the framework.
 
@@ -46,7 +46,7 @@ The figure below shows the main classes comprising the QP-nano framework and the
   <li><span class="tag">0</span> The ::QEvt class represents events, possibly with a parameter (the existence of event parameter is configured by the macro #Q_PARAM_SIZE).
   </li>
 
-  <li><span class="tag">1</span> The abstract ::QHsm class represents a Hierarchical State Machine (HSM) with full support for hierarchical nesting of states, entry/exit actions, initial transitions, and transitions to history in any composite state. This class is designed for ease of manual coding of HSMs in C, but it is also supported by the <a class="extern" target="_blank" href="http://www.state-machine.com/qm">QM modeling tool</a>. The class is abstract, meaning that it is not designed to be instantiated directly, but rather only for inheritance. The @ref game application provides an example of application-level classes deriving directly from ::QHsm (see [5]).
+  <li><span class="tag">1</span> The abstract ::QHsm class represents a Hierarchical State Machine (HSM) with full support for hierarchical nesting of states, entry/exit actions, initial transitions, and transitions to history in any composite state. This class is designed for ease of manual coding of HSMs in C, but it is also supported by the <a class="extern" target="_blank" href="https://www.state-machine.com/qm">QM modeling tool</a>. The class is abstract, meaning that it is not designed to be instantiated directly, but rather only for inheritance. The @ref game application provides an example of application-level classes deriving directly from ::QHsm (see [5]).
   </li>
 
   <li><span class="tag">2</span> The abstract ::QActive class represents an active object that uses the ::QHsm style state machine implementation strategy. This strategy is tailored to manual coding, but it is also supported by the QM modeling tool. The @ref game application provides an example of application-level classes deriving directly from ::QActive (see [4]).
@@ -66,18 +66,18 @@ The figure below shows the main classes comprising the QP-nano framework and the
 ------------------------------------------------------------------------------
 @section sm State Machines
 
-The behavior of each active object in QP-nano is specified by means of a <a href="http://www.state-machine.com/doc/concepts.html#HSM" target="_blank" class="extern">hierarchical state machine</a> (UML statechart), which is the most effective and elegant technique of decomposing event-driven behavior. The most important innovation of UML state machines over classical finite state machines (FSMs) is the hierarchical state nesting. The value of state nesting lies in avoiding repetitions, which are inevitable in the traditional "flat" FSM formalism and are the main reason for the "state-transition explosion" in FSMs. The semantics of state nesting allow substates to define only the differences of behavior from the superstates, thus promoting sharing and reusing behavior.
+The behavior of each active object in QP-nano is specified by means of a <a href="https://www.state-machine.com/doc/concepts#HSM" target="_blank" class="extern">hierarchical state machine</a> (UML statechart), which is the most effective and elegant technique of decomposing event-driven behavior. The most important innovation of UML state machines over classical finite state machines (FSMs) is the hierarchical state nesting. The value of state nesting lies in avoiding repetitions, which are inevitable in the traditional "flat" FSM formalism and are the main reason for the "state-transition explosion" in FSMs. The semantics of state nesting allow substates to define only the differences of behavior from the superstates, thus promoting sharing and reusing behavior.
 
 @htmlonly
 <div class="image">
-<a target="_blank" href="http://www.state-machine.com/doc/AN_Crash_Course_in_UML_State_Machines.pdf"><img border="0" src="img/AN_Crash_Course_in_UML_State_Machines.jpg" title="Download PDF"></a>
+<a target="_blank" href="https://www.state-machine.com/doc/AN_Crash_Course_in_UML_State_Machines.pdf"><img border="0" src="img/AN_Crash_Course_in_UML_State_Machines.jpg" title="Download PDF"></a>
 <div class="caption">
 Application Note: A Crash Course in UML State Machines
 </div>
 </div>
 @endhtmlonly
 
-The Quantum Leaps Application Note <a class="extern" target="_blank" href="http://www.state-machine.com/doc/AN_Crash_Course_in_UML_State_Machines.pdf"><strong>A Crash Course in UML State Machines</strong></a> introduces the main state machine concepts backed up by examples.
+The Quantum Leaps Application Note <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_Crash_Course_in_UML_State_Machines.pdf"><strong>A Crash Course in UML State Machines</strong></a> introduces the main state machine concepts backed up by examples.
 <div class="clear"></div>
 
 @note
@@ -86,11 +86,11 @@ The hallmark of the QP-nano implementation of UML state machines is **traceabili
 
 ------------------------------------------------------------------------------
 @section coding Coding Standard
-The QP/C framework has been developed in strict adherence to the documented <a class="extern" target="_blank" href="http://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"><strong>Quantum Leaps Coding Standard</strong></a>.
+The QP/C framework has been developed in strict adherence to the documented <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"><strong>Quantum Leaps Coding Standard</strong></a>.
 
 @htmlonly
 <div class="image">
-<a target="_blank" href="http://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"><img border="0" src="img/AN_Coding_Standard.jpg " title="Download PDF"></a>
+<a target="_blank" href="https://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"><img border="0" src="img/AN_Coding_Standard.jpg " title="Download PDF"></a>
 <div class="caption">
 Application Note: Quantum Leaps C/C++ Coding Standard
 </div>
@@ -106,14 +106,14 @@ Application Note: Quantum Leaps C/C++ Coding Standard
 
 @htmlonly
 <div class="image">
-<a target="_blank" href="http://www.state-machine.com/doc/AN_QP-nano_MISRA.pdf"><img border="0" src="img/AN_MISRA-QPn.jpg" title="Download PDF"></a>
+<a target="_blank" href="https://www.state-machine.com/doc/AN_QP-nano_MISRA.pdf"><img border="0" src="img/AN_MISRA-QPn.jpg" title="Download PDF"></a>
 <div class="caption">
 Application Note: QP-nano MISRA-C:2004 Compliance Matrix
 </div>
 </div>
 @endhtmlonly
 
-All deviations are carefully limited into very specific contexts and are documented with the Application Note: <a class="extern" target="_blank" href="http://www.state-machine.com/doc/AN_QP-nano_MISRA.pdf"><strong>QP-nano MISRA-C:2004 Compliance Matrix</strong></a>.
+All deviations are carefully limited into very specific contexts and are documented with the Application Note: <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_QP-nano_MISRA.pdf"><strong>QP-nano MISRA-C:2004 Compliance Matrix</strong></a>.
 
 @note
 MISRA and MISRA C are registered trademarks of MIRA Ltd, held on behalf of the MISRA Consortium.

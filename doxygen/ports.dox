@@ -23,7 +23,7 @@ All ports are located in sub-directories of the <span class="img folder">ports</
     <li><span class="img folder">arm-cm</span> &mdash; Native ports for ARM-Cortex-M (bare-metal) <span class="tag">A</span>
     </li>
     <ul class="tag">
-      <li><span class="img folder">qk</span> &mdash; Port to the @ref comp_qk "preemptive QK kernel" 
+      <li><span class="img folder">qk</span> &mdash; Port to the @ref comp_qk "preemptive QK kernel"
       </li>
       <ul class="tag">
         <li><span class="img folder">arm</span> &mdash; Port to ARM-KEIL toolset
@@ -35,15 +35,15 @@ All ports are located in sub-directories of the <span class="img folder">ports</
           </li>
           <li><span class="img folder">spy</span> &mdash; Spy build configuration
           </li>
-        </ul>  
+        </ul>
         <li><span class="img folder">gnu</span> &mdash; Port to GNU toolset
         </li>
         <li><span class="img folder">iar</span> &mdash; Port to IAR toolset
         </li>
-      </ul>  
-    </ul>  
+      </ul>
+    </ul>
     <ul class="tag">
-      <li><span class="img folder">qv</span> &mdash; Port to the @ref comp_qv "cooperative QV kernel" 
+      <li><span class="img folder">qv</span> &mdash; Port to the @ref comp_qv "cooperative QV kernel"
       </li>
       <ul class="tag">
         <li><span class="img folder">arm</span> &mdash; Port to ARM-KEIL toolset
@@ -55,31 +55,31 @@ All ports are located in sub-directories of the <span class="img folder">ports</
           </li>
           <li><span class="img folder">spy</span> &mdash; Spy build configuration
           </li>
-        </ul>  
+        </ul>
         <li><span class="img folder">gnu</span> &mdash; Port to GNU toolset
         </li>
         <li><span class="img folder">iar</span> &mdash; Port to IAR toolset
         </li>
-      </ul>  
-    </ul>  
+      </ul>
+    </ul>
 
     <li><span class="img folder">win32-qv</span> &mdash; Port to Win32-QV (Windows) <span class="tag">B</span>
-    </li>  
+    </li>
     <li><span class="img folder">posix-qv</span> &mdash; Port to POSIX-QV (Linux, BSD, etc.) <span class="tag">B</span>
-    </li>  
-  </ul>  
-</ul>    
+    </li>
+  </ul>
+</ul>
 
 <ul class="tag">
   <li><span class="tag">A</span> **Native Ports** are located in sub-directories named after the CPU architecture, such as <span class="img folder">arm-cm</span> for ARM Cortex-M. Under that directory, the sub-directories <span class="img folder">qk</span> and <span class="img folder">qv</span> contain ports for the @ref comp_qk "QK" and @ref comp_qv "QV" kernels, respectively.
   </li>
-  
+
   <li><span class="tag">B</span> **Ports for 3rd-party OS** are located in sub-directories named after the OS, such as <span class="img folder">win32-qv</span> for the Win32-QV (Windows with QV-type scheduler).
   </li>
 </ul>
 
 @note
-Because the QP distribution contains *all* ports, the number of sub-directories and files in the <span class="img folder">ports</span> folder may seem daunting. However, knowing the structure of the <span class="img folder">ports</span> folder, you can simply **delete** the sub-directories that are not interesting to you. 
+Because the QP distribution contains *all* ports, the number of sub-directories and files in the <span class="img folder">ports</span> folder may seem daunting. However, knowing the structure of the <span class="img folder">ports</span> folder, you can simply **delete** the sub-directories that are not interesting to you.
 
 
 @next{ports_native}
