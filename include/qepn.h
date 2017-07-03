@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Product: QEP-nano
-* Last updated for version 5.8.2
+* Last updated for version 5.9.3
 * Last updated on  2017-02-08
 *
 *                    Q u a n t u m     L e a P s
@@ -33,7 +33,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -46,16 +46,16 @@
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      582
+#define QP_VERSION      593
 
 /*! The current QP version number string of the form X.Y.Z, where X is
 * a 1-digit major version number, Y is a 1-digit minor version number,
 * and Z is a 1-digit release number.
 */
-#define QP_VERSION_STR  "5.8.2"
+#define QP_VERSION_STR  "5.9.3"
 
-/*! Tamperproof current QP release (5.8.2) and date (2017-02-08) */
-#define QP_RELEASE      0x9A8C4FB9U
+/*! Tamperproof current QP release (5.9.3) and date (2017-07-03) */
+#define QP_RELEASE      0x9A40C7BEU
 
 
 /****************************************************************************/

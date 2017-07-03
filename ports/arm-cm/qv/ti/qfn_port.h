@@ -1,16 +1,17 @@
 /**
 * @file
-* @brief QF-nano port to Cortex-M, cooperative QV kernel, TI-ARM CCS toolset
+* @brief QF-nano port to Cortex-M, cooperative QV-nano kernel,
+* TI-ARM CCS toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.8.1
-* Date of the Last Update:  2016-12-16
+* Last Updated for Version: 5.9.3
+* Date of the Last Update:  2017-07-03
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2017 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,7 +32,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -44,31 +45,39 @@
     || (defined __TI_TMS470_V7M4__) \
     || (defined __TI_TMS470_V7M7__)
 
+    /* Cortex-M3/M4/M7 alternative interrupt disabling with PRIMASK */
+    #define QF_PRIMASK_DISABLE() __asm(" CPSID I")
+    #define QF_PRIMASK_ENABLE()  __asm(" CPSIE I")
+
+    /* Cortex-M3/M4/M7 interrupt disabling policy, see NOTE3 */
+    #define QF_INT_DISABLE() do { \
+        QF_PRIMASK_DISABLE(); \
+        QF_set_BASEPRI(QF_BASEPRI); \
+        QF_PRIMASK_ENABLE(); \
+    } while (0)
+    #define QF_INT_ENABLE()      QF_set_BASEPRI(0U)
+
     /* BASEPRI limit for QF-aware ISR priorities, see NOTE3 */
     #define QF_BASEPRI          (0xFFU >> 2)
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4 */
     #define QF_AWARE_ISR_CMSIS_PRI  (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
-    /* QF interrupt disable/enable */
-    #define QF_INT_DISABLE()    QF_set_BASEPRI(QF_BASEPRI)
-    #define QF_INT_ENABLE()     QF_set_BASEPRI(0U)
-
-    /* the intrinsic function _norm() generates the CLZ instruction */
-    #define QF_LOG2(n_) ((uint8_t)(32U - _norm(n_)))
+    /* Cortex-M3/M4/M7 provide the CLZ instruction for fast LOG2 */
+    #define QF_LOG2(n_) ((uint_fast8_t)(32U - __clz(n_)))
 
     /* macro to put the CPU to sleep inside QV_onIdle() */
     #define QV_CPU_SLEEP() do { \
-        __asm(" CPSID I"); \
+        QF_PRIMASK_DISABLE(); \
         QF_INT_ENABLE(); \
         __asm(" WFI"); \
-        __asm(" CPSIE I"); \
+        QF_PRIMASK_ENABLE(); \
     } while (0)
 
     /* assembly function for setting the BASEPRI register */
     void QF_set_BASEPRI(unsigned basePri);
 
-    /* initialization of the QV kernel for Cortex-M3/M4/M4F */
+    /* initialization of the QV kernel for Cortex-M3/M4/M7 */
     #define QV_INIT() QV_init()
     void QV_init(void);
 
@@ -101,6 +110,12 @@
 #include "qvn.h"        /* QV-nano platform-independent public interface */
 
 /*****************************************************************************
+* NOTE1:
+* On Cortex-M0/M0+/M1 (architecture v6-M, v6S-M), the interrupt disabling
+* policy uses the PRIMASK register to disable interrupts globally. The
+* QF_AWARE_ISR_CMSIS_PRI level is zero, meaning that all interrupts are
+* "kernel-aware".
+*
 * NOTE2:
 * On Cortex-M3/M4/M7, the interrupt disable/enable policy uses the BASEPRI
 * register (which is not implemented in Cortex-M0/M0+/M1) to disable
@@ -113,10 +128,11 @@
 * higher than QF_BASEPRI, can call QF services.
 *
 * NOTE3:
-* For Cortex-M3/M4/M7, the macro QF_BASEPRI leaves the top 2 priority bits
-* empty for QF-aware interrupts. This is the highest-possible priority
-* (lowest possible numerical value) for the guaranteed 3 priority bits
-* implemented in the NVIC.
+* The selective disabling of "QF-aware" interrupts with the BASEPRI register
+* has a problem on ARM Cortex-M7 core r0p1 (see ARM-EPM-064408, errata
+* 837070). The workaround recommended by ARM is to surround MSR BASEPRI with
+* the CPSID i/CPSIE i pair, which is implemented in the QF_INT_DISABLE()
+* macro. This workaround works also for Cortex-M3/M4 cores.
 *
 * NOTE4:
 * The QF_AWARE_ISR_CMSIS_PRI macro is useful as an offset for enumerating
@@ -130,12 +146,6 @@
 * the macro QF_AWARE_ISR_CMSIS_PRI is intended only for applications and
 * is not used inside the QF port, which remains generic and not dependent
 * on the number of implemented priority bits in the NVIC.
-*
-* NOTE5:
-* On Cortex-M0/M0+/M1 (architecture v6-M, v6S-M), the interrupt disabling
-* policy uses the PRIMASK register to disable interrupts globally. The
-* QF_AWARE_ISR_CMSIS_PRI level is zero, meaning that all interrupts are
-* "kernel-aware".
 */
 
 #endif /* qfn_port_h */

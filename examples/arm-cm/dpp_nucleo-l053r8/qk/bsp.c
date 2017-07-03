@@ -224,6 +224,12 @@ void Q_onAssert(char const Q_ROM * const Q_ROM_VAR module, int loc) {
     (void)module;
     (void)loc;
 
+#ifndef NDEBUG
+    GPIOA->BSRR |= LED_LD2;  /* turn LED on  */
+    for (;;) {
+    }
+#endif
+
     NVIC_SystemReset();
 }
 

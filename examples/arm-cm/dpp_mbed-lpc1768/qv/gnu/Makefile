@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: Makefile for QP-nano, DPP on mbed-LPC1768, QV kernel, GNU-ARM
-# Last Updated for Version: 5.6.1
-# Date of the Last Update:  2016-01-10
+# Last Updated for Version: 5.9.3
+# Date of the Last Update:  2017-07-03
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -132,7 +132,7 @@ FLOAT_ABI :=
 # see http://gnutoolchains.com/arm-eabi/
 #
 ifeq ($(GNU_ARM),)
-GNU_ARM = C:/tools/gnu_arm-eabi
+GNU_ARM = $(QTOOLS)/gnu_arm-eabi
 endif
 
 # make sure that the GNU-ARM toolset exists...

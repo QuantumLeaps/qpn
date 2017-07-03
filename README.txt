@@ -51,6 +51,24 @@ mailto:info@state-machine.com
 ################### QP-nano Revision History ##########################
 
 
+QP-nano Version 5.9.3 (03-Jul-2017)
+-----------------------------------
+This release fixes the following bugs:
+
+- bug#176 "Incorrect initialization of PendSV interrupt priority in
+QK-nano for ARM Cortex-M0/M0+"
+(https://sourceforge.net/p/qpc/bugs/176/)
+
+- bug#162 "QF critical sections require modification for M7 core"
+https://sourceforge.net/p/qpc/bugs/162/
+
+Additionally, this release adapts the Makefiles for GNU-ARM to the new
+location of the GNU-ARM toolset, which is now included in the QTools
+Collection (v 5.9.1) for Windows.
+
+This release also upgrades CMSIS to version 5.0.2.
+
+
 QP-nano Version 5.8.2 (08-Feb-2017)
 -----------------------------------
 This release improves compatibility of assertion numbering between

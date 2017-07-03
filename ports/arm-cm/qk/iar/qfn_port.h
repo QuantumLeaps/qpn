@@ -1,16 +1,16 @@
 /**
 * @file
-* @brief QF-nano port to Cortex-M, preemptive QK kernel, IAR-ARM toolset
+* @brief QF-nano port to Cortex-M, preemptive QK-nano kernel, IAR-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.8.1
-* Date of the Last Update:  2016-12-16
+* Last Updated for Version: 5.9.3
+* Date of the Last Update:  2017-07-03
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2017 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,7 +31,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -45,22 +45,31 @@
     #define QF_INT_DISABLE()    __disable_interrupt()
     #define QF_INT_ENABLE()     __enable_interrupt()
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE1 */
     #define QF_AWARE_ISR_CMSIS_PRI 0
 
-#else /* Cortex-M3/M4/M7, see NOTE3 */
+#else /* Cortex-M3/M4/M7, see NOTE2 */
 
-    #define QF_INT_DISABLE()    __set_BASEPRI(QF_BASEPRI)
-    #define QF_INT_ENABLE()     __set_BASEPRI(0U)
+    /* Cortex-M3/M4/M7 alternative interrupt disabling with PRIMASK */
+    #define QF_PRIMASK_DISABLE() __disable_interrupt()
+    #define QF_PRIMASK_ENABLE()  __enable_interrupt()
 
-    /* NOTE: keep in synch with the value defined in "qk_port.s", see NOTE3 */
+    /* Cortex-M3/M4/M7 interrupt disabling policy, see NOTE3 */
+    #define QF_INT_DISABLE() do { \
+        QF_PRIMASK_DISABLE(); \
+        QF_set_BASEPRI(QF_BASEPRI); \
+        QF_PRIMASK_ENABLE(); \
+    } while (0)
+    #define QF_INT_ENABLE()      QF_set_BASEPRI(0U)
+
+    /* NOTE: keep in synch with the value defined in "qk_port.s" */
     #define QF_BASEPRI          (0xFFU >> 2)
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4 */
     #define QF_AWARE_ISR_CMSIS_PRI (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))
 
     /* Cortex-M3/M4/M7 provide the CLZ instruction for fast LOG2 */
-    #define QF_LOG2(n_) ((uint8_t)(32U - __CLZ(n_)))
+    #define QF_LOG2(n_) ((uint_fast8_t)(32U - __CLZ(n_)))
 #endif
 
 /* interrupt nesting policy for ISR level (ISRs can nest) */
@@ -106,10 +115,11 @@ void QK_init(void);
 * higher than QF_BASEPRI, can call QF services.
 *
 * NOTE3:
-* For Cortex-M3/M4/M7, the macro QF_BASEPRI leaves the top 2 priority bits
-* empty for QF-aware interrupts. This is the highest-possible priority
-* (lowest possible numerical value) for the guaranteed 3 priority bits
-* implemented in the NVIC.
+* The selective disabling of "QF-aware" interrupts with the BASEPRI register
+* has a problem on ARM Cortex-M7 core r0p1 (see ARM-EPM-064408, errata
+* 837070). The workaround recommended by ARM is to surround MSR BASEPRI with
+* the CPSID i/CPSIE i pair, which is implemented in the QF_INT_DISABLE()
+* macro. This workaround works also for Cortex-M3/M4 cores.
 *
 * NOTE4:
 * The QF_AWARE_ISR_CMSIS_PRI macro is useful as an offset for enumerating
