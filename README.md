@@ -1,3 +1,5 @@
+![QP framework](https://state-machine.com/img/qpn_banner.jpg)
+
 What's New?
 ===========
 Scroll down a bit to the section "QP-nano Revision History".
