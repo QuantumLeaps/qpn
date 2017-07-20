@@ -189,7 +189,7 @@
  QACTIVE_POST_X,
  QACTIVE_POST_ISR,
  QACTIVE_POST_X_ISR)
--emacro(950,          // MISRA04-2.1(req) assembly language 
+-emacro(950,          // MISRA04-2.1(req) assembly language
  QF_INT_DISABLE,
  QF_INT_ENABLE,
  QF_ISR_DISABLE,
@@ -227,7 +227,7 @@
  QActive_postISR)
 
 // QK-nano
--emacro(950,          // MISRA04-2.1(req) assembly language 
+-emacro(950,          // MISRA04-2.1(req) assembly language
  QK_ISR_ENTRY,
  QK_ISR_EXIT)
 -esym(960,            // MISRA04-19.4(req) Disallowed macro definition

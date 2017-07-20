@@ -1,6 +1,12 @@
 /**
 @page history Revision History
 
+@section qpn_5_9_5 Version 5.9.5, 2017-07-20
+This release fixes the following bug:
+- <a href="https://sourceforge.net/p/qpc/bugs/178/" class="extern">bug#178</a> "GNU-ARM compiler reports "Error: unaligned opcodes..." in startup code for QP/C/C++/nano examples". The bug fix entails modifying the startup code for the GNU-ARM compiler in the `3rd_party` directory. Specifically, the proper alignment directives have been added to the inline assembly in the exception handlers.
+
+
+------------------------------------------------------------------------------
 @section qpn_5_9_3 Version 5.9.3, 2017-07-03
 This release fixes the following bugs:
 
