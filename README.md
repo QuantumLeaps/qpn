@@ -1,8 +1,9 @@
 ![QP-nano framework](https://state-machine.com/img/qpn_banner.jpg)
 
+> **NOTE:** If your company has a policy forbidding open source in your product, all QP frameworks can be [licensed commercially](https://state-machine.com/licensing), in which case you don't use any open source license and you do not violate your policy.
+
 # What's New?
-View QP-nano Revision History at: 
-https://state-machine.com/qpn/history.html
+View QP-nano Revision History at: https://state-machine.com/qpn/history.html
 
 ---------------------------------------------------------------------------
 # About QP-nano
@@ -66,14 +67,19 @@ https://state-machine.com/doc/AN_Getting_Started_with_QP-nano.pdf
 The guide also contains a tutorial, in which you build a simple "Blinky"
 application.
 
-> NOTE: QP-nano can be unzipped anywhere in your file system, but the
+> **NOTE:** QP-nano can be unzipped anywhere in your file system, but the
 recommended location is `C:\qp\qpn` on Windows and `~/qp/qpn`
 on Linux/MacOS.
 
 ---------------------------------------------------------------------------
+# QP-nano Licensing
+QP-nano is licensed under the increasingly popular [dual licensing model](https://state-machine.com/licensing), in which both the open source software distribution mechanism and traditional closed source software distribution models are combined.
+
+> **NOTE:** If your company has a policy forbidding open source in your product, all QP frameworks can be [licensed commercially](https://state-machine.com/licensing), in which case you don't use any open source license and you do not violate your policy.
+
+---------------------------------------------------------------------------
 # QP-nano Documentation
-The **QP-nano Manual** is located online at:
-- https://state-machine.com/qpn
+The **QP-nano Manual** is located online at: https://state-machine.com/qpn
 
 ---------------------------------------------------------------------------
 # How to get help?
