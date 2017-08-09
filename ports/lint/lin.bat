@@ -1,8 +1,8 @@
 @echo off
 :: ===========================================================================
 :: Product: QP-nano build script for PC-Lint(TM), Standard C compiler
-:: Last Updated for Version: 5.8.0
-:: Date of the Last Update:  2016-11-18
+:: Last Updated for Version: 5.9.6
+:: Date of the Last Update:  2017-08-04
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
@@ -29,7 +29,7 @@
 :: along with this program. If not, see <http://www.gnu.org/licenses/>.
 ::
 :: Contact information:
-:: http://www.state-machine.com
+:: https://state-machine.com
 :: mailto:info@state-machine.com
 :: ===========================================================================
 setlocal
@@ -50,8 +50,8 @@ if NOT exist "%PC_LINT%" (
 set LINTFLAGS=..\..\include\std.lnt options.lnt %1 %2 %3 %4
 
 :: do the linting...
-%PC_LINT%\lint-nt -os(lint_qpn.log) %LINTFLAGS% -iqvn ..\..\source\qepn.c ..\..\source\qfn.c ..\..\source\qvn.c
-
-%PC_LINT%\lint-nt -os(lint_qkn.log)  %LINTFLAGS% -iqkn ..\..\source\qfn.c ..\..\source\qkn.c
+%PC_LINT%\lint-nt -os(lint_qfn.log) %LINTFLAGS% -iqvn ..\..\src\qfn\*.c
+%PC_LINT%\lint-nt -os(lint_qkn.log) %LINTFLAGS% -iqkn ..\..\src\qkn\*.c
+%PC_LINT%\lint-nt -os(lint_qvn.log) %LINTFLAGS% -iqvn ..\..\src\qvn\*.c
 
 endlocal

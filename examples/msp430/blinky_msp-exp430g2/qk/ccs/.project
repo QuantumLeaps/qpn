@@ -26,9 +26,14 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>QKn</name>
+			<type>2</type>
+			<locationURI>PARENT-5-PROJECT_LOC/src/qkn</locationURI>
+		</link>
+		<link>
 			<name>QP</name>
 			<type>2</type>
-			<locationURI>PARENT-5-PROJECT_LOC/source</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/src/qfn</locationURI>
 		</link>
 		<link>
 			<name>QP_port</name>

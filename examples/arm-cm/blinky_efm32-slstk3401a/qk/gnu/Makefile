@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: QP-nano Makefile, Blinky on EMF32-SLSTK3401A, QK kernel, GNU-ARM
-# Last Updated for Version: 5.9.3
-# Date of the Last Update:  2017-07-03
+# Last Updated for Version: 5.9.6
+# Date of the Last Update:  2017-08-04
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -67,7 +67,8 @@ QP_PORT_DIR := $(QPN)/ports/arm-cm/qk/gnu
 VPATH = \
 	.. \
 	../.. \
-	$(QPN)/source \
+	$(QPN)/src/qfn \
+	$(QPN)/src/qkn \
 	$(QP_PORT_DIR) \
 	$(QPN)/3rd_party/efm32pg1b \
 	$(QPN)/3rd_party/efm32pg1b/gnu
@@ -76,7 +77,6 @@ VPATH = \
 INCLUDES  = \
 	-I../.. \
 	-I$(QPN)/include \
-	-I$(QPN)/source \
 	-I$(QP_PORT_DIR) \
 	-I$(QPN)/3rd_party/CMSIS/Include \
 	-I$(QPN)/3rd_party/efm32pg1b

@@ -68,7 +68,9 @@ PROJECT := $(notdir $(CURDIR))
 QP_PORT_DIR := $(QPN)/ports/posix-qv
 APP_DIR     := .
 
-VPATH = $(APP_DIR)
+VPATH = \
+	$(APP_DIR) \
+	$(QPN)/src/qfn
 
 # include directories
 INCLUDES  = -I. \
@@ -98,7 +100,7 @@ QP_SRCS := \
 
 
 # combine all the soruces...
-VPATH += $(QPN)/source $(QP_PORT_DIR)
+VPATH += $(QP_PORT_DIR)
 C_SRCS += $(QP_SRCS)
 
 ifeq (rel, $(CONF)) # Release configuration ..................................

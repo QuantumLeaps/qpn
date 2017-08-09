@@ -5,8 +5,8 @@
 * @cond
 ******************************************************************************
 * Product: QEP-nano
-* Last updated for version 5.9.5
-* Last updated on  2017-07-19
+* Last updated for version 5.9.6
+* Last updated on  2017-08-04
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -46,16 +46,16 @@
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      595
+#define QP_VERSION      596
 
 /*! The current QP version number string of the form X.Y.Z, where X is
 * a 1-digit major version number, Y is a 1-digit minor version number,
 * and Z is a 1-digit release number.
 */
-#define QP_VERSION_STR  "5.9.5"
+#define QP_VERSION_STR  "5.9.6"
 
-/*! Tamperproof current QP release (5.9.5) and date (2017-07-20) */
-#define QP_RELEASE      0x9A3E2FACU
+/*! Tamperproof current QP release (5.9.6) and date (2017-08-04) */
+#define QP_RELEASE      0x9A315E6BU
 
 
 /****************************************************************************/

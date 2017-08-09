@@ -205,7 +205,7 @@ int const g_pfnVectors[] = {
     (int)&Default_Handler, //(int)&GPIOPortC_IRQHandler,   /* GPIO Port C                     */
     (int)&Default_Handler, //(int)&GPIOPortD_IRQHandler,   /* GPIO Port D                     */
     (int)&Default_Handler, //(int)&GPIOPortE_IRQHandler,   /* GPIO Port E                     */
-    (int)&UART0_IRQHandler,       /* UART0 Rx and Tx                 */
+    (int)&Default_Handler, //(int)&UART0_IRQHandler,       /* UART0 Rx and Tx                 */
     (int)&Default_Handler, //(int)&UART1_IRQHandler,       /* UART1 Rx and Tx                 */
     (int)&Default_Handler, //(int)&SSI0_IRQHandler,        /* SSI0 Rx and Tx                  */
     (int)&Default_Handler, //(int)&I2C0_IRQHandler,        /* I2C0 Master and Slave           */

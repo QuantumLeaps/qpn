@@ -645,7 +645,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\source\qepn.c</PathWithFileName>
+      <PathWithFileName>..\..\..\..\..\src\qfn\qepn.c</PathWithFileName>
       <FilenameWithoutPath>qepn.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -658,7 +658,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\source\qfn.c</PathWithFileName>
+      <PathWithFileName>..\..\..\..\..\src\qfn\qfn.c</PathWithFileName>
       <FilenameWithoutPath>qfn.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -671,7 +671,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\source\qkn.c</PathWithFileName>
+      <PathWithFileName>..\..\..\..\..\src\qkn\qkn.c</PathWithFileName>
       <FilenameWithoutPath>qkn.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>

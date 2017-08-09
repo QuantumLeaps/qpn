@@ -1,7 +1,7 @@
 ##############################################################################
 # Product: Makefile for QP-nano, DPP on NUCLEO-L152RE, QV kernel, GNU-ARM
-# Last Updated for Version: 5.9.3
-# Date of the Last Update:  2017-07-03
+# Last Updated for Version: 5.9.6
+# Date of the Last Update:  2017-08-04
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
@@ -67,7 +67,8 @@ QP_PORT_DIR := $(QPN)/ports/arm-cm/qv/gnu
 VPATH = \
 	.. \
 	../.. \
-	$(QPN)/source \
+	$(QPN)/src/qfn \
+	$(QPN)/src/qvn \
 	$(QP_PORT_DIR) \
 	$(QPN)/3rd_party/nucleo-l152re \
 	$(QPN)/3rd_party/nucleo-l152re/gnu
@@ -76,7 +77,6 @@ VPATH = \
 INCLUDES  = \
 	-I../.. \
 	-I$(QPN)/include \
-	-I$(QPN)/source \
 	-I$(QP_PORT_DIR) \
 	-I$(QPN)/3rd_party/CMSIS/Include \
 	-I$(QPN)/3rd_party/nucleo-l152re
@@ -106,7 +106,8 @@ LD_SCRIPT := $(PROJECT).ld
 QP_SRCS := \
 	qepn.c \
 	qfn.c \
-	qvn.c
+	qvn.c \
+	qvn_port.c
 
 QP_ASMS :=
 

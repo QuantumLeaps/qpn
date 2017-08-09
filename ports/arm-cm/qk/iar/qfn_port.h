@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, preemptive QK-nano kernel, IAR-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.9.3
-* Date of the Last Update:  2017-07-03
+* Last Updated for Version: 5.9.6
+* Date of the Last Update:  2017-08-04
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -57,10 +57,10 @@
     /* Cortex-M3/M4/M7 interrupt disabling policy, see NOTE3 */
     #define QF_INT_DISABLE() do { \
         QF_PRIMASK_DISABLE(); \
-        QF_set_BASEPRI(QF_BASEPRI); \
+        __set_BASEPRI(QF_BASEPRI); \
         QF_PRIMASK_ENABLE(); \
     } while (0)
-    #define QF_INT_ENABLE()      QF_set_BASEPRI(0U)
+    #define QF_INT_ENABLE()      __set_BASEPRI(0U)
 
     /* NOTE: keep in synch with the value defined in "qk_port.s" */
     #define QF_BASEPRI          (0xFFU >> 2)

@@ -1,6 +1,27 @@
 /**
 @page history Revision History
 
+@section qpn_5_9_6 Version 5.9.6, 2017-08-04
+This release changes the organization of the QP-nano source code to make it more friendly for the Eclipse CDT, as proposed in the <a href="https://sourceforge.net/p/qpc/feature-requests/123/" target="_blank" class="extern">feature request #123 "Eclipse-friendly source directory structure for QP"</a>. Specifically, the QP-nano source code is now provided in the `qpn/src/` directory with the following structure:
+
+@verbatim
+qpn\
+  +-source\  - exitsting source directory with "flat" structure
+  |            (for backwards-compatibility)
+  +-src\     - new source directory grouped by functionality
+     +-qfn\  - core framework (QEP-nano + QF-nano)
+     +-qkn\  - QK-nano kernel
+     +-qvn\  - QV-nano kernel
+@endverbatim
+
+This release consistently changes all example projects (for all toolchains) to use the **src/** directory for QP-nano source code, instead of the **source/** directory.
+
+@note The original `qpn/source` directory is still provided for backwards compatibility with the existing QP-nano projects. This directory will be phased out in the future QP-nano releases. Please use the new source code structure provided in the `qpn/src` directory.
+
+Finally, this release adds protection in the IRQ priorities initialization in QK-nano/QV-nano for ARM Cortex-M3/M4/M7, so that the number of IRQs is extracted from bits 0-2 of the ICTR register (INTLINESNUM).
+
+
+------------------------------------------------------------------------------
 @section qpn_5_9_5 Version 5.9.5, 2017-07-20
 This release fixes the following bug:
 - <a href="https://sourceforge.net/p/qpc/bugs/178/" class="extern">bug#178</a> "GNU-ARM compiler reports "Error: unaligned opcodes..." in startup code for QP/C/C++/nano examples". The bug fix entails modifying the startup code for the GNU-ARM compiler in the `3rd_party` directory. Specifically, the proper alignment directives have been added to the inline assembly in the exception handlers.

@@ -4,8 +4,8 @@
 * TI-ARM CCS toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.9.3
-* Date of the Last Update:  2017-07-03
+* Last Updated for Version: 5.9.6
+* Date of the Last Update:  2017-08-04
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -80,6 +80,9 @@
     #define QF_AWARE_ISR_CMSIS_PRI  0
 
 #endif /* not M3/M4/M7 */
+
+/* wait for interrupt */
+#define __WFI()    __asm(" WFI")
 
 /* interrupt nesting policy for ISR level (ISRs can nest) */
 #define QF_ISR_NEST

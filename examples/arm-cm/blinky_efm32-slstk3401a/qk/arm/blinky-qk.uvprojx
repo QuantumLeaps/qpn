@@ -334,7 +334,7 @@
               <MiscControls></MiscControls>
               <Define>EFM32PG1B200F256GM48=1 __FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..;..\..\..\..\..\include;..\..\..\..\..\source;..\..\..\..\..\ports\arm-cm\qk\arm;..\..\..\..\..\3rd_party\CMSIS\Include;..\..\..\..\..\3rd_party\efm32pg1b</IncludePath>
+              <IncludePath>..\..;..\..\..\..\..\include;..\..\..\..\..\ports\arm-cm\qk\arm;..\..\..\..\..\3rd_party\CMSIS\Include;..\..\..\..\..\3rd_party\efm32pg1b</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -455,17 +455,17 @@
             <File>
               <FileName>qepn.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\source\qepn.c</FilePath>
+              <FilePath>..\..\..\..\..\src\qfn\qepn.c</FilePath>
             </File>
             <File>
               <FileName>qfn.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\source\qfn.c</FilePath>
+              <FilePath>..\..\..\..\..\src\qfn\qfn.c</FilePath>
             </File>
             <File>
               <FileName>qkn.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\source\qkn.c</FilePath>
+              <FilePath>..\..\..\..\..\src\qkn\qkn.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -809,7 +809,7 @@
               <MiscControls></MiscControls>
               <Define>NDEBUG EFM32PG1B200F256GM48=1 __FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..;..\..\..\..\..\include;..\..\..\..\..\source;..\..\..\..\..\ports\arm-cm\qk\arm;..\..\..\..\..\3rd_party\CMSIS\Include;..\..\..\..\..\3rd_party\efm32pg1b</IncludePath>
+              <IncludePath>..\..;..\..\..\..\..\include;..\..\..\..\..\ports\arm-cm\qk\arm;..\..\..\..\..\3rd_party\CMSIS\Include;..\..\..\..\..\3rd_party\efm32pg1b</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -930,17 +930,17 @@
             <File>
               <FileName>qepn.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\source\qepn.c</FilePath>
+              <FilePath>..\..\..\..\..\src\qfn\qepn.c</FilePath>
             </File>
             <File>
               <FileName>qfn.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\source\qfn.c</FilePath>
+              <FilePath>..\..\..\..\..\src\qfn\qfn.c</FilePath>
             </File>
             <File>
               <FileName>qkn.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\source\qkn.c</FilePath>
+              <FilePath>..\..\..\..\..\src\qkn\qkn.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "QP-nano"
-PROJECT_NUMBER         = "5.9.5"
+PROJECT_NUMBER         = "5.9.6"
 PROJECT_BRIEF          =
 PROJECT_LOGO           = images/header_logo_ql.png
 OUTPUT_DIRECTORY       =
@@ -125,7 +125,9 @@ INPUT                  = \
     metrics.dox \
     modules.dox \
     ../include \
-    ../source \
+    ../src/qfn \
+    ../src/qvn \
+    ../src/qkn \
     ../ports/lint \
     ../ports/lint/qkn \
     ../ports/lint/qvn \
@@ -151,7 +153,9 @@ EXCLUDE_SYMBOLS        =
 EXAMPLE_PATH           = \
     snippets \
     ../include \
-    ../source \
+    ../src/qfn \
+    ../src/qvn \
+    ../src/qkn \
     ../ports \
     ../examples
 

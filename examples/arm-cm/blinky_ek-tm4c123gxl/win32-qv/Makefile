@@ -66,7 +66,8 @@ QP_PORT_DIR := $(QPN)/ports/win32-qv
 # list of all source directories used by this project
 VPATH = \
 	. \
-	..
+	.. \
+	$(QPN)/src/qfn
 
 # list of all include directories needed by this project
 INCLUDES  = \
@@ -167,8 +168,8 @@ endif
 #-----------------------------------------------------------------------------
 
 # combine all the soruces...
-INCLUDES += -I$(QPN)/source -I$(QP_PORT_DIR)
-VPATH    += $(QPN)/source $(QP_PORT_DIR)
+INCLUDES += -I$(QP_PORT_DIR)
+VPATH    += $(QP_PORT_DIR)
 C_SRCS   += $(QP_SRCS)
 
 C_OBJS       := $(patsubst %.c,   %.o, $(C_SRCS))

@@ -28,12 +28,17 @@
 		<link>
 			<name>QP</name>
 			<type>2</type>
-			<locationURI>PARENT-5-PROJECT_LOC/source</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/src/qfn</locationURI>
 		</link>
 		<link>
 			<name>QP_port</name>
 			<type>2</type>
 			<locationURI>PARENT-5-PROJECT_LOC/ports/msp430/qv/ccs</locationURI>
+		</link>
+		<link>
+			<name>QVn</name>
+			<type>2</type>
+			<locationURI>PARENT-5-PROJECT_LOC/src/qvn</locationURI>
 		</link>
 		<link>
 			<name>bsp.c</name>

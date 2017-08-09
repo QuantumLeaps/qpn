@@ -45,7 +45,7 @@
     #define QF_INT_DISABLE()    __asm volatile ("cpsid i")
     #define QF_INT_ENABLE()     __asm volatile ("cpsie i")
 
-    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE1 */
+    /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
     #define QF_AWARE_ISR_CMSIS_PRI  0
 
 #else /* Cortex-M3/M4/M7, see NOTE2 */

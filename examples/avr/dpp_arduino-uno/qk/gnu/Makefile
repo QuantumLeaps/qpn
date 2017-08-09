@@ -67,14 +67,14 @@ QP_PORT_DIR := $(QPN)/ports/avr/qk/gnu
 VPATH = \
 	.. \
 	../.. \
-	$(QPN)/source \
+	$(QPN)/src/qfn \
+	$(QPN)/src/qkn \
 	$(QP_PORT_DIR)
 
 # list of all include directories needed by this project
 INCLUDES  = \
 	-I../.. \
 	-I$(QPN)/include \
-	-I$(QPN)/source \
 	-I$(QP_PORT_DIR)
 
 #-----------------------------------------------------------------------------

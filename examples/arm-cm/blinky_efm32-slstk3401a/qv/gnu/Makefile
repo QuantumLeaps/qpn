@@ -67,7 +67,8 @@ QP_PORT_DIR := $(QPN)/ports/arm-cm/qv/gnu
 VPATH = \
 	.. \
 	../.. \
-	$(QPN)/source \
+	$(QPN)/src/qfn \
+	$(QPN)/src/qvn \
 	$(QP_PORT_DIR) \
 	$(QPN)/3rd_party/efm32pg1b \
 	$(QPN)/3rd_party/efm32pg1b/gnu
@@ -76,7 +77,6 @@ VPATH = \
 INCLUDES  = \
 	-I../.. \
 	-I$(QPN)/include \
-	-I$(QPN)/source \
 	-I$(QP_PORT_DIR) \
 	-I$(QPN)/3rd_party/CMSIS/Include \
 	-I$(QPN)/3rd_party/efm32pg1b

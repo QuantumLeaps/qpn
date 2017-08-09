@@ -86,7 +86,7 @@ The hallmark of the QP-nano implementation of UML state machines is **traceabili
 
 ------------------------------------------------------------------------------
 @section coding Coding Standard
-The QP/C framework has been developed in strict adherence to the documented <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"><strong>Quantum Leaps Coding Standard</strong></a>.
+The QP-nano framework has been developed in strict adherence to the documented <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_QL_Coding_Standard.pdf"><strong>Quantum Leaps Coding Standard</strong></a>.
 
 @htmlonly
 <div class="image">
@@ -129,4 +129,55 @@ The QP-nano framework comes with extensive support for automatic rule checking b
 @sa @ref lint "Lint Port"
 
 */
+
+/*##########################################################################*/
+/*! @dir ../include
+
+Platform-independent QP-nano API
+
+@note
+The QP-nano <span class="img folder">include</span> directory needs to be added to the compiler's include path in the applications using QP-nano.
+*/
+
+/*##########################################################################*/
+/*! @dir ../src
+
+Platform-independent QP-nano source code
+
+Files from this directory need to be added to the project, to build the QP-nano framework from source code.
+
+@note
+The QP-nano <span class="img folder">src</span> directory needs to be added to the compiler's include path in the applications that build QP-nano framework from sources (as opposed to using QP as a pre-built library).
+
+*/
+
+/*##########################################################################*/
+/*! @dir ../src/qfn
+
+Platform-independent implementation of the @ref qepn and @ref qfn components.
+
+@note
+Typically, files in this directory need to be added to the application build, but some QP ports might not need all the files in this directory. For example, a QP port to a 3rd-party RTOS kernel might be using a message queue of the RTOS instead of the native QP event queue, in which case the file qf_actq.c would not be needed and should be excluded from the build.
+
+*/
+
+/*##########################################################################*/
+/*! @dir ../src/qvn
+
+Platform-independent implementation of the @ref qvn built-in kernel.
+
+@attention
+Files in this directory need to be included in the QP application build only if the application uses the @ref qvn kernel.
+*/
+
+
+/*##########################################################################*/
+/*! @dir ../src/qkn
+
+Platform-independent implementation of the @ref qkn built-in kernel.
+
+@attention
+Files in this directory need to be included in the QP application build only if the application uses the @ref qkn kernel.
+*/
+
 

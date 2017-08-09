@@ -404,7 +404,6 @@
           <state>$PROJ_DIR$\.</state>
           <state>$PROJ_DIR$\..\..</state>
           <state>$PROJ_DIR$\..\..\..\..\..\include</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\source</state>
           <state>$PROJ_DIR$\..\..\..\..\..\ports\avr\qk\iar</state>
         </option>
         <option>
@@ -1451,7 +1450,6 @@
           <state>$PROJ_DIR$\.</state>
           <state>$PROJ_DIR$\..\..</state>
           <state>$PROJ_DIR$\..\..\..\..\..\include</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\source</state>
           <state>$PROJ_DIR$\..\..\..\..\..\ports\avr\qk\iar</state>
         </option>
         <option>
@@ -2117,13 +2115,13 @@
   <group>
     <name>QP</name>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\..\source\qepn.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\..\src\qfn\qepn.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\..\source\qfn.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\..\src\qfn\qfn.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\..\source\qkn.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\..\src\qkn\qkn.c</name>
     </file>
   </group>
 </project>

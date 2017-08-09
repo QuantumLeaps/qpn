@@ -1,6 +1,10 @@
 ![QP-nano framework](https://state-machine.com/img/qpn_banner.jpg)
 
-> **NOTE:** If your company has a policy forbidding open source in your product, all QP frameworks can be [licensed commercially](https://state-machine.com/licensing), in which case you don't use any open source license and you do not violate your policy.
+> **NOTE:** If your company has a policy forbidding open source in your
+product, all QP frameworks can be
+[licensed commercially](https://state-machine.com/licensing),
+in which case you don't use any open source license and you do not violate
+your policy.
 
 # What's New?
 View QP-nano Revision History at: https://state-machine.com/qpn/history.html

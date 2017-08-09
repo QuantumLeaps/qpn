@@ -67,7 +67,8 @@ QP_PORT_DIR := $(QPN)/ports/arm-cm/qk/gnu
 VPATH = \
 	.. \
 	../.. \
-	$(QPN)/source \
+	$(QPN)/src/qfn \
+	$(QPN)/src/qkn \
 	$(QP_PORT_DIR) \
 	$(QPN)/3rd_party/ek-tm4c123gxl \
 	$(QPN)/3rd_party/ek-tm4c123gxl/gnu
@@ -76,7 +77,6 @@ VPATH = \
 INCLUDES  = \
 	-I../.. \
 	-I$(QPN)/include \
-	-I$(QPN)/source \
 	-I$(QP_PORT_DIR) \
 	-I$(QPN)/3rd_party/CMSIS/Include \
 	-I$(QPN)/3rd_party/ek-tm4c123gxl
