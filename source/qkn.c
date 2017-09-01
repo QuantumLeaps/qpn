@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.1
-* Last updated on  2016-12-16
+* Last updated for version 5.9.7
+* Last updated on  2017-08-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -138,6 +138,101 @@ int_t QF_run(void) {
 #endif
 }
 
+
+/****************************************************************************/
+/****************************************************************************/
+#ifdef QK_SCHED_LOCK
+
+/****************************************************************************/
+/**
+* @description
+* This function locks the QK scheduler to the specified ceiling.
+*
+* @param[in]   ceiling    priority ceiling to which the QK scheduler
+*                         needs to be locked
+*
+* @returns
+* The previous QK Scheduler lock status, which is to be used to unlock
+* the scheduler by restoring its previous lock status in QK_schedUnlock().
+*
+* @note
+* QK_schedLock() must be always followed by the corresponding
+* QK_schedUnlock().
+*
+* @sa QK_schedUnlock()
+*
+* @usage
+* The following example shows how to lock and unlock the QK scheduler:
+* @include qkn_lock.c
+*/
+QSchedStatus QK_schedLock(uint_fast8_t ceiling) {
+    QSchedStatus stat;
+    QF_INT_DISABLE();
+
+    /* first store the previous lock prio */
+    if (QK_attr_.lockPrio < ceiling) { /* raising the lock prio? */
+        stat = (QSchedStatus)(QK_attr_.lockPrio << 8);
+        QK_attr_.lockPrio = ceiling;
+
+        /* add the previous lock holder priority */
+        stat |= (QSchedStatus)QK_attr_.lockHolder;
+
+        QK_attr_.lockHolder = QK_attr_.actPrio;
+    }
+    else {
+       stat = (QSchedStatus)0xFF;
+    }
+    QF_INT_ENABLE();
+
+    return stat; /* return the status to be saved in a stack variable */
+}
+
+/****************************************************************************/
+/**
+* @description
+* This function unlocks the QK scheduler to the previous status.
+*
+* @param[in]   stat       previous QK Scheduler lock status returned from
+*                         QK_schedLock()
+* @note
+* QK_schedUnlock() must always follow the corresponding QK_schedLock().
+*
+* @sa QK_schedLock()
+*
+* @usage
+* The following example shows how to lock and unlock the QK scheduler:
+* @include qkn_lock.c
+*/
+void QK_schedUnlock(QSchedStatus stat) {
+    /* has the scheduler been actually locked by the last QK_schedLock()? */
+    if (stat != (QSchedStatus)0xFF) {
+        uint_fast8_t lockPrio = QK_attr_.lockPrio; /* volatilie into tmp */
+        uint_fast8_t prevPrio = (uint_fast8_t)(stat >> 8);
+
+        QF_INT_DISABLE();
+
+        /** @pre
+        * The current lock priority must be greater than the previous
+        */
+        Q_REQUIRE_ID(700, lockPrio > prevPrio);
+
+        /* restore the previous lock priority and lock holder */
+        QK_attr_.lockPrio   = prevPrio;
+        QK_attr_.lockHolder = (uint_fast8_t)(stat & (QSchedStatus)0xFF);
+
+        /* find the highest-prio thread ready to run */
+        if (QK_sched_() != (uint_fast8_t)0) { /* priority found? */
+            QK_activate_(); /* activate any unlocked basic threads */
+        }
+
+        QF_INT_ENABLE();
+    }
+}
+
+#endif /* #ifdef QK_SCHED_LOCK */
+
+
+/****************************************************************************/
 /****************************************************************************/
 /**
 * @description
@@ -174,12 +269,12 @@ uint_fast8_t QK_sched_(void) {
     if (p <= QK_attr_.actPrio) {
         p = (uint_fast8_t)0; /* active object not eligible */
     }
-#ifdef QK_MUTEX
-    /* below the mutex ceiling? */
+#ifdef QK_SCHED_LOCK
+    /* below the scheduler ceiling? */
     else if (p <= QK_attr_.lockPrio) {
         p = (uint_fast8_t)0; /* active object not eligible */
     }
-#endif /* QK_MUTEX */
+#endif /* QK_SCHED_LOCK */
     else {
         Q_ASSERT_ID(610, p <= QF_maxActive_);
         QK_attr_.nextPrio = p; /* next AO to run */
@@ -265,76 +360,17 @@ void QK_activate_(void) {
         if (p <= pin) {
             p = (uint_fast8_t)0; /* active object not eligible */
         }
-#ifdef QK_MUTEX
-        /* below the mutex ceiling? */
+#ifdef QK_SCHED_LOCK
+        /* below the scheduler ceiling? */
         else if (p <= QK_attr_.lockPrio) {
             p = (uint_fast8_t)0; /* active object not eligible */
         }
         else {
             Q_ASSERT_ID(710, p <= QF_maxActive_);
         }
-#endif /* QK_MUTEX */
+#endif /* QK_SCHED_LOCK */
     } while (p != (uint_fast8_t)0);
 
     QK_attr_.actPrio = pin; /* restore the active priority */
 }
-
-
-/****************************************************************************/
-/****************************************************************************/
-#ifdef QK_MUTEX
-
-/**
-* @description
-* Lock the QK scheduler up to the given priority level.
-*
-* @param[in] prioCeiling  priority ceiling to lock the mutex
-*
-* @returns the previous value of the mutex priority ceiling
-*
-* @note This function should be always paired with QK_mutexUnlock(). The
-* code between QK_mutexLock() and QK_mutexUnlock() should be kept to the
-* minimum.
-*
-* @usage
-* @include qkn_mux.c
-*/
-QMutex QK_mutexLock(uint_fast8_t const prioCeiling) {
-    uint_fast8_t mutex;
-    QF_INT_DISABLE();
-    mutex = QK_attr_.lockPrio; /* original QK priority ceiling to return */
-    if (QK_attr_.lockPrio < prioCeiling) {
-        QK_attr_.lockPrio = prioCeiling; /* raise the QK priority ceiling */
-    }
-    QF_INT_ENABLE();
-    return mutex;
-}
-
-/****************************************************************************/
-/**
-* @description
-* Unlock the QK scheduler up to the saved priority level.
-*
-* @param[in]  mutex  previous priority level to unlock the mutex
-*
-* @description
-* @note This function should be always paired with QK_mutexLock(). The
-* code between QK_mutexLock() and QK_mutexUnlock() should be kept to the
-* minimum.
-*
-* @usage
-* @include qkn_mux.c
-*/
-void QK_mutexUnlock(QMutex mutex) {
-    QF_INT_DISABLE();
-    if (QK_attr_.lockPrio > mutex) {
-        QK_attr_.lockPrio = mutex; /* restore the saved priority ceiling */
-        if (QK_sched_() != (uint_fast8_t)0) {
-            QK_activate_();
-        }
-    }
-    QF_INT_ENABLE();
-}
-
-#endif /* #ifdef QK_MUTEX */
 

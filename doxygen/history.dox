@@ -1,6 +1,22 @@
 /**
 @page history Revision History
 
+@section qpn_5_9_7 Version 5.9.7, 2017-08-18
+This release phases out the QK-nano mutex and replaces it with an equivalent selective QK-nano scheduler locking up to the specified ceiling priority. Specifically, this feature has been implemented with two new operations QK_schedLock() and QK_schedUnlock(). This is done with consistency with the QK and QXK kernels in QP/C/C++. The advantage of the new implementation is also the ability of the scheduler locks to nest, which was not the case with the QK-nano mutex.
+
+All related QK-nano examples have been updated to use the selective scheduler locking instead of the mutex. The new blocking QXK mutex has been demonstrated in the following updated examples:
+- @ref arm-cm_dpp_efm32-slstk3401a
+- @ref arm-cm_dpp_ek-tm4c123gxl
+
+@attention
+The changes to QK-nano **break backwards-compatibly** with the existing code that relies these features. In the existing code, the mutexes should be replaced with selective scheduler locking.
+
+This release also updates CMSIS to version 5.1.0 (3rd_party/CMSIS).
+
+This release also adds the @ref api "API Reference" section to the QP-nano documentation.
+
+
+-----------------------------------------------------------------------------
 @section qpn_5_9_6 Version 5.9.6, 2017-08-04
 This release changes the organization of the QP-nano source code to make it more friendly for the Eclipse CDT, as proposed in the <a href="https://sourceforge.net/p/qpc/feature-requests/123/" target="_blank" class="extern">feature request #123 "Eclipse-friendly source directory structure for QP"</a>. Specifically, the QP-nano source code is now provided in the `qpn/src/` directory with the following structure:
 

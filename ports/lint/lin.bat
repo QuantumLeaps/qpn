@@ -1,8 +1,8 @@
 @echo off
 :: ===========================================================================
 :: Product: QP-nano build script for PC-Lint(TM), Standard C compiler
-:: Last Updated for Version: 5.9.6
-:: Date of the Last Update:  2017-08-04
+:: Last Updated for Version: 5.9.7
+:: Date of the Last Update:  2017-08-18
 ::
 ::                    Q u a n t u m     L e a P s
 ::                    ---------------------------
@@ -54,4 +54,5 @@ set LINTFLAGS=..\..\include\std.lnt options.lnt %1 %2 %3 %4
 %PC_LINT%\lint-nt -os(lint_qkn.log) %LINTFLAGS% -iqkn ..\..\src\qkn\*.c
 %PC_LINT%\lint-nt -os(lint_qvn.log) %LINTFLAGS% -iqvn ..\..\src\qvn\*.c
 
+:end
 endlocal

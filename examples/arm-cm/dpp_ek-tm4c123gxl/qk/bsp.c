@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on EK-TM4C123GXL board, preemptive QK kernel
-* Last Updated for Version: 5.8.0
-* Date of the Last Update:  2016-11-06
+* Last Updated for Version: 5.9.7
+* Date of the Last Update:  2018-08-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,7 +28,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
@@ -184,21 +184,21 @@ void BSP_displayPaused(uint8_t paused) {
 /*..........................................................................*/
 uint32_t BSP_random(void) { /* a very cheap pseudo-random-number generator */
     uint32_t rnd;
-    QMutex mutex;
+    QSchedStatus lockStat; /* <=== QK scheduler lock status */
 
     /* The flating point code is to exercise the FPU... */
     float volatile x = 3.1415926F;
     x = x + 2.7182818F;
 
-    mutex = QK_mutexLock(5U);  /* lock the mutex for the static l_rnd */
+    lockStat = QK_schedLock(N_PHILO); /* <=== lock scheduler up to N_PHILO prio */
     /* "Super-Duper" Linear Congruential Generator (LCG)
     * LCG(2^32, 3*7*11*13*23, 0, seed)
     */
     rnd = l_rnd * (3U*7U*11U*13U*23U);
-    l_rnd = rnd;
-    QK_mutexUnlock(mutex);    /* unlock the mutex for th static l_rnd */
+    l_rnd = rnd; /* set for the next time */
+    QK_schedUnlock(lockStat); /* <=== unlock the scheduler */
 
-    return rnd >> 8;
+    return (rnd >> 8);
 }
 /*..........................................................................*/
 void BSP_randomSeed(uint32_t seed) {

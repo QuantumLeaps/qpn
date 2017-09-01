@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "QP-nano"
-PROJECT_NUMBER         = "5.9.6"
+PROJECT_NUMBER         = "5.9.7"
 PROJECT_BRIEF          =
 PROJECT_LOGO           = images/header_logo_ql.png
 OUTPUT_DIRECTORY       =
@@ -41,7 +41,7 @@ OPTIMIZE_OUTPUT_FOR_C  = YES
 OPTIMIZE_OUTPUT_JAVA   = NO
 OPTIMIZE_FOR_FORTRAN   = NO
 OPTIMIZE_OUTPUT_VHDL   = NO
-EXTENSION_MAPPING      =
+EXTENSION_MAPPING      = lnt=Objective-C
 MARKDOWN_SUPPORT       = YES
 AUTOLINK_SUPPORT       = YES
 BUILTIN_STL_SUPPORT    = NO
@@ -71,13 +71,13 @@ HIDE_FRIEND_COMPOUNDS  = NO
 HIDE_IN_BODY_DOCS      = NO
 INTERNAL_DOCS          = NO
 CASE_SENSE_NAMES       = NO
-HIDE_SCOPE_NAMES       = NO
+HIDE_SCOPE_NAMES       = YES
 HIDE_COMPOUND_REFERENCE= NO
 SHOW_INCLUDE_FILES     = YES
 SHOW_GROUPED_MEMB_INC  = NO
 FORCE_LOCAL_INCLUDES   = NO
 INLINE_INFO            = YES
-SORT_MEMBER_DOCS       = YES
+SORT_MEMBER_DOCS       = NO
 SORT_BRIEF_DOCS        = NO
 SORT_MEMBERS_CTORS_1ST = NO
 SORT_GROUP_NAMES       = NO
@@ -112,6 +112,7 @@ INPUT                  = \
     main.dox \
     gs.dox \
     struct.dox \
+    api.dox \
     exa.dox \
     exa_apps.dox \
     exa_native.dox \
@@ -140,7 +141,8 @@ FILE_PATTERNS          = \
     *.c \
     *.cpp \
     *.s \
-    *.asm
+    *.asm \
+    *.lnt
 
 RECURSIVE              = YES
 EXCLUDE                =
@@ -313,7 +315,12 @@ EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           =
 INCLUDE_FILE_PATTERNS  =
-PREDEFINED             = Q_SPY QP_IMPL
+PREDEFINED             = \
+    Q_PARAM_SIZE=2 \
+    QF_TIMEEVT_CTR_SIZE=2 \
+    QF_TIMEEVT_PERIODIC \
+    QK_SCHED_LOCK
+ 
 EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------

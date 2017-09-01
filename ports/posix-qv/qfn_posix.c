@@ -5,8 +5,8 @@
 * @cond
 ******************************************************************************
 * Product: QF-nano emulation for POSIX with cooperative QV-nano kernel
-* Last Updated for Version: 5.8.0
-* Date of the Last Update:  2016-11-18
+* Last Updated for Version: 5.9.7
+* Date of the Last Update:  2017-08-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -310,7 +310,7 @@ void QF_init(uint_fast8_t maxActive) {
     QK_intNest_ = (uint_fast8_t)0;
 #endif
 
-#ifdef QK_MUTEX
+#ifdef QK_SCHED_LOCK
     QK_lockPrio_ = (uint_fast8_t)0;
 #endif
 

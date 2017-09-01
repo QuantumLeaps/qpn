@@ -100,7 +100,13 @@ usage. */
 */
 #define QF_TIMEEVT_USAGE
 
-/*! The preprocessor switch to eliminate the QK-nano mutex feature. */
-/*#define QK_NO_MUTEX*/
+/*! The preprocessor switch to enable the QK-nano scheduler locking. */
+/**
+* \description
+* QK-nano keeps supports selective scheduler locking up to a specified
+* ceiling priority. This scheduler locking can be used, for example, as
+* a non-blocking mutual exclusion mechanism (formerly QK-nano mutex).
+*/
+#define QK_SCHED_LOCK
 
 #endif /* qpn_conf_h */

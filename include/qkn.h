@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.1
-* Last updated on  2016-12-16
+* Last updated for version 5.9.7
+* Last updated on  2017-08-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -45,10 +45,10 @@
 typedef struct {
     uint_fast8_t volatile actPrio;  /*!< prio of the active AO */
     uint_fast8_t volatile nextPrio; /*!< prio of the next AO to execute */
-#ifdef QK_MUTEX
+#ifdef QK_SCHED_LOCK
     uint_fast8_t volatile lockPrio;   /*!< lock prio (0 == no-lock) */
     uint_fast8_t volatile lockHolder; /*!< prio of the lock holder */
-#endif /* QK_MUTEX */
+#endif /* QK_SCHED_LOCK */
 #ifdef QF_ISR_NEST
     uint_fast8_t volatile intNest;    /*!< ISR nesting level */
 #endif /* QF_ISR_NEST */
@@ -108,34 +108,19 @@ void QK_activate_(void);
 void QK_onIdle(void);
 
 
-#ifdef QK_MUTEX
+#ifdef QK_SCHED_LOCK
 
-    /*! QK Mutex type.
-    *
-    * QMutex represents the priority-ceiling mutex available in QK.
-    * @sa QK_mutexLock()
-    * @sa QK_mutexUnlock()
-    */
-    typedef uint_fast8_t QMutex;
+    /*! QK-nano Scheduler locking */
 
-    /*! QK priority-ceiling mutex lock
-    *
-    * Lock the QK scheduler up to the priority level @a prioCeiling.
-    *
-    * @note This function should be always paired with QK_mutexUnlock().
-    * The code between QK_mutexLock() and QK_mutexUnlock() should be kept
-    * to the minimum.
-    */
-    QMutex QK_mutexLock(uint_fast8_t const prioCeiling);
+    /*! The scheduler lock status */
+    typedef uint_fast16_t QSchedStatus;
 
-    /*! QK priority-ceiling mutex unlock
-    *
-    * @note This function should be always paired with QK_mutexLock().
-    * The code between QK_mutexLock() and QK_mutexUnlock() should be kept
-    * to the minimum.
-    */
-    void QK_mutexUnlock(QMutex mutex);
+    /*! QK Scheduler lock */
+    QSchedStatus QK_schedLock(uint_fast8_t ceiling);
 
-#endif /* QK_MUTEX */
+    /*! QK Scheduler unlock */
+    void QK_schedUnlock(QSchedStatus stat);
+
+#endif /* QK_SCHED_LOCK */
 
 #endif /* qkn_h */

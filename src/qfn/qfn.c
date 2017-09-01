@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.1
-* Last updated on  2016-12-16
+* Last updated for version 5.9.7
+* Last updated on  2017-08-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -319,7 +319,7 @@ void QF_init(uint_fast8_t maxActive) {
     QK_attr_.intNest = (uint_fast8_t)0;
 #endif
 
-#ifdef QK_MUTEX
+#ifdef QK_SCHED_LOCK
     QK_attr_.lockPrio   = (uint_fast8_t)0;
     QK_attr_.lockHolder = (uint_fast8_t)0;
 #endif

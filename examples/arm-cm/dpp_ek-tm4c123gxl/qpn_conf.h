@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano configuration for the Blinky example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 5.9.7
+* Date of the Last Update:  2017-08-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -38,6 +38,6 @@
 #define QF_MAX_TICK_RATE        1
 #define QF_TIMEEVT_CTR_SIZE     2
 #define QF_TIMEEVT_PERIODIC
-#define QK_MUTEX
+#define QK_SCHED_LOCK
 
 #endif  /* qpn_conf_h */
