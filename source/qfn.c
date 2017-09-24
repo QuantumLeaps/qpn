@@ -151,7 +151,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     QF_INT_DISABLE();
 
     /* margin available? */
-    if ((margin == QF_NO_MARGIN)
+    if (((margin == QF_NO_MARGIN) && (qlen > me->nUsed))
         || ((qlen - me->nUsed) > margin))
     {
         /* insert event into the ring buffer (FIFO) */
@@ -237,7 +237,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
 
     /* margin available? */
-    if ((margin == QF_NO_MARGIN)
+    if (((margin == QF_NO_MARGIN) && (qlen > me->nUsed))
         || ((qlen - me->nUsed) > margin))
     {
         /* insert event into the ring buffer (FIFO) */
