@@ -2,6 +2,14 @@
 @page history Revision History
 
 @section qpn_5_9_8 Version 5.9.8, 2017-09-15
+This release implements the feature request
+<a href="https://sourceforge.net/p/qpc/feature-requests/126/" target="_blank" class="extern">#126</a> "Allow non-asserting
+event posting for zero-margin allocations". Specifically, calling
+ACTIVE_POST_X() and ACTIVE_POST_X_ISR() with the margin argument of zero
+will no longer assert if the allocation/posting fails.
+The asserting version is these macros uses the special value of the @p margin
+argument of #QF_NO_MARGIN.
+
 Improved comments in the soruce code.
 
 Modifed ARM Cortex-M examples with the GNU-ARM toolset to be consistent with QP/C++ (support for RTTI and C++ Exception handling), as follows:

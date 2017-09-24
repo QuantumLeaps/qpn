@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.9.7
-* Last updated on  2017-08-18
+* Last updated for version 5.9.8
+* Last updated on  2017-09-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* httpS://state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -128,15 +128,11 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
 * __task__ context.
 *
 * @param[in,out] me     pointer (see @ref oop)
-* @param[in]     margin number of required free slots in the queue
-*                       after posting the event.
+* @param[in]     margin number of required free slots in the queue after
+*                       posting the event. The special value #QF_NO_MARGIN
+*                       means that this function will assert if posting fails.
 * @param[in]     sig    signal of the event to be posted
 * @param[in]     par    parameter of the event to be posted
-*
-* @note The zero value of the 'margin' parameter is special and denotes
-* situation when the post() operation is assumed to succeed (event delivery
-* guarantee). An assertion fires, when the event cannot be delivered in
-* this case.
 *
 * @usage
 * @include qfn_postx.c
@@ -155,8 +151,9 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     QF_INT_DISABLE();
 
     /* margin available? */
-    if ((qlen - me->nUsed) > margin) {
-
+    if ((margin == QF_NO_MARGIN)
+        || ((qlen - me->nUsed) > margin))
+    {
         /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -185,7 +182,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     }
     else {
         /* can tolerate dropping evts? */
-        Q_ASSERT_ID(310, margin != (uint_fast8_t)0);
+        Q_ASSERT_ID(310, margin != QF_NO_MARGIN);
 
         margin = (uint_fast8_t)false; /* posting failed */
     }
@@ -206,15 +203,11 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 * __ISR__ context.
 *
 * @param[in,out] me     pointer (see @ref oop)
-* @param[in]     margin number of required free slots in the queue
-*                       after posting the event.
+* @param[in]     margin number of required free slots in the queue after
+*                       posting the event. The special value #QF_NO_MARGIN
+*                       means that this function will assert if posting fails.
 * @param[in]     sig    signal of the event to be posted
 * @param[in]     par    parameter of the event to be posted
-*
-* @note The zero value of the 'margin' parameter is special and denotes
-* situation when the post() operation is assumed to succeed (event delivery
-* guarantee). An assertion fires, when the event cannot be delivered in
-* this case.
 *
 * @usage
 * @include qfn_postx.c
@@ -244,8 +237,9 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
 
     /* margin available? */
-    if ((qlen - me->nUsed) > margin) {
-
+    if ((margin == QF_NO_MARGIN)
+        || ((qlen - me->nUsed) > margin))
+    {
         /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -266,7 +260,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
     }
     else {
         /* can tolerate dropping evts? */
-        Q_ASSERT_ID(410, margin != (uint_fast8_t)0);
+        Q_ASSERT_ID(410, margin != QF_NO_MARGIN);
         margin = (uint_fast8_t)false; /* posting failed */
     }
 

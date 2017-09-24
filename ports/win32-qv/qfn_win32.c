@@ -5,8 +5,8 @@
 * @cond
 ******************************************************************************
 * Product: QF-nano emulation for Win32 with cooperative QV-nano kernel
-* Last Updated for Version: 5.9.7
-* Date of the Last Update:  2017-08-18
+* Last updated for version 5.9.8
+* Last updated on  2017-09-20
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,7 +33,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -103,8 +103,9 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     QF_INT_DISABLE();
 
     /* margin available? */
-    if (((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin) {
-
+    if ((margin == QF_NO_MARGIN)
+        || ((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin)
+    {
         /* insert event into the ring buffer (FIFO) */
         QF_FUDGED_QUEUE_AT_(me, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -127,7 +128,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     }
     else {
         /* can tolerate dropping evts? */
-        Q_ASSERT_ID(310, margin != (uint_fast8_t)0);
+        Q_ASSERT_ID(310, margin != QF_NO_MARGIN);
 
         margin = (uint_fast8_t)false; /* posting failed */
     }
@@ -146,8 +147,9 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
 {
     /* margin available? */
-    if (((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin) {
-
+    if ((margin == QF_NO_MARGIN)
+        || ((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin)
+    {
         /* insert event into the ring buffer (FIFO) */
         QF_FUDGED_QUEUE_AT_(me, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -169,7 +171,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
     }
     else {
         /* can tolerate dropping evts? */
-        Q_ASSERT_ID(410, margin != (uint_fast8_t)0);
+        Q_ASSERT_ID(410, margin != QF_NO_MARGIN);
         margin = (uint_fast8_t)false; /* posting failed */
     }
 
