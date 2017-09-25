@@ -102,10 +102,23 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 {
     QF_INT_DISABLE();
 
-    /* margin available? */
-    if ((margin == QF_NO_MARGIN)
-        || ((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin)
-    {
+    if (margin == QF_NO_MARGIN) {
+        if ((uint_fast8_t)QF_FUDGED_QUEUE_LEN > me->nUsed) {
+            margin = (uint_fast8_t)true; /* can post */
+        }
+        else {
+            margin = (uint_fast8_t)false; /* cannot post */
+            Q_ERROR_ID(310); /* must be able to post the event */
+        }
+    }
+    else if (((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin) {
+        margin = (uint_fast8_t)true; /* can post */
+    }
+    else {
+        margin = (uint_fast8_t)false; /* cannot post */
+    }
+
+    if (margin) { /* can post the event? */
         /* insert event into the ring buffer (FIFO) */
         QF_FUDGED_QUEUE_AT_(me, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -124,13 +137,6 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                 ((uint_fast8_t)1U << (me->prio - (uint_fast8_t)1));
             SetEvent(l_win32Event);
         }
-        margin = (uint_fast8_t)true; /* posting successful */
-    }
-    else {
-        /* can tolerate dropping evts? */
-        Q_ASSERT_ID(310, margin != QF_NO_MARGIN);
-
-        margin = (uint_fast8_t)false; /* posting failed */
     }
     QF_INT_ENABLE();
 
@@ -146,10 +152,23 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig)
 #endif
 {
-    /* margin available? */
-    if ((margin == QF_NO_MARGIN)
-        || ((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin)
-    {
+    if (margin == QF_NO_MARGIN) {
+        if ((uint_fast8_t)QF_FUDGED_QUEUE_LEN > me->nUsed) {
+            margin = (uint_fast8_t)true; /* can post */
+        }
+        else {
+            margin = (uint_fast8_t)false; /* cannot post */
+            Q_ERROR_ID(310); /* must be able to post the event */
+        }
+    }
+    else if (((uint_fast8_t)QF_FUDGED_QUEUE_LEN - me->nUsed) > margin) {
+        margin = (uint_fast8_t)true; /* can post */
+    }
+    else {
+        margin = (uint_fast8_t)false; /* cannot post */
+    }
+
+    if (margin) { /* can post the event? */
         /* insert event into the ring buffer (FIFO) */
         QF_FUDGED_QUEUE_AT_(me, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -167,12 +186,6 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                 ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
             SetEvent(l_win32Event);
         }
-        margin = (uint_fast8_t)true; /* posting successful */
-    }
-    else {
-        /* can tolerate dropping evts? */
-        Q_ASSERT_ID(410, margin != QF_NO_MARGIN);
-        margin = (uint_fast8_t)false; /* posting failed */
     }
 
     return (bool)margin;
