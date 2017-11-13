@@ -3,13 +3,13 @@
 @image html qpn_banner.jpg
 
 @section ab_about What is it?
-<a class="extern" target="_blank" href="https://www.state-machine.com/products/"><strong>QP-nano&trade; (Quantum Platform Nano)</strong></a> is an ultra-lightweight, open source <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Framework"><strong>active object (actor) framework</strong></a> for building responsive and modular real-time embedded applications as systems of asynchronous event-driven <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Active"><strong>active objects</strong></a> (concurrent @ref sm "state machines"). The QP-nano&trade; framework is a member of a larger family consisting of QP-nano, <a href="https://www.state-machine.com/qpc" target="_blank" class="extern">QP/C</a>, and <a href="https://www.state-machine.com/qpcpp" target="_blank" class="extern">QP/C++</a> frameworks, which are all strictly quality controlled, thoroughly documented, and available under @ref licensing "dual licensing model".
+<a class="extern" target="_blank" href="https://state-machine.com/products/"><strong>QP-nano&trade; (Quantum Platform Nano)</strong></a> is an ultra-lightweight, open source <a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#Framework"><strong>active object (actor) framework</strong></a> for building responsive and modular real-time embedded applications as systems of asynchronous event-driven <a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#Active"><strong>active objects</strong></a> (concurrent @ref sm "state machines"). The QP-nano&trade; framework is a member of a larger family consisting of QP-nano, <a href="https://state-machine.com/qpc" target="_blank" class="extern">QP/C</a>, and <a href="https://state-machine.com/qpcpp" target="_blank" class="extern">QP/C++</a> frameworks, which are all strictly quality controlled, thoroughly documented, and available under @ref licensing "dual licensing model".
 
 @note
-The QP-nano&trade; framework is intended for **low-end** 8- and 16-bit microcontrollers such as AVRmega, MSP430, or 8051 with very limited RAM on board (less then 1KB). If your MCU has more than 1KB of RAM, you should consider the <a href="https://www.state-machine.com/qpc" target="_blank" class="extern">QP/C&trade;</a> framework instead of QP-nano&trade;.
+The QP-nano&trade; framework is intended for **low-end** 8- and 16-bit microcontrollers such as AVRmega, MSP430, or 8051 with very limited RAM on board (less then 1KB). If your MCU has more than 1KB of RAM, you should consider the <a href="https://state-machine.com/qpc" target="_blank" class="extern">QP/C&trade;</a> framework instead of QP-nano&trade;.
 
 @attention
-To use QP-nano&trade; effectively, you need to understand the <a href="https://www.state-machine.com/doc/concepts" target="_blank" class="extern"><strong>key concepts</strong></a> that underline the architecture of the framework and your applications based on the framework.
+To use QP-nano&trade; effectively, you need to understand the <a href="https://state-machine.com/doc/concepts" target="_blank" class="extern"><strong>key concepts</strong></a> that underline the architecture of the framework and your applications based on the framework.
 
 
 <div style="clear:both"></div>
@@ -22,19 +22,19 @@ To use QP-nano&trade; effectively, you need to understand the <a href="https://w
 
 @section ab_goals What does it do?
 The main goals of the QP-nano&trade; framework are:
-- to provide a reusable **architecture** based on <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Framework">active objects (actors)</a>, which is _safer_ and more extensible than the venerable "superloop" commonly used on low-end 8- and 16-bit microcontrollers.
+- to provide a reusable **architecture** based on <a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#Framework">active objects (actors)</a>, which is _safer_ and more extensible than the venerable "superloop" commonly used on low-end 8- and 16-bit microcontrollers.
 - to provide a simple-to-use coding techniques for @ref sm "hierarchical state machines", with which to implement the behavior of active objects.
 - to provide efficient and thread-safe event-driven mechanisms for active objects to communicate, such as direct event passing.
 - to provide event-driven timing services (time events).
 - to provide a selection of built-in real-time kernels to run the QP applications, such as the cooperative @ref qvn "QV-nano kernel" and the preemptive non-blocking @ref qkn "QK-nano kernel".
 - to provide portability layer and ready-to-use emulations on the desktop operating systems such as @ref posix-qv "Linux" and @ref win32-qv "Windows".
-- to provide a target for modeling and automatic code generation from the <a href="https://www.state-machine.com/qm" target="_blank" class="extern">QM modeling tool</a>.
+- to provide a target for modeling and automatic code generation from the <a href="https://state-machine.com/qm" target="_blank" class="extern">QM modeling tool</a>.
 
 
 ------------------------------------------------------------------------------
 @section ab_special What's special about it?
 
-The QP-nano&trade; framework is a unique offering on the embedded software market. It provides a modern, reusable **architecture** of embedded applications, which combines object-orientation with the particular model of concurrency, known as <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Active"><strong>active objects</strong></a> (concurrent @ref sm "state machines"). This architecture is generally **safer** and better structured than the venerable "superloop + spaghetti-code" commonly used on low-end 8- and 16-bit microcontrollers.
+The QP-nano&trade; framework is a unique offering on the embedded software market. It provides a modern, reusable **architecture** of embedded applications, which combines object-orientation with the particular model of concurrency, known as <a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#Active"><strong>active objects</strong></a> (concurrent @ref sm "state machines"). This architecture is generally **safer** and better structured than the venerable "superloop + spaghetti-code" commonly used on low-end 8- and 16-bit microcontrollers.
 
 
 <div class="separate"></div>
@@ -42,7 +42,7 @@ The QP-nano&trade; framework is a unique offering on the embedded software marke
 The most unique characteristic of the QP-nano&trade; framework is its **tiny footprint**, especially in RAM. In this respect, QP-nano&trade; requires far less resources than even the smallest conventional Real-Time Operating System (RTOS) kernel. In fact, it has been designed to run on microcontrollers, where you cannot fit any traditional kernel. At the same time, QP-nano&trade; gives you a much higher level of abstraction than a conventional RTOS. With QP-nano&trade;, you work at the level of active objects, state machines and events, as opposed to "superloop" commonly used on low-end 8- and 16-bit microcontrollers.
 
 @note
-If you can program your MCU in ANSI-C, you probably can fit in QP-nano&trade;. For example, the article <a href="https://www.state-machine.com/doc/Samek0605.pdf" target="_blank" class="extern"><em>UML Statecharts at $10.99</em></a> describes a complete QP-nano&trade; application (PEdestrian LIght CONtroled (PELICAN) crossing) implemented in a 8051 MCU with 256 bytes of RAM.
+If you can program your MCU in ANSI-C, you probably can fit in QP-nano&trade;. For example, the article <a href="https://state-machine.com/doc/Samek0605.pdf" target="_blank" class="extern"><em>UML Statecharts at $10.99</em></a> describes a complete QP-nano&trade; application (PEdestrian LIght CONtroled (PELICAN) crossing) implemented in a 8051 MCU with 256 bytes of RAM.
 
 
 <div class="separate"></div>
@@ -50,11 +50,11 @@ If you can program your MCU in ANSI-C, you probably can fit in QP-nano&trade;. F
 Even though it is written in @ref misra "MISRA-compliant" ANSI-C, QP-nano&trade; is fundamentally an **object-oriented** framework, which means that the framework itself and your applications derived from the framework are fundamentally composed of <a href="https://en.wikipedia.org/wiki/Class_(computer_programming)" target="_blank" class="extern">classes</a> and only classes can have @ref sm "state machines" associated with them.
 
 @note
-If you program in C and object-oriented programming is new to you, please refer to the Application Note <a class="pdf" target="_blank" href="https://www.state-machine.com/doc/AN_Simple_OOP_in_C.pdf">"Simple Object-Oriented Programming in C"</a>, which describes how you can implement the concepts of _classes_, _inheritance_, and _polymorphism_ to portable ANSI-C.
+If you program in C and object-oriented programming is new to you, please refer to the Application Note <a class="pdf" target="_blank" href="https://state-machine.com/doc/AN_OOP_in_C.pdf">"Object-Oriented Programming in C"</a>, which describes how you can implement the concepts of _classes_, _inheritance_, and _polymorphism_ to portable ANSI-C.
 <br>
 @htmlonly
 <div class="image">
-<a target="_blank" href="https://www.state-machine.com/doc/AN_OOP_in_C.pdf"><img border="0" src="img/AN_OOP_in_C.gif" title="Download PDF"></a>
+<a target="_blank" href="https://state-machine.com/doc/AN_OOP_in_C.pdf"><img border="0" src="img/AN_OOP_in_C.gif" title="Download PDF"></a>
 <div class="caption">
 Application Note: Object-Oriented Programming in C
 </div>
@@ -65,7 +65,7 @@ Application Note: Object-Oriented Programming in C
 <div class="separate"></div>
 @subsection hsms Hierarchical State Machines
 The behavior of active objects is specified in QP-nano&trade; by means of
-<a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#HSM"><strong>hierarchical state machines</strong> (UML statecharts)</a>. The frameworks support manual coding of UML state machines in C or C++ as well as fully automatic code generation by means of the free graphical <a class="extern" target="_blank" href="https://www.state-machine.com/qm">QM&trade; modeling tool</a>.
+<a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#HSM"><strong>hierarchical state machines</strong> (UML statecharts)</a>. The frameworks support manual coding of UML state machines in C or C++ as well as fully automatic code generation by means of the free graphical <a class="extern" target="_blank" href="https://state-machine.com/qm">QM&trade; modeling tool</a>.
 
 @remarks
 State machines can be an incredibly powerful technique, but they require an event-driven **infrastructure** (framework) that provides, at a minimum: a run-to-completion (RTC) execution context for each state machine, queuing of events, and event-based timing services. This is really the pivotal point. Without an event-driven framewok (like QP-nano), state machines are like <a class="extern" target="_blank" href="https://state-machine.com/doc/concepts#Infrastructure">cars without an infrastructure of roads</a>.

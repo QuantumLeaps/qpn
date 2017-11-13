@@ -3,8 +3,8 @@
 * @brief QF-nano port ARM Cortex-M, preemptive QK-nano kernel, GNU-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.9.3
-* Date of the Last Update:  2017-07-03
+* Last Updated for Version: 6.0.1
+* Date of the Last Update:  2017-11-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -42,8 +42,8 @@
 /* QF interrupt disable/enable and log2()... */
 #if (__ARM_ARCH == 6) /* Cortex-M0/M0+/M1 ?, see NOTE1 */
 
-    #define QF_INT_DISABLE()    __asm volatile ("cpsid i")
-    #define QF_INT_ENABLE()     __asm volatile ("cpsie i")
+    #define QF_INT_DISABLE()    __asm volatile ("cpsid i" : : : "memory")
+    #define QF_INT_ENABLE()     __asm volatile ("cpsie i" : : : "memory")
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE2 */
     #define QF_AWARE_ISR_CMSIS_PRI  0
@@ -51,8 +51,8 @@
 #else /* Cortex-M3/M4/M7, see NOTE2 */
 
     /* Cortex-M3/M4/M7 alternative interrupt disabling with PRIMASK */
-    #define QF_PRIMASK_DISABLE() __asm volatile ("cpsid i")
-    #define QF_PRIMASK_ENABLE()  __asm volatile ("cpsie i")
+    #define QF_PRIMASK_DISABLE() __asm volatile ("cpsid i" : : : "memory")
+    #define QF_PRIMASK_ENABLE()  __asm volatile ("cpsie i" : : : "memory")
 
     /* Cortex-M3/M4/M7 interrupt disabling policy, see NOTE3 */
     #define QF_INT_DISABLE() do { \

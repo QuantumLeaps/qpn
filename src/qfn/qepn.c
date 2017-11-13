@@ -4,8 +4,8 @@
 * @ingroup qep
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.2
-* Last updated on  2017-02-22
+* Last updated for version 6.0.1
+* Last updated on  2017-11-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -69,11 +69,11 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 * @param[in,out] me      pointer (see @ref oop)
 * @param[in]     initial pointer to the top-most initial state-handler
 *                        function in the derived state machine
+* @note
+* Must be called only by the constructors of the derived state machines.
 *
-* @note Must be called only by the constructors of the derived state
-* machines.
-*
-* @note Must be called only ONCE before QHSM_INIT().
+* @note
+* Must be called only ONCE before QHSM_INIT().
 *
 * @usage
 * The following example illustrates how to invoke QHsm_ctor() in the
@@ -97,7 +97,8 @@ void QHsm_ctor(QHsm * const me, QStateHandler initial) {
 *
 * @param[in,out] me pointer (see @ref oop)
 *
-* @note Must be called only ONCE after the QHsm_ctor().
+* @note
+* Must be called only ONCE after the QHsm_ctor().
 */
 void QHsm_init_(QHsm * const me) {
     QStateHandler t = me->state;
@@ -157,11 +158,13 @@ void QHsm_init_(QHsm * const me) {
 *
 * @param[in] me pointer (see @ref oop)
 *
-* @returns Always returns #Q_RET_IGNORED, which means that the top state
-*          ignores all events.
+* @returns
+* Always returns #Q_RET_IGNORED, which means that the top state ignores
+* all events.
 *
-* @note The parameter @p me to this state handler is not used. It is provided
-* for conformance with the state-handler function signature ::QStateHandler.
+* @note
+* The parameter @p me to this state handler is not used. It is provided for
+* conformance with the state-handler function signature ::QStateHandler.
 */
 QState QHsm_top(void const * const me) {
     (void)me; /* suppress the "unused parameter" compiler warning */
@@ -278,7 +281,8 @@ void QHsm_dispatch_(QHsm * const me) {
 * @param[in,out] me   pointer (see @ref oop)
 * @param[in,out] path array of pointers to state-handler functions
 *                     to execute the entry actions
-* @returns the depth of the entry path stored in the @p path parameter.
+* @returns
+* the depth of the entry path stored in the @p path parameter.
 */
 static int_fast8_t QHsm_tran_(QHsm * const me,
                               QStateHandler path[QHSM_MAX_NEST_DEPTH_])
@@ -425,20 +429,24 @@ static int_fast8_t QHsm_tran_(QHsm * const me,
 * @param[in] me     pointer (see @ref oop)
 * @param[in] parent pointer to the state-handler function
 *
-* @returns the child of a given @c parent state, which is an ancestor of
-* the currently active state
+* @returns
+* the child of a given @c parent state, which is an ancestor of the current
+* active state. For the corner case when the currently active state is the
+* given @c parent state, function returns the @c parent state.
 *
-* @note this function is designed to be called during state transitions,
-* so it does not necessarily start in a stable state configuration.
-* However, the function establishes stable state configuration upon exit.
+* @note
+* This function is designed to be called during state transitions, so it
+* does not necessarily start in a stable state configuration. However, the
+* function establishes stable state configuration upon exit.
 *
-* @sa QHsm_childState()
+* @sa
+* QHsm_childState()
 */
 QStateHandler QHsm_childState_(QHsm * const me,
                                QStateHandler const parent)
 {
     QStateHandler child = me->state; /* start with the current state */
-    bool isConfirmed = false; /* start with the child not confirmed */
+    bool isFound = false; /* start with the child not found */
     QState r;
 
     /* establish stable state configuration */
@@ -446,7 +454,7 @@ QStateHandler QHsm_childState_(QHsm * const me,
     do {
         /* is this the parent of the current child? */
         if (me->temp == parent) {
-            isConfirmed = true; /* child is confirmed */
+            isFound = true; /* child is found */
             r = (QState)Q_RET_IGNORED; /* break out of the loop */
         }
         else {
@@ -457,8 +465,8 @@ QStateHandler QHsm_childState_(QHsm * const me,
     } while (r != (QState)Q_RET_IGNORED); /* QHsm_top() state not reached */
     me->temp = me->state; /* establish stable state configuration */
 
-    /** @post the child must be confirmed */
-    Q_ENSURE_ID(710, isConfirmed != false);
+    /** @post the child must be found */
+    Q_ENSURE_ID(810, isFound != false);
 
     return child; /* return the child */
 }
