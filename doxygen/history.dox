@@ -1,11 +1,21 @@
 /**
 @page history Revision History
 
+@section qpn_6_0_2 Version 6.0.2, 2017-12-04
+This release changes the GNU-ARM toolchain in all Makefiles for ARM Cortex-M projects to GNU-ARM toolchain provided by ARM Ltd at:
+
+https://developer.arm.com/open-source/gnu-toolchain/gnu-rm
+
+@note
+This change matches QTools version 6.0.2, which now includes the GNU-ARM toolchain provided by ARM Ltd.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_0_1 Version 6.0.1, 2017-11-10
 This release includes a workaround for the GNU-ARM compiler bug for the ARMv6-M architecture (Cortex-M0/M0+/M1), which can lead to generation of incorrect code for the QP-nano critical section at certain gcc optimization levels (such as -O). This bug was first discovered and filed as [bug#184](https://sourceforge.net/p/qpc/bugs/184/). The bug affected the GNU-ARM ports to both built-in kernels @ref qvn "QV-nano" and @ref qkn "QK-nano".
 
 @attention
-This release no longer contains the directory `qpc/source`, which was scheduled to be phased out in QP5. In QP6 the source code is found only in the `qpc/src` directory.
+This release no longer contains the directory `qpn/source`, which was scheduled to be phased out in QP5. In QP6 the source code is found only in the `qpn/src` directory.
 
 
 @note
