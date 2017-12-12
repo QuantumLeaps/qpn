@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.9.8
-* Last updated on  2017-09-20
+* Last updated for version 6.0.3
+* Last updated on  2017-12-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -151,7 +151,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     QF_INT_DISABLE();
 
     if (margin == QF_NO_MARGIN) {
-        if (qlen > me->nUsed) {
+        if (qlen > (uint_fast8_t)me->nUsed) {
             margin = (uint_fast8_t)true; /* can post */
         }
         else {
@@ -159,7 +159,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
             Q_ERROR_ID(310); /* must be able to post the event */
         }
     }
-    else if ((qlen - me->nUsed) > margin) {
+    else if ((qlen - (uint_fast8_t)me->nUsed) > margin) {
         margin = (uint_fast8_t)true; /* can post */
     }
     else {
@@ -172,18 +172,18 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 #if (Q_PARAM_SIZE != 0)
         QF_ROM_QUEUE_AT_(acb, me->head).par = par;
 #endif
-        if (me->head == (uint_fast8_t)0) {
-            me->head = qlen; /* wrap the head */
+        if (me->head == (uint8_t)0) {
+            me->head = (uint8_t)qlen; /* wrap the head */
         }
         --me->head;
         ++me->nUsed;
 
         /* is this the first event? */
-        if (me->nUsed == (uint_fast8_t)1) {
+        if (me->nUsed == (uint8_t)1) {
 
             /* set the corresponding bit in the ready set */
             QF_readySet_ |= (uint_fast8_t)
-                ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
+                ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
 
 #ifdef QK_PREEMPTIVE
             if (QK_sched_() != (uint_fast8_t)0) {
@@ -243,7 +243,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
 
     if (margin == QF_NO_MARGIN) {
-        if (qlen > me->nUsed) {
+        if (qlen > (uint_fast8_t)me->nUsed) {
             margin = (uint_fast8_t)true; /* can post */
         }
         else {
@@ -251,7 +251,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
             Q_ERROR_ID(310); /* must be able to post the event */
         }
     }
-    else if ((qlen - me->nUsed) > margin) {
+    else if ((qlen - (uint_fast8_t)me->nUsed) > margin) {
         margin = (uint_fast8_t)true; /* can post */
     }
     else {
@@ -264,16 +264,16 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #if (Q_PARAM_SIZE != 0)
         QF_ROM_QUEUE_AT_(acb, me->head).par = par;
 #endif
-        if (me->head == (uint_fast8_t)0) {
-            me->head = qlen; /* wrap the head */
+        if (me->head == (uint8_t)0) {
+            me->head = (uint8_t)qlen; /* wrap the head */
         }
         --me->head;
         ++me->nUsed;
         /* is this the first event? */
-        if (me->nUsed == (uint_fast8_t)1) {
+        if (me->nUsed == (uint8_t)1) {
             /* set the bit */
             QF_readySet_ |= (uint_fast8_t)
-                ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
+                ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
         }
     }
 
@@ -340,9 +340,9 @@ void QF_init(uint_fast8_t maxActive) {
         /* QF_active[p] must be initialized */
         Q_ASSERT_ID(110, a != (QActive *)0);
 
-        a->head    = (uint_fast8_t)0;
-        a->tail    = (uint_fast8_t)0;
-        a->nUsed   = (uint_fast8_t)0;
+        a->head    = (uint8_t)0;
+        a->tail    = (uint8_t)0;
+        a->nUsed   = (uint8_t)0;
 #if (QF_TIMEEVT_CTR_SIZE != 0)
         for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
             a->tickCtr[n].nTicks   = (QTimeEvtCtr)0;
@@ -464,7 +464,7 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 #ifdef QF_TIMEEVT_USAGE
     /* set a bit in QF_timerSetX_[] to rememer that the timer is running */
     QF_timerSetX_[tickRate] |= (uint_fast8_t)
-        ((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
+        ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
 #endif
     QF_INT_ENABLE();
 }
@@ -491,10 +491,8 @@ void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
 #ifdef QF_TIMEEVT_USAGE
     /* clear a bit in QF_timerSetX_[] to rememer that timer is not running */
     QF_timerSetX_[tickRate] &= (uint_fast8_t)
-        ~((uint_fast8_t)1 << (me->prio - (uint_fast8_t)1));
+        ~((uint_fast8_t)1 << (me->prio - (uint8_t)1));
 #endif
     QF_INT_ENABLE();
 }
 #endif /* #if (QF_TIMEEVT_CTR_SIZE != 0) */
-
-

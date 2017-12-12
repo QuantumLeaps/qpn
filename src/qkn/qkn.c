@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.9.7
-* Last updated on  2017-08-18
+* Last updated for version 6.0.3
+* Last updated on  2017-12-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -94,7 +94,7 @@ static void initialize(void) {
         /* QF_active[p] must be initialized */
         Q_ASSERT_ID(110, a != (QActive *)0);
 
-        a->prio = p; /* set the priority of the active object */
+        a->prio = (uint8_t)p; /* set the priority of the active object */
     }
 
     /* trigger initial transitions in all registered active objects... */
@@ -316,7 +316,7 @@ void QK_activate_(void) {
         QF_INT_DISABLE(); /* get ready to access the queue */
 
         /* some unused events must be available */
-        Q_ASSERT_ID(810, a->nUsed > (uint_fast8_t)0);
+        Q_ASSERT_ID(810, a->nUsed > (uint8_t)0);
         --a->nUsed;
 
         Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
@@ -324,8 +324,8 @@ void QK_activate_(void) {
         Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
 #endif
         /* wrap around? */
-        if (a->tail == (uint_fast8_t)0) {
-            a->tail = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
+        if (a->tail == (uint8_t)0) {
+            a->tail = Q_ROM_BYTE(acb->qlen);
         }
         --a->tail;
         QF_INT_ENABLE(); /* enable interrupts to launch a task */
@@ -335,7 +335,7 @@ void QK_activate_(void) {
         QF_INT_DISABLE();
 
 
-        if (a->nUsed == (uint_fast8_t)0) { /* empty queue? */
+        if (a->nUsed == (uint8_t)0) { /* empty queue? */
             /* clear the ready bit */
             QF_readySet_ &= (uint_fast8_t)
                 ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));

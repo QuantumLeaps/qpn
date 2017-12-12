@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 5.9.8
-* Last updated on  2017-09-16
+* Last updated for version 6.0.3
+* Last updated on  2017-12-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -57,7 +57,7 @@
 #if (QF_TIMEEVT_CTR_SIZE == 0)
     /* no time events */
 #elif (QF_TIMEEVT_CTR_SIZE == 1)
-    typedef uint_fast8_t QTimeEvtCtr;
+    typedef uint_t QTimeEvtCtr;
 #elif (QF_TIMEEVT_CTR_SIZE == 2)
     /*! type of the Time Event counter, which determines the dynamic
     * range of the time delays measured in clock ticks.
@@ -68,13 +68,13 @@
     * #QF_TIMEEVT_CTR_SIZE. The other possible values of this type are
     * as follows: @n
     * none when (QF_TIMEEVT_CTR_SIZE not defined or == 0), @n
-    * uint_fast8_t  when (QF_TIMEEVT_CTR_SIZE == 1); @n
-    * uint_fast16_t when (QF_TIMEEVT_CTR_SIZE == 2); and @n
-    * uint_fast32_t when (QF_TIMEEVT_CTR_SIZE == 4).
+    * uint8_t  when (QF_TIMEEVT_CTR_SIZE == 1); @n
+    * uint16_t when (QF_TIMEEVT_CTR_SIZE == 2); and @n
+    * uint32_t when (QF_TIMEEVT_CTR_SIZE == 4).
     */
-    typedef uint_fast16_t QTimeEvtCtr;
+    typedef uint16_t QTimeEvtCtr;
 #elif (QF_TIMEEVT_CTR_SIZE == 4)
-    typedef uint_fast32_t QTimeEvtCtr;
+    typedef uint32_t QTimeEvtCtr;
 #else
     #error "QF_TIMER_SIZE defined incorrectly, expected 1, 2, or 4"
 #endif
@@ -126,18 +126,18 @@ typedef struct {
 #endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
 
     /*! priority of the active object (1..8) */
-    uint_fast8_t prio;
+    uint8_t prio;
 
     /*! offset to where next event will be inserted into the buffer */
-    uint_fast8_t head;
+    uint8_t volatile head;
 
     /*! offset of where next event will be extracted from the buffer */
-    uint_fast8_t tail;
+    uint8_t volatile tail;
 
     /*! number of events currently present in the queue
     * (events in the ring buffer + 1 event in the state machine)
     */
-    uint_fast8_t nUsed;
+    uint8_t volatile nUsed;
 
 } QActive;
 

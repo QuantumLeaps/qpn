@@ -4,8 +4,8 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.1
-* Last updated on  2016-12-16
+* Last updated for version 6.0.3
+* Last updated on  2017-12-12
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -89,7 +89,7 @@ int_t QF_run(void) {
         /* QF_active[p] must be initialized */
         Q_ASSERT_ID(810, a != (QActive *)0);
 
-        a->prio = p; /* set the priority of the active object */
+        a->prio = (uint8_t)p; /* set the priority of the active object */
     }
 
     /* trigger initial transitions in all registered active objects... */
@@ -124,15 +124,15 @@ int_t QF_run(void) {
             a = QF_ROM_ACTIVE_GET_(p);
 
             /* some unsuded events must be available */
-            Q_ASSERT_ID(820, a->nUsed > (uint_fast8_t)0);
+            Q_ASSERT_ID(820, a->nUsed > (uint8_t)0);
 
             --a->nUsed;
             Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
 #if (Q_PARAM_SIZE != 0)
             Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
 #endif
-            if (a->tail == (uint_fast8_t)0) { /* wrap around? */
-                a->tail = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
+            if (a->tail == (uint8_t)0) { /* wrap around? */
+                a->tail = Q_ROM_BYTE(acb->qlen);
             }
             --a->tail;
             QF_INT_ENABLE();
@@ -141,7 +141,7 @@ int_t QF_run(void) {
 
             QF_INT_DISABLE();
             /* empty queue? */
-            if (a->nUsed == (uint_fast8_t)0) {
+            if (a->nUsed == (uint8_t)0) {
                 /* clear the bit corresponding to 'p' */
                 QF_readySet_ &=
                     (uint_fast8_t)~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
