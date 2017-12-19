@@ -57,7 +57,7 @@
 #if (QF_TIMEEVT_CTR_SIZE == 0)
     /* no time events */
 #elif (QF_TIMEEVT_CTR_SIZE == 1)
-    typedef uint_t QTimeEvtCtr;
+    typedef uint8_t QTimeEvtCtr;
 #elif (QF_TIMEEVT_CTR_SIZE == 2)
     /*! type of the Time Event counter, which determines the dynamic
     * range of the time delays measured in clock ticks.
