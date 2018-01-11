@@ -3,8 +3,8 @@
 * @brief QF-nano port to Cortex-M, cooperative QV kernel, ARM-KEIL toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.9.3
-* Date of the Last Update:  2017-07-03
+* Last Updated for Version: 6.0.4
+* Date of the Last Update:  2018-01-10
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -68,8 +68,8 @@
     } while (0)
     #define QF_INT_ENABLE()      QF_set_BASEPRI(0U)
 
-    /* NOTE: keep in synch with the value defined in "qk_port.s" */
-    #define QF_BASEPRI          (0xFFU >> 2)
+    /* BASEPRI threshold for "QF-aware" interrupts, see NOTE2 */
+    #define QF_BASEPRI           0x3F
 
     /* QF-aware ISR priority for CMSIS function NVIC_SetPriority(), NOTE4 */
     #define QF_AWARE_ISR_CMSIS_PRI (QF_BASEPRI >> (8 - __NVIC_PRIO_BITS))

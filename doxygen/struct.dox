@@ -2,15 +2,30 @@
 
 @tableofcontents
 
-The QP-nano framework brings together three **most effective techniques** of structuring embedded systems:
+@section files Directories and Files
 
-- <a href="https://www.state-machine.com/doc/concepts#Active" target="_blank" class="extern">active objects</a>;
+The following annotated directory tree lists the top-level directories provided in the standard QP-nano distribution.
 
-- <a href="https://www.state-machine.com/doc/concepts#HSM" target="_blank" class="extern">hierarchical state machines</a> (UML statecharts); and
+<ul class="tag">
+  <li><span class="img folder">qpn/</span>
+  </li>
+  <ul class="tag">
+    <li><span class="img folder">3rd_party/</span> &mdash; Third-Party code used in the QP-nano @ref ports "ports" and @ref exa "examples"
+    </li>
+    <li><span class="img folder">examples/</span> &mdash; @ref exa "QP-nano Examples"
+    </li>
+    <li><span class="img folder">ports/</span> &mdash; @ref ports "QP-nano Ports"
+    </li>
+    <li><span class="img folder">include/</span> &mdash; Platform-independent QP-nano API (see <a href="dir_d44c64559bbebec7f509842c48db8b23.html"><strong>include</strong></a>)
+    </li>
+    <li><span class="img folder">src/</span> &mdash; Platform-independent QP-nano source code (see @ref <a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html"><strong>src</strong></a>)
+    </li>
+  </ul>
+</ul>
 
-- <a href="https://www.state-machine.com/doc/concepts#Modeling" target="_blank" class="extern">graphical modeling</a> and <a href="https://www.state-machine.com/doc/concepts#Code" target="_blank" class="extern">automatic code generation</a>.
+@note
+The standard QP-nano distribution contains many @ref exa "Example Projects", which are specifically designed to help you learn to use QP-nano and to serve you as starting points for your own projects.
 
-The following sections describe the main components and structure of the framework.
 
 
 ------------------------------------------------------------------------------

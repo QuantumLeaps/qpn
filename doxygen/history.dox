@@ -1,6 +1,13 @@
 /**
 @page history Revision History
 
+@section qpn_6_0_4 Version 6.0.4, 2018-01-10
+This release replaces assembly with C implementation in the ARM-KEIL ports or the QK-nano kernel to Cortex-M to take advantage of the `__asm` functions. (NOTE: this change has impact on the existing QP-nano applications that use the ARM-KEIL toolchain and the QK kernel.)
+
+Also, this release adds an example of the Dining Philosophers Problem (DPP) re-designed with the ["Orthogonal Component" state pattern](https://www.state-machine.com/doc/Pattern_Orthogonal.pdf). The application uses only one active object (Table), while the Philos are stateful components of Table. The example is located in `qpn\examples\win32-qv\dpp_comp`.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_0_3 Version 6.0.3, 2017-12-12
 This release replaces attributes of ::QActive class and ::QTimeEvtCtr type from type uint_fast8_t to uint8_t. For the ARM Cortex-M port, these changes reduce the memory footprint of each ::QActive instance from 40 to 26 bytes (35% improvement).
 

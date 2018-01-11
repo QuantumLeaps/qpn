@@ -4,9 +4,8 @@
 * @ingroup qepn
 * @cond
 ******************************************************************************
-* Product: QEP-nano
-* Last updated for version 6.0.3
-* Last updated on  2017-12-12
+* Last updated for version 6.0.4
+* Last updated on  2018-01-10
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -38,24 +37,24 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qepn_h
-#define qepn_h
+#ifndef qep_h
+#define qep_h
 
 /****************************************************************************/
 /*! The current QP version as a decimal constant XYZ, where X is a 1-digit
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      603
+#define QP_VERSION      604
 
 /*! The current QP version number string of the form X.Y.Z, where X is
 * a 1-digit major version number, Y is a 1-digit minor version number,
 * and Z is a 1-digit release number.
 */
-#define QP_VERSION_STR  "6.0.3"
+#define QP_VERSION_STR  "6.0.4"
 
-/*! Tamperproof current QP release (6.0.3) and date (2017-12-12) */
-#define QP_RELEASE      0x99F31CE4U
+/*! Tamperproof current QP release (6.0.4) and date (2018-01-10) */
+#define QP_RELEASE      0x94A562C3U
 
 
 /****************************************************************************/
