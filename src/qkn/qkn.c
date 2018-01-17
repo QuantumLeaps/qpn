@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.0.3
-* Last updated on  2017-12-12
+* Last updated for version 6.0.4
+* Last updated on  2018-01-16
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -37,6 +37,7 @@
 ******************************************************************************
 * @endcond
 */
+#define QP_IMPL       /* this is QP implementation */
 #include "qpn_conf.h" /* QP-nano configuration file (from the application) */
 #include "qfn_port.h" /* QF-nano port from the port directory */
 #include "qassert.h"  /* embedded systems-friendly assertions */
