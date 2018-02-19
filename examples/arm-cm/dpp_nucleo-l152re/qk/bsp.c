@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on STM32 NUCLEO-L152RE board, preemptive QK kernel
-* Last Updated for Version: 5.5.1
-* Date of the Last Update:  2015-10-05
+* Last Updated for Version: 6.1.0
+* Date of the Last Update:  2018-02-14
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,7 +28,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"

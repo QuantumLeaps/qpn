@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on STM32 NUCLEO-L053R8 board, preemptive QK kernel
-* Last Updated for Version: 6.0.3
-* Date of the Last Update:  2017-12-12
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -188,6 +188,17 @@ void QF_onStartup(void) {
 
     /* enable IRQs... */
 }
+
+/*..........................................................................*/
+#ifdef QK_ON_CONTEXT_SW
+/* NOTE: the context-switch callback is called with interrupts DISABLED */
+void QK_onContextSw(uint_fast8_t prev, uint_fast8_t next) {
+    (void)prev;
+    if (next != (uint_fast8_t)0) {
+        //_impure_ptr = &reentrant[next];
+    }
+}
+#endif /* QK_ON_CONTEXT_SW */
 /*..........................................................................*/
 void QK_onIdle(void) {
 

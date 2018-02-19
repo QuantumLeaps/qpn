@@ -1,6 +1,17 @@
 /**
 @page history Revision History
 
+@section qpn_6_1_1 Version 6.1.1, 2018-02-18
+The main purpose of this release is adding the context-switch callback to the preemptive @ref qkn "QK-nano" kernel. The QK_onContextSw() callback function provides a mechanism to perform additional custom operations when QK switches context from one thread to another. To avoid extra overhead when this functionality is not needed and for backwards-compatiblity with the existing applications, the callback is enabled only when the macro #QK_ON_CONTEXT_SW is defined. The macro can be defined either directly in command-line for the compiler, or in the QK-nano port file (qpn_port.h). Examples for the context-switch callbacks have been provided for the @ref arm-cm_dpp_nucleo-l053r8 "NUCLEO-L053R8" (Cortex-M0+) and the @ref arm-cm_dpp_ek-tm4c123gxl "EK-TM4C123GXL" (Cortex-M4F).
+
+Another purpose of this release is adding the support for the [<strong>ARM Compiler 6 (ARM-Clang)</strong>](https://developer.arm.com/products/software-development-tools/compilers/arm-compiler), which is a C/C++ toolchain for ARM processors based on the modern [Clang frontend](https://clang.llvm.org/) and the [LLVM framework](https://llvm.org/). This release adds the ARM-Clang ports and examples for all built-in kernels (QV-nano and QK-nano) for the ARM Cortex-M CPU cores.
+
+Also, this release changes the ARM Cortex-M ports for the IAR-ARM toolchain in that it replaces the assembly modules with the equivalent C implementation. All existing example projects for IAR-ARM have been updated to use the `qkn_port.c` files instead of `qkn_port.s` files.
+
+Also, this release adds new project files for the Atollic TRUEstudio for STM32. The TRUEstudio projects (Eclipse) have been added for the @ref arm-cm_dpp_nucleo-l053r8 "NUCLEO-L053R8" (Cortex-M0+) and the @ref arm-cm_dpp_nucleo-l152re "NUCLEO-L152RE" (Cortex-M3).
+
+
+------------------------------------------------------------------------------
 @section qpn_6_0_4 Version 6.0.4, 2018-01-10
 This release replaces assembly with C implementation in the ARM-KEIL ports or the QK-nano kernel to Cortex-M to take advantage of the `__asm` functions. (NOTE: this change has impact on the existing QP-nano applications that use the ARM-KEIL toolchain and the QK kernel.)
 

@@ -5,8 +5,8 @@
 * @cond
 ******************************************************************************
 * Product: QF-nano emulation for POSIX with cooperative QV-nano kernel
-* Last updated for version 5.9.8
-* Last updated on  2017-09-20
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,17 +33,16 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
 #include "qpn.h" /* QP-nano */
+#include <pthread.h> /* POSIX-thread API */
 
-#include <pthread.h>    /* POSIX-thread API */
-
-#ifdef QK_PREEMPTIVE
-    #error "This QP-nano port does not support QK_PREEMPTIVE configuration"
+#ifdef qkn_h
+    #error "This QP-nano port does not support QK-nano configuration"
 #endif
 
 Q_DEFINE_THIS_MODULE("qfn_posix")

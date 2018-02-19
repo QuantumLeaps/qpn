@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.0.3
-* Last updated on  2017-12-12
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -117,7 +117,7 @@
 * the __first__ member of the derived struct.
 * @include qfn_qactive.c
 */
-typedef struct {
+typedef struct QActive {
     QHsm super; /**< derives from the ::QHsm base class */
 
 #if (QF_TIMEEVT_CTR_SIZE != 0)

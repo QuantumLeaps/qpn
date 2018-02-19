@@ -1,11 +1,11 @@
 /**
 * @file
-* @brief QK-nano implementation.
+* @brief QK-nano preemptive kernel implementation.
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.0.4
-* Last updated on  2018-01-16
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,12 +32,11 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
-#define QP_IMPL       /* this is QP implementation */
 #include "qpn_conf.h" /* QP-nano configuration file (from the application) */
 #include "qfn_port.h" /* QF-nano port from the port directory */
 #include "qassert.h"  /* embedded systems-friendly assertions */
@@ -48,10 +47,6 @@ Q_DEFINE_THIS_MODULE("qkn")
 #ifndef qkn_h
     #error "Source file included in a project NOT based on the QK-nano kernel"
 #endif /* qkn_h */
-
-#if (!defined(QK_PREEMPTIVE)) || defined(QV_COOPERATIVE)
-    #error "The preemptive QK-nano kernel is not configured properly"
-#endif
 
 /* Public-scope objects *****************************************************/
 QK_Attr QK_attr_; /* global attributes of the QK-nano kernel */
@@ -106,9 +101,9 @@ static void initialize(void) {
 
     /* process all events posted during initialization... */
     QF_INT_DISABLE();
-    QK_attr_.actPrio = (uint_fast8_t)0; /* prio of the QK-nano idle loop */
+    QK_attr_.actPrio = (uint8_t)0; /* prio of the QK-nano idle loop */
     if (QK_sched_() != (uint_fast8_t)0) {
-        QK_activate_(); /* activate AOs to process events posted so far */
+        QK_activate_(); /* activate AOs to process all events posted so far */
     }
     QF_INT_ENABLE();
 }
@@ -120,11 +115,8 @@ static void initialize(void) {
 * the QF and start at least one active object with QActive_start().
 * This implementation of QF_run() is for the preemptive QK-nano kernel.
 *
-* @returns QF_run() typically does not return in embedded applications.
-* However, when QP runs on top of an operating system,  QF_run() might
-* return and in this case the return represents the error code (0 for
-* success). Typically the value returned from QF_run() is subsequently
-* passed on as return from main().
+* @returns
+* In QK-nano QF_run() does not return.
 */
 int_t QF_run(void) {
     initialize();
@@ -171,9 +163,10 @@ QSchedStatus QK_schedLock(uint_fast8_t ceiling) {
     QF_INT_DISABLE();
 
     /* first store the previous lock prio */
-    if (QK_attr_.lockPrio < ceiling) { /* raising the lock prio? */
-        stat = (QSchedStatus)(QK_attr_.lockPrio << 8);
-        QK_attr_.lockPrio = ceiling;
+    /* raising the lock prio? */
+    if ((uint_fast8_t)QK_attr_.lockPrio < ceiling) {
+        stat = (QSchedStatus)QK_attr_.lockPrio << 8;
+        QK_attr_.lockPrio = (uint8_t)ceiling;
 
         /* add the previous lock holder priority */
         stat |= (QSchedStatus)QK_attr_.lockHolder;
@@ -207,7 +200,7 @@ QSchedStatus QK_schedLock(uint_fast8_t ceiling) {
 void QK_schedUnlock(QSchedStatus stat) {
     /* has the scheduler been actually locked by the last QK_schedLock()? */
     if (stat != (QSchedStatus)0xFF) {
-        uint_fast8_t lockPrio = QK_attr_.lockPrio; /* volatilie into tmp */
+        uint_fast8_t lockPrio = (uint_fast8_t)QK_attr_.lockPrio;
         uint_fast8_t prevPrio = (uint_fast8_t)(stat >> 8);
 
         QF_INT_DISABLE();
@@ -218,8 +211,8 @@ void QK_schedUnlock(QSchedStatus stat) {
         Q_REQUIRE_ID(700, lockPrio > prevPrio);
 
         /* restore the previous lock priority and lock holder */
-        QK_attr_.lockPrio   = prevPrio;
-        QK_attr_.lockHolder = (uint_fast8_t)(stat & (QSchedStatus)0xFF);
+        QK_attr_.lockPrio   = (uint8_t)prevPrio;
+        QK_attr_.lockHolder = (uint8_t)(stat & (QSchedStatus)0xFF);
 
         /* find the highest-prio thread ready to run */
         if (QK_sched_() != (uint_fast8_t)0) { /* priority found? */
@@ -267,18 +260,18 @@ uint_fast8_t QK_sched_(void) {
 #endif
 
     /* is the highest-prio below the active priority? */
-    if (p <= QK_attr_.actPrio) {
+    if (p <= (uint_fast8_t)QK_attr_.actPrio) {
         p = (uint_fast8_t)0; /* active object not eligible */
     }
 #ifdef QK_SCHED_LOCK
     /* below the scheduler ceiling? */
-    else if (p <= QK_attr_.lockPrio) {
+    else if (p <= (uint_fast8_t)QK_attr_.lockPrio) {
         p = (uint_fast8_t)0; /* active object not eligible */
     }
 #endif /* QK_SCHED_LOCK */
     else {
         Q_ASSERT_ID(610, p <= QF_maxActive_);
-        QK_attr_.nextPrio = p; /* next AO to run */
+        QK_attr_.nextPrio = (uint8_t)p; /* next AO to run */
     }
 
     return p;
@@ -295,20 +288,25 @@ uint_fast8_t QK_sched_(void) {
 * interrupts **disabled**.
 */
 void QK_activate_(void) {
-    uint_fast8_t pin = QK_attr_.actPrio;  /* save the active priority */
-    uint_fast8_t p   = QK_attr_.nextPrio; /* the next prio to run */
+    uint_fast8_t pin = (uint_fast8_t)QK_attr_.actPrio;  /* save active prio */
+    uint_fast8_t p   = (uint_fast8_t)QK_attr_.nextPrio; /* next prio to run */
+
+    /* QK Context switch callback enabled? */
+#ifdef QK_ON_CONTEXT_SW
+    uint_fast8_t pprev = pin;
+#endif /* QK_ON_CONTEXT_SW */
 
     /* QK_attr_.nextPrio must be non-zero upon entry to QK_activate_() */
     Q_REQUIRE_ID(800, p != (uint_fast8_t)0);
 
-    QK_attr_.nextPrio = (uint_fast8_t)0; /* clear for the next time */
+    QK_attr_.nextPrio = (uint8_t)0; /* clear for the next time */
 
     /* loop until no more ready-to-run AOs of higher prio than the initial */
     do {
         QActive *a;
         QActiveCB const Q_ROM *acb;
 
-        QK_attr_.actPrio = p; /* this becomes the active priority */
+        QK_attr_.actPrio = (uint8_t)p; /* this becomes the active priority */
         QF_INT_ENABLE();  /* it's safe to leave critical section */
 
         acb = &QF_active[p];
@@ -329,7 +327,15 @@ void QK_activate_(void) {
             a->tail = Q_ROM_BYTE(acb->qlen);
         }
         --a->tail;
-        QF_INT_ENABLE(); /* enable interrupts to launch a task */
+
+#ifdef QK_ON_CONTEXT_SW
+        if (p != pprev) {  /* changing threads? */
+            QK_onContextSw(pprev, p); /* context-switch callback */
+            pprev = p; /* update previous priority */
+        }
+#endif /* QK_ON_CONTEXT_SW */
+
+        QF_INT_ENABLE(); /* unconditionally enable interrupts */
 
         QHSM_DISPATCH(&a->super); /* dispatch to the SM (execute RTC step) */
 
@@ -363,7 +369,7 @@ void QK_activate_(void) {
         }
 #ifdef QK_SCHED_LOCK
         /* below the scheduler ceiling? */
-        else if (p <= QK_attr_.lockPrio) {
+        else if (p <= (uint_fast8_t)QK_attr_.lockPrio) {
             p = (uint_fast8_t)0; /* active object not eligible */
         }
         else {
@@ -372,6 +378,10 @@ void QK_activate_(void) {
 #endif /* QK_SCHED_LOCK */
     } while (p != (uint_fast8_t)0);
 
-    QK_attr_.actPrio = pin; /* restore the active priority */
+    QK_attr_.actPrio = (uint8_t)pin; /* restore the active priority */
+
+#ifdef QK_ON_CONTEXT_SW
+    QK_onContextSw(pprev, pin); /* context-switch callback */
+#endif /* QK_ON_CONTEXT_SW */
 }
 

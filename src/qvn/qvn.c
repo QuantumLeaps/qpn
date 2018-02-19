@@ -4,8 +4,8 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 6.0.4
-* Last updated on  2018-01-16
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,12 +32,11 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
-#define QP_IMPL       /* this is QP implementation */
 #include "qpn_conf.h" /* QP-nano configuration file (from the application) */
 #include "qfn_port.h" /* QF-nano port from the port directory */
 #include "qassert.h"  /* embedded systems-friendly assertions */
@@ -48,10 +47,6 @@ Q_DEFINE_THIS_MODULE("qvn")
 #ifndef qvn_h
     #error "Source file included in a project NOT based on the QV-nano kernel"
 #endif /* qvn_h */
-
-#if (!defined(QV_COOPERATIVE)) || defined(QK_PREEMPTIVE)
-    #error "The cooperative QV kernel is not configured properly"
-#endif
 
 /****************************************************************************/
 /**

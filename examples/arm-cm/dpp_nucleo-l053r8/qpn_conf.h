@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: QP-nano configuration for the Blinky example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,7 +28,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
 #ifndef qpn_conf_h
@@ -38,5 +38,6 @@
 #define QF_MAX_TICK_RATE        1
 #define QF_TIMEEVT_CTR_SIZE     2
 #define QF_TIMEEVT_PERIODIC
+#define QK_ON_CONTEXT_SW
 
 #endif  /* qpn_conf_h */

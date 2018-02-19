@@ -4,9 +4,8 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Product: QV-nano
-* Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,25 +32,16 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
+
 ******************************************************************************
 * @endcond
 */
 #ifndef qvn_h
 #define qvn_h
 
-/*! Preprocessor switch for configuring cooperative real-time kernel
-* (QV-nano). The macro is automatically defined by including the qvn.h file
-* in qpn_port.h.
-*/
-/**
-* @note If defined, this macro eliminates the code for the preemptive
-* QK-nano kernel provided in QF-nano. Instead, the fully preemptive QK-nano
-* real-time kernel is used.
-*/
-#define QV_COOPERATIVE  1
-
+/****************************************************************************/
 /*! Ready set of QV-nano. */
 extern uint_fast8_t volatile QV_readySet_;
 

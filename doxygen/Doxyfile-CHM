@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "QP-nano"
-PROJECT_NUMBER         = "6.0.4"
+PROJECT_NUMBER         = "6.1.1"
 PROJECT_BRIEF          =
 PROJECT_LOGO           = images/header_logo_ql.png
 OUTPUT_DIRECTORY       =
@@ -43,6 +43,7 @@ OPTIMIZE_FOR_FORTRAN   = NO
 OPTIMIZE_OUTPUT_VHDL   = NO
 EXTENSION_MAPPING      = lnt=Objective-C
 MARKDOWN_SUPPORT       = YES
+TOC_INCLUDE_HEADINGS   = YES
 AUTOLINK_SUPPORT       = YES
 BUILTIN_STL_SUPPORT    = NO
 CPP_CLI_SUPPORT        = NO
@@ -103,6 +104,7 @@ WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = NO
+WARN_AS_ERROR          = NO
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           =
 #---------------------------------------------------------------------------
@@ -150,7 +152,7 @@ EXCLUDE                =
 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
-EXCLUDE_SYMBOLS        =
+EXCLUDE_SYMBOLS        = QP_IMPL
 
 EXAMPLE_PATH           = \
     snippets \
@@ -161,7 +163,7 @@ EXAMPLE_PATH           = \
     ../ports \
     ../examples
 
-EXAMPLE_PATTERNS       =
+EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = images
 INPUT_FILTER           =
@@ -181,6 +183,9 @@ REFERENCES_LINK_SOURCE = YES
 SOURCE_TOOLTIPS        = YES
 USE_HTAGS              = NO
 VERBATIM_HEADERS       = YES
+CLANG_ASSISTED_PARSING = NO
+CLANG_OPTIONS          =
+CLANG_COMPILATION_DATABASE_PATH = 0
 #---------------------------------------------------------------------------
 # Configuration options related to the alphabetical class index
 #---------------------------------------------------------------------------
@@ -214,7 +219,7 @@ CHM_FILE               = ../../../doxygen/qpn.chm
 HHC_LOCATION           =
 GENERATE_CHI           = NO
 CHM_INDEX_ENCODING     =
-BINARY_TOC             = NO
+BINARY_TOC             = YES
 TOC_EXPAND             = NO
 GENERATE_QHP           = NO
 QCH_FILE               =
@@ -319,8 +324,9 @@ PREDEFINED             = \
     Q_PARAM_SIZE=2 \
     QF_TIMEEVT_CTR_SIZE=2 \
     QF_TIMEEVT_PERIODIC \
-    QK_SCHED_LOCK
- 
+    QK_SCHED_LOCK \
+    QK_ON_CONTEXT_SW
+
 EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
@@ -363,6 +369,7 @@ DOTFILE_DIRS           =
 MSCFILE_DIRS           =
 DIAFILE_DIRS           =
 PLANTUML_JAR_PATH      =
+PLANTUML_CFG_FILE      =
 PLANTUML_INCLUDE_PATH  =
 DOT_GRAPH_MAX_NODES    = 50
 MAX_DOT_GRAPH_DEPTH    = 0

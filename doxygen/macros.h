@@ -23,6 +23,10 @@
 * instead use: #QF_TIMEEVT_USAGE */
 #define Q_TIMERSET
 
+/*! This macro enables calling the QK-nano context-switch callback
+* QK_onContextSw() */
+#define QK_ON_CONTEXT_SW
+
 /*! Macro that should be defined (typically on the compiler's command line)
 in the Win32-GUI applications that use the @ref win32-qv port.
 */

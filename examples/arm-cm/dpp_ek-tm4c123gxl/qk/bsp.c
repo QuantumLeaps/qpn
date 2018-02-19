@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Product: DPP on EK-TM4C123GXL board, preemptive QK kernel
-* Last Updated for Version: 5.9.7
-* Date of the Last Update:  2018-08-18
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -28,7 +28,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpn.h"
@@ -231,6 +231,17 @@ void QF_onStartup(void) {
     /* enable IRQs... */
     NVIC_EnableIRQ(GPIOA_IRQn);
 }
+
+/*..........................................................................*/
+#ifdef QK_ON_CONTEXT_SW
+/* NOTE: the context-switch callback is called with interrupts DISABLED */
+void QK_onContextSw(uint_fast8_t prev, uint_fast8_t next) {
+    (void)prev;
+    if (next != (uint_fast8_t)0) {
+        //_impure_ptr = &reentrant[next];
+    }
+}
+#endif /* QK_ON_CONTEXT_SW */
 /*..........................................................................*/
 void QK_onIdle(void) {
     /* toggle LED2 on and then off, see NOTE01 */

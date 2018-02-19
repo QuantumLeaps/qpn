@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.0.4
-* Last updated on  2018-01-16
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,12 +32,11 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* httpS://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
-#define QP_IMPL       /* this is QP implementation */
 #include "qpn_conf.h" /* QP-nano configuration file (from the application) */
 #include "qfn_port.h" /* QF-nano port from the port directory */
 #include "qassert.h"  /* embedded systems-friendly assertions */
@@ -186,7 +185,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
             QF_readySet_ |= (uint_fast8_t)
                 ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
 
-#ifdef QK_PREEMPTIVE
+#ifdef qkn_h
             if (QK_sched_() != (uint_fast8_t)0) {
                 QK_activate_(); /* activate the next active object */
             }
@@ -320,7 +319,7 @@ void QF_init(uint_fast8_t maxActive) {
 
     QF_readySet_ = (uint_fast8_t)0;
 
-#ifdef QK_PREEMPTIVE
+#ifdef qkn_h
     QK_attr_.actPrio = (uint_fast8_t)8; /* QK-nano scheduler locked */
 
 #ifdef QF_ISR_NEST
@@ -332,7 +331,7 @@ void QF_init(uint_fast8_t maxActive) {
     QK_attr_.lockHolder = (uint_fast8_t)0;
 #endif
 
-#endif /* #ifdef QK_PREEMPTIVE */
+#endif /* #ifdef qkn_h */
 
     /* clear all registered active objects... */
     for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {

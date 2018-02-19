@@ -1,13 +1,13 @@
 ##############################################################################
-# Product: Makefile for QP-nano, DPP on mbed-LPC1768, QK kernel, GNU-ARM
-# Last Updated for Version: 5.9.3
-# Date of the Last Update:  2017-07-03
+# Product: Makefile for QP-nano, DPP on mbed-LPC1768, QV kernel, GNU-ARM
+# Last Updated for Version: 6.1.0
+# Date of the Last Update:  2018-02-13
 #
 #                    Q u a n t u m     L e a P s
 #                    ---------------------------
 #                    innovating embedded systems
 #
-# Copyright (C) Quantum Leaps, LLC. All rights reserved.
+# Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 #
 # This program is open source software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
@@ -28,7 +28,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact information:
-# https://state-machine.com
+# https://www.state-machine.com
 # mailto:info@state-machine.com
 ##############################################################################
 # examples of invoking this Makefile:
@@ -49,7 +49,7 @@
 #-----------------------------------------------------------------------------
 # project name
 #
-PROJECT     := dpp-qk
+PROJECT     := dpp-qv
 
 #-----------------------------------------------------------------------------
 # project directories
@@ -61,14 +61,14 @@ QPN := ../../../../..
 endif
 
 # QP port used in this project
-QP_PORT_DIR := $(QPN)/ports/arm-cm/qk/gnu
+QP_PORT_DIR := $(QPN)/ports/arm-cm/qv/gnu
 
 # list of all source directories used by this project
 VPATH = \
 	.. \
 	../.. \
 	$(QPN)/src/qfn \
-	$(QPN)/src/qkn \
+	$(QPN)/src/qvn \
 	$(QP_PORT_DIR) \
 	$(QPN)/3rd_party/mbed-lpc1768 \
 	$(QPN)/3rd_party/mbed-lpc1768/gnu
@@ -106,10 +106,10 @@ LD_SCRIPT := $(PROJECT).ld
 QP_SRCS := \
 	qepn.c \
 	qfn.c \
-	qkn.c
+	qvn.c \
+	qvn_port.c
 
-QP_ASMS := \
-	qk_port.s
+QP_ASMS :=
 
 LIB_DIRS  :=
 LIBS      :=
@@ -163,16 +163,6 @@ RM    := rm
 # combine all the soruces...
 C_SRCS += $(QP_SRCS)
 ASM_SRCS += $(QP_ASMS)
-
-# add the pre-defined symbol for ARM architecture
-DEFINES += -D__ARM_ARCH=$(ARM_ARCH)
-ASM_CPU += -defsym=__ARM_ARCH=$(ARM_ARCH)
-
-# add the pre-defined symbol __FPU_PRESENT if needed...
-ifneq (,$(ARM_FPU))
-DEFINES += -D__FPU_PRESENT
-ASM_FPU += -defsym=__FPU_PRESENT=1
-endif
 
 ifeq (rel, $(CONF)) # Release configuration ..................................
 

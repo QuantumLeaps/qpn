@@ -5,8 +5,8 @@
 * @cond
 ******************************************************************************
 * Product: QF-nano emulation for Win32 with cooperative QV-nano kernel
-* Last updated for version 5.9.8
-* Last updated on  2017-09-20
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -33,7 +33,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -43,7 +43,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>  /* Win32 API */
 
-#ifdef QK_PREEMPTIVE
+#ifdef qkn_h
     #error "This QP-nano port does not support QK_PREEMPTIVE configuration"
 #endif
 

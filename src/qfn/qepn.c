@@ -4,8 +4,8 @@
 * @ingroup qep
 * @cond
 ******************************************************************************
-* Last updated for version 6.0.4
-* Last updated on  2018-01-16
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,12 +32,11 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
-#define QP_IMPL       /* this is QP implementation */
 #include "qpn_conf.h" /* QP-nano configuration file (from the application) */
 #include "qfn_port.h" /* QF-nano port from the port directory */
 #include "qassert.h"  /* embedded systems-friendly assertions */

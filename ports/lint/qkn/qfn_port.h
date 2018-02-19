@@ -3,8 +3,8 @@
 * @brief QF-nano port for Lint, preemptive QK kernel, generic C compiler
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.1
-* Last updated on  2016-12-16
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -31,7 +31,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * \endcond
@@ -143,6 +143,9 @@
 */
 #define QK_INIT()  QK_init()
 void QK_init(void);
+
+/*! Macro that enables context-switch callback in QK-nano */
+#define QK_ON_CONTEXT_SW
 
 void int_disable(void); /*!< example of a function to disable interrupts */
 void int_enable(void);  /*!< example of a function to enable interrupts */

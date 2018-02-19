@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 5.9.7
-* Last updated on  2017-08-18
+* Last updated for version 6.1.1
+* Last updated on  2018-02-18
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -43,30 +43,19 @@
 /****************************************************************************/
 /*! attributes of the QK kernel */
 typedef struct {
-    uint_fast8_t volatile actPrio;  /*!< prio of the active AO */
-    uint_fast8_t volatile nextPrio; /*!< prio of the next AO to execute */
+    uint8_t volatile actPrio;     /*!< prio of the active AO */
+    uint8_t volatile nextPrio;    /*!< prio of the next AO to execute */
 #ifdef QK_SCHED_LOCK
-    uint_fast8_t volatile lockPrio;   /*!< lock prio (0 == no-lock) */
-    uint_fast8_t volatile lockHolder; /*!< prio of the lock holder */
+    uint8_t volatile lockPrio;    /*!< lock prio (0 == no-lock) */
+    uint8_t volatile lockHolder;  /*!< prio of the lock holder */
 #endif /* QK_SCHED_LOCK */
 #ifdef QF_ISR_NEST
-    uint_fast8_t volatile intNest;    /*!< ISR nesting level */
+    uint8_t volatile intNest;     /*!< ISR nesting level */
 #endif /* QF_ISR_NEST */
 } QK_Attr;
 
 /*! global attributes of the QK kernel */
 extern QK_Attr QK_attr_;
-
-/*! Preprocessor switch for configuring preemptive real-time kernel
-* (QK-nano). The macro is automatically defined by including the qkn.h file
-* in qpn_port.h.
-*/
-/**
-* @note If defined, this macro eliminates the code for the non-preemptive
-* scheduler provided in QF-nano. Instead, the fully preemptive QK-nano
-* real-time kernel is used.
-*/
-#define QK_PREEMPTIVE   1
 
 /****************************************************************************/
 /*! QK-nano scheduler finds the highest-priority thread ready to run */
@@ -94,6 +83,31 @@ void QK_activate_(void);
 
 #endif
 
+#ifdef QK_ON_CONTEXT_SW
+
+    /*! QK-nano context switch callback (customized in BSPs for QK-nano) */
+    /**
+    * @description
+    * This callback function provides a mechanism to perform additional
+    * custom operations when QK switches context from one thread to
+    * another.
+    *
+    * @param[in] prev   priority of the previous thread (active object)
+    *                   (prev==0 means that @p prev was the QK idle loop)
+    * @param[in] next   priority of the next thread (active object)
+    *                   (next==0) means that @p next is the QK idle loop)
+    * @attention
+    * QK_onContextSw() is invoked with interrupts **disabled** and must also
+    * return with interrupts **disabled**.
+    *
+    * @note
+    * This callback is enabled by defining the macro #QK_ON_CONTEXT_SW.
+    *
+    * @include qkn_oncontextsw.c
+    */
+    void QK_onContextSw(uint_fast8_t prev, uint_fast8_t next);
+
+#endif /* QK_ON_CONTEXT_SW */
 
 /*! QK idle callback (customized in BSPs for QK)
 *

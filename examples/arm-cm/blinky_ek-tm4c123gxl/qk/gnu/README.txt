@@ -1,14 +1,15 @@
 About this Example
 ==================
-This example can be built from the command prompt with the provided
-Makefile. The example can also be imported as a Makefile-based
-project into Eclipse-based IDEs.
+This example can be built in two different ways:
+- from the command prompt with the provided Makefile.
+- from the TI Code Composer Studio with the provided CCS project.
 
 
 The Makefile
 ============
 The provided Makefile should be easy to adapt for your own projects.
-It contains three build configurations: Debug (default) and Release.
+It contains three build configurations: Debug (default), Release, and
+Spy.
 
 Also, the Makefile has been specifically designed to work as an external
 Makefile with the Eclipse CDT. 
@@ -17,9 +18,11 @@ The various build configurations are built as follows:
 
 make
 make CONF=rel
+make CONF=spy
 
 make clean
 make CONF=rel clean
+make CONF=spy clean
 
 ***
 NOTE:

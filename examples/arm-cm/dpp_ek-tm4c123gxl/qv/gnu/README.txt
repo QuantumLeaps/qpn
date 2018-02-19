@@ -1,8 +1,8 @@
 About this Example
 ==================
-This example can be built from the command prompt with the provided
-Makefile. The example can also be imported as a Makefile-based
-project into Eclipse-based IDEs.
+This example can be built in two different ways:
+- from the command prompt with the provided Makefile.
+- from the TI Code Composer Studio with the provided CCS project.
 
 
 The Makefile
@@ -18,12 +18,15 @@ The various build configurations are built as follows:
 
 make
 make CONF=rel
+make CONF=spy
 
 make clean
 make CONF=rel clean
+make CONF=spy clean
 
-****
-NOTE: The installation folder of the GNU-ARM toolset on YOUR machine needs
+***
+NOTE:
+The installation folder of the GNU-ARM toolset on YOUR machine needs
 to be adjusted in the provided Makefile, by editing the symbol: GNU_ARM.
 As described in the comment for this symbol, the GNU-ARM toolset is taken
 from: http://gnutoolchains.com/arm-eabi
@@ -31,13 +34,13 @@ from: http://gnutoolchains.com/arm-eabi
 It is highly recommened to use the same GNU-ARM distribution, especially
 for ARM Cortex-M4F projects, due to the support for the hardware FPU
 (float-abi=hard).
-****
+***
 
 
 Adjusting Stack and Heap Sizes
 ==============================
-The stack and heap sizes are determined in this project by the GNU linker
-script (.ld file), which provides a template of the recommended GNU linker
+The stack and heap sizes are determined in this project by the GCC linker
+script (.ld file), which provides a template of the recommended GCC linker
 script for QP applications.
    
 
@@ -60,9 +63,9 @@ The weak function assert_failed() defined in this file might be re-defined
 in the application to customize it for the application-specific error-
 handling policy.
 
-****
+***
 NOTE: The function assert_failed() typically should NOT use the stack,
 because stack might be corrupted by the time this function is called.
 Also, assert_failed() is intended to handle catastrophic errors and
 should NOT return.
-****
+***
