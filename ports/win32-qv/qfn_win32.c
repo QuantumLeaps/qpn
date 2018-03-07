@@ -1,18 +1,17 @@
 /**
 * @file
-* @brief QF-nano port to POSIX/P-threads, GNU-C compiler
+* @brief QF-nano port to Win32 with cooperative QV kernel (win32-qv)
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Product: QF-nano emulation for Win32 with cooperative QV-nano kernel
-* Last updated for version 6.1.1
-* Last updated on  2018-02-18
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-03-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -370,9 +369,13 @@ int_t QF_run(void) {
 
     QF_onStartup(); /* invoke startup callback */
 
-    l_isRunning = true;
-    Q_ALLEGE_ID(810, CreateThread(NULL, 1024, &ticker_thread, 0, 0, NULL)
-        != (HANDLE)0); /* ticker thread must be created */
+    l_isRunning = true; /* QF-nano is running */
+
+    if (l_tickMsec != (uint32_t)0) { /* system clock tick configured? */
+        /* create the ticker thread... */
+        HANDLE ticker = CreateThread(NULL, 1024, &ticker_thread, 0, 0, NULL);
+        Q_ASSERT_ID(810, ticker != (HANDLE)0); /* thread must be created */
+    }
 
     /* the event loop of the QV-nano kernel... */
     QF_INT_DISABLE();
@@ -438,7 +441,12 @@ void QF_stop(void) {
 }
 /****************************************************************************/
 void QF_setTickRate(uint32_t ticksPerSec) {
-    l_tickMsec = 1000UL / ticksPerSec;
+    if (ticksPerSec != (uint32_t)0) {
+        l_tickMsec = 1000UL / ticksPerSec;
+    }
+    else {
+        l_tickMsec = (uint32_t)0; /* means NO system clock tick */
+    }
 }
 
 /*..........................................................................*/

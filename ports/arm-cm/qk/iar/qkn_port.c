@@ -1,6 +1,6 @@
 /**
 * @file
-* @brief QK-nano port to ARM Cortex-M, ARM-CLANG toolset
+* @brief QK-nano port to ARM Cortex-M, IAR-ARM toolset
 * @cond
 ******************************************************************************
 * Last Updated for Version: 6.1.1
@@ -122,7 +122,7 @@ void QK_init(void) {
 * exception). In QK, this is exactly the time when the QK activator needs to
 * handle the asynchronous preemption.
 *****************************************************************************/
-__attribute__ ((naked))
+__stackless
 void PendSV_Handler(void) {
 __asm volatile (
 
@@ -180,7 +180,7 @@ __asm volatile (
 * NOTE: Thread_ret does not execute in the PendSV context!
 * NOTE: Thread_ret executes entirely with interrupts DISABLED.
 *****************************************************************************/
-__attribute__ ((naked))
+__stackless
 void Thread_ret(void) {
 __asm volatile (
 
@@ -222,7 +222,7 @@ __asm volatile (
 * NOTE: The NMI exception is entered with interrupts DISABLED, so it needs
 * to re-enable interrupts before it returns to the preempted task.
 *****************************************************************************/
-__attribute__ ((naked))
+__stackless
 void NMI_Handler(void) {
 __asm volatile (
 

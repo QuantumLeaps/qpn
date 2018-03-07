@@ -3,14 +3,14 @@
 * @brief QV-nano port to ARM Cortex-M, ARM-CLANG toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.1.0
-* Date of the Last Update:  2018-02-13
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-03-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,45 +31,15 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
-#include "qfn_port.h"
+#include "qpn_conf.h" /* QP-nano configuration file (from the application) */
+#include "qfn_port.h" /* QF-nano port from the port directory */
 
-#if (__ARM_ARCH == 6) /* Cortex-M0/M0+/M1 ? */
-
-/* hand-optimized quick LOG2 in assembly (M0/M0+ have no CLZ instruction) */
-__attribute__ ((naked))
-uint_fast8_t QF_qlog2(uint32_t x) {
-__asm volatile (
-    "  MOVS    r1,#0            \n"
-    "  LSRS    r2,r0,#16        \n"
-    "  BEQ     QF_qlog2_1       \n"
-    "  MOVS    r1,#16           \n"
-    "  MOVS    r0,r2            \n"
-    "QF_qlog2_1:                \n"
-    "  LSRS    r2,r0,#8         \n"
-    "  BEQ     QF_qlog2_2       \n"
-    "  ADDS    r1, r1,#8        \n"
-    "  MOVS    r0, r2           \n"
-    "QF_qlog2_2:                \n"
-    "  LSRS    r2,r0,#4         \n"
-    "  BEQ     QF_qlog2_3       \n"
-    "  ADDS    r1,r1,#4         \n"
-    "  MOV     r0,r2            \n"
-    "QF_qlog2_3:                \n"
-    "  LDR     r2,=QF_qlog2_LUT \n"
-    "  LDRB    r0,[r2,r0]       \n"
-    "  ADDS    r0,r1, r0        \n"
-    "  BX      lr               \n"
-    "QF_qlog2_LUT:              \n"
-    "  .byte 0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4"
-    );
-}
-
-#else /* NOT Cortex-M0/M0+/M1 */
+#if (__ARM_ARCH != 6) /* NOT Cortex-M0/M0+/M1(v6-M, v6S-M)? */
 
 #define SCnSCB_ICTR  ((uint32_t volatile *)0xE000E004)
 #define SCB_SYSPRI   ((uint32_t volatile *)0xE000ED14)
@@ -79,7 +49,7 @@ __asm volatile (
 * Initialize the exception priorities and IRQ priorities to safe values.
 *
 * Description:
-* On Cortex-M3/M4/M7, this QV port disables interrupts by means of the
+* On Cortex-M3/M4, this QV port disables interrupts by means of the
 * BASEPRI register. However, this method cannot disable interrupt
 * priority zero, which is the default for all interrupts out of reset.
 * The following code changes the SysTick priority and all IRQ priorities
@@ -114,5 +84,5 @@ void QV_init(void) {
     } while (n != 0);
 }
 
-#endif /* NOT Cortex-M0/M0+/M1 */
+#endif /* NOT Cortex-M0/M0+/M1(v6-M, v6S-M)? */
 

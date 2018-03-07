@@ -3,14 +3,14 @@
 * @brief QV-nano port to ARM Cortex-M, ARM-KEIL toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.9.6
-* Date of the Last Update:  2017-07-28
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-03-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,7 +31,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -49,7 +49,7 @@
 * Initialize the exception priorities and IRQ priorities to safe values.
 *
 * Description:
-* On Cortex-M3/M4/M7, this QV port disables interrupts by means of the
+* On Cortex-M3/M4, this QV port disables interrupts by means of the
 * BASEPRI register. However, this method cannot disable interrupt
 * priority zero, which is the default for all interrupts out of reset.
 * The following code changes the SysTick priority and all IRQ priorities
@@ -85,3 +85,4 @@ void QV_init(void) {
 }
 
 #endif /* NOT Cortex-M0/M0+/M1(v6-M, v6S-M)? */
+

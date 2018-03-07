@@ -3,14 +3,14 @@
 * @brief QK-nano port to ARM Cortex-M, ARM-KEIL toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.0.4
-* Date of the Last Update:  2018-01-10
+* Last Updated for Version: 6.1.1
+* Date of the Last Update:  2018-03-06
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,12 +31,18 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
-#include "qfn_port.h"
+#include "qpn_conf.h" /* QP-nano configuration file (from the application) */
+#include "qfn_port.h" /* QF-nano port from the port directory */
+
+/* prototypes --------------------------------------------------------------*/
+void PendSV_Handler(void);
+void NMI_Handler(void);
+void Thread_ret(void);
 
 #define SCnSCB_ICTR  ((uint32_t volatile *)0xE000E004)
 #define SCB_SYSPRI   ((uint32_t volatile *)0xE000ED14)
@@ -47,7 +53,7 @@
 * Initialize the exception priorities and IRQ priorities to safe values.
 *
 * Description:
-* On Cortex-M3/M4/M7, this QK port disables interrupts by means of the
+* On Cortex-M3/M4, this QK port disables interrupts by means of the
 * BASEPRI register. However, this method cannot disable interrupt
 * priority zero, which is the default for all interrupts out of reset.
 * The following code changes the SysTick priority and all IRQ priorities
@@ -73,7 +79,7 @@ void QK_init(void) {
     /* SCB_SYSPRI2: SVCall */
     SCB_SYSPRI[2] |= (QF_BASEPRI << 24);
 
-    /* SCB_SYSPRI3:  SysTick, Debug */
+    /* SCB_SYSPRI3:  SysTick, PendSV, Debug */
     SCB_SYSPRI[3] |= (QF_BASEPRI << 24) | (QF_BASEPRI << 16) | QF_BASEPRI;
 
     /* set all implemented IRQ priories to QF_BASEPRI... */
@@ -156,7 +162,7 @@ __asm void PendSV_Handler(void) {
     LDR     r1,=Thread_ret    /* return address after the call   (new lr) */
 
     SUB     sp,sp,#8*4        /* reserve space for exception stack frame */
-    ADD     r0,sp,#5*4        /* r0 := 5 registers below the top of stack */
+    ADD     r0,sp,#5*4        /* r0 := 5 registers below the SP */
     STM     r0!,{r1-r3}       /* save xpsr,pc,lr */
 
     MOVS    r0,#6
@@ -235,3 +241,4 @@ __asm void NMI_Handler(void) {
 
     ALIGN                     /* align the code to 4-byte boundary */
 }
+
