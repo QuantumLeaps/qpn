@@ -3,14 +3,14 @@
 * @brief QF-nano emulation for Win32 with cooperative QV kernel
 * @cond
 ******************************************************************************
-* Last updated for version 5.6.4
-* Last updated on  2016-05-04
+* Last Updated for Version: 6.2.0
+* Date of the Last Update:  2018-04-09
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -31,8 +31,8 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* https://www.state-machine.com
+* mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
 */
@@ -57,9 +57,12 @@
 void QF_enterCriticalSection_(void);
 void QF_leaveCriticalSection_(void);
 
+/* set clock tick rate (NOTE ticksPerSec==0 disables the "ticker thread" */
 void QF_setTickRate(uint32_t ticksPerSec); /* set clock tick rate */
 
-/* ISR-level clock tick callback */
+/* ISR-level clock tick callback
+* (NOTE not called when "ticker thread" is not running)
+*/
 void QF_onClockTickISR(void);
 
 /* application-level callback to cleanup the application */

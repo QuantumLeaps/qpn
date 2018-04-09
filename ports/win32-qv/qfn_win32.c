@@ -4,8 +4,8 @@
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.1.1
-* Date of the Last Update:  2018-03-06
+* Last updated for version 6.2.0
+* Last updated on  2018-04-09
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -371,7 +371,8 @@ int_t QF_run(void) {
 
     l_isRunning = true; /* QF-nano is running */
 
-    if (l_tickMsec != (uint32_t)0) { /* system clock tick configured? */
+    /* system clock tick configured? */
+    if (l_tickMsec != (uint32_t)0) {
         /* create the ticker thread... */
         HANDLE ticker = CreateThread(NULL, 1024, &ticker_thread, 0, 0, NULL);
         Q_ASSERT_ID(810, ticker != (HANDLE)0); /* thread must be created */
@@ -491,5 +492,4 @@ static DWORD WINAPI ticker_thread(LPVOID par) {
 * maximum dynamic range of uint_fast8_t data type, which is 0xFF
 * (see QF_FUDGED_QUEUE_LEN).
 */
-
 

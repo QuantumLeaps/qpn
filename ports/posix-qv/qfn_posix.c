@@ -1,18 +1,17 @@
 /**
 * @file
-* @brief QF-nano port to POSIX/P-threads, GNU-C compiler
+* @brief QF-nano port to POSIX API with cooperative QV scheduler (posix-qv)
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Product: QF-nano emulation for POSIX with cooperative QV-nano kernel
-* Last updated for version 6.1.1
-* Last updated on  2018-02-18
+* Last updated for version 6.2.0
+* Last updated on  2018-04-09
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
 *                    innovating embedded systems
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -377,8 +376,12 @@ int_t QF_run(void) {
     QF_onStartup(); /* invoke startup callback */
 
     l_isRunning = true;
-    Q_ALLEGE_ID(810, pthread_create(&thread, (pthread_attr_t *)0,
-         &tickerThread, (void *)0) == 0); /* ticker thread must be created */
+
+    /* system clock tick configured? */
+    if ((l_tick.tv_sec != 0) || (l_tick.tv_nsec != 0)) {
+        Q_ALLEGE_ID(810, pthread_create(&thread, (pthread_attr_t *)0,
+             &tickerThread, (void *)0) == 0); /* ticker thread must be created */
+    }
 
     /* the event loop of the QV-nano kernel... */
     QF_INT_DISABLE();
@@ -422,10 +425,17 @@ int_t QF_run(void) {
             }
         }
         else {
-            /* yield the CPU until new event(s) arrive */
-            pthread_cond_wait(&l_condVar, &l_pThreadMutex_);
-            QF_INT_ENABLE();
+            /* the QV kernel in embedded systems calls here the QV_onIdle()
+            * callback. However, the POSIX-QV port does not do busy-waiting
+            * for events. Instead, the POSIX-QV port efficiently waits until
+            * QP events become available.
+            */
+            while (QF_readySet_ == (uint_fast8_t)0) {
+                pthread_cond_wait(&l_condVar, &l_pThreadMutex_);
+            }
 
+            QF_INT_ENABLE();
+            /* enable "interrupts" to let other threads run... */
             QF_INT_DISABLE();
         }
     }
@@ -441,13 +451,18 @@ void QF_stop(void) {
     l_isRunning = false;    /* cause exit from the event loop */
 
     /* unblock the event loop so it can terminate */
+    QF_readySet_ = (uint_fast8_t)1;
     pthread_cond_signal(&l_condVar);
 }
 /****************************************************************************/
 void QF_setTickRate(uint32_t ticksPerSec) {
-    l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC / ticksPerSec;
+    if (ticksPerSec != (uint32_t)0) {
+        l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC / ticksPerSec;
+    }
+    else {
+        l_tick.tv_nsec = 0; /* means NO system clock tick */
+    }
 }
-
 /*..........................................................................*/
 static void *tickerThread(void *par) { /* the expected P-Thread signature */
     (void)par; /* unused parameter */
@@ -493,5 +508,4 @@ static void *tickerThread(void *par) { /* the expected P-Thread signature */
 * to emulate the ISR level. This means that only the ISR-level APIs are
 * available inside the QF_onClockTickISR() callback.
 */
-
 

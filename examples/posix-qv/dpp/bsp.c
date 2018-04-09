@@ -110,7 +110,7 @@ void QF_onClockTickISR(void) {
     struct timeval timeout = { 0U, 0U }; /* timeout for select() */
     fd_set con; /* FD set representing the console */
 
-    QF_tickXISR(0U); /* perform the QF-nano clock tick processing */
+    QF_tickXISR(0U); /* process time events at rate 0 */
 
     FD_ZERO(&con);
     FD_SET(0, &con);
