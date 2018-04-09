@@ -433,10 +433,6 @@ int_t QF_run(void) {
             while (QF_readySet_ == (uint_fast8_t)0) {
                 pthread_cond_wait(&l_condVar, &l_pThreadMutex_);
             }
-
-            QF_INT_ENABLE();
-            /* enable "interrupts" to let other threads run... */
-            QF_INT_DISABLE();
         }
     }
     QF_INT_ENABLE();
