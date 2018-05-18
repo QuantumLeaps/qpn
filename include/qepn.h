@@ -4,8 +4,8 @@
 * @ingroup qepn
 * @cond
 ******************************************************************************
-* Last updated for version 6.2.0
-* Last updated on  2018-03-13
+* Last updated for version 6.3.0
+* Last updated on  2018-05-09
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -434,11 +434,6 @@ extern char_t const Q_ROM QP_versionStr[6];
 
 /*! get the current QP-nano version number string of the form "X.Y.Z" */
 #define QP_getVersion() (QP_versionStr)
-
-
-/****************************************************************************/
-/*! Helper macro to calculate static dimension of a 1-dim array @a array_ */
-#define Q_DIM(array_) (sizeof(array_) / sizeof((array_)[0]))
 
 #endif /* qepn_h */
 

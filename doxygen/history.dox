@@ -1,6 +1,11 @@
 /**
 @page history Revision History
 
+@section qpn_6_3_0 Version 6.3.0, 2018-05-10
+This release improves the command-line scripts for flash programming of the supported MCUs. Specifically, the flash.bat batch files for EFM32-SLSTK3401A, EK-TM4C123GXL, and for Arudino UNO have been updated.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_2_0 Version 6.2.0, 2018-03-16
 This release updates the QP-nano ports to win32-qv and posix-qv to allow a "tickless" mode, where the "tickerThread" is not created. This mode is set by configuring the system clock tick rate to 0 (QF_setTickRate(0)).
 
