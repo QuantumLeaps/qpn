@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.1.1
-* Last updated on  2018-02-18
+* Last updated for version 6.3.3
+* Last updated on  2018-06-23
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -156,7 +156,11 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
         }
         else {
             margin = (uint_fast8_t)false; /* cannot post */
-            Q_ERROR_ID(310); /* must be able to post the event */
+#ifndef Q_NASSERT
+            QF_INT_ENABLE();
+            /* must be able to post event : Q_ERROR_ID(310) */
+            Q_onAssert(Q_this_module_, 310);
+#endif
         }
     }
     else if ((qlen - (uint_fast8_t)me->nUsed) > margin) {
@@ -248,7 +252,11 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
         }
         else {
             margin = (uint_fast8_t)false; /* cannot post */
-            Q_ERROR_ID(310); /* must be able to post the event */
+#ifndef Q_NASSERT
+            QF_INT_ENABLE();
+            /* must be able to post event : Q_ERROR_ID(410) */
+            Q_onAssert(Q_this_module_, 410);
+#endif
         }
     }
     else if ((qlen - (uint_fast8_t)me->nUsed) > margin) {

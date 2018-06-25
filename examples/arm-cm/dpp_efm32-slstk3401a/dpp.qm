@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="4.1.1" links="0">
+<model version="4.3.0" links="1">
  <documentation>Dining Philosopher Problem example with QActive</documentation>
+ <!--${qpn}-->
  <framework name="qpn"/>
+ <!--${AOs}-->
  <package name="AOs" stereotype="0x02">
+  <!--${AOs::Philo}-->
   <class name="Philo" superclass="qpn::QActive">
+   <!--${AOs::Philo::SM}-->
    <statechart>
+    <!--${AOs::Philo::SM::initial}-->
     <initial target="../1">
      <initial_glyph conn="2,3,5,1,20,5,-3">
       <action box="0,-2,6,2"/>
      </initial_glyph>
     </initial>
+    <!--${AOs::Philo::SM::thinking}-->
     <state name="thinking">
      <entry>QActive_armX(&amp;me-&gt;super, 0U, THINK_TIME, 0U);</entry>
      <exit>QActive_disarmX(&amp;me-&gt;super, 0U);</exit>
+     <!--${AOs::Philo::SM::thinking::Q_TIMEOUT}-->
      <tran trig="Q_TIMEOUT" target="../../2">
       <tran_glyph conn="2,12,3,1,20,13,-3">
        <action box="0,-2,6,2"/>
       </tran_glyph>
      </tran>
+     <!--${AOs::Philo::SM::thinking::EAT, DONE}-->
      <tran trig="EAT, DONE">
       <action>Q_ERROR(); /* these events should never arrive in this state */</action>
       <tran_glyph conn="2,17,3,-1,13">
@@ -29,13 +37,16 @@
       <exit box="1,4,6,2"/>
      </state_glyph>
     </state>
+    <!--${AOs::Philo::SM::hungry}-->
     <state name="hungry">
      <entry>QACTIVE_POST(&amp;AO_Table, HUNGRY_SIG, me-&gt;super.prio);</entry>
+     <!--${AOs::Philo::SM::hungry::EAT}-->
      <tran trig="EAT" target="../../3">
       <tran_glyph conn="2,30,3,1,20,13,-3">
        <action box="0,-2,14,2"/>
       </tran_glyph>
      </tran>
+     <!--${AOs::Philo::SM::hungry::DONE}-->
      <tran trig="DONE">
       <action>Q_ERROR(); /* this event should never arrive in this state */</action>
       <tran_glyph conn="2,36,3,-1,14">
@@ -46,15 +57,18 @@
       <entry box="1,2,5,2"/>
      </state_glyph>
     </state>
+    <!--${AOs::Philo::SM::eating}-->
     <state name="eating">
      <entry>QActive_armX(&amp;me-&gt;super, 0U, EAT_TIME, 0U);</entry>
      <exit>QActive_disarmX(&amp;me-&gt;super, 0U);
 QACTIVE_POST(QF_ACTIVE_CAST(&amp;AO_Table), DONE_SIG, me-&gt;super.prio);</exit>
+     <!--${AOs::Philo::SM::eating::Q_TIMEOUT}-->
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,51,3,1,22,-41,-5">
        <action box="0,-2,6,2"/>
       </tran_glyph>
      </tran>
+     <!--${AOs::Philo::SM::eating::EAT, DONE}-->
      <tran trig="EAT, DONE">
       <action>Q_ERROR(); /* these events should never arrive in this state */</action>
       <tran_glyph conn="2,55,3,-1,13">
@@ -69,10 +83,15 @@ QACTIVE_POST(QF_ACTIVE_CAST(&amp;AO_Table), DONE_SIG, me-&gt;super.prio);</exit>
     <state_diagram size="37,61"/>
    </statechart>
   </class>
+  <!--${AOs::Table}-->
   <class name="Table" superclass="qpn::QActive">
+   <!--${AOs::Table::fork[N_PHILO]}-->
    <attribute name="fork[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <!--${AOs::Table::isHungry[N_PHILO]}-->
    <attribute name="isHungry[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <!--${AOs::Table::SM}-->
    <statechart>
+    <!--${AOs::Table::SM::initial}-->
     <initial target="../1/2">
      <action>uint8_t n;
 for (n = 0U; n &lt; N_PHILO; ++n) {
@@ -84,19 +103,23 @@ for (n = 0U; n &lt; N_PHILO; ++n) {
       <action box="0,-2,6,2"/>
      </initial_glyph>
     </initial>
+    <!--${AOs::Table::SM::active}-->
     <state name="active">
+     <!--${AOs::Table::SM::active::TERMINATE}-->
      <tran trig="TERMINATE">
       <action>BSP_terminate(0);</action>
       <tran_glyph conn="2,11,3,-1,14">
        <action box="0,-2,11,4"/>
       </tran_glyph>
      </tran>
+     <!--${AOs::Table::SM::active::EAT}-->
      <tran trig="EAT">
       <action>Q_ERROR();</action>
       <tran_glyph conn="2,15,3,-1,14">
        <action box="0,-2,10,4"/>
       </tran_glyph>
      </tran>
+     <!--${AOs::Table::SM::active::serving}-->
      <state name="serving">
       <entry brief="give pending permitions to eat">uint8_t n;
 for (n = 0U; n &lt; N_PHILO; ++n) { /* give permissions to eat... */
@@ -114,6 +137,7 @@ for (n = 0U; n &lt; N_PHILO; ++n) { /* give permissions to eat... */
         BSP_displayPhilStat(n, &quot;eating  &quot;);
     }
 }</entry>
+      <!--${AOs::Table::SM::active::serving::HUNGRY}-->
       <tran trig="HUNGRY">
        <action>uint8_t n, m;
 QActive *philo;
@@ -124,6 +148,7 @@ Q_ASSERT((n &lt; N_PHILO) &amp;&amp; (me-&gt;isHungry[n] == 0U));
 
 BSP_displayPhilStat(n, &quot;hungry  &quot;);
 m = LEFT(n);</action>
+       <!--${AOs::Table::SM::active::serving::HUNGRY::[bothfree]}-->
        <choice>
         <guard brief="both free">(me-&gt;fork[m] == FREE) &amp;&amp; (me-&gt;fork[n] == FREE)</guard>
         <action>me-&gt;fork[m] = USED;
@@ -135,6 +160,7 @@ BSP_displayPhilStat(n, &quot;eating  &quot;);</action>
          <action box="1,0,10,2"/>
         </choice_glyph>
        </choice>
+       <!--${AOs::Table::SM::active::serving::HUNGRY::[else]}-->
        <choice>
         <guard>else</guard>
         <action>me-&gt;isHungry[n] = 1U;</action>
@@ -146,6 +172,7 @@ BSP_displayPhilStat(n, &quot;eating  &quot;);</action>
         <action box="0,-2,8,2"/>
        </tran_glyph>
       </tran>
+      <!--${AOs::Table::SM::active::serving::DONE}-->
       <tran trig="DONE">
        <action>uint8_t n, m;
 QActive *philo;
@@ -185,12 +212,14 @@ if ((me-&gt;isHungry[m] != 0U) &amp;&amp; (me-&gt;fork[n] == FREE)) {
         <action box="0,-2,6,2"/>
        </tran_glyph>
       </tran>
+      <!--${AOs::Table::SM::active::serving::EAT}-->
       <tran trig="EAT">
        <action>Q_ERROR();</action>
        <tran_glyph conn="4,37,3,-1,15">
         <action box="0,-2,12,4"/>
        </tran_glyph>
       </tran>
+      <!--${AOs::Table::SM::active::serving::PAUSE}-->
       <tran trig="PAUSE" target="../../3">
        <tran_glyph conn="4,41,3,1,37,6,-3">
         <action box="0,-2,7,2"/>
@@ -200,14 +229,17 @@ if ((me-&gt;isHungry[m] != 0U) &amp;&amp; (me-&gt;fork[n] == FREE)) {
        <entry box="1,2,27,2"/>
       </state_glyph>
      </state>
+     <!--${AOs::Table::SM::active::paused}-->
      <state name="paused">
       <entry>BSP_displayPaused(1U);</entry>
       <exit>BSP_displayPaused(0U);</exit>
+      <!--${AOs::Table::SM::active::paused::SERVE}-->
       <tran trig="SERVE" target="../../2">
        <tran_glyph conn="4,57,3,1,39,-20,-5">
         <action box="0,-2,7,2"/>
        </tran_glyph>
       </tran>
+      <!--${AOs::Table::SM::active::paused::HUNGRY}-->
       <tran trig="HUNGRY">
        <action>uint8_t n = (uint8_t)(Q_PAR(me) - PHILO_0_PRIO);
 /* philo ID must be in range and he must be not hungry */
@@ -218,6 +250,7 @@ BSP_displayPhilStat(n, &quot;hungry  &quot;);</action>
         <action box="0,-2,6,2"/>
        </tran_glyph>
       </tran>
+      <!--${AOs::Table::SM::active::paused::DONE}-->
       <tran trig="DONE">
        <action>uint8_t n, m;
 
@@ -246,12 +279,19 @@ me-&gt;fork[n] = FREE;</action>
     <state_diagram size="49,69"/>
    </statechart>
   </class>
+  <!--${AOs::AO_Philo0}-->
   <attribute name="AO_Philo0" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <!--${AOs::AO_Philo1}-->
   <attribute name="AO_Philo1" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <!--${AOs::AO_Philo2}-->
   <attribute name="AO_Philo2" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <!--${AOs::AO_Philo3}-->
   <attribute name="AO_Philo3" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <!--${AOs::AO_Philo4}-->
   <attribute name="AO_Philo4" type="struct Philo" visibility="0x00" properties="0x00"/>
+  <!--${AOs::AO_Table}-->
   <attribute name="AO_Table" type="struct Table" visibility="0x00" properties="0x00"/>
+  <!--${AOs::Philo_ctor}-->
   <operation name="Philo_ctor" type="void" visibility="0x00" properties="0x00">
    <code>QActive_ctor(&amp;AO_Philo0.super, Q_STATE_CAST(&amp;Philo_initial));
 QActive_ctor(&amp;AO_Philo1.super, Q_STATE_CAST(&amp;Philo_initial));
@@ -260,6 +300,7 @@ QActive_ctor(&amp;AO_Philo3.super, Q_STATE_CAST(&amp;Philo_initial));
 QActive_ctor(&amp;AO_Philo4.super, Q_STATE_CAST(&amp;Philo_initial));
 BSP_randomSeed(123U);</code>
   </operation>
+  <!--${AOs::Table_ctor}-->
   <operation name="Table_ctor" type="void" visibility="0x00" properties="0x00">
    <code>uint8_t n;
 Table *me = &amp;AO_Table;
@@ -271,7 +312,9 @@ for (n = 0U; n &lt; N_PHILO; ++n) {
 }</code>
   </operation>
  </package>
+ <!--${.}-->
  <directory name=".">
+  <!--${.::dpp.h}-->
   <file name="dpp.h">
    <text>#ifndef dpp_h
 #define dpp_h
@@ -290,19 +333,20 @@ enum DPPSignals {
 #define N_PHILO ((uint8_t)5)
 #define PHILO_0_PRIO 1
 
-$declare(AOs::AO_Philo0)
-$declare(AOs::AO_Philo1)
-$declare(AOs::AO_Philo2)
-$declare(AOs::AO_Philo3)
-$declare(AOs::AO_Philo4)
-$declare(AOs::AO_Table)
+$declare${AOs::AO_Philo0}
+$declare${AOs::AO_Philo1}
+$declare${AOs::AO_Philo2}
+$declare${AOs::AO_Philo3}
+$declare${AOs::AO_Philo4}
+$declare${AOs::AO_Table}
 
-$declare(AOs::Philo_ctor)
-$declare(AOs::Table_ctor)
+$declare${AOs::Philo_ctor}
+$declare${AOs::Table_ctor}
 
 #endif /* dpp_h */
 </text>
   </file>
+  <!--${.::philo.c}-->
   <file name="philo.c">
    <text>#include &quot;qpn.h&quot;  /* QP-nano port */
 #include &quot;bsp.h&quot;  /* Board Support Package */
@@ -311,14 +355,14 @@ $declare(AOs::Table_ctor)
 Q_DEFINE_THIS_MODULE(&quot;philo&quot;)
 
 /* Active object class -----------------------------------------------------*/
-$declare(AOs::Philo)
+$declare${AOs::Philo}
 
 /* Global objects ----------------------------------------------------------*/
-$define(AOs::AO_Philo0)
-$define(AOs::AO_Philo1)
-$define(AOs::AO_Philo2)
-$define(AOs::AO_Philo3)
-$define(AOs::AO_Philo4)
+$define${AOs::AO_Philo0}
+$define${AOs::AO_Philo1}
+$define${AOs::AO_Philo2}
+$define${AOs::AO_Philo3}
+$define${AOs::AO_Philo4}
 
 /* Local objects -----------------------------------------------------------*/
 #define THINK_TIME  \
@@ -327,9 +371,10 @@ $define(AOs::AO_Philo4)
     (QTimeEvtCtr)((BSP_random() % BSP_TICKS_PER_SEC) + BSP_TICKS_PER_SEC)
 
 /* Philo definition --------------------------------------------------------*/
-$define(AOs::Philo_ctor)
-$define(AOs::Philo)</text>
+$define${AOs::Philo_ctor}
+$define${AOs::Philo}</text>
   </file>
+  <!--${.::table.c}-->
   <file name="table.c">
    <text>#include &quot;qpn.h&quot;  /* QP-nano port */
 #include &quot;bsp.h&quot;  /* Board Support Package */
@@ -338,10 +383,10 @@ $define(AOs::Philo)</text>
 Q_DEFINE_THIS_MODULE(&quot;table&quot;)
 
 /* Active object class -----------------------------------------------------*/
-$declare(AOs::Table)
+$declare${AOs::Table}
 
 /* Global objects ----------------------------------------------------------*/
-$define(AOs::AO_Table)
+$define${AOs::AO_Table}
 
 #define RIGHT(n_) ((uint8_t)(((n_) + (N_PHILO - 1U)) % N_PHILO))
 #define LEFT(n_)  ((uint8_t)(((n_) + 1U) % N_PHILO))
@@ -349,8 +394,8 @@ $define(AOs::AO_Table)
 #define USED      ((uint8_t)1)
 
 /*..........................................................................*/
-$define(AOs::Table_ctor)
-$define(AOs::Table)</text>
+$define${AOs::Table_ctor}
+$define${AOs::Table}</text>
   </file>
  </directory>
 </model>

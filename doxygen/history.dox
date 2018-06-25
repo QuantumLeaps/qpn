@@ -1,6 +1,22 @@
 /**
 @page history Revision History
 
+@section qpn_6_3_3 Version 6.3.3, 2018-06-22
+This release fixes the following bugs:
+
+- [bug#216 "Generated code for QP version check violates MISRA-C Rule 10.1"](https://sourceforge.net/p/qpc/bugs/216/).
+
+- [bug#217 "GNU-ARM -fstack-protector incompatible with the QP ports to GNU-ARM"](https://sourceforge.net/p/qpc/bugs/217/).
+
+- [bug#215 "QP is internally inconsistent in calling assertion macros"](https://sourceforge.net/p/qpc/bugs/215/).
+
+Also, this release demonstrates the new features of QM 4.3.0 in several example models (qpn/examples/ directory).
+
+Finally, this release updates `3rd_party/CMSIS/Include` to the latest version from GitHub.
+
+
+
+------------------------------------------------------------------------------
 @section qpn_6_3_0 Version 6.3.0, 2018-05-10
 This release improves the command-line scripts for flash programming of the supported MCUs. Specifically, the flash.bat batch files for EFM32-SLSTK3401A, EK-TM4C123GXL, and for Arudino UNO have been updated.
 
