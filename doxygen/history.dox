@@ -4,6 +4,8 @@
 @section qpn_6_3_3 Version 6.3.3, 2018-06-22
 This release fixes the following bugs:
 
+- [bugs:#218 "__flash attribute in avr port"](https://sourceforge.net/p/qpc/bugs/218/)
+
 - [bug#216 "Generated code for QP version check violates MISRA-C Rule 10.1"](https://sourceforge.net/p/qpc/bugs/216/).
 
 - [bug#217 "GNU-ARM -fstack-protector incompatible with the QP ports to GNU-ARM"](https://sourceforge.net/p/qpc/bugs/217/).

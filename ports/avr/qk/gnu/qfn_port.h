@@ -3,8 +3,8 @@
 * @brief QF-nano port AVR ATmega, preemptive QK-nano kernel, GNU-AVR toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.7.2
-* Date of the Last Update:  2016-09-30
+* Last Updated for Version: 6.3.3
+* Date of the Last Update:  2018-06-30
 *
 *                    Q u a n t u m     L e a P s
 *                    ---------------------------
@@ -31,7 +31,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * Contact information:
-* http://www.state-machine.com
+* https://www.state-machine.com
 * mailto:info@state-machine.com
 ******************************************************************************
 * @endcond
@@ -39,9 +39,8 @@
 #ifndef qfn_port_h
 #define qfn_port_h
 
-#define Q_ROM                PROGMEM
-#define Q_ROM_BYTE(rom_var_) pgm_read_byte_near(&(rom_var_))
-#define Q_ROM_PTR(rom_var_)  pgm_read_word_near(&(rom_var_))
+/* GNU-AVR extended keyword '__flash' allocates const objects to ROM */
+#define Q_ROM            __flash
 
 /* QF-nano interrupt disable/enable... */
 #define QF_INT_DISABLE() __asm__ __volatile__ ("cli" ::)
