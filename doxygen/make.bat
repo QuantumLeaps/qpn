@@ -1,12 +1,12 @@
 @echo off
 :: ==========================================================================
 :: Product: QP-nano script for generating Doxygen documentation
-:: Last Updated for Version: 6.3.3
-:: Date of the Last Update:  2018-06-22
+:: Last Updated for Version: 6.3.7
+:: Date of the Last Update:  2018-12-05
 ::
-::                    Q u a n t u m     L e a P s
-::                    ---------------------------
-::                    innovating embedded systems
+::                    Q u a n t u m  L e a P s
+::                    ------------------------
+::                    Modern Embedded Software
 ::
 :: Copyright (C) Quantum Leaps, LLC. All rights reserved.
 ::
@@ -38,7 +38,7 @@ echo usage:
 echo make
 echo make -CHM
 
-set VERSION=6.3.3
+set VERSION=6.3.7
 
 :: Generate Resource Standard Metrics for QP-nano ............................ 
 set DOXHOME="C:\tools\doxygen\bin"

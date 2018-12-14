@@ -3,14 +3,14 @@
 * @brief QF-nano emulation for POSIX with cooperative QV kernel
 * @cond
 ******************************************************************************
-* Last updated for version 6.2.0
-* Last updated on  2018-04-09
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-11-09
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -57,8 +57,10 @@
 void QF_enterCriticalSection_(void);
 void QF_leaveCriticalSection_(void);
 
-/* set clock tick rate (NOTE ticksPerSec==0 disables the "ticker thread" */
-void QF_setTickRate(uint32_t ticksPerSec); /* set clock tick rate */
+/* set clock tick rate and p-thread priority
+* (NOTE ticksPerSec==0 disables the "ticker thread"
+*/
+void QF_setTickRate(uint32_t ticksPerSec, int_t tickPrio);
 
 /* ISR-level clock tick callback
 * (NOTE not called when "ticker thread" is not running)
@@ -68,6 +70,11 @@ void QF_onClockTickISR(void);
 /* application-level callback to cleanup the application */
 void QF_onCleanup(void);
 
+/* abstractions for console access... */
+void QF_consoleSetup(void);
+void QF_consoleCleanup(void);
+int QF_consoleGetKey(void);
+int QF_consoleWaitForKey(void);
 
 /* NOTES: ********************************************************************
 *

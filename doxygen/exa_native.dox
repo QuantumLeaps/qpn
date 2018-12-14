@@ -17,7 +17,7 @@ Click on the following links to see examples for the specified CPU architectures
 
 */
 /*##########################################################################*/
-/*! @page exa_qv QV Kernel (Non-Preemptive, Priority-Based, Non-Blocking)
+/*! @page exa_qv QV-nano Kernel (Non-Preemptive, Priority-Based, Non-Blocking)
 
 @htmlonly
 <script src="preview.js" type="text/javascript"></script>
@@ -39,7 +39,7 @@ You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; 
 - @ref msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
 */
 /*##########################################################################*/
-/*! @page exa_qk QK Kernel (Preemptive, Priority-Based, Non-Blocking)
+/*! @page exa_qk QK-nano Kernel (Preemptive, Priority-Based, Non-Blocking)
 
 @htmlonly
 <script src="preview.js" type="text/javascript"></script>
@@ -131,7 +131,7 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
   | | | | | +-Makefile          - Makefile for building the project
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QK kernel
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
   | | | +-qv/        - QV version
   | | | | +-arm/     - ARM-KEIL toolchain
   | | | | | +-blinky-qk.uvprojx - uVision project
@@ -139,7 +139,7 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
   | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QV kernel
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
   | | | +-win32-qv/  - Windows emulation (single thread)
   | | | | +-Makefile          - Makefile for building the project with MinGW
   | | | | +-bsp.c    - BSP for the Win32-QV
@@ -148,11 +148,11 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
 
 ------------------------------------------------------------------------------
 @section arm-cm_blinky_ek-tm4c123gxl_feat Features Demonstrated
-- cooperative QV kernel
+- cooperative QV-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
-- preemptive run-to-completion QK kernel
+- preemptive run-to-completion QK-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
@@ -198,7 +198,7 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
   | | | | | +-Makefile          - Makefile for building the project
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QK kernel
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
   | | | +-qv/        - QV version
   | | | | +-arm/     - ARM-KEIL toolchain
   | | | | | +-blinky-qk.uvprojx - uVision project
@@ -206,20 +206,20 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
   | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QV kernel
-  | | | +-win32-qv/  - Windows emulation (single thread)
-  | | | | +-Makefile          - Makefile for building the project with MinGW
-  | | | | +-bsp.c    - BSP for the Win32-QV
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | +-workstation/ - Examples for workstations (Windows, Linux, MacOS)
+  | | | | +-Makefile   - Makefile for building the project with MinGW
+  | | | | +-bsp.c    - BSP for workstations
 @endcode
 
 
 ------------------------------------------------------------------------------
 @section arm-cm_blinky_efm32-slstk3401a_feat Features Demonstrated
-- cooperative QV kernel
+- cooperative QV-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
-- preemptive run-to-completion QK kernel
+- preemptive run-to-completion QK-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
@@ -270,8 +270,8 @@ The DPP example is located in the directory <span class="img folder">qpc/example
   | | | | | +-.ccsproject  - CCS project
   | | | | | +-.cproject    - C Eclipse project
   | | | | | +-.project     - Eclipse project
-  | | | | +-bsp.c    - BSP for the QK kernel
-  | | | | +-main.c   - main() for the QK kernel
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
+  | | | | +-main.c   - main() for the QK-nano kernel
   | | | +-qv/        - QV version
   | | | | +-arm/     - ARM-KEIL toolchain
   | | | | | +-dpp-qk.uvprojx - uVision project
@@ -279,19 +279,19 @@ The DPP example is located in the directory <span class="img folder">qpc/example
   | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QV kernel
-  | | | | +-main.c   - main() for the QV kernel
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | | +-main.c   - main() for the QV-nano kernel
 @endcode
 
 
 ------------------------------------------------------------------------------
 @section arm-cm_dpp_ek-tm4c123gxl_feat Features Demonstrated
-- cooperative QV kernel
+- cooperative QV-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
   + with TI-ARM toolchain (CCS)
-- preemptive run-to-completion QK kernel
+- preemptive run-to-completion QK-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
@@ -314,7 +314,7 @@ Once programmed into the board, the example rapidly toggles the Blue LED from th
 
 @image html bd_EFM32-SLSTK3401A.jpg EFM32-SLSTK3401A board
 
-The DPP example is located in the directory <span class="img folder">qpc/examples/arm-cm/dpp_efm32-slstk3401a</span> and includes versions for @ref qv "cooperative QV kernel", the  @ref qk "preemptive QK kernel", and the @ref qxk "preemptive dual mode QXK RTOS kernel"  each provided for the ARM-KEIL, GNU-ARM, and IAR-ARM. The following annotated directory listing describes the contents of the example folder:
+The DPP example is located in the directory <span class="img folder">qpc/examples/arm-cm/dpp_efm32-slstk3401a</span> and includes versions for @ref qv "cooperative QV-nano kernel", the  @ref qk "preemptive QK-nano kernel", and the @ref qxk "preemptive dual mode QXK RTOS kernel"  each provided for the ARM-KEIL, GNU-ARM, and IAR-ARM. The following annotated directory listing describes the contents of the example folder:
 
 @code{.x}
  qpn/                - QP-nano installation directory
@@ -331,8 +331,8 @@ The DPP example is located in the directory <span class="img folder">qpc/example
   | | | | | +-Makefile          - Makefile for building the project
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-dpp-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QK kernel
-  | | | | +-main.c   - main() for the QK kernel
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
+  | | | | +-main.c   - main() for the QK-nano kernel
   | | | +-qv/        - QV version
   | | | | +-arm/     - ARM-KEIL toolchain
   | | | | | +-dpp-qk.uvprojx - uVision project
@@ -340,18 +340,18 @@ The DPP example is located in the directory <span class="img folder">qpc/example
   | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
   | | | | +-iar/     - IAR-ARM toolchain
   | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
-  | | | | +-bsp.c    - BSP for the QV kernel
-  | | | | +-main.c   - main() for the QV kernel
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | | +-main.c   - main() for the QV-nano kernel
 @endcode
 
 
 ------------------------------------------------------------------------------
 @section arm-cm_dpp_efm32-slstk3401a_feat Features Demonstrated
-- cooperative QV kernel
+- cooperative QV-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain
-- preemptive run-to-completion QK kernel
+- preemptive run-to-completion QK-nano kernel
   + with ARM-KEIL toolchain
   + with GNU-ARM toolchain
   + with IAR-ARM toolchain

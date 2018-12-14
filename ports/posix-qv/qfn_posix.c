@@ -38,7 +38,14 @@
 * @endcond
 */
 #include "qpn.h" /* QP-nano */
-#include <pthread.h> /* POSIX-thread API */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <pthread.h>
+#include <signal.h>
+#include <unistd.h>
+#include <termios.h>
+#include <sys/ioctl.h>
 
 #ifdef qkn_h
     #error "This QP-nano port does not support QK-nano configuration"
@@ -67,8 +74,10 @@ uint8_t const Q_ROM QF_log2Lkup[16] = {
 /* mutex for QF critical section */
 static pthread_mutex_t l_pThreadMutex_;
 static pthread_cond_t l_condVar; /* cond var to signal when AOs are ready */
+static struct termios l_tsav; /* structure with saved terminal attributes */
 static bool l_isRunning;  /* flag indicating when QF is running */
 static struct timespec l_tick;
+static int_t l_tickPrio;
 enum { NANOSLEEP_NSEC_PER_SEC = 1000000000 }; /* see NOTE1 */
 
 /* "fudged" event queues for AOs, see NOTE2 */
@@ -77,6 +86,7 @@ static QEvt l_fudgedQueue[8][QF_FUDGED_QUEUE_LEN];
 #define QF_FUDGED_QUEUE_AT_(ao_, i_) (l_fudgedQueue[(ao_)->prio - 1U][(i_)])
 
 static void *tickerThread(void *par); /* the expected P-Thread signature */
+static void sigIntHandler(int dummy);
 
 /****************************************************************************/
 void QActive_ctor(QActive * const me, QStateHandler initial) {
@@ -90,7 +100,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
     me->super.vptr = &vtbl.super; /* hook the vptr to QActive virtual table */
 }
 
-/****************************************************************************/
+/*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
 bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                     enum_t const sig, QParam const par)
@@ -142,7 +152,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     return (bool)margin;
 }
 
-/****************************************************************************/
+/*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
 bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig, QParam const par)
@@ -192,7 +202,6 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 
 
 /****************************************************************************/
-/****************************************************************************/
 #if (QF_TIMEEVT_CTR_SIZE != 0)
 
 void QF_tickXISR(uint_fast8_t const tickRate) {
@@ -227,8 +236,7 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
         --p;
     } while (p != (uint_fast8_t)0);
 }
-
-/****************************************************************************/
+/*..........................................................................*/
 #ifdef QF_TIMEEVT_PERIODIC
 void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
                   QTimeEvtCtr const nTicks, QTimeEvtCtr const interval)
@@ -250,8 +258,7 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 #endif
     QF_INT_ENABLE();
 }
-
-/****************************************************************************/
+/*..........................................................................*/
 void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
     QF_INT_DISABLE();
     me->tickCtr[tickRate].nTicks = (QTimeEvtCtr)0;
@@ -269,15 +276,14 @@ void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
 #endif /* #if (QF_TIMEEVT_CTR_SIZE != 0) */
 
 /* QF functions ============================================================*/
-/****************************************************************************/
 void QF_enterCriticalSection_(void) {
     pthread_mutex_lock(&l_pThreadMutex_);
 }
-/****************************************************************************/
+/*..........................................................................*/
 void QF_leaveCriticalSection_(void) {
     pthread_mutex_unlock(&l_pThreadMutex_);
 }
-/****************************************************************************/
+/*..........................................................................*/
 /**
 * @description
 * The function QF_init() initializes the number of active objects to be
@@ -293,6 +299,8 @@ void QF_leaveCriticalSection_(void) {
 void QF_init(uint_fast8_t maxActive) {
     QActive *a;
     uint_fast8_t p;
+    struct sigaction sig_act;
+
 #if (defined(QF_TIMEEVT_USAGE) || (QF_TIMEEVT_CTR_SIZE != 0))
     uint_fast8_t n;
 #endif /* QF_TIMEEVT_USAGE */
@@ -307,6 +315,11 @@ void QF_init(uint_fast8_t maxActive) {
 
     l_tick.tv_sec = 0;
     l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC/100L; /* default clock tick */
+    l_tickPrio = sched_get_priority_min(SCHED_FIFO); /* default tick prio */
+
+    /* install the SIGINT (Ctrl-C) signal handler */
+    sig_act.sa_handler = &sigIntHandler;
+    sigaction(SIGINT, &sig_act, NULL);
 
 #ifdef QF_TIMEEVT_USAGE
     for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
@@ -349,11 +362,12 @@ void QF_init(uint_fast8_t maxActive) {
 #endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
     }
 }
-/****************************************************************************/
+/*..........................................................................*/
 int_t QF_run(void) {
     uint_fast8_t p;
     QActive *a;
     pthread_t thread;
+    struct sched_param sparam;
 
     pthread_cond_init(&l_condVar, 0);
 
@@ -374,6 +388,15 @@ int_t QF_run(void) {
     }
 
     QF_onStartup(); /* invoke startup callback */
+
+    /* try to set the priority of the ticker thread, see NOTE01 */
+    sparam.sched_priority = l_tickPrio;
+    if (pthread_setschedparam(pthread_self(), SCHED_FIFO, &sparam) == 0) {
+        /* success, this application has sufficient privileges */
+    }
+    else {
+        /* setting priority failed, probably due to insufficient privieges */
+    }
 
     l_isRunning = true;
 
@@ -442,7 +465,7 @@ int_t QF_run(void) {
 
     return (int_t)0; /* success */
 }
-/****************************************************************************/
+/*..........................................................................*/
 void QF_stop(void) {
     l_isRunning = false;    /* cause exit from the event loop */
 
@@ -450,15 +473,47 @@ void QF_stop(void) {
     QF_readySet_ = (uint_fast8_t)1;
     pthread_cond_signal(&l_condVar);
 }
+
 /****************************************************************************/
-void QF_setTickRate(uint32_t ticksPerSec) {
+void QF_setTickRate(uint32_t ticksPerSec, int_t tickPrio) {
     if (ticksPerSec != (uint32_t)0) {
         l_tick.tv_nsec = NANOSLEEP_NSEC_PER_SEC / ticksPerSec;
     }
     else {
         l_tick.tv_nsec = 0; /* means NO system clock tick */
     }
+    l_tickPrio = tickPrio;
 }
+/*..........................................................................*/
+void QF_consoleSetup(void) {
+    struct termios tio;   /* modified terminal attributes */
+
+    tcgetattr(0, &l_tsav); /* save the current terminal attributes */
+    tcgetattr(0, &tio);    /* obtain the current terminal attributes */
+    tio.c_lflag &= ~(ICANON | ECHO); /* disable the canonical mode & echo */
+    tcsetattr(0, TCSANOW, &tio);     /* set the new attributes */
+}
+/*..........................................................................*/
+void QF_consoleCleanup(void) {
+    tcsetattr(0, TCSANOW, &l_tsav); /* restore the saved attributes */
+}
+/*..........................................................................*/
+int QF_consoleGetKey(void) {
+    int byteswaiting;
+    ioctl(0, FIONREAD, &byteswaiting);
+    if (byteswaiting > 0) {
+        char ch;
+        read(0, &ch, 1);
+        return (int)ch;
+    }
+    return 0; /* no input at this time */
+}
+/*..........................................................................*/
+int QF_consoleWaitForKey(void) {
+    return getchar();
+}
+
+
 /*..........................................................................*/
 static void *tickerThread(void *par) { /* the expected P-Thread signature */
     (void)par; /* unused parameter */
@@ -471,6 +526,13 @@ static void *tickerThread(void *par) { /* the expected P-Thread signature */
         QF_INT_ENABLE();
     }
     return (void *)0; /* return success */
+}
+
+/****************************************************************************/
+static void sigIntHandler(int dummy) {
+    (void)dummy; /* unused parameter */
+    QF_onCleanup();
+    exit(-1);
 }
 
 /* NOTES: ********************************************************************

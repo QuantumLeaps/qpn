@@ -1,15 +1,15 @@
 /**
 * @file
-* @brief QF-nano port to Win32 with cooperative QV kernel (win32-qv)
+* @brief QF-nano port to Win32 API (single-threaded, like the QV kernel)
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Last updated for version 6.2.0
-* Last updated on  2018-04-09
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-11-09
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
 * Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
@@ -42,6 +42,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>  /* Win32 API */
 
+#include <conio.h>    /* console input/output */
+
 #ifdef qkn_h
     #error "This QP-nano port does not support QK_PREEMPTIVE configuration"
 #endif
@@ -67,9 +69,10 @@ uint8_t const Q_ROM QF_log2Lkup[16] = {
 
 /* Local objects ===========================================================*/
 static CRITICAL_SECTION l_win32CritSect; /* for QP-nano critical sections */
-static HANDLE  l_win32Event;     /* Win32 event to signal events */
-static DWORD   l_tickMsec = 10U; /* clock tick in msec (for Sleep()) */
-static bool    l_isRunning;      /* flag indicating when QF is running */
+static HANDLE l_win32Event;    /* Win32 event to signal events */
+static DWORD l_tickMsec = 10U; /* clock tick in msec (argument for Sleep()) */
+static int_t l_tickPrio = 50;  /* default priority of the "ticker" thread */
+static bool  l_isRunning;      /* flag indicating when QF is running */
 
 /* "fudged" event queues for AOs, see NOTE2 */
 #define QF_FUDGED_QUEUE_LEN  0xFFU
@@ -190,8 +193,6 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
     return (bool)margin;
 }
 
-
-/****************************************************************************/
 /****************************************************************************/
 #if (QF_TIMEEVT_CTR_SIZE != 0)
 
@@ -330,9 +331,9 @@ void QF_init(uint_fast8_t maxActive) {
         /* QF_active[p] must be initialized */
         Q_ASSERT_ID(110, a != (QActive *)0);
 
-        a->head    = (uint_fast8_t)0;
-        a->tail    = (uint_fast8_t)0;
-        a->nUsed   = (uint_fast8_t)0;
+        a->head  = (uint_fast8_t)0;
+        a->tail  = (uint_fast8_t)0;
+        a->nUsed = (uint_fast8_t)0;
 #if (QF_TIMEEVT_CTR_SIZE != 0)
         for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
             a->tickCtr[n].nTicks   = (QTimeEvtCtr)0;
@@ -441,20 +442,50 @@ void QF_stop(void) {
     SetEvent(l_win32Event); /* unblock the event-loop so it can terminate */
 }
 /****************************************************************************/
-void QF_setTickRate(uint32_t ticksPerSec) {
+void QF_setTickRate(uint32_t ticksPerSec, int_t tickPrio) {
     if (ticksPerSec != (uint32_t)0) {
         l_tickMsec = 1000UL / ticksPerSec;
     }
     else {
         l_tickMsec = (uint32_t)0; /* means NO system clock tick */
     }
+    l_tickPrio = tickPrio;
 }
 
 /*..........................................................................*/
-/* Win32 thread for the system time tick... */
-static DWORD WINAPI ticker_thread(LPVOID par) {
-    (void)par; /* unused parameter */
-    //SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+void QF_consoleSetup(void) {
+}
+/*..........................................................................*/
+void QF_consoleCleanup(void) {
+}
+/*..........................................................................*/
+int QF_consoleGetKey(void) {
+    if (_kbhit()) { /* any key pressed? */
+        return _getch();
+    }
+    return 0;
+}
+/*..........................................................................*/
+int QF_consoleWaitForKey(void) {
+    return _getch();
+}
+
+/****************************************************************************/
+static DWORD WINAPI ticker_thread(LPVOID arg) { /* for CreateThread() */
+    int threadPrio = THREAD_PRIORITY_NORMAL;
+
+    // set the ticker thread priority according to selection made in
+    // QF_setTickRate()
+    //
+    if (l_tickPrio < 33) {
+        threadPrio = THREAD_PRIORITY_BELOW_NORMAL;
+    }
+    else if (l_tickPrio > 66) {
+        threadPrio = THREAD_PRIORITY_ABOVE_NORMAL;
+    }
+
+    SetThreadPriority(GetCurrentThread(), threadPrio);
+
     while (l_isRunning) {
         Sleep(l_tickMsec); /* wait for the tick interval */
 
@@ -462,7 +493,10 @@ static DWORD WINAPI ticker_thread(LPVOID par) {
         QF_onClockTickISR(); /* call back to the app, see NOTE1 */
         QF_INT_ENABLE();
     }
-    return 0U; /* return success */
+
+    (void)arg; /* unused parameter */
+
+    return (DWORD)0; /* return success */
 }
 
 /*****************************************************************************

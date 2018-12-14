@@ -1,14 +1,14 @@
 /**
 * @file
-* @brief QF-nano port ARM Cortex-M, preemptive QK kernel, ARM-KEIL toolset
+* @brief QF-nano port ARM Cortex-M, preemptive QK-nano kernel, ARM-KEIL
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.1.1
-* Date of the Last Update:  2018-03-05
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-12-05
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
 * Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
@@ -67,12 +67,6 @@
 
     /* Cortex-M3/M4 provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint_fast8_t)(32U - __clz(n_)))
-
-    /* inline function for getting the BASEPRI register */
-    static __inline unsigned QF_get_BASEPRI(void) {
-        register unsigned volatile __regBasePri __asm("basepri");
-        return __regBasePri;
-    }
 
     /* inline function for setting the BASEPRI register */
     static __inline void QF_set_BASEPRI(unsigned basePri) {

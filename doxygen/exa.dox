@@ -71,20 +71,12 @@ All examples are located in sub-directories of the <span class="img folder">exam
       </ul>
     </ul>
 
-    <li><span class="img folder">posix-qv</span> &mdash; Examples for POSIX (3rd-party OS) with cooperative QV scheduler [B]
+    <li><span class="img folder">workstation</span> &mdash; Examples for Workstations [B]
     </li>
     <ul class="tag">
-      <li><span class="img folder">blinky</span> &mdash; Blinky example for POSIX-QV (console app)</li>
-      <li><span class="img folder">dpp</span> &mdash; DPP example for POSIX-QV (console app)</li>
-    </ul>
-
-    <li><span class="img folder">win32-qv</span> &mdash; Examples for Win32 (Windows OS) with cooperative QV scheduler [B]
-    </li>
-    <ul class="tag">
-      <li><span class="img folder">blinky</span> &mdash; Blinky example for Win32-QV (console app)</li>
-      <li><span class="img folder">dpp</span> &mdash; DPP example for Win32-QV (console app)</li>
-      <li><span class="img folder">dpp-gui</span> &mdash; DPP example for Win32-QV (GUI app)</li>
-      <li><span class="img folder">game-gui</span> &mdash; "Fly 'n' Shoot" game example for Win32-QV (GUI app)</li>
+      <li><span class="img folder">blinky</span> &mdash; Blinky example for workstations (console app)</li>
+      <li><span class="img folder">dpp</span> &mdash; DPP example for workstations (console app)</li>
+      <li><span class="img folder">. . .</span> &mdash; Other examples for workstations (console app)</li>
     </ul>
 
   </ul>
@@ -94,13 +86,13 @@ All examples are located in sub-directories of the <span class="img folder">exam
   <li><span class="tag">A</span> @subpage exa_native "Native examples" are located in sub-directories named after the CPU architecture, such as <span class="img folder">arm-cm</span> for ARM Cortex-M. Under that directory, the sub-directories <span class="img folder">blinky_ek-tm4c123gxl</span> contain the specific example on the specified board, such as "Blinky" on the EK-TM4C123GXL board here. In the specific example folder, you find sub-folders for the @ref comp_qk "QK" and @ref comp_qv "QV" kernels, respectively.
   </li>
 
-  <li><span class="tag">B</span> @subpage exa_os "Examples for 3rd-party OS" are located in sub-directories named after the OS, such as <span class="img folder">win32-qv</span> for Win32 API (Windows) with QV directory and <span class="img folder">posix-qv</span> for POSIX API (e.g., Linux) with QV directory.
+  <li><span class="tag">B</span> @subpage exa_os "Examples for Workstations" are located in sub-directory <span class="img folder">workstation</span>. These examples can be built on Windows, Linux and MacOS.
   </li>
 
 </ul>
 
 @note
-Because the QP distribution contains *all* examples, the number of sub-directories and files in the <span class="img folder">examples</span> folder may seem daunting. However, knowing the structure of the <span class="img folder">examples</span> folder, you can simply **delete** the sub-directories that are not interesting to you.
+Because the QP-nano distribution contains *all* examples, the number of sub-directories and files in the <span class="img folder">examples</span> folder may seem daunting. However, knowing the structure of the <span class="img folder">examples</span> folder, you can simply **delete** the sub-directories that are not interesting to you.
 
 
 ------------------------------------------------------------------------------
@@ -117,7 +109,7 @@ With the exception of the game application, all other example applications can b
 Beyond these basic applications for demonstrating and testing the various @ref ports "QP-nano ports", the QP-nano distribution contains all examples described in the book <a class="extern" target="_blank" href="https://www.state-machine.com/psicc2" >Practical UML Statecharts in C/C++, 2nd Edition</a>
 
 @sa
-@ref exa_win32-qv
+@ref exa_os
 
 
 <div class="separate"></div>
@@ -220,8 +212,7 @@ To work with QP-nano effectively, you need to learn a bit more about active obje
 
 ------------------------------------------------------------------------------
 @section exa_ref_os Examples for Third-Party OS
-- @ref exa_posix-qv
-- @ref exa_win32-qv
+- @subpage exa_os
 
 
 ------------------------------------------------------------------------------

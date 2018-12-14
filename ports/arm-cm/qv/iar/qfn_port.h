@@ -1,14 +1,14 @@
 /**
 * @file
-* @brief QF-nano port ARM Cortex-M, cooperative QV kernel, IAR-ARM toolset
+* @brief QF-nano port ARM Cortex-M, cooperative QV-nano kernel, IAR-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.1.1
-* Date of the Last Update:  2018-03-05
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-12-05
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
 * Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
@@ -85,7 +85,6 @@
     /* initialization of the QV kernel for Cortex-M3/M4 */
     #define QV_INIT() QV_init()
     void QV_init(void);
-
 #endif
 
 /* interrupt nesting policy for ISR level (ISRs can nest) */

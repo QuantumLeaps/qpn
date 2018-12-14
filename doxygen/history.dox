@@ -1,6 +1,11 @@
 /**
 @page history Revision History
 
+@section qpn_6_3_7 Version 6.3.7, 2018-12-07
+The main purpose of this release is re-designing of the @ref exa_os "examples for workstations" (previously `win32-qv` and `posix-qv`). All these types of examples have been consolidated in the @ref exa_os "exampes/workstation" folder, where the provided `Makefiles` have been extended to be cross-platform so that they work on Windows, Linux, and MacOS without changes. To facilitate the creation of truly portable, cross-platform examples, the existing @ref ports_os "QP ports to Windows/POSIX" have been augmented with abstractions for portable console access.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_3_3 Version 6.3.3, 2018-06-22
 This release fixes the following bugs:
 
@@ -15,7 +20,6 @@ This release fixes the following bugs:
 Also, this release demonstrates the new features of QM 4.3.0 in several example models (qpn/examples/ directory).
 
 Finally, this release updates `3rd_party/CMSIS/Include` to the latest version from GitHub.
-
 
 
 ------------------------------------------------------------------------------

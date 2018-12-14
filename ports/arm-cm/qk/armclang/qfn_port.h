@@ -1,14 +1,14 @@
 /**
 * @file
-* @brief QF-nano port ARM Cortex-M, preemptive QK kernel, ARM-CLANG toolset
+* @brief QF-nano port ARM Cortex-M, preemptive QK-nano kernel, ARM-CLANG
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.1.1
-* Date of the Last Update:  2018-03-05
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-12-05
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
 * Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
@@ -67,10 +67,6 @@
 
     /* Cortex-M3/M4 provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint_fast8_t)(32U - __builtin_clz(n_)))
-
-    /* macro for getting the BASEPRI register */
-    #define QF_GET_BASEPRI(basepri_) __asm volatile (\
-        "mrs %0,BASEPRI" : "=r" (basepri_) :: )
 
     /* macro for setting the BASEPRI register */
     #define QF_SET_BASEPRI(basepri_) __asm volatile (\

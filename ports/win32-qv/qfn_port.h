@@ -1,14 +1,15 @@
 /**
 * @file
 * @brief QF-nano emulation for Win32 with cooperative QV kernel
+* @ingroup ports
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.2.0
-* Date of the Last Update:  2018-04-09
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-11-14
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
 * Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
@@ -57,8 +58,8 @@
 void QF_enterCriticalSection_(void);
 void QF_leaveCriticalSection_(void);
 
-/* set clock tick rate (NOTE ticksPerSec==0 disables the "ticker thread" */
-void QF_setTickRate(uint32_t ticksPerSec); /* set clock tick rate */
+/* set clock tick rate (NOTE ticksPerSec==0 disables the "ticker thread") */
+void QF_setTickRate(uint32_t ticksPerSec, int_t tickPrio);
 
 /* ISR-level clock tick callback
 * (NOTE not called when "ticker thread" is not running)
@@ -68,15 +69,26 @@ void QF_onClockTickISR(void);
 /* application-level callback to cleanup the application */
 void QF_onCleanup(void);
 
-/* special adaptations for QWIN GUI applications */
+/* special adaptations for QWIN GUI applications... */
 #ifdef QWIN_GUI
     /* replace main() with main_gui() as the entry point to a GUI app. */
     #define main() main_gui()
     int_t main_gui(); /* prototype of the GUI application entry point */
 #endif
 
-/* portable "safe" facilities from <stdio.h> and <string.h> ... */
-#ifdef _MSC_VER /* Microsoft C/C++ compiler? */
+/* abstractions for console access... */
+void QF_consoleSetup(void);
+void QF_consoleCleanup(void);
+int QF_consoleGetKey(void);
+int QF_consoleWaitForKey(void);
+
+/****************************************************************************/
+/* Microsoft C++: portable "safe" facilities from <stdio.h> and <string.h> */
+#ifdef _MSC_VER
+
+#if (_MSC_VER < 1900) /* before Visual Studio 2015 */
+#define snprintf _snprintf
+#endif
 
 #define SNPRINTF_S(buf_, len_, format_, ...) \
     _snprintf_s(buf_, len_, _TRUNCATE, format_, ##__VA_ARGS__)

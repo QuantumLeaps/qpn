@@ -1,22 +1,7 @@
-/*! @page exa_os Examples for Third-Party OS
-
-- @subpage exa_posix-qv
-- @subpage exa_win32-qv
-
-*/
 /*##########################################################################*/
-/*! @page exa_posix-qv POSIX-QV (Linux, etc.)
+/*! @page exa_os Examples for Workstations (Windows/POSIX)
 
-@image html under_construction.jpg
-
-@sa
-@ref posix-qv  "QP-nano POSIX-QV Emulation"
-*/
-
-/*##########################################################################*/
-/*! @page exa_win32-qv Win32-QV (Windows)
-
-<p>The <span class="img folder">examples/win32</span> folder contains all examples described in the book <a class="extern" target="_blank" href="https://www.state-machine.com/psicc2" >Practical UML Statecharts in C/C++, 2nd Edition</a>. These examples include:
+<p>The <span class="img folder">examples/workstation</span> folder contains all examples described in the book <a class="extern" target="_blank" href="https://www.state-machine.com/psicc2" >Practical UML Statecharts in C/C++, 2nd Edition</a> and more. These examples include:
 </p>
 
 - <span class="img folder">blinky</span> Simple "Blinky" for Windows (command line)
@@ -25,12 +10,11 @@
 - <span class="img folder">comp_qm</span> Orthogonal Component with QM model design pattern
 - <span class="img folder">defer</span> Deferred Event design pattern
 - <span class="img folder">dpp</span> DPP (command-line)
+- <span class="img folder">dpp-comp</span> DPP with the "Orthogonal Component" pattern (command-line)
 - <span class="img folder">dpp-gui</span> DPP (with GUI on Windows)
 - <span class="img folder">game-gui</span> "Fly 'n' Shoot" game from Chapter 1 of PSiCC2
 - <span class="img folder">history</span> Transition-to-History design pattern (hand-coded)
-- <span class="img folder">history_qm</span> Transition-to-History with QM model
 - <span class="img folder">pelican</span> PEdestrian LIgth CONtrolled Crossing (command line)
-- <span class="img folder">qmsmtst</span> Test State Machine based on ::QMsm with QM model
 - <span class="img folder">qhsmtst</span> Test State Machine based on ::QHsm with QM model
 - <span class="img folder">reminder</span> Reminder design pattern from Chapter 5 of PSiCC2
 - <span class="img folder">reminder2</span> Reminder design pattern different version

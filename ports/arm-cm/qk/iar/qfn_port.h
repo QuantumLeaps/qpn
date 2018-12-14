@@ -1,14 +1,14 @@
 /**
 * @file
-* @brief QF-nano port ARM Cortex-M, preemptive QK kernel, IAR-ARM toolset
+* @brief QF-nano port ARM Cortex-M, preemptive QK-nano kernel, IAR-ARM
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.1.1
-* Date of the Last Update:  2018-03-05
+* Last Updated for Version: 6.3.7
+* Date of the Last Update:  2018-12-05
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
 * Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
 *
