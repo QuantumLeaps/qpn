@@ -1,6 +1,14 @@
 /**
 @page history Revision History
 
+@section qpn_6_3_8 Version 6.3.8, 2018-12-31
+The main purpose of this release is the update the `Makefiles` that use the [GNU-ARM Embedded Toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) to match the recent update in [QTools for Windows 6.3.8](https://sourceforge.net/projects/qpc/files/QTools/). Specifically, all `Makefiles` in the `examples` directory have been updated to use the GNU-ARM toolchain located in `qtools\gnu_arm-none-eabi` and use the tools prefix **arm-none-eabi-**.
+
+@note
+The `Makefiles` that use the GNU-ARM included in this release require [QTools for Windows version 6.3.8 or newer](https://sourceforge.net/projects/qpc/files/QTools/) and will **NOT** work with the older QTools collection.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_3_7 Version 6.3.7, 2018-12-07
 The main purpose of this release is re-designing of the @ref exa_os "examples for workstations" (previously `win32-qv` and `posix-qv`). All these types of examples have been consolidated in the @ref exa_os "exampes/workstation" folder, where the provided `Makefiles` have been extended to be cross-platform so that they work on Windows, Linux, and MacOS without changes. To facilitate the creation of truly portable, cross-platform examples, the existing @ref ports_os "QP ports to Windows/POSIX" have been augmented with abstractions for portable console access.
 
