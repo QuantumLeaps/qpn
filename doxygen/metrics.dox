@@ -1,7 +1,7 @@
-/** @page metrics Code Metrics 
+/** @page metrics Code Metrics
 
-@code 
-                   Standard Code Metrics for QP-nano 6.3.8 
+@code
+                   Standard Code Metrics for QP-nano 6.3.8
 
            Resource Standard Metrics (TM) for C, C++, C# and Java
                    Version 7.75 - mSquaredTechnologies.com
@@ -106,5 +106,5 @@
   Other File Count ......:          0  Total File Count ......:          6
   ________________________________________________________________________
 
-@endcode 
-*/ 
+@endcode
+*/

@@ -98,7 +98,7 @@ C_SRCS := \
 	startup_stm32l053xx.c
 
 # C++ source files
-CPP_SRCS := 
+CPP_SRCS :=
 
 OUTPUT    := $(PROJECT)
 LD_SCRIPT := $(PROJECT).ld

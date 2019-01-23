@@ -97,7 +97,7 @@ C_SRCS := \
 	startup_TM4C123GH6PM.c
 
 # C++ source files
-CPP_SRCS := 
+CPP_SRCS :=
 
 OUTPUT    := $(PROJECT)
 LD_SCRIPT := $(PROJECT).ld

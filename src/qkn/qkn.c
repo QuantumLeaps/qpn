@@ -4,14 +4,14 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.1.1
-* Last updated on  2018-02-18
+* Last updated for version 6.3.8
+* Last updated on  2019-01-23
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -209,6 +209,9 @@ void QK_schedUnlock(QSchedStatus stat) {
         * The current lock priority must be greater than the previous
         */
         Q_REQUIRE_ID(700, lockPrio > prevPrio);
+#ifdef Q_NASSERT
+        (void)lockPrio; /* avoid compiler warning about unused variable */
+#endif
 
         /* restore the previous lock priority and lock holder */
         QK_attr_.lockPrio   = (uint8_t)prevPrio;
