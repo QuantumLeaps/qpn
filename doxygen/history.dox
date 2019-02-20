@@ -1,6 +1,19 @@
 /**
 @page history Revision History
 
+@section qpn_6_4_0 Version 6.4.0, 2019-02-10
+This release brings the following changes:
+
+- added assertion to QHSM_INIT() to make sure the the virtual-pinter (vptr) is initialized
+
+@note
+These additional assertions require #Q_DEFINE_THIS_FILE or #Q_DEFINE_THIS_MODULE at the top of the .c file that calls QHSM_INIT().
+
+- modified qassert.h to work correctly when assertions are disabled with #Q_NASSERT and also updated the QP/C source code to build correctly without assertions
+- modified Makefiles for workstations (Windows and POSIX) to use compiler options -std=c99 for C and -std=c++11 for C++ as well as -pedantic option.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_3_8 Version 6.3.8, 2018-12-31
 The main purpose of this release is the update the `Makefiles` that use the [GNU-ARM Embedded Toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) to match the recent update in [QTools for Windows 6.3.8](https://sourceforge.net/projects/qpc/files/QTools/). Specifically, all `Makefiles` in the `examples` directory have been updated to use the GNU-ARM toolchain located in `qtools\gnu_arm-none-eabi` and use the tools prefix **arm-none-eabi-**.
 

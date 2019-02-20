@@ -1,7 +1,7 @@
-/** @page metrics Code Metrics
+/** @page metrics Code Metrics 
 
-@code
-                   Standard Code Metrics for QP-nano 6.3.8
+@code 
+                   Standard Code Metrics for QP-nano 6.4.0 
 
            Resource Standard Metrics (TM) for C, C++, C# and Java
                    Version 7.75 - mSquaredTechnologies.com
@@ -9,7 +9,7 @@
   License Type: Windows Single User License
   Licensed To : Quantum Leaps, LLC
   License No. : WS2975                          License Date: Dec 15, 2013
-  Build Date  : Sep  2 2009                         Run Date: Dec 28, 2018
+  Build Date  : Sep  2 2009                         Run Date: Feb 19, 2019
   (C)1996-2009 M Squared Technologies LLC
   ________________________________________________________________________
 
@@ -21,7 +21,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 54       eLOC 53       lLOC 5        Comment 258      Lines      338
+  LOC 49       eLOC 48       lLOC 5        Comment 258      Lines      334
   ________________________________________________________________________
   End of File: ..\include\qassert.h
 
@@ -31,7 +31,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 104      eLOC 101      lLOC 31       Comment 308      Lines      439
+  LOC 107      eLOC 104      lLOC 33       Comment 308      Lines      442
   ________________________________________________________________________
   End of File: ..\include\qepn.h
 
@@ -92,9 +92,9 @@
 
                          ~~ Total Project Summary ~~
 
-  LOC 412      eLOC 407      lLOC 100      Comment 1079     Lines     1627
+  LOC 410      eLOC 405      lLOC 102      Comment 1079     Lines     1626
   Average per File, metric/6 files
-  LOC 68       eLOC 67       lLOC 16       Comment 179      Lines      271
+  LOC 68       eLOC 67       lLOC 17       Comment 179      Lines      271
 
   ------------------------------------------------------------------------
 
@@ -106,5 +106,5 @@
   Other File Count ......:          0  Total File Count ......:          6
   ________________________________________________________________________
 
-@endcode
-*/
+@endcode 
+*/ 

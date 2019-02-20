@@ -1,6 +1,8 @@
 #include "qpn.h"   /* QP-nano */
 #include "calc.h"  /* Application interface */
 
+Q_DEFINE_THIS_FILE
+
 static Calc l_calc; /* an instance of Calc HSM */
 
 int main() {

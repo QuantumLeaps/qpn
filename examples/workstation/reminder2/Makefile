@@ -1,13 +1,13 @@
 ##############################################################################
 # Product: Makefile for QP-nano for Windows and POSIX *HOSTS*
-# Last updated for version 6.3.7
-# Last updated on  2018-11-06
+# Last updated for version 6.4.0
+# Last updated on  2019-01-09
 #
 #                    Q u a n t u m  L e a P s
 #                    ------------------------
 #                    Modern Embedded Software
 #
-# Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
+# Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 #
 # This program is open source software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
@@ -40,9 +40,15 @@
 # cleaning configurations: Debug (default), Release, and Spy
 # make clean
 # make CONF=rel clean
+#
+# NOTE:
+# To use this Makefile on Windows, you will need the GNU make utility, which
+# is included in the QTools collection for Windows, see:
+#    http://sourceforge.net/projects/qpc/files/QTools/
+#
 
 #-----------------------------------------------------------------------------
-# project name
+# project name:
 #
 PROJECT := reminder2
 
@@ -72,7 +78,7 @@ C_SRCS := \
 	reminder2.c
 
 # C++ source files...
-CPP_SRCS  :=
+CPP_SRCS :=
 
 LIB_DIRS  :=
 LIBS      :=
@@ -149,22 +155,25 @@ endif
 ifeq (rel, $(CONF)) # Release configuration ..................................
 
 BIN_DIR := build_rel
+# gcc options:
+CFLAGS  = -c -O3 -fno-pie -std=c99 -pedantic -Wall -Wextra -W \
+	$(INCLUDES) $(DEFINES) -DNDEBUG
 
-CFLAGS = -c -ffunction-sections -fdata-sections \
-	-Os -Wall -W $(INCLUDES) $(DEFINES) -DNDEBUG
+CPPFLAGS = -c -O3 -fno-pie -std=c++11 -pedantic -Wall -Wextra \
+	-fno-rtti -fno-exceptions \
+	$(INCLUDES) $(DEFINES) -DNDEBUG
 
-CPPFLAGS = -c -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections \
-	-Os -Wall -W $(INCLUDES) $(DEFINES) -DNDEBUG
-
-else  # default Debug configuration ..........................................
+else # default Debug configuration .........................................
 
 BIN_DIR := build
 
-CFLAGS = -c -g -ffunction-sections -fdata-sections \
-	-O -Wall -W $(INCLUDES) $(DEFINES)
+# gcc options:
+CFLAGS  = -c -g -O -fno-pie -std=c99 -pedantic -Wall -Wextra -W \
+	$(INCLUDES) $(DEFINES)
 
-CPPFLAGS = -c -g -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections \
-	-O -Wall -W $(INCLUDES) $(DEFINES)
+CPPFLAGS = -c -g -O -fno-pie -std=c++11 -pedantic -Wall -Wextra \
+	-fno-rtti -fno-exceptions \
+	$(INCLUDES) $(DEFINES)
 
 endif  # .....................................................................
 
@@ -194,19 +203,20 @@ all: $(TARGET_EXE)
 $(TARGET_EXE) : $(C_OBJS_EXT) $(CPP_OBJS_EXT)
 	$(LINK) $(LINKFLAGS) $(LIB_DIRS) -o $@ $^ $(LIBS)
 
-$(BIN_DIR)/%.d : %.cpp
-	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
-
 $(BIN_DIR)/%.d : %.c
 	$(CC) -MM -MT $(@:.d=.o) $(CFLAGS) $< > $@
 
-$(BIN_DIR)/%.o : %.cpp
-	$(CPP) $(CPPFLAGS) $< -o $@
+$(BIN_DIR)/%.d : %.cpp
+	$(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $< > $@
 
 $(BIN_DIR)/%.o : %.c
 	$(CC) $(CFLAGS) $< -o $@
 
-.PHONY : clean show
+$(BIN_DIR)/%.o : %.cpp
+	$(CPP) $(CPPFLAGS) $< -o $@
+
+$(BIN_DIR)/%.o : %.rc
+	$(RC) $(RCINCLUDES) -i $< -o $@
 
 # include dependency files only if our goal depends on their existence
 ifneq ($(MAKECMDGOALS),clean)
