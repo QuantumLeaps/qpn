@@ -34,6 +34,7 @@ lint*.txt
 *.bak
 *.qlc
 JLink*.*
+version-*
 
 eclipse/
 test_priv/
@@ -51,7 +52,6 @@ Spy/
 lib/
 obj/
 output/
-
 
 doxygen/html/
 lint/*.txt

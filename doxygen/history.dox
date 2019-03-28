@@ -1,6 +1,11 @@
 /**
 @page history Revision History
 
+@section qpn_6_5_0 Version 6.5.0, 2019-03-30
+This QP-nano release matches the [QM release 4.5.0](https://www.state-machine.com/qm/history.html#qm_4_5_0), which introduced new implementation for QP/C++. Even though this has no impact on the QP-nano state machine implementation with QM, this release is needed for compatibility checking between QP and QM. This release comes with several models for **QM 4.5.0**.
+
+
+------------------------------------------------------------------------------
 @section qpn_6_4_0 Version 6.4.0, 2019-02-10
 This release brings the following changes:
 

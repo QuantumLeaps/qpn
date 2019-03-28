@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="4.3.1" links="0">
+<model version="4.5.0" links="0">
  <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing example</documentation>
  <framework name="qpn"/>
  <package name="components" stereotype="0x02">
   <class name="Pelican" superclass="qpn::QActive">
    <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing</documentation>
    <attribute name="flashCtr" type="uint8_t" visibility="0x02" properties="0x00"/>
-   <statechart>
+   <statechart properties="0x01">
     <initial target="../1">
      <initial_glyph conn="2,2,5,1,72,4,-2">
       <action box="1,-2,27,4"/>

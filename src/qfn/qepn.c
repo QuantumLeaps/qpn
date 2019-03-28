@@ -4,8 +4,8 @@
 * @ingroup qep
 * @cond
 ******************************************************************************
-* Last updated for version 6.3.8
-* Last updated on  2019-01-23
+* Last updated for version 6.5.0
+* Last updated on  2019-03-28
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -44,7 +44,7 @@
 Q_DEFINE_THIS_MODULE("qepn")
 
 /****************************************************************************/
-char_t const Q_ROM QP_versionStr[6] = QP_VERSION_STR;
+char_t const Q_ROM QP_versionStr[7] = QP_VERSION_STR;
 
 /****************************************************************************/
 /****************************************************************************/
