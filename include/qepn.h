@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 6.5.0
-* Last updated on  2019-03-28
+* Last updated on  2019-04-16
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -433,7 +433,7 @@ enum {
 
 /****************************************************************************/
 /*! the current QP version number string in ROM, based on QP_VERSION_STR */
-extern char_t const Q_ROM QP_versionStr[6];
+extern char_t const Q_ROM QP_versionStr[7];
 
 /*! get the current QP-nano version number string of the form "X.Y.Z" */
 #define QP_getVersion() (QP_versionStr)
