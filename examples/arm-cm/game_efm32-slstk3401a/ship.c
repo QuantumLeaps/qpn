@@ -113,6 +113,10 @@ static QState Ship_flying(Ship * const me) {
         case Q_ENTRY_SIG: {
             me->score = 0; /* reset the score */
             QACTIVE_POST(&AO_Tunnel, SCORE_SIG, me->score);
+
+            /* lauch the ship from the initial position */
+            me->x = GAME_SHIP_X;
+            me->y = (GAME_SHIP_Y << 2);
             status_ = Q_HANDLED();
             break;
         }
