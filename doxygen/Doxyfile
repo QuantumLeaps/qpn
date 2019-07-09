@@ -134,6 +134,7 @@ INPUT = \
     ../ports/lint \
     ../ports/lint/qkn \
     ../ports/lint/qvn \
+    ../../doxygen/help.dox \
     ../../doxygen/glossary.dox
 
 INPUT_ENCODING         = UTF-8
