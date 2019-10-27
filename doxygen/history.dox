@@ -1,6 +1,19 @@
 /**
 @page history Revision History
 
+@section qpn_6_6_0 Version 6.6.0, 2019-10-31
+The main purpose of this release is the change in distribution of the QP-nano framework, which is now bundled together with the other QP frameworks (QP/C and QP/C++) as well as QM, and the QTools collection into "QP-bundle". This "QP-bundle" provides a single, streamlined and simplified download and installation of all QP frameworks and all the accompanying tools.
+
+This release brings also the following changes:
+
+- removed "//" (double slash) from all comments for compliance with the MISRA-C:2012 required Rule 3.1. (The "//" sequence was used in the URLs, such as "http://...").
+- converted inclusion guards in header files to uppercase as per coding convention for macros.
+- replaced "vtbl" with "vtable" in QP-nano source code
+- extended the range of #Q_PARAM_SIZE to 8 (8 corresponding to uint64_t)
+- fixed [bug#252 qassert.h used as standalone in qpn](https://sourceforge.net/p/qpc/bugs/252/)
+
+
+------------------------------------------------------------------------------
 @section qpn_6_5_1 Version 6.5.1, 2019-06-11
 This release adds ports and examples for PIC24/dsPIC 16-bit MCUs with MPLAB-X and XC16 compiler toolchain.
 

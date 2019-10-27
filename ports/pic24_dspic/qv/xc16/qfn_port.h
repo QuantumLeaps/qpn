@@ -37,8 +37,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* QF-nano interrupt disable/enable, see NOTE01 */
 #define QF_INT_DISABLE()        __builtin_disi(0x3FFFU)
@@ -77,5 +77,5 @@
 * interrupt will not occur.
 */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */
 

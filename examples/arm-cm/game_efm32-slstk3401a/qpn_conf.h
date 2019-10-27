@@ -31,12 +31,12 @@
 * http://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
-#ifndef qpn_conf_h
-#define qpn_conf_h
+#ifndef QPN_CONF_H
+#define QPN_CONF_H
 
 #define Q_PARAM_SIZE            4
 #define QF_MAX_TICK_RATE        2
 #define QF_TIMEEVT_CTR_SIZE     2
 #define QF_TIMEEVT_PERIODIC
 
-#endif /* qpn_conf_h */
+#endif /* QPN_CONF_H */

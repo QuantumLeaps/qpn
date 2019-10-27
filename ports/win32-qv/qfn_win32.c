@@ -4,14 +4,14 @@
 * @ingroup ports
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.3.7
-* Date of the Last Update:  2018-11-09
+* Last updated for version 6.6.0
+* Last updated on  2019-10-04
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -29,11 +29,11 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
@@ -83,14 +83,14 @@ static DWORD WINAPI ticker_thread(LPVOID arg);
 
 /****************************************************************************/
 void QActive_ctor(QActive * const me, QStateHandler initial) {
-    static QActiveVtbl const vtbl = { /* QActive virtual table */
+    static QActiveVtable const vtable = { /* QActive virtual table */
         { &QHsm_init_,
           &QHsm_dispatch_ },
         &QActive_postX_,
         &QActive_postXISR_
     };
     QHsm_ctor(&me->super, initial);
-    me->super.vptr = &vtbl.super; /* hook the vptr to QActive virtual table */
+    me->super.vptr = &vtable.super; /* hook the vptr to QActive vtable */
 }
 
 /****************************************************************************/

@@ -36,8 +36,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* GNU-AVR extended keyword '__flash' allocates const objects to ROM */
 #define Q_ROM            __flash
@@ -77,4 +77,4 @@
 #include "qfn.h"         /* QF-nano  platform-independent public interface */
 #include "qkn.h"         /* QK-nano  platform-independent public interface */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */

@@ -31,8 +31,8 @@
 * https://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
-#ifndef qpn_conf_h
-#define qpn_conf_h
+#ifndef QPN_CONF_H
+#define QPN_CONF_H
 
 #define Q_PARAM_SIZE            4
 #define QF_MAX_TICK_RATE        1
@@ -41,4 +41,4 @@
 #define QK_SCHED_LOCK
 #define QK_ON_CONTEXT_SW
 
-#endif  /* qpn_conf_h */
+#endif  /* QPN_CONF_H */

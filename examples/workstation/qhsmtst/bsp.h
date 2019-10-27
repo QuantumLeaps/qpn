@@ -31,12 +31,12 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 *****************************************************************************/
-#ifndef bsp_h
-#define bsp_h
+#ifndef BSP_H
+#define BSP_H
 
 void BSP_init(char const *fname);
 void BSP_exit(void);
 void BSP_display(char const *msg);
 void BSP_dispatch(QSignal sig);
 
-#endif /* bsp_h */
+#endif /* BSP_H */

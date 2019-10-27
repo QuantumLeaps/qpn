@@ -36,8 +36,8 @@
 ******************************************************************************
 * \endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /**
 * \description
@@ -157,4 +157,4 @@ void int_enable(void);  /*!< example of a function to enable interrupts */
 #include "qfn.h"       /* QF-nano platform-independent public interface */
 #include "qkn.h"       /* QK-nano platform-independent public interface */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */

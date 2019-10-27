@@ -36,8 +36,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* QF-nano interrupt disable/enable... */
 #define QF_INT_DISABLE() __disable_interrupt()
@@ -55,4 +55,4 @@
 #include "qfn.h"         /* QF-nano  platform-independent public interface */
 #include "qvn.h"         /* QV-nano  platform-independent public interface */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */

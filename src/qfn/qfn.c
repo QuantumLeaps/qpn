@@ -4,14 +4,14 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.3.3
-* Last updated on  2018-06-23
+* Last updated for version 6.6.0
+* Last updated on  2019-10-04
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -29,11 +29,11 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
@@ -96,7 +96,7 @@ uint8_t const Q_ROM QF_log2Lkup[16] = {
 
 /****************************************************************************/
 void QActive_ctor(QActive * const me, QStateHandler initial) {
-    static QActiveVtbl const vtbl = { /* QActive virtual table */
+    static QActiveVtable const vtable = { /* QActive virtual table */
         { &QHsm_init_,
           &QHsm_dispatch_ },
         &QActive_postX_,
@@ -106,14 +106,14 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
     /**
     * @note QActive inherits QActive, so by the @ref oop convention
     * it should call the constructor of the superclass, i.e., QActive_ctor().
-    * However, this would pull in the QActiveVtbl, which in turn will pull
+    * However, this would pull in the QActiveVtable, which in turn will pull
     * in the code for QHsm_init_() and QHsm_dispatch_() implemetations,
     * which is expensive. To avoid this code size penalty, in case ::QHsm is
     * not used in a given project, the call to QHsm_ctor() avoids pulling
     * in the code for QHsm.
     */
     QHsm_ctor(&me->super, initial);
-    me->super.vptr = &vtbl.super; /* hook the vptr to QActive virtual table */
+    me->super.vptr = &vtable.super; /* hook the vptr to QActive vtable */
 }
 
 /****************************************************************************/
@@ -159,7 +159,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 #ifndef Q_NASSERT
             QF_INT_ENABLE();
             /* must be able to post event : Q_ERROR_ID(310) */
-            Q_onAssert(Q_this_module_, 310);
+            Q_onAssert(Q_this_module_, (int_t)310);
 #endif
         }
     }
@@ -255,7 +255,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #ifndef Q_NASSERT
             QF_INT_ENABLE();
             /* must be able to post event : Q_ERROR_ID(410) */
-            Q_onAssert(Q_this_module_, 410);
+            Q_onAssert(Q_this_module_, (int_t)410);
 #endif
         }
     }

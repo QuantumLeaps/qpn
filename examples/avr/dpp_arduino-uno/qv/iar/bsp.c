@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: DPP example, Arduino-UNO board, cooperative QV kernel, IAR-AVR
-* Last Updated for Version: 5.8.0
-* Date of the Last Update:  2016-11-06
+* Last updated for version 6.6.0
+* Last updated on  2019-10-15
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, LLC. state-machine.com.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -25,11 +25,11 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* http://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 *****************************************************************************/
 #include "qpn.h"
 #include "dpp.h"
@@ -78,10 +78,10 @@ __interrupt void timer2_ISR(void) {
     tmp ^= buttons.depressed;     /* changed debounced depressed */
     if ((tmp & BTN_EXT) != 0U) {  /* debounced BTN_EXT state changed? */
         if ((buttons.depressed & BTN_EXT) != 0U) { /* is BTN_EXT depressed? */
-            QACTIVE_POST_ISR((QActive *)&AO_Table, PAUSE_SIG, 0U);
+            QACTIVE_POST_ISR(&AO_Table, PAUSE_SIG, 0U);
         }
         else {            /* the button is released */
-            QACTIVE_POST_ISR((QActive *)&AO_Table, SERVE_SIG, 0U);
+            QACTIVE_POST_ISR(&AO_Table, SERVE_SIG, 0U);
         }
     }
 }

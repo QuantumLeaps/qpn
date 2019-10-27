@@ -1,8 +1,8 @@
 @echo off
 :: ==========================================================================
 :: Product: QP-nano script for generating Doxygen documentation
-:: Last Updated for Version: 6.5.1
-:: Date of the Last Update:  2019-06-11
+:: Last Updated for Version: 6.6.0
+:: Date of the Last Update:  2019-08-30
 ::
 ::                    Q u a n t u m  L e a P s
 ::                    ------------------------
@@ -38,14 +38,14 @@ echo usage:
 echo make
 echo make -CHM
 
-set VERSION=6.5.1
+set VERSION=6.6.0
 
 :: Generate Resource Standard Metrics for QP-nano ............................ 
 set DOXHOME="C:\tools\doxygen\bin"
 set RCMHOME="C:\tools\MSquared\M2 RSM"
 
 set RSM_OUTPUT=metrics.dox
-set RSM_INPUT=..\include\*.h ..\source\*.h ..\source\*.c
+set RSM_INPUT=..\include\*.h ..\src\qfn\*.c ..\src\qkn\*.c ..\src\qvn\*.c
 
 echo /** @page metrics Code Metrics > %RSM_OUTPUT%
 echo.>> %RSM_OUTPUT%
@@ -68,22 +68,24 @@ if "%1"=="-CHM" (
     xcopy img tmp\img\
     echo img\img.htm >> tmp\index.hhp
 
-    echo Generate CHM...
+    echo Generating CHM...
     "C:\tools\HTML Help Workshop\hhc.exe" tmp\index.hhp
     
+    echo.
     echo Cleanup...
     rmdir /S /Q  tmp
-    echo CHM file generated in ..\..\uploads\qpn\
+    echo CHM file generated in C:\qp\uploads\qpn\
 
 
 ) else (
+    echo.
     echo Cleanup...
-    rmdir /S /Q  ..\..\doxygen\qpn
+    rmdir /S /Q  C:\qp\uploads\qpn\qpn
     
     echo Adding custom images...
-    xcopy preview.js ..\..\doxygen\qpn\
-    xcopy img ..\..\doxygen\qpn\img\
-    copy images\favicon.ico ..\..\doxygen\qpn
+    xcopy preview.js C:\qp\uploads\qpn\qpn\
+    xcopy img C:\qp\uploads\qpn\qpn\img\
+    copy images\favicon.ico C:\qp\uploads\qpn\qpn
 
     echo Generating HTML...
     %DOXHOME%\doxygen.exe Doxyfile

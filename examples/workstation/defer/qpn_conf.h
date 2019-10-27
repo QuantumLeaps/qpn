@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: QP-nano configuration for the "Deferred Event" example
-* Last Updated for Version: 5.6.2
-* Date of the Last Update:  2016-04-05
+* Last updated for version 6.6.0
+* Last updated on  2019-10-14
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -25,17 +25,17 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* http://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 *****************************************************************************/
-#ifndef qpn_conf_h
-#define qpn_conf_h
+#ifndef QPN_CONF_H
+#define QPN_CONF_H
 
-#define Q_PARAM_SIZE            4
+#define Q_PARAM_SIZE            8
 #define QF_TIMEEVT_CTR_SIZE     2
 #define QF_TIMEEVT_PERIODIC
 
-#endif  /* qpn_conf_h */
+#endif /* QPN_CONF_H */

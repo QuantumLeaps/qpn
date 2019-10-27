@@ -4,14 +4,14 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.1.1
-* Last updated on  2018-02-18
+* Last updated for version 6.6.0
+* Last updated on  2019-10-15
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -29,16 +29,16 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_h
-#define qfn_h
+#ifndef QFN_H
+#define QFN_H
 
 /**
 * @description
@@ -143,7 +143,7 @@ typedef struct QActive {
 
 /*! Virtual table for the QActive class */
 typedef struct {
-    QHsmVtbl super; /*!< inherits QHsmVtbl */
+    QHsmVtable super; /*!< inherits QHsmVtable */
 
 #if (Q_PARAM_SIZE != 0)
     /*! virtual function to asynchronously post (FIFO) an event to an AO
@@ -165,7 +165,7 @@ typedef struct {
     bool (*postISR)(QActive * const me, uint_fast8_t const margin,
                     enum_t const sig);
 #endif
-} QActiveVtbl;
+} QActiveVtable;
 
 /*! protected "constructor" of an QActive active object. */
 void QActive_ctor(QActive * const me, QStateHandler initial);
@@ -194,11 +194,11 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @usage
     * @include qfn_post.c
     */
-    #define QACTIVE_POST(me_, sig_, par_) \
-        ((void)(*((QActiveVtbl const *)( \
-            QF_ACTIVE_CAST((me_))->super.vptr))->post)( \
-                QF_ACTIVE_CAST((me_)), QF_NO_MARGIN, \
-                (enum_t)(sig_), (QParam)(par_)))
+    #define QACTIVE_POST(me_, sig_, par_) do {                      \
+        QActive * const ao_ = QF_ACTIVE_CAST((me_));                \
+        ((void)(*((QActiveVtable const *)(ao_->super.vptr))->post)( \
+                ao_, QF_NO_MARGIN, (enum_t)(sig_), (QParam)(par_)));\
+    } while (0)
 
     /*! Polymorphically posts an event to an active object (FIFO)
     * without delivery guarantee (task context).
@@ -223,11 +223,9 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @usage
     * @include qfn_postx.c
     */
-    #define QACTIVE_POST_X(me_, margin_, sig_, par_) \
-        ((*((QActiveVtbl const *)( \
-            QF_ACTIVE_CAST((me_))->super.vptr))->post)( \
-                QF_ACTIVE_CAST((me_)), \
-                (margin_), (enum_t)(sig_), (QParam)(par_)))
+    #define QACTIVE_POST_X(me_, margin_, sig_, par_)            \
+        ((*((QActiveVtable const *)((me_)->super.vptr))->post)( \
+             (me_), (margin_), (enum_t)(sig_), (QParam)(par_)))
 
     /*! Polymorphically posts an event to an active object (FIFO)
     * with delivery guarantee (ISR context).
@@ -245,11 +243,11 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @usage
     * @include qfn_post.c
     */
-    #define QACTIVE_POST_ISR(me_, sig_, par_) \
-        ((void)(*((QActiveVtbl const *)( \
-            QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
-                QF_ACTIVE_CAST((me_)), QF_NO_MARGIN, \
-                (enum_t)(sig_), (QParam)(par_)))
+    #define QACTIVE_POST_ISR(me_, sig_, par_) do {                     \
+        QActive * const ao_ = QF_ACTIVE_CAST((me_));                   \
+        ((void)(*((QActiveVtable const *)(ao_->super.vptr))->postISR)( \
+                ao_, QF_NO_MARGIN, (enum_t)(sig_), (QParam)(par_)));   \
+    } while (0)
 
     /*! Polymorphically posts an event to an active object (FIFO)
     * without delivery guarantee (ISR context).
@@ -274,10 +272,10 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     * @usage
     * @include qfn_postx.c
     */
-    #define QACTIVE_POST_X_ISR(me_, margin_, sig_, par_) \
-        ((*((QActiveVtbl const *)( \
+    #define QACTIVE_POST_X_ISR(me_, margin_, sig_, par_)   \
+        ((*((QActiveVtable const *)(                       \
             QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
-                QF_ACTIVE_CAST((me_)), (margin_), \
+                QF_ACTIVE_CAST((me_)), (margin_),          \
                 (enum_t)(sig_), (QParam)(par_)))
 
     /*! Implementation of the task-level event posting */
@@ -289,26 +287,29 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
                            enum_t const sig, QParam const par);
 
 #else /* no event parameter */
-    #define QACTIVE_POST(me_, sig_) \
-        ((void)(*((QActiveVtbl const *)( \
-            QF_ACTIVE_CAST((me_))->super.vptr))->post)( \
-                QF_ACTIVE_CAST((me_)), (uint_fast8_t)0, (enum_t)(sig_)))
 
-    #define QACTIVE_POST_X(me_, margin_, sig_) \
-        ((*((QActiveVtbl const *)((me_)->super.vptr))->post)((me_), \
+    #define QACTIVE_POST(me_, sig_) do {                            \
+        QActive * const ao_ = QF_ACTIVE_CAST((me_));                \
+        ((void)(*((QActiveVtable const *)(ao_->super.vptr))->post)( \
+                ao_, QF_NO_MARGIN, (enum_t)(sig_)));                \
+    } while (0)
+
+    #define QACTIVE_POST_X(me_, margin_, sig_)                        \
+        ((*((QActiveVtable const *)((me_)->super.vptr))->post)((me_), \
                                    (margin_), (sig_)))
 
     bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                         enum_t const sig);
 
-    #define QACTIVE_POST_ISR(me_, sig_) \
-        ((void)(*((QActiveVtbl const*)( \
-            QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
-                 QF_ACTIVE_CAST((me_)), (uint_fast8_t)0, (enum_t)(sig_)))
+    #define QACTIVE_POST_ISR(me_, sig_) do {                           \
+        QActive * const ao_ = QF_ACTIVE_CAST((me_));                   \
+        ((void)(*((QActiveVtable const *)(ao_->super.vptr))->postISR)( \
+                ao_, QF_NO_MARGIN, (enum_t)(sig_)));                   \
+    } while (0)
 
-    #define QACTIVE_POST_X_ISR(me_, margin_, sig_) \
-        ((*((QActiveVtbl const *)( \
-            QF_ACTIVE_CAST((me_))->super.vptr))->postISR)( \
+    #define QACTIVE_POST_X_ISR(me_, margin_, sig_)                     \
+        ((*((QActiveVtable const *)(                                   \
+            QF_ACTIVE_CAST((me_))->super.vptr))->postISR)(             \
                 QF_ACTIVE_CAST((me_)), (margin_), (enum_t)(sig_)))
 
     bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
@@ -440,5 +441,5 @@ extern uint8_t const Q_ROM QF_invPow2Lkup[9];
 */
 #define QF_ACTIVE_CAST(a_)     ((QActive *)(a_))
 
-#endif /* qfn_h */
+#endif /* QFN_H */
 

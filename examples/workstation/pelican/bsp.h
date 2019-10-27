@@ -31,8 +31,8 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 *****************************************************************************/
-#ifndef bsp_h
-#define bsp_h
+#ifndef BSP_H
+#define BSP_H
 
 #define BSP_TICKS_PER_SEC   100U
 
@@ -49,4 +49,4 @@ void BSP_showState(char_t const *state);
 void BSP_signalCars(enum BSP_CarsSignal sig);
 void BSP_signalPeds(enum BSP_PedsSignal sig);
 
-#endif /* bsp_h */
+#endif /* BSP_H */

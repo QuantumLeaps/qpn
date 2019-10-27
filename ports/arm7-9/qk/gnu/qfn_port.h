@@ -36,8 +36,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* fast unconditional interrupt disabling/enabling for ARM state, NOTE1 */
 #define QF_INT_DISABLE()   \
@@ -90,4 +90,4 @@ void QF_unused(void);
 * QP services. Specifically FIQ cannot post or publish events.
 */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */

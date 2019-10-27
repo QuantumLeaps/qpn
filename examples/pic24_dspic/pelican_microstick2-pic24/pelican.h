@@ -16,8 +16,8 @@
 * for more details.
 */
 /*$endhead${.::pelican.h} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-#ifndef pelican_h
-#define pelican_h
+#ifndef PELICAN_H
+#define PELICAN_H
 
 enum PelicanSignals {
     PEDS_WAITING_SIG = Q_USER_SIG,
@@ -34,4 +34,4 @@ void Pelican_ctor(void);
 
 extern struct Pelican AO_Pelican;
 
-#endif /* pelican_h */
+#endif /* PELICAN_H */

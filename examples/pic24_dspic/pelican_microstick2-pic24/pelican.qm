@@ -241,8 +241,8 @@ BSP_signalPeds(PEDS_BLANK);</action>
  </package>
  <directory name=".">
   <file name="pelican.h">
-   <text>#ifndef pelican_h
-#define pelican_h
+   <text>#ifndef PELICAN_H
+#define PELICAN_H
 
 enum PelicanSignals {
     PEDS_WAITING_SIG = Q_USER_SIG,
@@ -256,7 +256,7 @@ $declare(components::Pelican_ctor)
 
 extern struct Pelican AO_Pelican;
 
-#endif /* pelican_h */
+#endif /* PELICAN_H */
 </text>
   </file>
   <file name="pelican.c">

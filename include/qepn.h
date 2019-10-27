@@ -4,8 +4,8 @@
 * @ingroup qepn
 * @cond
 ******************************************************************************
-* Last updated for version 6.5.0
-* Last updated on  2019-04-16
+* Last updated for version 6.6.0
+* Last updated on  2019-10-14
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -29,32 +29,32 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
-#ifndef qep_h
-#define qep_h
+#ifndef QEPN_H
+#define QEPN_H
 
 /****************************************************************************/
 /*! The current QP version as a decimal constant XXYZ, where XX is a 2-digit
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      650U
+#define QP_VERSION      660U
 
 /*! The current QP version number string of the form XX.Y.Z, where XX is
 * a 2-digit major version number, Y is a 1-digit minor version number,
 * and Z is a 1-digit release number.
 */
-#define QP_VERSION_STR  "6.5.0"
+#define QP_VERSION_STR  "6.6.0"
 
-/*! Tamperproof current QP release (6.5.0) and date (2019-03-31) */
-#define QP_RELEASE      0x8E8DC8C5U
+/*! Encrypted current QP release (6.6.0) and date (2019-10-31) */
+#define QP_RELEASE      0x8E22F8FBU
 
 
 /****************************************************************************/
@@ -107,14 +107,17 @@ typedef uint8_t QSignal;
     * @description
     * This typedef is configurable via the preprocessor switch #Q_PARAM_SIZE.
     * The other possible values of this type are as follows: @n
-    * none when (Q_PARAM_SIZE == 0); @n
-    * uint8_t when (Q_PARAM_SIZE == 1); @n
-    * uint16_t when (Q_PARAM_SIZE == 2); and @n
-    * uint32_t when (Q_PARAM_SIZE == 4).
+    * none when (Q_PARAM_SIZE == 0);@n
+    * uint8_t when (Q_PARAM_SIZE == 1);@n
+    * uint16_t when (Q_PARAM_SIZE == 2);@n
+    * uint32_t when (Q_PARAM_SIZE == 4); and @n
+    * uint64_t when (Q_PARAM_SIZE == 8).
     */
     typedef uint32_t QParam;
+#elif (Q_PARAM_SIZE == 8)
+    typedef uint64_t QParam;
 #else
-    #error "Q_PARAM_SIZE defined incorrectly, expected 0, 1, 2, or 4"
+    #error "Q_PARAM_SIZE defined incorrectly, expected 0, 1, 2, 4 or 8"
 #endif
 
 /****************************************************************************/
@@ -156,7 +159,7 @@ typedef QState (*QStateHandler)(void * const me);
 
 /****************************************************************************/
 /*! virtual table for the ::QHsm class. */
-typedef struct QHsmVtbl QHsmVtbl;
+typedef struct QHsmVtable QHsmVtable;
 
 /*! Hierarchical State Machine */
 /**
@@ -178,14 +181,14 @@ typedef struct QHsmVtbl QHsmVtbl;
 * @sa @ref oop
 */
 typedef struct {
-    QHsmVtbl const *vptr; /*!< virtual pointer */
+    QHsmVtable const *vptr; /*!< virtual pointer */
     QStateHandler state;  /*!< current active state (state-variable) */
     QStateHandler temp;   /*!< temporary: tran. chain, target state, etc. */
     QEvt evt;  /*!< currently processed event in the HSM (protected) */
 } QHsm;
 
 /*! Virtual table for the QHsm class */
-struct QHsmVtbl {
+struct QHsmVtable {
     /*! Triggers the top-most initial transition in a HSM. */
     void (*init)(QHsm * const me);
 
@@ -438,5 +441,5 @@ extern char_t const Q_ROM QP_versionStr[7];
 /*! get the current QP-nano version number string of the form "X.Y.Z" */
 #define QP_getVersion() (QP_versionStr)
 
-#endif /* qepn_h */
+#endif /* QEPN_H */
 

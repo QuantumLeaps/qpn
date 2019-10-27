@@ -36,8 +36,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* interrupt disabling policy for task level, see NOTE1 */
 #define QF_INT_DISABLE()     QF_enterCriticalSection_()
@@ -97,4 +97,4 @@ int QF_consoleWaitForKey(void);
 * priority-inheritance protocol.
 */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */

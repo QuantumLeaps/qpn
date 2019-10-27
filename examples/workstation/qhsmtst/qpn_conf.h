@@ -31,9 +31,9 @@
 * http://www.state-machine.com
 * mailto:info@state-machine.com
 *****************************************************************************/
-#ifndef qpn_conf_h
-#define qpn_conf_h
+#ifndef QPN_CONF_H
+#define QPN_CONF_H
 
 #define Q_PARAM_SIZE            1
 
-#endif  /* qpn_conf_h */
+#endif  /* QPN_CONF_H */

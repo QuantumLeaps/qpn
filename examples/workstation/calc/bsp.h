@@ -31,8 +31,8 @@
 * Web:   www.state-machine.com
 * Email: info@state-machine.com
 *****************************************************************************/
-#ifndef bsp_h
-#define bsp_h
+#ifndef BSP_H
+#define BSP_H
 
 #define KEY_PLUS    '+'
 #define KEY_MINUS   '-'
@@ -49,4 +49,4 @@ void BSP_exit(void);
 void BSP_display(void);
 void BSP_message(char const *state);
 
-#endif /* bsp_h */
+#endif /* BSP_H */

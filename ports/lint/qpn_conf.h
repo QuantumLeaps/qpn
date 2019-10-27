@@ -36,8 +36,8 @@
 ******************************************************************************
 * \endcond
 */
-#ifndef qpn_conf_h
-#define qpn_conf_h
+#ifndef QPN_CONF_H
+#define QPN_CONF_H
 
 /*! The size (in bytes) of the single scalar parameter representation
 * in the QEvent struct. Valid values: none (0), 1, 2, or 4; default none (0).
@@ -109,4 +109,4 @@ usage. */
 */
 #define QK_SCHED_LOCK
 
-#endif /* qpn_conf_h */
+#endif /* QPN_CONF_H */

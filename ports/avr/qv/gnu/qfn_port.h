@@ -36,8 +36,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* GNU-AVR extended keyword '__flash' allocates const objects to ROM */
 #define Q_ROM            __flash
@@ -82,4 +82,4 @@
 * instructins. You should NEVER separate these two lines.
 */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */

@@ -3,14 +3,14 @@
 * @brief QP-nano public interface including backwards-compatibility layer
 * @cond
 ******************************************************************************
-* Last updated for version 5.8.0
-* Last updated on  2016-11-06
+* Last updated for version 6.6.0
+* Last updated on  2019-07-30
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, www.state-machine.com.
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,16 +28,16 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* Web:   www.state-machine.com
-* Email: info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
-#ifndef qpn_h
-#define qpn_h
+#ifndef QPN_H
+#define QPN_H
 
 /**
 * @description
@@ -203,4 +203,4 @@ typedef QEvt QEvent;
 }
 #endif
 
-#endif  /* qpn_h */
+#endif  /* QPN_H */

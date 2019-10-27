@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.3.8
-* Last updated on  2019-01-23
+* Last updated for version 6.6.0
+* Last updated on  2019-07-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -29,11 +29,11 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
@@ -44,9 +44,9 @@
 Q_DEFINE_THIS_MODULE("qkn")
 
 /* protection against including this source file in a wrong project */
-#ifndef qkn_h
+#ifndef QKN_H
     #error "Source file included in a project NOT based on the QK-nano kernel"
-#endif /* qkn_h */
+#endif /* QKN_H */
 
 /* Public-scope objects *****************************************************/
 QK_Attr QK_attr_; /* global attributes of the QK-nano kernel */

@@ -36,8 +36,8 @@
 ******************************************************************************
 * @endcond
 */
-#ifndef qfn_port_h
-#define qfn_port_h
+#ifndef QFN_PORT_H
+#define QFN_PORT_H
 
 /* QF interrupt disable/enable and log2()... */
 #if (__TARGET_ARCH_THUMB == 3) /* Cortex-M0/M0+/M1(v6-M, v6S-M)? */
@@ -136,5 +136,5 @@
 * on the number of implemented priority bits in the NVIC.
 */
 
-#endif /* qfn_port_h */
+#endif /* QFN_PORT_H */
 
