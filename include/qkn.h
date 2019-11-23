@@ -5,7 +5,7 @@
 * @cond
 ******************************************************************************
 * Last updated for version 6.6.0
-* Last updated on  2019-07-30
+* Last updated on  2019-11-20
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -45,13 +45,9 @@
 typedef struct {
     uint8_t volatile actPrio;     /*!< prio of the active AO */
     uint8_t volatile nextPrio;    /*!< prio of the next AO to execute */
-#ifdef QK_SCHED_LOCK
     uint8_t volatile lockPrio;    /*!< lock prio (0 == no-lock) */
     uint8_t volatile lockHolder;  /*!< prio of the lock holder */
-#endif /* QK_SCHED_LOCK */
-#ifdef QF_ISR_NEST
     uint8_t volatile intNest;     /*!< ISR nesting level */
-#endif /* QF_ISR_NEST */
 } QK_Attr;
 
 /*! global attributes of the QK kernel */
