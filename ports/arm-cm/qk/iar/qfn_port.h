@@ -31,7 +31,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -87,7 +87,7 @@ void Thread_ret(void);
         (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)); \
     } \
     QF_INT_ENABLE(); \
-} while (0)
+} while (false)
 
 #include <intrinsics.h> /* intrinsic IAR functions */
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */

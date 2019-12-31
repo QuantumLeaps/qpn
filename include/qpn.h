@@ -3,8 +3,8 @@
 * @brief QP-nano public interface including backwards-compatibility layer
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-07-30
+* Last updated for version 6.7.0
+* Last updated on  2019-12-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -31,7 +31,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -95,107 +95,6 @@ typedef QHsm QMsm;
 /*! @deprecated QMsm state machine constructor; instead use: QHsm_ctor() */
 #define QMsm_ctor     QHsm_ctor
 
-/*! @deprecated execute the top-most initial transition in QMsm;
-* instead use QHSM_INIT()
-*/
-#define QMSM_INIT(me_)      QHSM_INIT((me_))
-
-/*! @deprecated dispatch an event to QMsm; instead use QHSM_DISPATCH() */
-#define QMSM_DISPATCH(me_)  QHSM_DISPATCH((me_))
-
-/*! @deprecated macro for cooperativew "Vanilla" kernel;
-* instead use: QV_onIdle() */
-#define QF_onIdle   QV_onIdle
-
-#ifdef Q_TIMERSET
-    #define QF_TIMEEVT_USAGE
-#endif /* Q_TIMERSET */
-
-/****************************************************************************/
-#if (QP_API_VERSION < 500)
-
-/*! @deprecated macro for odd 8-bit CPUs. */
-#define Q_ROM_VAR
-
-/*! @deprecated macro for odd 8-bit CPUs. */
-#define Q_REENTRANT
-
-/*! @deprecated execute the top-most initial transition in QMsm;
-* instead use QMSM_INIT()
-*/
-#define QMsm_init(me_)      QHSM_INIT((me_))
-
-/*! @deprecated dispatch an event to QMsm; instead use QMSM_DISPATCH() */
-#define QMsm_dispatch(me_)  QMSM_DISPATCH((me_))
-
-#if (Q_PARAM_SIZE != 0)
-    /*! Deprecated API defined for backwards-compatibility */
-    #define QActive_post(me_, sig_, par_) \
-        QACTIVE_POST((me_), (sig_), (par_))
-
-    /*! Deprecated API defined for backwards-compatibility */
-    #define QActive_postISR(me_, sig_, par_) \
-        QACTIVE_POST_ISR((me_), (sig_), (par_))
-#else
-    #define QActive_post(me_, sig_)    QACTIVE_POST((me_), (sig_))
-    #define QActive_postISR(me_, sig_) QACTIVE_POST_ISR((me_), (sig_))
-#endif
-
-#ifdef QF_TIMEEVT_PERIODIC
-    /*! Arming a one-shot time event for the default tick rate (rate 0);
-    * instead use QActive_armX()
-    */
-    #define QActive_arm(me_, ticks_) \
-        (QActive_armX((me_), (uint_fast8_t)0, (ticks_), 0U))
-#else
-    #define QActive_arm(me_, ticks_) \
-        (QActive_armX((me_), (uint_fast8_t)0, (ticks_)))
-#endif /* QF_TIMEEVT_PERIODIC */
-
-/*! Disarming a time event for the default tick rate (rate 0);
-* instead use QActive_disarmX()
-*/
-#define QActive_disarm(me_)     (QActive_disarmX((me_), (uint_fast8_t)0))
-
-
-/****************************************************************************/
-#if (QP_API_VERSION < 450)
-
-/*! @deprecated QP-nano event type; instead use QEvt */
-typedef QEvt QEvent;
-
-#ifdef QF_INT_LOCK
-    #define QF_INT_DISABLE()  QF_INT_LOCK()
-#endif
-
-#ifdef QF_INT_UNLOCK
-    #define QF_INT_ENABLE()   QF_INT_UNLOCK()
-#endif
-
-#ifdef QF_ISR_NEST
-    #ifdef QF_ISR_KEY_TYPE
-        #define QF_ISR_STAT_TYPE  QF_ISR_KEY_TYPE
-    #endif
-    #ifdef QF_ISR_LOCK
-        #define QF_ISR_DISABLE(stat_)  QF_ISR_LOCK(stat_)
-    #endif
-    #ifdef QF_ISR_UNLOCK
-        #define QF_ISR_RESTORE(stat_)  QF_ISR_UNLOCK(stat_)
-    #endif
-#endif /* QF_ISR_NEST */
-
-#if (QF_TIMEEVT_CTR_SIZE != 0)
-    /*! System clock tick processing for the default tick rate 0;
-    * instead use QF_tickXISR()
-    */
-    #define QF_tickISR() (QF_tickXISR((uint_fast8_t)0))
-
-    /*! Legacy API defined for backwards compatibility */
-    #define QF_tick()    (QF_tickXISR((uint_fast8_t)0))
-#endif
-
-#endif /* QP_API_VERSION < 450 */
-#endif /* QP_API_VERSION < 500 */
 #endif /* QP_API_VERSION < 540 */
 /****************************************************************************/
 

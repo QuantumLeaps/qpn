@@ -3,8 +3,8 @@
 * @brief QK-nano port to ARM Cortex-M, IAR-ARM toolset
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-11-11
+* Last updated for version 6.7.0
+* Last updated on  2019-12-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -31,7 +31,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond

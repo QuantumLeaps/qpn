@@ -6,8 +6,21 @@ product, all QP frameworks can be
 in which case you don't use any open source license and you do not violate
 your policy.
 
+
+---------------------------------------------------------------------------
 # What's New?
 View QP-nano Revision History at: https://www.state-machine.com/qpn/history.html
+
+
+---------------------------------------------------------------------------
+# Documentation
+The offline HTML documentation for **this** particular version of QP-nano
+is located in the folder html/. To view the offline documentation, open
+the file html/index.html in your web browser.
+
+The online HTML documention for the **latest** version of QP-nano is located
+at: https://www.state-machine.com/qpn/
+
 
 ---------------------------------------------------------------------------
 # About QP-nano

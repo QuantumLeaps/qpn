@@ -80,7 +80,7 @@ void  __attribute__((__interrupt__(__preprologue__( \
         } \
     } \
     __asm__ volatile ("disi #0x0000"); \
-} while (0);
+} while (false);
 
 #include <stdint.h>      /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>     /* Boolean type.      WG14/N843 C99 Standard */

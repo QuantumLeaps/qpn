@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-11-20
+* Last updated for version 6.7.0
+* Last updated on  2019-12-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -48,10 +48,10 @@ typedef struct {
     uint8_t volatile lockPrio;    /*!< lock prio (0 == no-lock) */
     uint8_t volatile lockHolder;  /*!< prio of the lock holder */
     uint8_t volatile intNest;     /*!< ISR nesting level */
-} QK_Attr;
+} QK_PrivAttr;
 
 /*! global attributes of the QK kernel */
-extern QK_Attr QK_attr_;
+extern QK_PrivAttr QK_attr_;
 
 /****************************************************************************/
 /*! QK-nano scheduler finds the highest-priority thread ready to run */

@@ -1,7 +1,7 @@
 /** @page metrics Code Metrics 
 
 @code 
-                   Standard Code Metrics for QP-nano 6.6.0 
+                   Standard Code Metrics for QP-nano 6.7.0 
 
            Resource Standard Metrics (TM) for C, C++, C# and Java
                    Version 7.75 - mSquaredTechnologies.com
@@ -9,7 +9,7 @@
   License Type: Windows Single User License
   Licensed To : Quantum Leaps, LLC
   License No. : WS2975                          License Date: Dec 15, 2013
-  Build Date  : Sep  2 2009                         Run Date: Nov 12, 2019
+  Build Date  : Sep  2 2009                         Run Date: Dec 31, 2019
   (C)1996-2009 M Squared Technologies LLC
   ________________________________________________________________________
 
@@ -39,6 +39,8 @@
   File: ..\include\qfn.h
   ________________________________________________________________________
 
+  ------------------------------------------------------------------------
+
                           ~~ Total File Summary ~~
 
   LOC 134      eLOC 134      lLOC 50       Comment 264      Lines      445
@@ -51,7 +53,7 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 40       eLOC 40       lLOC 16       Comment 92       Lines      140
+  LOC 36       eLOC 36       lLOC 16       Comment 90       Lines      136
   ________________________________________________________________________
   End of File: ..\include\qkn.h
 
@@ -61,19 +63,9 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 75       eLOC 74       lLOC 4        Comment 105      Lines      206
+  LOC 22       eLOC 21       lLOC 3        Comment 73       Lines      105
   ________________________________________________________________________
   End of File: ..\include\qpn.h
-
-
-  File: ..\include\qpn_conf.h
-  ________________________________________________________________________
-
-                          ~~ Total File Summary ~~
-
-  LOC 8        eLOC 8        lLOC 0        Comment 104      Lines      117
-  ________________________________________________________________________
-  End of File: ..\include\qpn_conf.h
 
 
   File: ..\include\qvn.h
@@ -181,7 +173,7 @@
       Function Base           : 1
       Conditional if / else if: 7     
   Complexity   Param 4       Return 1      Cyclo Vg 8       Total       13
-  LOC 45       eLOC 34       lLOC 18       Comment 32       Lines       56
+  LOC 46       eLOC 35       lLOC 19       Comment 32       Lines       57
 
   Function: QActive_postXISR_
   Parameters: (QActive * const me, uint_fast8_t margin, enum_t const sig, 
@@ -190,7 +182,7 @@
       Function Base           : 1
       Conditional if / else if: 6     
   Complexity   Param 4       Return 1      Cyclo Vg 7       Total       12
-  LOC 57       eLOC 47       lLOC 20       Comment 31       Lines       66
+  LOC 58       eLOC 48       lLOC 21       Comment 31       Lines       67
 
   Function: QF_init
   Parameters: (uint_fast8_t maxActive)
@@ -225,21 +217,21 @@
 
                           ~~ Total File Summary ~~
 
-  LOC 248      eLOC 213      lLOC 88       Comment 249      Lines      506
+  LOC 250      eLOC 215      lLOC 90       Comment 249      Lines      508
   ------------------------------------------------------------------------
 
                         ~~ File Functional Summary ~~
 
   File Function Count....:          7
-  Total Function LOC.....:        208  Total Function Pts LOC :        1.9
-  Total Function eLOC....:        174  Total Function Pts eLOC:        1.7
-  Total Function lLOC....:         84  Total Function Pts lLOC:        0.7
+  Total Function LOC.....:        210  Total Function Pts LOC :        2.0
+  Total Function eLOC....:        176  Total Function Pts eLOC:        1.7
+  Total Function lLOC....:         86  Total Function Pts lLOC:        0.7
   Total Function Params .:         18  Total Function Return .:          7
   Total Cyclo Complexity :         28  Total Function Complex.:         53
          ------     -----     -----     ------     ------     -----       
-  Max Function LOC ......:         57  Average Function LOC ..:      29.71
-  Max Function eLOC .....:         47  Average Function eLOC .:      24.86
-  Max Function lLOC .....:         23  Average Function lLOC .:      12.00
+  Max Function LOC ......:         58  Average Function LOC ..:      30.00
+  Max Function eLOC .....:         48  Average Function eLOC .:      25.14
+  Max Function lLOC .....:         23  Average Function lLOC .:      12.29
          ------     -----     -----     ------     ------     -----       
   Max Function Parameters:          4  Avg Function Parameters:       2.57
   Max Function Returns ..:          1  Avg Function Returns ..:       1.00
@@ -379,15 +371,15 @@
 
   ------------------------------------------------------------------------
 
-                     ~~ Project Analysis For 11 Files ~~
+                     ~~ Project Analysis For 10 Files ~~
 
   ------------------------------------------------------------------------
 
                          ~~ Total Project Summary ~~
 
-  LOC 1162     eLOC 1048     lLOC 461      Comment 1984     Lines     3285
-  Average per File, metric/11 files
-  LOC 105      eLOC 95       lLOC 41       Comment 180      Lines      298
+  LOC 1099     eLOC 985      lLOC 462      Comment 1846     Lines     3065
+  Average per File, metric/10 files
+  LOC 109      eLOC 98       lLOC 46       Comment 184      Lines      306
 
   ------------------------------------------------------------------------
 
@@ -432,13 +424,13 @@
   Parameters: (QActive * const me, uint_fast8_t margin, enum_t const sig, 
               QParam const par)
   Complexity   Param 4       Return 1      Cyclo Vg 8       Total       13
-  LOC 45       eLOC 34       lLOC 18       Comment 32       Lines       56
+  LOC 46       eLOC 35       lLOC 19       Comment 32       Lines       57
 
   Function: QActive_postXISR_
   Parameters: (QActive * const me, uint_fast8_t margin, enum_t const sig, 
               QParam const par)
   Complexity   Param 4       Return 1      Cyclo Vg 7       Total       12
-  LOC 57       eLOC 47       lLOC 20       Comment 31       Lines       66
+  LOC 58       eLOC 48       lLOC 21       Comment 31       Lines       67
 
   Function: QF_init
   Parameters: (uint_fast8_t maxActive)
@@ -497,24 +489,24 @@
   LOC 67       eLOC 57       lLOC 33       Comment 40       Lines       99
 
   Total: Functions  
-  LOC 668      eLOC 560      lLOC 342      InCmp 49       CycloCmp     100
+  LOC 670      eLOC 562      lLOC 344      InCmp 49       CycloCmp     100
   Function Points         FP(LOC) 5.2     FP(eLOC) 4.4    FP(lLOC)     2.7
 
   ------------------------------------------------------------------------
 
                       ~~ Project Functional Analysis ~~
 
-  Total Functions .......:         20  Total Physical Lines ..:        904
-  Total LOC .............:        668  Total Function Pts LOC :        5.2
-  Total eLOC ............:        560  Total Function Pts eLOC:        4.4
-  Total lLOC.............:        342  Total Function Pts lLOC:        2.7
+  Total Functions .......:         20  Total Physical Lines ..:        906
+  Total LOC .............:        670  Total Function Pts LOC :        5.2
+  Total eLOC ............:        562  Total Function Pts eLOC:        4.4
+  Total lLOC.............:        344  Total Function Pts lLOC:        2.7
   Total Cyclomatic Comp. :        100  Total Interface Comp. .:         49
   Total Parameters ......:         29  Total Return Points ...:         20
   Total Comment Lines ...:        574  Total Blank Lines .....:        120
          ------     -----     -----     ------     ------     -----       
-  Avg Physical Lines ....:      45.20
-  Avg LOC ...............:      33.40  Avg eLOC ..............:      28.00
-  Avg lLOC ..............:      17.10  Avg Cyclomatic Comp. ..:       5.00
+  Avg Physical Lines ....:      45.30
+  Avg LOC ...............:      33.50  Avg eLOC ..............:      28.10
+  Avg lLOC ..............:      17.20  Avg Cyclomatic Comp. ..:       5.00
   Avg Interface Comp. ...:       2.45  Avg Parameters ........:       1.45
   Avg Return Points .....:       1.00  Avg Comment Lines .....:      28.70
          ------     -----     -----     ------     ------     -----       
@@ -534,10 +526,10 @@
 
                              ~~ File Summary ~~
 
-  C Source Files *.c ....:          4  C/C++ Include Files *.h:          7
+  C Source Files *.c ....:          4  C/C++ Include Files *.h:          6
   C++ Source Files *.c* .:          0  C++ Include Files *.h* :          0
   C# Source Files *.cs ..:          0  Java Source File *.jav*:          0
-  Other File Count ......:          0  Total File Count ......:         11
+  Other File Count ......:          0  Total File Count ......:         10
   ________________________________________________________________________
 
 @endcode 

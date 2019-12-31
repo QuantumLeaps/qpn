@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-10-15
+* Last updated for version 6.7.0
+* Last updated on  2019-12-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -198,7 +198,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
         QActive * const ao_ = QF_ACTIVE_CAST((me_));                \
         ((void)(*((QActiveVtable const *)(ao_->super.vptr))->post)( \
                 ao_, QF_NO_MARGIN, (enum_t)(sig_), (QParam)(par_)));\
-    } while (0)
+    } while (false)
 
     /*! Polymorphically posts an event to an active object (FIFO)
     * without delivery guarantee (task context).
@@ -247,7 +247,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
         QActive * const ao_ = QF_ACTIVE_CAST((me_));                   \
         ((void)(*((QActiveVtable const *)(ao_->super.vptr))->postISR)( \
                 ao_, QF_NO_MARGIN, (enum_t)(sig_), (QParam)(par_)));   \
-    } while (0)
+    } while (false)
 
     /*! Polymorphically posts an event to an active object (FIFO)
     * without delivery guarantee (ISR context).
@@ -292,7 +292,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
         QActive * const ao_ = QF_ACTIVE_CAST((me_));                \
         ((void)(*((QActiveVtable const *)(ao_->super.vptr))->post)( \
                 ao_, QF_NO_MARGIN, (enum_t)(sig_)));                \
-    } while (0)
+    } while (false)
 
     #define QACTIVE_POST_X(me_, margin_, sig_)                        \
         ((*((QActiveVtable const *)((me_)->super.vptr))->post)((me_), \
@@ -305,7 +305,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
         QActive * const ao_ = QF_ACTIVE_CAST((me_));                   \
         ((void)(*((QActiveVtable const *)(ao_->super.vptr))->postISR)( \
                 ao_, QF_NO_MARGIN, (enum_t)(sig_)));                   \
-    } while (0)
+    } while (false)
 
     #define QACTIVE_POST_X_ISR(me_, margin_, sig_)                     \
         ((*((QActiveVtable const *)(                                   \
@@ -387,7 +387,7 @@ typedef struct {
 } QActiveCB;
 
 /** active object control blocks */
-/*lint -save -e960    MISRA-C:2004 8.12, extern array declared without size */
+/*lint -save -e9067 MISRA-C:2012 Rule 8.11, extern array declared without size */
 extern QActiveCB const Q_ROM QF_active[];
 /*lint -restore */
 

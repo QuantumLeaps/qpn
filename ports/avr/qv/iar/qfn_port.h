@@ -54,7 +54,7 @@
     __enable_interrupt(); \
     __sleep(); \
     SMCR = 0U; \
-} while (0)
+} while (false)
 
 /* QF CPU reset for AVR */
 #define QF_RESET()       __asm("jmp 0x0000")

@@ -31,7 +31,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -110,7 +110,7 @@ void GraphicDisplay_redraw(GraphicDisplay * const me);
     pixelRGB[0] = (color_)[0]; \
     pixelRGB[1] = (color_)[1]; \
     pixelRGB[2] = (color_)[2]; \
-} while (0)
+} while (false)
 
 #define GraphicDisplay_clearPixel(me_, x_, y_) do { \
     BYTE *pixelRGB = &(me_)->bits[3*((x_) \
@@ -118,7 +118,7 @@ void GraphicDisplay_redraw(GraphicDisplay * const me);
     pixelRGB[0] = (me_)->bgColor[0]; \
     pixelRGB[1] = (me_)->bgColor[1]; \
     pixelRGB[2] = (me_)->bgColor[2]; \
-} while (0)
+} while (false)
 
 /* SegmentDisplay "class" for drawing segment displays, LEDs, etc...........*/
 typedef struct {

@@ -52,7 +52,7 @@
     if (QK_sched_() != (uint_fast8_t)0) { \
         QK_activate_(); \
     } \
-} while (0)
+} while (false)
 
 
 #include <intrinsics.h>  /* CCS intrinsic functions */

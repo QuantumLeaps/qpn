@@ -55,13 +55,13 @@
     if (QK_sched_() != (uint_fast8_t)0) { \
         QK_activate_(); \
     } \
-} while (0)
+} while (false)
 
 /* QK sleep mode */
 #define QK_CPU_SLEEP()   do { \
     __asm__ __volatile__ ("sleep" ::); \
     SMCR = 0U; \
-} while (0)
+} while (false)
 
 /* QF CPU reset for AVR */
 #define QF_RESET()       __asm__ __volatile__ ("jmp 0x0000" ::)

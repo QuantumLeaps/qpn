@@ -28,7 +28,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 *****************************************************************************/
 #include "qpn.h"
@@ -47,7 +47,7 @@ Q_DEFINE_THIS_FILE
 /* the on-board LED labeled "L" on Arduino-UNO (PORTB) */
 #define LED_L   (1U << 5)
 
-/* external button BTN_EXT (PORTD), http://arduino.cc/en/tutorial/button */
+/* external button BTN_EXT (PORTD), arduino.cc/en/tutorial/button */
 #define BTN_EXT (1U << 2)
 
 static unsigned  l_rnd;  /* random seed */

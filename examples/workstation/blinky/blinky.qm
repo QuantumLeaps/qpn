@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model version="4.5.1" links="0">
+<model version="4.6.0" links="1">
  <documentation>Simple Blinky example for QP-nano, which demonstrates:
 - Active object (Blinky) with state machine
 - Board Support Package abstraction for portability
 - BSP implementation for desktop OS (Windows, Linux, Mac)
 - Platform-independent main() function
 - make.bat batch file for Windows</documentation>
+ <!--${qpn}-->
  <framework name="qpn"/>
+ <!--${AOs}-->
  <package name="AOs" stereotype="0x02">
+  <!--${AOs::Blinky}-->
   <class name="Blinky" superclass="qpn::QActive">
+   <!--${AOs::Blinky::SM}-->
    <statechart properties="0x01">
+    <!--${AOs::Blinky::SM::initial}-->
     <initial target="../1">
      <action>/* arm the private time event for tick rate 0
 * to expire in 1/2s and periodically every 1/2 second
@@ -22,8 +27,10 @@ QActive_armX(&amp;me-&gt;super,
       <action box="0,-2,6,2"/>
      </initial_glyph>
     </initial>
+    <!--${AOs::Blinky::SM::off}-->
     <state name="off">
      <entry>BSP_ledOff();</entry>
+     <!--${AOs::Blinky::SM::off::Q_TIMEOUT}-->
      <tran trig="Q_TIMEOUT" target="../../2">
       <tran_glyph conn="2,13,3,1,18,6,-2">
        <action box="0,-2,8,2"/>
@@ -33,8 +40,10 @@ QActive_armX(&amp;me-&gt;super,
       <entry box="1,2,12,4"/>
      </state_glyph>
     </state>
+    <!--${AOs::Blinky::SM::on}-->
     <state name="on">
      <entry>BSP_ledOn();</entry>
+     <!--${AOs::Blinky::SM::on::Q_TIMEOUT}-->
      <tran trig="Q_TIMEOUT" target="../../1">
       <tran_glyph conn="2,25,3,1,20,-15,-4">
        <action box="0,-2,8,2"/>
@@ -47,13 +56,16 @@ QActive_armX(&amp;me-&gt;super,
     <state_diagram size="30,29"/>
    </statechart>
   </class>
+  <!--${AOs::Blinky_ctor}-->
   <operation name="Blinky_ctor" type="void" visibility="0x00" properties="0x01">
    <documentation>The Blinky &quot;constructor&quot; is provided outside of the Blinky class, so that it can be used independently from the class. This is part of the &quot;opaque pointer&quot; design idiom.</documentation>
    <code>Blinky * const me = &amp;AO_Blinky;
 QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Blinky_initial));</code>
   </operation>
  </package>
+ <!--${.}-->
  <directory name=".">
+  <!--${.::blinky.c}-->
   <file name="blinky.c">
    <text>#include &quot;qpn.h&quot;    /* QP-nano framework API */
 #include &lt;stdio.h&gt;
@@ -110,6 +122,7 @@ int main(void) {
 $define${AOs::Blinky_ctor}
 $define${AOs::Blinky}</text>
   </file>
+  <!--${.::qpn_conf.h}-->
   <file name="qpn_conf.h">
    <text>#ifndef QPN_CONF_H
 #define QPN_CONF_H

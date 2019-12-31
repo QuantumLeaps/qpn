@@ -4,8 +4,8 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-07-30
+* Last updated for version 6.7.0
+* Last updated on  2019-12-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -48,8 +48,8 @@ Q_DEFINE_THIS_MODULE("qkn")
     #error "Source file included in a project NOT based on the QK-nano kernel"
 #endif /* QKN_H */
 
-/* Public-scope objects *****************************************************/
-QK_Attr QK_attr_; /* global attributes of the QK-nano kernel */
+/* Global-scope objects *****************************************************/
+QK_PrivAttr QK_attr_; /* private attributes of the QK-nano kernel */
 
 /* Local-scope objects ******************************************************/
 static void initialize(void); /* prototype required by MISRA */

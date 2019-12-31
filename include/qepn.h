@@ -32,7 +32,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -210,7 +210,7 @@ struct QHsmVtable {
 #define QHSM_INIT(me_) do {      \
     Q_ASSERT((me_)->vptr);       \
     (*(me_)->vptr->init)((me_)); \
-} while (0)
+} while (false)
 
 /*! Polymorphically dispatches an event to a HSM. */
 /**

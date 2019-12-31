@@ -4,8 +4,8 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-10-04
+* Last updated for version 6.7.0
+* Last updated on  2019-12-30
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
@@ -32,7 +32,7 @@
 * along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* <www.state-machine.com>
+* <www.state-machine.com/licensing>
 * <info@state-machine.com>
 ******************************************************************************
 * @endcond
@@ -147,15 +147,16 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 {
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
     uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
+    bool can_post;
 
     QF_INT_DISABLE();
 
     if (margin == QF_NO_MARGIN) {
         if (qlen > (uint_fast8_t)me->nUsed) {
-            margin = (uint_fast8_t)true; /* can post */
+            can_post = true; /* can post */
         }
         else {
-            margin = (uint_fast8_t)false; /* cannot post */
+            can_post = false; /* cannot post */
 #ifndef Q_NASSERT
             QF_INT_ENABLE();
             /* must be able to post event : Q_ERROR_ID(310) */
@@ -164,13 +165,13 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
         }
     }
     else if ((qlen - (uint_fast8_t)me->nUsed) > margin) {
-        margin = (uint_fast8_t)true; /* can post */
+        can_post = true; /* can post */
     }
     else {
-        margin = (uint_fast8_t)false; /* cannot post */
+        can_post = false; /* cannot post */
     }
 
-    if (margin) { /* can post the event? */
+    if (can_post) { /* can post the event? */
         /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -198,7 +199,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     }
     QF_INT_ENABLE();
 
-    return (bool)margin;
+    return can_post;
 }
 
 /****************************************************************************/
@@ -237,6 +238,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
     uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
+    bool can_post;
 
 #ifdef QF_ISR_NEST
 #ifdef QF_ISR_STAT_TYPE
@@ -248,10 +250,10 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 
     if (margin == QF_NO_MARGIN) {
         if (qlen > (uint_fast8_t)me->nUsed) {
-            margin = (uint_fast8_t)true; /* can post */
+            can_post = true; /* can post */
         }
         else {
-            margin = (uint_fast8_t)false; /* cannot post */
+            can_post = false; /* cannot post */
 #ifndef Q_NASSERT
             QF_INT_ENABLE();
             /* must be able to post event : Q_ERROR_ID(410) */
@@ -260,13 +262,13 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
         }
     }
     else if ((qlen - (uint_fast8_t)me->nUsed) > margin) {
-        margin = (uint_fast8_t)true; /* can post */
+        can_post = true; /* can post */
     }
     else {
-        margin = (uint_fast8_t)false; /* cannot post */
+        can_post = false; /* cannot post */
     }
 
-    if (margin) { /* can post the event? */
+    if (can_post) { /* can post the event? */
         /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
 #if (Q_PARAM_SIZE != 0)
@@ -293,7 +295,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
 #endif
 
-    return (bool)margin;
+    return can_post;
 }
 
 /****************************************************************************/

@@ -53,7 +53,7 @@
     #define QV_CPU_SLEEP() do { \
         __asm volatile ("wfi"); \
         QF_INT_ENABLE(); \
-    } while (0)
+    } while (false)
 
 #else /* Cortex-M3/M4, see NOTE2 */
 
@@ -77,7 +77,7 @@
         QF_INT_ENABLE(); \
         __asm volatile ("wfi"); \
         QF_PRIMASK_ENABLE(); \
-    } while (0)
+    } while (false)
 
     /* Cortex-M3/M4 provide the CLZ instruction for fast LOG2 */
     #define QF_LOG2(n_) ((uint_fast8_t)(32U - __builtin_clz(n_)))

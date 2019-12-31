@@ -55,7 +55,7 @@
 #define QF_ISR_DISABLE(stat_) do { \
     __asm volatile ("MRS %0,cpsr" : "=r" (stat_) :: "cc"); \
     QF_INT_DISABLE(); \
-} while (0)
+} while (false)
 
 #define QF_ISR_RESTORE(stat_) __set_CPSR(stat_)
 

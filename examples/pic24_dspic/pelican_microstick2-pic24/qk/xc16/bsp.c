@@ -25,11 +25,11 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com/licensing>
+* <info@state-machine.com>
 *****************************************************************************/
 #include "qpn.h"
 #include "bsp.h"
@@ -130,7 +130,7 @@ void BSP_signalPeds(enum BSP_PedsSignal sig) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+void Q_onAssert(char const Q_ROM * const file, int line) {
     (void)file;       /* unused parameter */
     (void)line;       /* unused parameter */
     QF_INT_DISABLE(); /* make sure that interrupts are disabled */

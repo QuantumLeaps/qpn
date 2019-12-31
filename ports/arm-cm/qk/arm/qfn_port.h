@@ -90,7 +90,7 @@ void QK_init(void);
         (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)); \
     } \
     QF_INT_ENABLE(); \
-} while (0)
+} while (false)
 
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */
 #include <stdbool.h>    /* Boolean type.      WG14/N843 C99 Standard */
