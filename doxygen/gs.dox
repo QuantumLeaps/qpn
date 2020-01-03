@@ -1,7 +1,12 @@
 /*! @page gs Getting Started
 
+@section gs_obtain Downloading &amp; Installing QP-nano&trade;
+@tableofcontents
+
+<p>The most recommended way of obtaining QP-nano&trade; is by downloading the <a class="extern" target="_blank" href="https://www.state-machine.com/#Downloads"><b>QP-bundle&trade;</b></a>, which includes QP-nano&trade; as well as other QP frameworks and also the <a class="extern" target="_blank" href="https://www.state-machine.com/qm/">QM&trade; modeling tool</a> and the <a class="extern" target="_blank" href="https://www.state-machine.com/products/">QTools&trade; collection</a>. The main advantage of obtaining QP-nano&trade; bundled together like that is that you get all components, tools and examples ready to go.
+
 @note
-The features of this online help and tips for using it are described in Section @subpage help.
+<a class="extern" target="_blank" href="https://www.state-machine.com/#Downloads"><strong>QP-bundle&trade;</strong></a> is the **most recommended** way of downloading and installing QP-nano&trade;. However, if you are allergic to installers and GUIs or don't have administrator privileges you can also **download and install QP-nano&trade; separately** as described in the Application Note: "Getting Started with QP-nano" below.
 
 
 ------------------------------------------------------------------------------
