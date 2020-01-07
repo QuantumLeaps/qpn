@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="bsp.c" />
-    <ClCompile Include="..\..\..\..\source\qepn.c">
-      <Filter>QP</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\ports\win32-qv\qfn_win32.c">
       <Filter>QP</Filter>
     </ClCompile>
@@ -15,6 +12,9 @@
     <ClCompile Include="..\ship.c" />
     <ClCompile Include="..\tunnel.c" />
     <ClCompile Include="..\..\..\..\ports\win32-qv\qwin_gui.c">
+      <Filter>QP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\qfn\qepn.c">
       <Filter>QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -30,7 +30,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="game-gui.rc" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\hungry.bmp">

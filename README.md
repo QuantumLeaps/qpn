@@ -78,10 +78,11 @@ model of concurrency with hierarchical state machines.
 
 ---------------------------------------------------------------------------
 # Getting Started with QP-nano
-The [QP-nano Reference Manual](https://www.state-machine.com/qpn/) provides instructions on how to download, install, and get started with QP-nano quickly.
+The [QP-nano Reference Manual](https://www.state-machine.com/qpn/) provides
+instructions on how to download, install, and get started with QP-nano quickly.
 
-The [AppNote: "Getting Started with QP-nano"](https://www.state-machine.com/doc/AN_Getting_Started_with_QP-nano.pdf) contains also a tutorial, in which you build a simple "Blinky"
-application.
+The [AppNote: "Getting Started with QP-nano"][AN] contains also a tutorial,
+in which you build a simple "Blinky" application.
 
 
 ---------------------------------------------------------------------------
@@ -116,3 +117,4 @@ The **QP-nano Manual** is located online at: https://www.state-machine.com/qpn
    [Active]: <https://www.state-machine.com/doc/concepts#Active>
    [HSM]: <https://www.state-machine.com/doc/concepts#HSM>
    [Lic]: <https://www.state-machine.com/licensing>
+   [AN]: <https://www.state-machine.com/doc/AN_Getting_Started_with_QP-nano.pdf>

@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: "Fly 'n' Shoot" game example, EFM32-SLSTK3401A, Win32-GUI
-* Last Updated for Version: 6.3.7
-* Date of the Last Update:  2018-11-09
+* Last Updated for Version: 6.7.0
+* Date of the Last Update:  2020-01-06
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -620,7 +620,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
 
     /* create the main custom dialog window */
     hWnd = CreateCustDialog(hInst, IDD_APPLICATION, NULL,
-                            &WndProc, "QP_APP");
+                            &WndProc, "MY_CLASS");
     ShowWindow(hWnd, iCmdShow);  /* show the main window */
 
     /* enter the message loop... */

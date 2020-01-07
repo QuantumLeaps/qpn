@@ -5,10 +5,10 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="philo.c" />
     <ClCompile Include="table.c" />
-    <ClCompile Include="..\..\..\source\qepn.c">
+    <ClCompile Include="..\..\..\ports\win32-qv\qfn_win32.c">
       <Filter>QP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ports\win32-qv\qfn_win32.c">
+    <ClCompile Include="..\..\..\src\qfn\qepn.c">
       <Filter>QP</Filter>
     </ClCompile>
   </ItemGroup>

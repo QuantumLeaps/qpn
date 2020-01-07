@@ -33,18 +33,16 @@
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\philo.c" />
     <ClCompile Include="..\table.c" />
-    <ClCompile Include="..\..\..\..\source\qepn.c">
-      <Filter>QP</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\ports\win32-qv\qfn_win32.c">
       <Filter>QP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ports\win32-qv\win32_gui.c">
+    <ClCompile Include="..\..\..\..\ports\win32-qv\qwin_gui.c" />
+    <ClCompile Include="..\..\..\..\src\qfn\qepn.c">
       <Filter>QP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="dpp-gui.rc" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -54,8 +52,6 @@
     <ClInclude Include="..\..\..\..\ports\win32-qv\qfn_port.h">
       <Filter>QP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\ports\win32-qv\win32_gui.h">
-      <Filter>QP</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\..\..\ports\win32-qv\qwin_gui.h" />
   </ItemGroup>
 </Project>
