@@ -4,14 +4,14 @@
 * @ingroup qepn
 * @cond
 ******************************************************************************
-* Last updated for version 6.7.0
-* Last updated on  2019-12-28
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -45,16 +45,16 @@
 * major version number, Y is a 1-digit minor version number, and Z is
 * a 1-digit release number.
 */
-#define QP_VERSION      670U
+#define QP_VERSION      680U
 
 /*! The current QP version number string of the form XX.Y.Z, where XX is
 * a 2-digit major version number, Y is a 1-digit minor version number,
 * and Z is a 1-digit release number.
 */
-#define QP_VERSION_STR  "6.7.0"
+#define QP_VERSION_STR  "6.8.0"
 
-/*! Encrypted current QP release (6.7.0) and date (2019-12-30) */
-#define QP_RELEASE      0x8E049B81U
+/*! Encrypted  current QP release (6.8.0) and date (2020-03-31) */
+#define QP_RELEASE      0x8897E7A7U
 
 
 /****************************************************************************/
@@ -94,30 +94,30 @@ typedef uint8_t QSignal;
 
 #ifndef Q_PARAM_SIZE
     /*! The size of event parameter Valid values 0, 1, 2, or 4; default 0 */
-    #define Q_PARAM_SIZE 0
+    #define Q_PARAM_SIZE 0U
 #endif
-#if (Q_PARAM_SIZE == 0)
-#elif (Q_PARAM_SIZE == 1)
+#if (Q_PARAM_SIZE == 0U)
+#elif (Q_PARAM_SIZE == 1U)
     typedef uint8_t QParam;
-#elif (Q_PARAM_SIZE == 2)
+#elif (Q_PARAM_SIZE == 2U)
     typedef uint16_t QParam;
-#elif (Q_PARAM_SIZE == 4)
+#elif (Q_PARAM_SIZE == 4U)
     /*! type of the event parameter. */
     /**
     * @description
     * This typedef is configurable via the preprocessor switch #Q_PARAM_SIZE.
     * The other possible values of this type are as follows: @n
-    * none when (Q_PARAM_SIZE == 0);@n
-    * uint8_t when (Q_PARAM_SIZE == 1);@n
-    * uint16_t when (Q_PARAM_SIZE == 2);@n
-    * uint32_t when (Q_PARAM_SIZE == 4); and @n
-    * uint64_t when (Q_PARAM_SIZE == 8).
+    * none when (Q_PARAM_SIZE == 0U);@n
+    * uint8_t when (Q_PARAM_SIZE == 1U);@n
+    * uint16_t when (Q_PARAM_SIZE == 2U);@n
+    * uint32_t when (Q_PARAM_SIZE == 4U); and @n
+    * uint64_t when (Q_PARAM_SIZE == 8U).
     */
     typedef uint32_t QParam;
-#elif (Q_PARAM_SIZE == 8)
+#elif (Q_PARAM_SIZE == 8U)
     typedef uint64_t QParam;
 #else
-    #error "Q_PARAM_SIZE defined incorrectly, expected 0, 1, 2, 4 or 8"
+    #error "Q_PARAM_SIZE defined incorrectly, expected 0U, 1U, 2U, 4U or 8U"
 #endif
 
 /****************************************************************************/
@@ -130,7 +130,7 @@ typedef uint8_t QSignal;
 */
 typedef struct {
     QSignal sig; /*!< signal of the event */
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
     QParam par;  /*!< scalar parameter of the event */
 #endif
 } QEvt;
@@ -142,13 +142,13 @@ typedef struct {
 */
 #define Q_SIG(me_)  (((QHsm *)(me_))->evt.sig)
 
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
 /*! Macro to access the parameter of the current event of a state machine */
 /**
 * @param[in,out] me_ pointer to a subclass of ::QHsm (see @ref oop)
 */
 #define Q_PAR(me_)  (((QHsm *)(me_))->evt.par)
-#endif  /* (Q_PARAM_SIZE != 0) */
+#endif  /* (Q_PARAM_SIZE != 0U) */
 
 /****************************************************************************/
 /*! Type returned from  a state-handler function. */
@@ -260,29 +260,47 @@ QState QHsm_top(void const * const me);
 
 
 /****************************************************************************/
-/*! All possible values returned from state/action handlers */
-enum {
-    /* unhandled and need to "bubble up" */
-    Q_RET_SUPER,     /*!< event passed to superstate to handle */
-    Q_RET_SUPER_SUB, /*!< event passed to submachine superstate */
-    Q_RET_UNHANDLED, /*!< event unhandled due to a guard */
+/* All possible values returned from state/action handlers */
 
-    /* handled and do not need to "bubble up" */
-    Q_RET_HANDLED,   /*!< event handled (internal transition) */
-    Q_RET_IGNORED,   /*!< event silently ignored (bubbled up to top) */
+/* unhandled and need to "bubble up"... */
 
-    /* entry/exit */
-    Q_RET_ENTRY,     /*!< state entry action executed */
-    Q_RET_EXIT,      /*!< state exit  action executed */
+/*! event passed to superstate to handle */
+#define Q_RET_SUPER      ((QState)0)
 
-    /* no side effects */
-    Q_RET_NULL,      /*!< return value without any effect */
+/*! event passed to submachine superstate */
+#define Q_RET_SUPER_SUB  ((QState)1)
 
-    /* transitions need to execute transition-action table in QHsm */
-    Q_RET_TRAN,      /*!< event handled (regular transition) */
-    Q_RET_TRAN_INIT, /*!< initial transition in a state or submachine */
-    Q_RET_TRAN_HIST  /*!< event handled (transition to history) */
-};
+/*! event unhandled due to a guard */
+#define Q_RET_UNHANDLED  ((QState)2)
+
+/* handled and do not need to "bubble up"... */
+/*! event handled (internal transition) */
+#define Q_RET_HANDLED    ((QState)3)
+
+/*! event silently ignored (bubbled up to top) */
+#define Q_RET_IGNORED    ((QState)4)
+
+/* entry/exit... */
+/*! state entry action executed */
+#define Q_RET_ENTRY      ((QState)5)
+
+/*! state exit  action executed */
+#define Q_RET_EXIT       ((QState)6)
+
+/* no side effects */
+/*! return value without any effect */
+#define Q_RET_NULL       ((QState)7)
+
+/* transitions need to execute transition-action table in QHsm... */
+/*! event handled (regular transition) */
+#define Q_RET_TRAN       ((QState)8)
+
+/*! initial transition in a state or submachine */
+#define Q_RET_TRAN_INIT  ((QState)9)
+
+/*! event handled (transition to history) */
+#define Q_RET_TRAN_HIST  ((QState)10)
+
 
 /*! Perform upcast from a subclass of ::QHsm to the base class ::QHsm */
 /**
@@ -334,31 +352,45 @@ enum {
 * @include qepn_qtran.c
 */
 #define Q_SUPER(super_)  \
-    ((Q_HSM_UPCAST(me))->temp = Q_STATE_CAST(super_), (QState)Q_RET_SUPER)
+    ((Q_HSM_UPCAST(me))->temp = Q_STATE_CAST(super_), Q_RET_SUPER)
 
 /*! Macro to call in a state-handler when it handles an event.
 *  Applicable to both HSMs and FSMs.
 */
-#define Q_HANDLED()      ((QState)Q_RET_HANDLED)
+#define Q_HANDLED()      Q_RET_HANDLED
 
 /*! Macro to call in a state-handler when it attempts to handle
 * an event but a guard condition evaluates to 'false' and there is no other
 * explicit way of handling the event. Applicable only to HSMs.
 */
-#define Q_UNHANDLED()    ((QState)Q_RET_UNHANDLED)
+#define Q_UNHANDLED()    Q_RET_UNHANDLED
 
 
 /*! QP reserved signals */
-enum {
-    Q_ENTRY_SIG = 1,  /*!< signal for coding entry actions */
-    Q_EXIT_SIG,       /*!< signal for coding exit actions */
-    Q_INIT_SIG,       /*!< signal for coding nested initial transitions */
-    Q_TIMEOUT_SIG,    /*!< timeout signal at the default tick rate 0 */
-    Q_TIMEOUT1_SIG,   /*!< timeout signal at tick rate 1 */
-    Q_TIMEOUT2_SIG,   /*!< timeout signal at tick rate 2 */
-    Q_TIMEOUT3_SIG,   /*!< timeout signal at tick rate 3 */
-    Q_USER_SIG        /*!< first signal for the user applications */
-};
+
+/*! signal for coding entry actions */
+#define Q_ENTRY_SIG     ((QSignal)1)
+
+/*! signal for coding exit actions */
+#define Q_EXIT_SIG      ((QSignal)2)
+
+/*! signal for coding nested initial transitions */
+#define Q_INIT_SIG      ((QSignal)3)
+
+/*! timeout signal at the default tick rate 0 */
+#define Q_TIMEOUT_SIG   ((QSignal)4)
+
+/*! timeout signal at tick rate 1 */
+#define Q_TIMEOUT1_SIG  ((QSignal)5)
+
+/*! timeout signal at tick rate 2 */
+#define Q_TIMEOUT2_SIG  ((QSignal)6)
+
+/*! timeout signal at tick rate 3 */
+#define Q_TIMEOUT3_SIG  ((QSignal)7)
+
+/*!< first signal for the user applications */
+#define Q_USER_SIG      ((QSignal)8)
 
 /*! Perform cast from unsigned integer to a pointer of type @a type_ */
 /**
@@ -368,7 +400,7 @@ enum {
 * Such uses can trigger PC-Lint "Note 923: cast from int to pointer" and
 * this macro helps to encapsulate this deviation.
 */
-#define Q_UINT2PTR_CAST(type_, uint_)  ((type_ *)(uint_))
+#define Q_UINT2PTR_CAST(type_, uintptr_)  ((type_ *)(uintptr_))
 
 /****************************************************************************/
 /* macros for accessing data in ROM */

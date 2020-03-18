@@ -4,14 +4,14 @@
 * @ingroup qvn
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-07-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -74,12 +74,12 @@ int_t QF_run(void) {
     /** @pre the number of active objects must be initialized by calling:
     * QF_init(Q_DIM(QF_active));
     */
-    Q_REQUIRE_ID(100, ((uint_fast8_t)1 <= QF_maxActive_)
-                      && (QF_maxActive_ <= (uint_fast8_t)8));
+    Q_REQUIRE_ID(100, (1U <= QF_maxActive_)
+                      && (QF_maxActive_ <= 8U));
 #endif
 
     /* set priorities all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
+    for (p = 1U; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
@@ -89,7 +89,7 @@ int_t QF_run(void) {
     }
 
     /* trigger initial transitions in all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
+    for (p = 1U; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
         QHSM_INIT(&a->super); /* take the initial transition in the SM */
     }
@@ -99,17 +99,16 @@ int_t QF_run(void) {
     /* the event loop of the cooperative QV-nano kernel... */
     QF_INT_DISABLE();
     for (;;) {
-        if (QF_readySet_ != (uint_fast8_t)0) {
+        if (QF_readySet_ != 0U) {
             QActiveCB const Q_ROM *acb;
 
 #ifdef QF_LOG2
             p = QF_LOG2(QF_readySet_);
 #else
             /* hi nibble non-zero? */
-            if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
-                p = (uint_fast8_t)(
-                      (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
-                      + (uint_fast8_t)4);
+            if ((QF_readySet_ & 0xF0U) != 0U) {
+                p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
+                      + 4U;
             }
             else { /* hi nibble of QF_readySet_ is zero */
                 p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
@@ -120,14 +119,14 @@ int_t QF_run(void) {
             a = QF_ROM_ACTIVE_GET_(p);
 
             /* some unsuded events must be available */
-            Q_ASSERT_ID(820, a->nUsed > (uint8_t)0);
+            Q_ASSERT_ID(820, a->nUsed > 0U);
 
             --a->nUsed;
             Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
             Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
 #endif
-            if (a->tail == (uint8_t)0) { /* wrap around? */
+            if (a->tail == 0U) { /* wrap around? */
                 a->tail = Q_ROM_BYTE(acb->qlen);
             }
             --a->tail;
@@ -137,10 +136,9 @@ int_t QF_run(void) {
 
             QF_INT_DISABLE();
             /* empty queue? */
-            if (a->nUsed == (uint8_t)0) {
+            if (a->nUsed == 0U) {
                 /* clear the bit corresponding to 'p' */
-                QF_readySet_ &=
-                    (uint_fast8_t)~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
+                QF_readySet_ &= (uint_fast8_t)~(1U << (p - 1U));
             }
         }
         else {
@@ -157,7 +155,7 @@ int_t QF_run(void) {
         }
     }
 #ifdef __GNUC__  /* GNU compiler? */
-    return (int_t)0;
+    return 0;
 #endif
 }
 

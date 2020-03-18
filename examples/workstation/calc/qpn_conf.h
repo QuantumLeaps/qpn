@@ -34,6 +34,6 @@
 #ifndef QPN_CONF_H
 #define QPN_CONF_H
 
-#define Q_PARAM_SIZE            1
+#define Q_PARAM_SIZE            1U
 
 #endif  /* QPN_CONF_H */

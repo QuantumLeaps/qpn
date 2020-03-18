@@ -34,7 +34,7 @@
 #ifndef QPN_CONF_H
 #define QPN_CONF_H
 
-#define QF_TIMEEVT_CTR_SIZE     2
-#define Q_PARAM_SIZE            4
+#define QF_TIMEEVT_CTR_SIZE     2U
+#define Q_PARAM_SIZE            4U
 
 #endif  /* QPN_CONF_H */

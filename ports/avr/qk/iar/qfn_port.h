@@ -52,15 +52,15 @@
 /* QK-nano interrupt entry/exit */
 #define QK_ISR_ENTRY()   ((void)0)
 #define QK_ISR_EXIT()    do { \
-    if (QK_sched_() != (uint_fast8_t)0) { \
-        QK_activate_(); \
-    } \
+    if (QK_sched_() != 0U) {  \
+        QK_activate_();       \
+    }                         \
 } while (false)
 
 /* QK sleep mode... */
 #define QK_CPU_SLEEP()   do { \
-    __sleep(); \
-    SMCR = 0U; \
+    __sleep();                \
+    SMCR = 0U;                \
 } while (false)
 
 /* QF CPU reset for AVR */

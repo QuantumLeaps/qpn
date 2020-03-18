@@ -81,12 +81,12 @@
 void QK_init(void);
 
 #define QK_ISR_ENTRY() ((void)0)
-#define QK_ISR_EXIT()  do { \
-    QF_INT_DISABLE(); \
-    if (QK_sched_() != (uint_fast8_t)0) { \
+#define QK_ISR_EXIT()  do {                                               \
+    QF_INT_DISABLE();                                                     \
+    if (QK_sched_() != 0U) {                                              \
         (*Q_UINT2PTR_CAST(uint32_t, 0xE000ED04U) = (uint32_t)(1U << 28)); \
-    } \
-    QF_INT_ENABLE(); \
+    }                                                                     \
+    QF_INT_ENABLE();                                                      \
 } while (false)
 
 #include <stdint.h>     /* Exact-width types. WG14/N843 C99 Standard */

@@ -73,10 +73,10 @@
 
     /* macro to put the CPU to sleep inside QV_onIdle() */
     #define QV_CPU_SLEEP() do { \
-        QF_PRIMASK_DISABLE(); \
-        QF_INT_ENABLE(); \
-        __WFI(); \
-        QF_PRIMASK_ENABLE(); \
+        QF_PRIMASK_DISABLE();   \
+        QF_INT_ENABLE();        \
+        __WFI();                \
+        QF_PRIMASK_ENABLE();    \
     } while (false)
 
     /* Cortex-M3/M4 provide the CLZ instruction for fast LOG2 */

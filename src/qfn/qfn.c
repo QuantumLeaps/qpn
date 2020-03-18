@@ -4,14 +4,14 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.7.0
-* Last updated on  2019-12-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -87,10 +87,8 @@ uint_fast8_t volatile QF_timerSetX_[QF_MAX_TICK_RATE];
 
 #ifndef QF_LOG2
 uint8_t const Q_ROM QF_log2Lkup[16] = {
-    (uint8_t)0, (uint8_t)1, (uint8_t)2, (uint8_t)2,
-    (uint8_t)3, (uint8_t)3, (uint8_t)3, (uint8_t)3,
-    (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4,
-    (uint8_t)4, (uint8_t)4, (uint8_t)4, (uint8_t)4
+    0U, 1U, 2U, 2U, 3U, 3U, 3U, 3U,
+    4U, 4U, 4U, 4U, 4U, 4U, 4U, 4U
 };
 #endif /* QF_LOG2 */
 
@@ -137,7 +135,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial) {
 * @usage
 * @include qfn_postx.c
 */
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
 bool QActive_postX_(QActive * const me, uint_fast8_t margin,
                     enum_t const sig, QParam const par)
 #else
@@ -146,7 +144,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 #endif
 {
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
-    uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
+    uint_fast8_t qlen = Q_ROM_BYTE(acb->qlen);
     bool can_post;
 
     QF_INT_DISABLE();
@@ -160,7 +158,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 #ifndef Q_NASSERT
             QF_INT_ENABLE();
             /* must be able to post event : Q_ERROR_ID(310) */
-            Q_onAssert(Q_this_module_, (int_t)310);
+            Q_onAssert(Q_this_module_, 310);
 #endif
         }
     }
@@ -174,24 +172,23 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
     if (can_post) { /* can post the event? */
         /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
         QF_ROM_QUEUE_AT_(acb, me->head).par = par;
 #endif
-        if (me->head == (uint8_t)0) {
+        if (me->head == 0U) {
             me->head = (uint8_t)qlen; /* wrap the head */
         }
         --me->head;
         ++me->nUsed;
 
         /* is this the first event? */
-        if (me->nUsed == (uint8_t)1) {
+        if (me->nUsed == 1U) {
 
             /* set the corresponding bit in the ready set */
-            QF_readySet_ |= (uint_fast8_t)
-                ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
+            QF_readySet_ |= (uint_fast8_t)1 << (me->prio - 1U);
 
 #ifdef qkn_h
-            if (QK_sched_() != (uint_fast8_t)0) {
+            if (QK_sched_() != 0U) {
                 QK_activate_(); /* activate the next active object */
             }
 #endif
@@ -223,7 +220,7 @@ bool QActive_postX_(QActive * const me, uint_fast8_t margin,
 * @usage
 * @include qfn_postx.c
 */
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
 bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
                        enum_t const sig, QParam const par)
 #else
@@ -237,7 +234,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #endif
 #endif
     QActiveCB const Q_ROM *acb = &QF_active[me->prio];
-    uint_fast8_t qlen = (uint_fast8_t)Q_ROM_BYTE(acb->qlen);
+    uint_fast8_t qlen = Q_ROM_BYTE(acb->qlen);
     bool can_post;
 
 #ifdef QF_ISR_NEST
@@ -257,7 +254,7 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
 #ifndef Q_NASSERT
             QF_INT_ENABLE();
             /* must be able to post event : Q_ERROR_ID(410) */
-            Q_onAssert(Q_this_module_, (int_t)410);
+            Q_onAssert(Q_this_module_, 410);
 #endif
         }
     }
@@ -271,19 +268,18 @@ bool QActive_postXISR_(QActive * const me, uint_fast8_t margin,
     if (can_post) { /* can post the event? */
         /* insert event into the ring buffer (FIFO) */
         QF_ROM_QUEUE_AT_(acb, me->head).sig = (QSignal)sig;
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
         QF_ROM_QUEUE_AT_(acb, me->head).par = par;
 #endif
-        if (me->head == (uint8_t)0) {
+        if (me->head == 0U) {
             me->head = (uint8_t)qlen; /* wrap the head */
         }
         --me->head;
         ++me->nUsed;
         /* is this the first event? */
-        if (me->nUsed == (uint8_t)1) {
+        if (me->nUsed == 1U) {
             /* set the bit */
-            QF_readySet_ |= (uint_fast8_t)
-                ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
+            QF_readySet_ |= (uint_fast8_t)1 << (me->prio - 1U);
         }
     }
 
@@ -317,50 +313,50 @@ void QF_init(uint_fast8_t maxActive) {
     uint_fast8_t n;
 
     /** @pre the number of active objects must be in range */
-    Q_REQUIRE_ID(100, ((uint_fast8_t)1 < maxActive)
-                      && (maxActive <= (uint_fast8_t)9));
-    QF_maxActive_ = (uint_fast8_t)maxActive - (uint_fast8_t)1;
+    Q_REQUIRE_ID(100, (1U < maxActive)
+                      && (maxActive <= 9U));
+    QF_maxActive_ = (uint_fast8_t)maxActive - 1U;
 
 #ifdef QF_TIMEEVT_USAGE
-    for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
-        QF_timerSetX_[n] = (uint_fast8_t)0;
+    for (n = 0U; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
+        QF_timerSetX_[n] = 0U;
     }
 #endif /* QF_TIMEEVT_USAGE */
 
-    QF_readySet_ = (uint_fast8_t)0;
+    QF_readySet_ = 0U;
 
 #ifdef qkn_h
-    QK_attr_.actPrio = (uint_fast8_t)8; /* QK-nano scheduler locked */
+    QK_attr_.actPrio = 8U; /* QK-nano scheduler locked */
 
 #ifdef QF_ISR_NEST
-    QK_attr_.intNest = (uint_fast8_t)0;
+    QK_attr_.intNest = 0U;
 #endif
 
 #ifdef QK_SCHED_LOCK
-    QK_attr_.lockPrio   = (uint_fast8_t)0;
-    QK_attr_.lockHolder = (uint_fast8_t)0;
+    QK_attr_.lockPrio   = 0U;
+    QK_attr_.lockHolder = 0U;
 #endif
 
 #endif /* #ifdef qkn_h */
 
     /* clear all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
+    for (p = 1U; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
         Q_ASSERT_ID(110, a != (QActive *)0);
 
-        a->head    = (uint8_t)0;
-        a->tail    = (uint8_t)0;
-        a->nUsed   = (uint8_t)0;
-#if (QF_TIMEEVT_CTR_SIZE != 0)
-        for (n = (uint_fast8_t)0; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
-            a->tickCtr[n].nTicks   = (QTimeEvtCtr)0;
+        a->head    = 0U;
+        a->tail    = 0U;
+        a->nUsed   = 0U;
+#if (QF_TIMEEVT_CTR_SIZE != 0U)
+        for (n = 0U; n < (uint_fast8_t)QF_MAX_TICK_RATE; ++n) {
+            a->tickCtr[n].nTicks   = 0U;
 #ifdef QF_TIMEEVT_PERIODIC
-            a->tickCtr[n].interval = (QTimeEvtCtr)0;
+            a->tickCtr[n].interval = 0U;
 #endif /* def QF_TIMEEVT_PERIODIC */
         }
-#endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
+#endif /* (QF_TIMEEVT_CTR_SIZE != 0U) */
     }
 
 #ifdef QV_INIT /* initialization of the QV-nano kernel defined? */
@@ -372,7 +368,7 @@ void QF_init(uint_fast8_t maxActive) {
 
 /****************************************************************************/
 /****************************************************************************/
-#if (QF_TIMEEVT_CTR_SIZE != 0)
+#if (QF_TIMEEVT_CTR_SIZE != 0U)
 
 /****************************************************************************/
 /**
@@ -400,31 +396,30 @@ void QF_tickXISR(uint_fast8_t const tickRate) {
         QActive *a = QF_ROM_ACTIVE_GET_(p);
         QTimer *t = &a->tickCtr[tickRate];
 
-        if (t->nTicks != (QTimeEvtCtr)0) {
+        if (t->nTicks != 0U) {
             --t->nTicks;
-            if (t->nTicks == (QTimeEvtCtr)0) {
+            if (t->nTicks == 0U) {
 
 #ifdef QF_TIMEEVT_PERIODIC
-                if (t->interval != (QTimeEvtCtr)0) {
+                if (t->interval != 0U) {
                     t->nTicks = t->interval; /* re-arm the periodic timer */
                 }
 #endif /* QF_TIMEEVT_PERIODIC */
 
 #ifdef QF_TIMEEVT_USAGE
-                QF_timerSetX_[tickRate] &= (uint_fast8_t)
-                    ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
+                QF_timerSetX_[tickRate] &= (uint_fast8_t)(~(1U << (p - 1U)));
 #endif /* QF_TIMEEVT_USAGE */
 
 #if (Q_PARAM_SIZE != 0)
                 QACTIVE_POST_ISR(a, (enum_t)Q_TIMEOUT_SIG + (enum_t)tickRate,
-                                 (QParam)0);
+                                 0U);
 #else
                 QACTIVE_POST_ISR(a, (enum_t)Q_TIMEOUT_SIG + (enum_t)tickRate);
-#endif /* (Q_PARAM_SIZE != 0) */
+#endif /* (Q_PARAM_SIZE != 0U) */
             }
         }
         --p;
-    } while (p != (uint_fast8_t)0);
+    } while (p != 0U);
 }
 
 /****************************************************************************/
@@ -473,8 +468,7 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 
 #ifdef QF_TIMEEVT_USAGE
     /* set a bit in QF_timerSetX_[] to rememer that the timer is running */
-    QF_timerSetX_[tickRate] |= (uint_fast8_t)
-        ((uint_fast8_t)1 << (me->prio - (uint8_t)1));
+    QF_timerSetX_[tickRate] |= (uint_fast8_t)1 << (me->prio - 1U);
 #endif
     QF_INT_ENABLE();
 }
@@ -493,16 +487,15 @@ void QActive_armX(QActive * const me, uint_fast8_t const tickRate,
 */
 void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate) {
     QF_INT_DISABLE();
-    me->tickCtr[tickRate].nTicks = (QTimeEvtCtr)0;
+    me->tickCtr[tickRate].nTicks = 0U;
 #ifdef QF_TIMEEVT_PERIODIC
-    me->tickCtr[tickRate].interval = (QTimeEvtCtr)0;
+    me->tickCtr[tickRate].interval = 0U;
 #endif /* QF_TIMEEVT_PERIODIC */
 
 #ifdef QF_TIMEEVT_USAGE
     /* clear a bit in QF_timerSetX_[] to rememer that timer is not running */
-    QF_timerSetX_[tickRate] &= (uint_fast8_t)
-        ~((uint_fast8_t)1 << (me->prio - (uint8_t)1));
+    QF_timerSetX_[tickRate] &= (uint_fast8_t)(~(1U << (me->prio - 1U)));
 #endif
     QF_INT_ENABLE();
 }
-#endif /* #if (QF_TIMEEVT_CTR_SIZE != 0) */
+#endif /* #if (QF_TIMEEVT_CTR_SIZE != 0U) */

@@ -3,14 +3,14 @@
 * @brief Customizable and memory-efficient assertions for embedded systems
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-10-14
+* Last updated for version 6.8.0
+* Last updated on  2020-01-21
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -218,9 +218,15 @@
 
 #endif /* Q_NASSERT */
 
+/****************************************************************************/
 #ifdef __cplusplus
     extern "C" {
 #endif
+
+#ifndef Q_NORETURN
+    /*! no-return function specifier */
+    #define Q_NORETURN    void
+#endif /*  Q_NORETURN */
 
 /*! Callback function invoked in case of any assertion failure. */
 /**
@@ -229,8 +235,8 @@
 * the application to perform the clean system shutdown and perhaps a reset.
 *
 * @param[in] module name of the file/module in which the assertion failed
-*                   (constant ROM-based, zero-terminated C string)
-* @param[in] loc    location of the assertion within the module. This could
+*                   (constant, zero-terminated C string)
+* @param[in] location location of the assertion within the module. This could
 *                   be a line number or a user-specified ID-number.
 *
 * @note This callback function should _not_ return, as continuation after
@@ -250,7 +256,7 @@
 * #Q_ERROR, #Q_ALLEGE as well as #Q_ASSERT_ID, #Q_REQUIRE_ID, #Q_ENSURE_ID,
 * #Q_ERROR_ID, and #Q_ALLEGE_ID.
 */
-void Q_onAssert(char_t const Q_ROM * const module, int_t location);
+Q_NORETURN Q_onAssert(char_t const Q_ROM * const module, int_t const location);
 
 #ifdef __cplusplus
     }

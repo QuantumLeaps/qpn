@@ -4,14 +4,14 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.7.0
-* Last updated on  2019-12-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -63,18 +63,18 @@ uint_fast8_t QK_sched_(void);
 void QK_activate_(void);
 
 #ifndef QF_ISR_NEST
-    #define QK_SCHEDULE_() do { \
-        if (QK_sched_() != (uint_fast8_t)0) { \
-            QK_activate_(); \
+    #define QK_SCHEDULE_() do {  \
+        if (QK_sched_() != 0U) { \
+            QK_activate_();      \
         } \
-    } while(0)
+    } while(false)
 #else
     /*! The macro to invoke the QK scheduler in the QK_ISR_EXIT() */
-    #define QK_SCHEDULE_() \
-        if (QK_attr_.intNest == (uint_fast8_t)0) { \
-            if (QK_sched_() != (uint_fast8_t)0) { \
-                QK_activate_(); \
-            } \
+    #define QK_SCHEDULE_()            \
+        if (QK_attr_.intNest == 0U) { \
+            if (QK_sched_() != 0U) {  \
+                QK_activate_();       \
+            }                         \
         } else ((void)0)
 
 #endif

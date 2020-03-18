@@ -7,14 +7,14 @@
 * with every QP-nano application.
 * @cond
 ******************************************************************************
-* Last updated for version 6.7.0
-* Last updated on  2019-12-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-09
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -56,7 +56,7 @@
 *
 * @sa ::QEvt, #Q_PAR(), QF_post(), QF_postNoLock()
 */
-#define Q_PARAM_SIZE            4
+#define Q_PARAM_SIZE            4U
 
 /*! The size (in bytes) of the time event-counter representation in
 * the QActive struct. Valid values: none (0), 1, 2, or 4; default none (0).
@@ -72,7 +72,7 @@
 *
 * @sa #QTimeEvtCtr
 */
-#define QF_TIMEEVT_CTR_SIZE     2
+#define QF_TIMEEVT_CTR_SIZE     2U
 
 /*! Configuration switch to enable/disable periodic time events. */
 /**

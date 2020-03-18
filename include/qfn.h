@@ -4,14 +4,14 @@
 * @ingroup qfn
 * @cond
 ******************************************************************************
-* Last updated for version 6.7.0
-* Last updated on  2019-12-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -50,15 +50,15 @@
 /****************************************************************************/
 #ifndef QF_TIMEEVT_CTR_SIZE
     /*! macro to override the default QTimeEvtCtr size.
-    * Valid values 0, 1, 2, or 4; default 0
+    * Valid values 0U, 1U, 2U, or 4U; default 0U
     */
-    #define QF_TIMEEVT_CTR_SIZE 0
+    #define QF_TIMEEVT_CTR_SIZE 0U
 #endif
-#if (QF_TIMEEVT_CTR_SIZE == 0)
+#if (QF_TIMEEVT_CTR_SIZE == 0U)
     /* no time events */
-#elif (QF_TIMEEVT_CTR_SIZE == 1)
+#elif (QF_TIMEEVT_CTR_SIZE == 1U)
     typedef uint8_t QTimeEvtCtr;
-#elif (QF_TIMEEVT_CTR_SIZE == 2)
+#elif (QF_TIMEEVT_CTR_SIZE == 2U)
     /*! type of the Time Event counter, which determines the dynamic
     * range of the time delays measured in clock ticks.
     */
@@ -67,19 +67,19 @@
     * This typedef is configurable via the preprocessor switch
     * #QF_TIMEEVT_CTR_SIZE. The other possible values of this type are
     * as follows: @n
-    * none when (QF_TIMEEVT_CTR_SIZE not defined or == 0), @n
-    * uint8_t  when (QF_TIMEEVT_CTR_SIZE == 1); @n
-    * uint16_t when (QF_TIMEEVT_CTR_SIZE == 2); and @n
-    * uint32_t when (QF_TIMEEVT_CTR_SIZE == 4).
+    * none when (QF_TIMEEVT_CTR_SIZE not defined or == 0U), @n
+    * uint8_t  when (QF_TIMEEVT_CTR_SIZE == 1U); @n
+    * uint16_t when (QF_TIMEEVT_CTR_SIZE == 2U); and @n
+    * uint32_t when (QF_TIMEEVT_CTR_SIZE == 4U).
     */
     typedef uint16_t QTimeEvtCtr;
-#elif (QF_TIMEEVT_CTR_SIZE == 4)
+#elif (QF_TIMEEVT_CTR_SIZE == 4U)
     typedef uint32_t QTimeEvtCtr;
 #else
-    #error "QF_TIMER_SIZE defined incorrectly, expected 1, 2, or 4"
+    #error "QF_TIMER_SIZE defined incorrectly, expected 1U, 2U, or 4U"
 #endif
 
-#if (QF_TIMEEVT_CTR_SIZE != 0)
+#if (QF_TIMEEVT_CTR_SIZE != 0U)
     /*! Timer structure the active objects */
     typedef struct {
         QTimeEvtCtr nTicks;   /*!< timer tick counter */
@@ -87,13 +87,13 @@
         QTimeEvtCtr interval; /*!< timer interval */
 #endif /* QF_TIMEEVT_PERIODIC */
     } QTimer;
-#endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
+#endif /* (QF_TIMEEVT_CTR_SIZE != 0U) */
 
 #ifndef QF_MAX_TICK_RATE
     /*! Default value of the macro configurable value in qpn_port.h */
-    #define QF_MAX_TICK_RATE     1
-#elif (QF_MAX_TICK_RATE > 4)
-    #error "QF_MAX_TICK_RATE exceeds the 4 limit"
+    #define QF_MAX_TICK_RATE     1U
+#elif (QF_MAX_TICK_RATE > 4U)
+    #error "QF_MAX_TICK_RATE exceeds the 4U limit"
 #endif
 
 /****************************************************************************/
@@ -120,10 +120,10 @@
 typedef struct QActive {
     QHsm super; /**< derives from the ::QHsm base class */
 
-#if (QF_TIMEEVT_CTR_SIZE != 0)
+#if (QF_TIMEEVT_CTR_SIZE != 0U)
     /*! Timer for the active object */
     QTimer tickCtr[QF_MAX_TICK_RATE];
-#endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
+#endif /* (QF_TIMEEVT_CTR_SIZE != 0U) */
 
     /*! priority of the active object (1..8) */
     uint8_t prio;
@@ -145,7 +145,7 @@ typedef struct QActive {
 typedef struct {
     QHsmVtable super; /*!< inherits QHsmVtable */
 
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
     /*! virtual function to asynchronously post (FIFO) an event to an AO
     * (task context).
     */
@@ -176,7 +176,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
 */
 #define QF_NO_MARGIN ((uint_fast8_t)0xFF)
 
-#if (Q_PARAM_SIZE != 0)
+#if (Q_PARAM_SIZE != 0U)
     /*! Polymorphically posts an event to an active object (FIFO)
     * with delivery guarantee (task context).
     */
@@ -316,7 +316,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
                            enum_t const sig);
 #endif
 
-#if (QF_TIMEEVT_CTR_SIZE != 0)
+#if (QF_TIMEEVT_CTR_SIZE != 0U)
 
     /*! Processes all armed time events at every clock tick. */
     void QF_tickXISR(uint_fast8_t const tickRate);
@@ -334,7 +334,7 @@ void QActive_ctor(QActive * const me, QStateHandler initial);
     /*! Disarm a time event. Since the tick counter */
     void QActive_disarmX(QActive * const me, uint_fast8_t const tickRate);
 
-#endif /* (QF_TIMEEVT_CTR_SIZE != 0) */
+#endif /* (QF_TIMEEVT_CTR_SIZE != 0U) */
 
 
 /****************************************************************************/

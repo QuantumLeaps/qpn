@@ -4,14 +4,14 @@
 * @ingroup qkn
 * @cond
 ******************************************************************************
-* Last updated for version 6.7.0
-* Last updated on  2019-12-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -79,12 +79,12 @@ static void initialize(void) {
     /** @pre the number of active objects must be initialized by calling:
     * QF_init(Q_DIM(QF_active));
     */
-    Q_REQUIRE_ID(100, ((uint_fast8_t)1 <= QF_maxActive_)
+    Q_REQUIRE_ID(100, (1U <= QF_maxActive_)
                       && (QF_maxActive_ <= (uint_fast8_t)8));
 #endif
 
     /* set priorities all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
+    for (p = 1U; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
 
         /* QF_active[p] must be initialized */
@@ -94,15 +94,15 @@ static void initialize(void) {
     }
 
     /* trigger initial transitions in all registered active objects... */
-    for (p = (uint_fast8_t)1; p <= QF_maxActive_; ++p) {
+    for (p = 1U; p <= QF_maxActive_; ++p) {
         a = QF_ROM_ACTIVE_GET_(p);
         QHSM_INIT(&a->super); /* take the initial transition in the SM */
     }
 
     /* process all events posted during initialization... */
     QF_INT_DISABLE();
-    QK_attr_.actPrio = (uint8_t)0; /* prio of the QK-nano idle loop */
-    if (QK_sched_() != (uint_fast8_t)0) {
+    QK_attr_.actPrio = 0U; /* prio of the QK-nano idle loop */
+    if (QK_sched_() != 0U) {
         QK_activate_(); /* activate AOs to process all events posted so far */
     }
     QF_INT_ENABLE();
@@ -127,7 +127,7 @@ int_t QF_run(void) {
         QK_onIdle(); /* invoke the on-idle callback */
     }
 #ifdef __GNUC__  /* GNU compiler? */
-    return (int_t)0;
+    return 0;
 #endif
 }
 
@@ -174,7 +174,7 @@ QSchedStatus QK_schedLock(uint_fast8_t ceiling) {
         QK_attr_.lockHolder = QK_attr_.actPrio;
     }
     else {
-       stat = (QSchedStatus)0xFF;
+       stat = 0xFFU;
     }
     QF_INT_ENABLE();
 
@@ -199,7 +199,7 @@ QSchedStatus QK_schedLock(uint_fast8_t ceiling) {
 */
 void QK_schedUnlock(QSchedStatus stat) {
     /* has the scheduler been actually locked by the last QK_schedLock()? */
-    if (stat != (QSchedStatus)0xFF) {
+    if (stat != 0xFFU) {
         uint_fast8_t lockPrio = (uint_fast8_t)QK_attr_.lockPrio;
         uint_fast8_t prevPrio = (uint_fast8_t)(stat >> 8);
 
@@ -215,10 +215,10 @@ void QK_schedUnlock(QSchedStatus stat) {
 
         /* restore the previous lock priority and lock holder */
         QK_attr_.lockPrio   = (uint8_t)prevPrio;
-        QK_attr_.lockHolder = (uint8_t)(stat & (QSchedStatus)0xFF);
+        QK_attr_.lockHolder = (uint8_t)(stat & 0xFFU);
 
         /* find the highest-prio thread ready to run */
-        if (QK_sched_() != (uint_fast8_t)0) { /* priority found? */
+        if (QK_sched_() != 0U) { /* priority found? */
             QK_activate_(); /* activate any unlocked basic threads */
         }
 
@@ -252,10 +252,8 @@ uint_fast8_t QK_sched_(void) {
     p = (uint_fast8_t)QF_LOG2(QF_readySet_);
 #else
     /* hi nibble used? */
-    if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
-        p = (uint_fast8_t)(
-                (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
-                + (uint_fast8_t)4);
+    if ((QF_readySet_ & 0xF0U) != 0U) {
+        p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4]) + 4U;
     }
     else { /* hi nibble of QF_readySet_ is zero */
         p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
@@ -264,12 +262,12 @@ uint_fast8_t QK_sched_(void) {
 
     /* is the highest-prio below the active priority? */
     if (p <= (uint_fast8_t)QK_attr_.actPrio) {
-        p = (uint_fast8_t)0; /* active object not eligible */
+        p = 0U; /* active object not eligible */
     }
 #ifdef QK_SCHED_LOCK
     /* below the scheduler ceiling? */
     else if (p <= (uint_fast8_t)QK_attr_.lockPrio) {
-        p = (uint_fast8_t)0; /* active object not eligible */
+        p = 0U; /* active object not eligible */
     }
 #endif /* QK_SCHED_LOCK */
     else {
@@ -300,9 +298,9 @@ void QK_activate_(void) {
 #endif /* QK_ON_CONTEXT_SW */
 
     /* QK_attr_.nextPrio must be non-zero upon entry to QK_activate_() */
-    Q_REQUIRE_ID(800, p != (uint_fast8_t)0);
+    Q_REQUIRE_ID(800, p != 0U);
 
-    QK_attr_.nextPrio = (uint8_t)0; /* clear for the next time */
+    QK_attr_.nextPrio = 0U; /* clear for the next time */
 
     /* loop until no more ready-to-run AOs of higher prio than the initial */
     do {
@@ -318,7 +316,7 @@ void QK_activate_(void) {
         QF_INT_DISABLE(); /* get ready to access the queue */
 
         /* some unused events must be available */
-        Q_ASSERT_ID(810, a->nUsed > (uint8_t)0);
+        Q_ASSERT_ID(810, a->nUsed > 0U);
         --a->nUsed;
 
         Q_SIG(a) = QF_ROM_QUEUE_AT_(acb, a->tail).sig;
@@ -326,7 +324,7 @@ void QK_activate_(void) {
         Q_PAR(a) = QF_ROM_QUEUE_AT_(acb, a->tail).par;
 #endif
         /* wrap around? */
-        if (a->tail == (uint8_t)0) {
+        if (a->tail == 0U) {
             a->tail = Q_ROM_BYTE(acb->qlen);
         }
         --a->tail;
@@ -345,10 +343,9 @@ void QK_activate_(void) {
         QF_INT_DISABLE();
 
 
-        if (a->nUsed == (uint8_t)0) { /* empty queue? */
+        if (a->nUsed == 0U) { /* empty queue? */
             /* clear the ready bit */
-            QF_readySet_ &= (uint_fast8_t)
-                ~((uint_fast8_t)1 << (p - (uint_fast8_t)1));
+            QF_readySet_ &= (uint_fast8_t)(~(1U << (p - 1U)));
         }
 
         /* find new highest-prio AO ready to run... */
@@ -356,10 +353,8 @@ void QK_activate_(void) {
         p = (uint_fast8_t)QF_LOG2(QF_readySet_);
 #else
         /* hi nibble used? */
-        if ((QF_readySet_ & (uint_fast8_t)0xF0) != (uint_fast8_t)0) {
-            p = (uint_fast8_t)(
-                    (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4])
-                    + (uint_fast8_t)4);
+        if ((QF_readySet_ & 0xF0U) != 0U) {
+            p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_ >> 4]) + 4U;
         }
         else { /* hi nibble of QF_readySet_ is zero */
             p = (uint_fast8_t)Q_ROM_BYTE(QF_log2Lkup[QF_readySet_]);
@@ -368,18 +363,18 @@ void QK_activate_(void) {
 
         /* is the new priority below the initial preemption threshold? */
         if (p <= pin) {
-            p = (uint_fast8_t)0; /* active object not eligible */
+            p = 0U; /* active object not eligible */
         }
 #ifdef QK_SCHED_LOCK
         /* below the scheduler ceiling? */
         else if (p <= (uint_fast8_t)QK_attr_.lockPrio) {
-            p = (uint_fast8_t)0; /* active object not eligible */
+            p = 0U; /* active object not eligible */
         }
         else {
             Q_ASSERT_ID(710, p <= QF_maxActive_);
         }
 #endif /* QK_SCHED_LOCK */
-    } while (p != (uint_fast8_t)0);
+    } while (p != 0U);
 
     QK_attr_.actPrio = (uint8_t)pin; /* restore the active priority */
 
