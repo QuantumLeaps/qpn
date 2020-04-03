@@ -35,8 +35,8 @@
 #include "bsp.h"     /* Board Support Package */
 #include "defer.h"   /* Application interface */
 
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <stdio.h>
 
 //Q_DEFINE_THIS_FILE
 
@@ -44,8 +44,8 @@
 void BSP_init(void) {
 }
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const file, int_t line) {
-    fprintf(stderr, "Assertion failed in %s, line %d", file, line);
+Q_NORETURN Q_onAssert(char_t const Q_ROM * const file, int_t line) {
+    FPRINTF_S(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);
 }
 
@@ -56,7 +56,7 @@ void QF_onStartup(void) {
 }
 /*..........................................................................*/
 void QF_onCleanup(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_consoleCleanup();
 }
 /*..........................................................................*/

@@ -35,7 +35,7 @@
 #include "bsp.h"
 #include "clock.h"
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 
 /* HSM methods */
 static QState Alarm_initial(Alarm *me);
@@ -59,8 +59,8 @@ QState Alarm_off(Alarm * const me) {
         case Q_ENTRY_SIG: {
             /* while in the off state, the alarm is kept in decimal format */
             me->alarm_time = (me->alarm_time/60U)*100U + me->alarm_time%60U;
-            printf("*** Alarm OFF %02d:%02d\n",
-                   me->alarm_time/100U, me->alarm_time%100);
+            PRINTF_S("*** Alarm OFF %02d:%02d\n",
+                     me->alarm_time/100U, me->alarm_time%100);
             fflush(stdout);
             status = Q_HANDLED();
             break;
@@ -78,8 +78,8 @@ QState Alarm_off(Alarm * const me) {
             }
             else { /* alarm out of range -- clear and don't transition */
                 me->alarm_time = 0U;
-                printf("*** Alarm reset %02d:%02d\n",
-                       me->alarm_time/100U, me->alarm_time%100U);
+                PRINTF_S("*** Alarm reset %02d:%02d\n",
+                         me->alarm_time/100U, me->alarm_time%100U);
                 status = Q_HANDLED();
             }
             break;
@@ -87,8 +87,8 @@ QState Alarm_off(Alarm * const me) {
         case ALARM_SET_SIG: {
             /* while setting, the alarm is kept in decimal format */
             me->alarm_time = (10U * me->alarm_time + Q_PAR(me)) % 10000U;
-            printf("*** Alarm SET %02d:%02d\n",
-                   me->alarm_time/100U, me->alarm_time%100U);
+            PRINTF_S("*** Alarm SET %02d:%02d\n",
+                     me->alarm_time/100U, me->alarm_time%100U);
             fflush(stdout);
             status = Q_HANDLED();
             break;
@@ -105,14 +105,14 @@ QState Alarm_on(Alarm * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("*** Alarm ON %02d:%02d\n",
-                   me->alarm_time/60, me->alarm_time%60);
+            PRINTF_S("*** Alarm ON %02d:%02d\n",
+                     me->alarm_time/60, me->alarm_time%60);
             fflush(stdout);
             status = Q_HANDLED();
             break;
         }
         case ALARM_SET_SIG: {
-            printf("*** Cannot set Alarm when it is ON\n");
+            PRINTF_S("%s\n", "*** Cannot set Alarm when it is ON");
             fflush(stdout);
             status = Q_HANDLED();
             break;
@@ -123,7 +123,7 @@ QState Alarm_on(Alarm * const me) {
         }
         case TIME_SIG: {
             if (Q_PAR(me) == me->alarm_time) {
-                printf("ALARM!!!\n");
+                PRINTF_S("%s\n", "ALARM!!!");
                 /* asynchronously post the event to the container AO */
                 QACTIVE_POST((QActive *)&AO_AlarmClock, ALARM_SIG, 0);
             }

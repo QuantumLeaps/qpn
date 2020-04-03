@@ -3,14 +3,14 @@
 * @brief QF-nano port ARM Cortex-M, preemptive QK-nano kernel, IAR-ARM
 * @cond
 ******************************************************************************
-* Last updated for version 6.6.0
-* Last updated on  2019-11-20
+* Last Updated for Version: 6.8.0
+* Date of the Last Update:  2020-03-31
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,7 +28,7 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <www.gnu.org/licenses>.
+* along with this program. If not, see <www.gnu.org/licenses/>.
 *
 * Contact information:
 * <www.state-machine.com/licensing>
@@ -38,6 +38,9 @@
 */
 #ifndef QFN_PORT_H
 #define QFN_PORT_H
+
+/*! no-return function specifier (IAR compiler) */
+#define Q_NORETURN  __noreturn void
 
 /* QF interrupt disable/enable and log2()... */
 #if (__ARM_ARCH == 6) /* Cortex-M0/M0+/M1 ?, see NOTE1 */

@@ -111,7 +111,7 @@ void BSP_randomSeed(uint32_t seed) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const file, int line) {
+Q_NORETURN Q_onAssert(char const Q_ROM * const file, int line) {
     (void)file;       /* unused parameter */
     (void)line;       /* unused parameter */
     QF_INT_DISABLE(); /* make sure that interrupts are disabled */

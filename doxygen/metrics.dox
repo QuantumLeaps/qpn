@@ -1,9 +1,9 @@
-/** @page metrics Code Metrics
+/** @page metrics Code Metrics 
 
-@code{cpp}
-                   Code Metrics for QP-nano
+@code{cpp} 
+                   Code Metrics for QP-nano 
 ================================================
-  NLOC    CCN   token  PARAM  length  location
+  NLOC    CCN   token  PARAM  length  location  
 ------------------------------------------------
        9      1     48      2       9 QHsm_ctor@83-91@..\src\qfn\qepn.c
       33      6    258      1      49 QHsm_init_@103-151@..\src\qfn\qepn.c
@@ -47,5 +47,5 @@ No thresholds exceeded (cyclomatic_complexity > 20 or nloc > 1000000 or length >
 Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
 ------------------------------------------------------------------------------------------
        729      28.6     7.0      176.8       20            0      0.00    0.00
-@endcode
-*/
+@endcode 
+*/ 

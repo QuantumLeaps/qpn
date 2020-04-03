@@ -184,7 +184,7 @@ void QK_onIdle(void) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const module, int loc) {
+Q_NORETURN Q_onAssert(char const Q_ROM * const module, int loc) {
     /*
     * NOTE: add here your application-specific error handling
     */

@@ -3,14 +3,14 @@
 * @brief QF-nano port ARM Cortex-M, cooperative QV-nano kernel, GNU-ARM toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 6.3.7
-* Date of the Last Update:  2018-12-05
+* Last Updated for Version: 6.8.0
+* Date of the Last Update:  2020-03-31
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2018 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,16 +28,19 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses/>.
 *
 * Contact information:
-* https://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com/licensing>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
 #ifndef QFN_PORT_H
 #define QFN_PORT_H
+
+/* GNU-ARM function attribute for "no-return" function */
+#define Q_NORETURN   __attribute__ ((noreturn)) void
 
 /* QF interrupt disable/enable and log2()... */
 #if (__ARM_ARCH == 6) /* Cortex-M0/M0+/M1 ?, see NOTE1 */

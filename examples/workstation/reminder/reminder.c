@@ -35,7 +35,7 @@
 #include "bsp.h"
 #include "reminder.h"
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 
 /*..........................................................................*/
 typedef struct SensorTag {
@@ -106,7 +106,7 @@ QState Sensor_polling(Sensor * const me) {
         case Q_TIMEOUT_SIG: {
             /* timeout in 1/2 second */
             ++me->pollCtr;
-            printf("poll %3d\n", me->pollCtr);
+            PRINTF_S("poll %3d\n", me->pollCtr);
             if ((me->pollCtr & 0x3U) == 0U) { /* modulo 4 */
                 QACTIVE_POST(&me->super, DATA_READY_SIG, 0U);
             }
@@ -144,7 +144,7 @@ QState Sensor_idle(Sensor * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("-> idle\n");
+            PRINTF_S("%s\n", "-> idle");
             status = Q_HANDLED();
             break;
         }
@@ -164,7 +164,7 @@ QState Sensor_busy(Sensor * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("-> busy\n");
+            PRINTF_S("%s\n", "-> busy");
             status = Q_HANDLED();
             break;
         }
@@ -173,7 +173,7 @@ QState Sensor_busy(Sensor * const me) {
             QActive_armX(&me->super, 0U,
                          BSP_TICKS_PER_SEC/2U, BSP_TICKS_PER_SEC/2U);
             ++me->procCtr;
-            printf("process %3d\n", me->procCtr);
+            PRINTF_S("process %3d\n", me->procCtr);
             if ((me->procCtr & 0x1U) == 0U) { /* modulo 2 */
                 status = Q_TRAN(&Sensor_idle);
             }

@@ -423,8 +423,8 @@ int_t QF_run(void) {
     }
     QF_INT_ENABLE();
     QF_onCleanup(); /* cleanup callback */
-    //CloseHandle(l_win32Event);
-    //DeleteCriticalSection(&l_win32CritSect);
+    /*CloseHandle(l_win32Event);*/
+    /*DeleteCriticalSection(&l_win32CritSect);*/
 
     return 0; /* success */
 }
@@ -466,9 +466,9 @@ int QF_consoleWaitForKey(void) {
 static DWORD WINAPI ticker_thread(LPVOID arg) { /* for CreateThread() */
     int threadPrio = THREAD_PRIORITY_NORMAL;
 
-    // set the ticker thread priority according to selection made in
-    // QF_setTickRate()
-    //
+    /* set the ticker thread priority according to selection made in
+    * QF_setTickRate()
+    */
     if (l_tickPrio < 33) {
         threadPrio = THREAD_PRIORITY_BELOW_NORMAL;
     }

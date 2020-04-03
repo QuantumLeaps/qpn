@@ -35,9 +35,8 @@
 #include "bsp.h"     /* Board Support Package */
 #include "history.h" /* Application interface */
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <string.h>
 
 /*..........................................................................*/
 /* dummy definition of the QF_active[] array (not used in this example) */
@@ -47,18 +46,18 @@ QActiveCB const Q_ROM QF_active[] = {
 
 /*..........................................................................*/
 void BSP_init(void) {
-    printf("History state pattern\nQP-nano version: %s\n"
+    PRINTF_S("History state pattern\nQP-nano version: %s\n"
            "Press 'o' to OPEN  the door\n"
            "Press 'c' to CLOSE the door\n"
            "Press 't' to start TOASTING\n"
            "Press 'b' to start BAKING\n"
            "Press 'f' to turn the oven OFF\n"
            "Press ESC to quit...\n",
-           QP_getVersion());
+           QP_VERSION_STR);
 }
 /*..........................................................................*/
 void BSP_exit(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_onCleanup();
     exit(0);
 }
@@ -78,7 +77,7 @@ void QF_onClockTickISR(void) {
 
 /*..........................................................................*/
 /* this function is used by the QP embedded systems-friendly assertions */
-void Q_onAssert(char const * const file, int line) {
-    printf("Assertion failed in %s, line %d", file, line);
+Q_NORETURN Q_onAssert(char const * const file, int line) {
+    PRINTF_S("Assertion failed in %s, line %d", file, line);
     exit(-1);
 }

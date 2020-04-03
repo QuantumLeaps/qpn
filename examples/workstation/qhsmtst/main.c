@@ -35,8 +35,8 @@
 #include "bsp.h"
 #include "qhsmtst.h"
 
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <stdio.h>
 
 //Q_DEFINE_THIS_FILE
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
         BSP_dispatch(C_SIG);
     }
     else { /* interactive version */
-        printf("\n");
+        PRINTF_S("\n", "");
         for (;;) { /* event loop */
             int c;
             QSignal sig;

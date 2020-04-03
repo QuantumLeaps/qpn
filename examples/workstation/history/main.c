@@ -35,7 +35,7 @@
 #include "bsp.h"     /* Board Support Package */
 #include "history.h" /* Application interface */
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
 
 Q_DEFINE_THIS_FILE
@@ -53,9 +53,9 @@ int main() {
     for (;;) {
         uint8_t c;
 
-        printf("\n");
+        PRINTF_S("%c\n", ' ');
         c = (uint8_t)QF_consoleWaitForKey();
-        printf("%c: ", (c != '\33') ? c : 'x');
+        PRINTF_S("%c: ", (c != '\33') ? c : 'x');
 
         switch (c) {
             case 'o':   Q_SIG(the_oven) = OPEN_SIG;      break;

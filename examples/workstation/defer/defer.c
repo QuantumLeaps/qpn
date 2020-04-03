@@ -35,7 +35,7 @@
 #include "bsp.h"     /* Board Support Package */
 #include "defer.h"   /* Application interface */
 
-#include <stdio.h>   /* this example uses printf() to report status */
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 
 /*..........................................................................*/
 typedef struct TServerTag { /* Transaction Server active object */
@@ -114,13 +114,13 @@ QState TServer_idle(TServer * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("-> idle\n");
+            PRINTF_S("%s\n", "-> idle");
             TServer_recallRequest(me); /* recall the request */
             status = Q_HANDLED();
             break;
         }
         case NEW_REQUEST_SIG: {
-            printf("Processing request #%d\n", (int)Q_PAR(me));
+            PRINTF_S("Processing request #%d\n", (int)Q_PAR(me));
             status = Q_TRAN(&TServer_receiving);
             break;
         }
@@ -136,7 +136,7 @@ QState TServer_receiving(TServer * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("-> receiving\n");
+            PRINTF_S("%s\n", "-> receiving");
 
             /* one-shot timeout in 1 second */
             QActive_armX(&me->super, 0U, BSP_TICKS_PER_SEC, 0U);
@@ -159,7 +159,7 @@ QState TServer_authorizing(TServer * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("-> authorizing\n");
+            PRINTF_S("%s\n", "-> authorizing");
             /* one-shot timeout in 2 seconds */
             QActive_armX(&me->super, 0U, 2U*BSP_TICKS_PER_SEC, 0U);
             status = Q_HANDLED();
@@ -182,21 +182,21 @@ void TServer_deferRequest(TServer * const me) {
     if (me->deferredRequest.sig == 0U) { /* the request NOT deferred yet? */
         me->deferredRequest.sig = Q_SIG(me);
         me->deferredRequest.par = Q_PAR(me);
-        printf("deferring request #%d\n", (int)me->deferredRequest.par);
+        PRINTF_S("deferring request #%d\n", (int)me->deferredRequest.par);
     }
     else {
-        printf("!!! cannot defer request #%d\n", (int)Q_PAR(me));
+        PRINTF_S("!!! cannot defer request #%d\n", (int)Q_PAR(me));
     }
 }
 void TServer_recallRequest(TServer * const me) {
     if (me->deferredRequest.sig != 0U) { /* the request already deferred? */
-        printf("recalling request #%d\n", (int)me->deferredRequest.par);
+        PRINTF_S("recalling request #%d\n", (int)me->deferredRequest.par);
         QACTIVE_POST(&me->super,
                      me->deferredRequest.sig, me->deferredRequest.par);
 
         me->deferredRequest.sig = 0U; /* request no longer deferred */
     }
     else {
-        printf("No requests to recall\n");
+        PRINTF_S("%s\n", "No requests to recall");
     }
 }

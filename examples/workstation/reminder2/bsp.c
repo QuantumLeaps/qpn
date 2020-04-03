@@ -35,14 +35,14 @@
 #include "bsp.h"
 #include "reminder2.h"
 
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <stdio.h>
 
 //Q_DEFINE_THIS_FILE
 
 /*..........................................................................*/
 void BSP_init(void) {
-    printf("Reminder state pattern example2\nQP-nano version: %s\n"
+    PRINTF_S("Reminder state pattern example2\nQP-nano version: %s\n"
            "Press 'e' to echo the current state of number cruncher ON\n"
            "Press ESC to quit\n"
            "Number crunching started...\n",
@@ -50,12 +50,12 @@ void BSP_init(void) {
 }
 /*..........................................................................*/
 void BSP_echo(double sum) {
-    printf("Echo! pi=%16.14f\n", 4.0*sum);
+    PRINTF_S("Echo! pi=%16.14f\n", 4.0*sum);
     fflush(stdout);
 }
 /*..........................................................................*/
 void BSP_result(double sum) {
-    printf("pi=%16.14f\n", 4.0*sum);
+    PRINTF_S("pi=%16.14f\n", 4.0*sum);
     fflush(stdout);
 }
 
@@ -66,7 +66,7 @@ void QF_onStartup(void) {
 }
 /*..........................................................................*/
 void QF_onCleanup(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_consoleCleanup();
 }
 /*..........................................................................*/
@@ -86,8 +86,8 @@ void QF_onClockTickISR(void) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const file, int_t line) {
-    fprintf(stderr, "Assertion failed in %s, line %d", file, line);
+Q_NORETURN Q_onAssert(char_t const Q_ROM * const file, int_t line) {
+    FPRINTF_S(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);
 }
 

@@ -35,21 +35,21 @@
 #include "bsp.h"
 #include "clock.h"
 
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <stdio.h>
 
 //Q_DEFINE_THIS_FILE
 
 /*..........................................................................*/
 void BSP_init(void) {
-    printf("Orthogonal Component state pattern\nQP-nano version: %s\n"
+    PRINTF_S("Orthogonal Component state pattern\nQP-nano version: %s\n"
            "Press 'o' to turn the Alarm ON\n"
            "Press 'f' to turn the Alarm OFF\n"
            "Press '0'..'9' to set the Alarm time\n"
            "Press 'A' to set the Clock in 12-hour mode\n"
            "Press 'B' to set the Clock in 24-hour mode\n"
            "Press ESC to quit...\n",
-           QP_versionStr);
+           QP_VERSION_STR);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ void QF_onStartup(void) {
 }
 /*..........................................................................*/
 void QF_onCleanup(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye");
     QF_consoleCleanup();
 }
 /*..........................................................................*/
@@ -116,8 +116,8 @@ void QF_onClockTickISR(void) {
     }
 }
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const file, int_t line) {
-    fprintf(stderr, "Assertion failed in %s, line %d", file, line);
+Q_NORETURN Q_onAssert(char_t const Q_ROM * const file, int_t line) {
+    FPRINTF_S(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);
 }
 

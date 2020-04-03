@@ -1,13 +1,13 @@
 /*****************************************************************************
 * Product: DPP example, Arduino-UNO board, preemptive QK kernel, IAR-AVR
-* Last updated for version 6.6.0
-* Last updated on  2019-10-15
+* Last updated for version 6.8.0
+* Last updated on  2020-03-22
 *
 *                    Q u a n t u m  L e a P s
 *                    ------------------------
 *                    Modern Embedded Software
 *
-* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -170,10 +170,12 @@ void QK_onIdle(void) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const file, int line) {
+Q_NORETURN Q_onAssert(char const Q_ROM * const module, int location) {
     /* implement the error-handling policy for your application!!! */
     QF_INT_DISABLE(); /* disable all interrupts */
     QF_RESET();  /* reset the CPU */
+    for (;;) {
+    }
 }
 
 /*****************************************************************************

@@ -35,9 +35,8 @@
 #include "bsp.h"
 #include "calc.h"
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <string.h>
 
 #define DISP_WIDTH  9
 
@@ -65,7 +64,7 @@ void BSP_insert(int keyId) {
         ++l_len;
     }
     else if (l_len < (DISP_WIDTH - 1)) {
-        memmove(&l_display[0], &l_display[1], DISP_WIDTH - 1);
+        MEMMOVE_S(&l_display[0], DISP_WIDTH, &l_display[1], DISP_WIDTH - 1);
         l_display[DISP_WIDTH - 1] = (char)keyId;
         ++l_len;
     }
@@ -77,11 +76,11 @@ void BSP_negate(void) {
 }
 /*..........................................................................*/
 void BSP_display(void) {
-    printf("\n[%s] ", l_display);
+    PRINTF_S("\n[%s] ", l_display);
 }
 /*..........................................................................*/
 void BSP_exit(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_onCleanup();
     exit(0);
 }
@@ -111,7 +110,8 @@ int BSP_eval(double operand1, int oper, double operand2) {
                 result = operand1 / operand2;
             }
             else {
-                strcpy(l_display, " Error 0 "); /* error: divide by zero */
+                /* error: divide by zero */
+                STRCPY_S(l_display, DISP_WIDTH, " Error 0 ");
                 ok = 0;
             }
             break;
@@ -122,10 +122,11 @@ int BSP_eval(double operand1, int oper, double operand2) {
             result = 0.0;
         }
         if ((-99999999.0 < result) && (result < 99999999.0)) {
-            sprintf(l_display, "%9.6g", result);
+            SNPRINTF_S(l_display, DISP_WIDTH, "%9.6g", result);
         }
         else {
-            strcpy(l_display, " Error 1 "); /* error: out of range */
+            /* error: out of range */
+            STRCPY_S(l_display, DISP_WIDTH, " Error 1 ");
             ok = 0;
         }
     }
@@ -133,7 +134,7 @@ int BSP_eval(double operand1, int oper, double operand2) {
 }
 /*..........................................................................*/
 void BSP_message(char const *msg) {
-    printf(msg);
+    PRINTF_S("%s", msg);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -150,7 +151,7 @@ void QF_onClockTickISR(void) {
 
 /*..........................................................................*/
 /* this function is used by the QP embedded systems-friendly assertions */
-void Q_onAssert(char const * const file, int line) {
-    printf("Assertion failed in %s, line %d", file, line);
+Q_NORETURN Q_onAssert(char const * const file, int line) {
+    FPRINTF_S(stderr, "Assertion failed in %s, line %d", file, line);
     exit(-1);
 }

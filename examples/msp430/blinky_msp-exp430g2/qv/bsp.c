@@ -110,7 +110,7 @@ void QV_onIdle(void) { /* NOTE: called with interrutps DISABLED, see NOTE1 */
 #endif
 }
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const file, int line) {
+Q_NORETURN Q_onAssert(char const Q_ROM * const file, int line) {
     /* implement the error-handling policy for your application!!! */
     QF_INT_DISABLE(); /* disable all interrupts */
 

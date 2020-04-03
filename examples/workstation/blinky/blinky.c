@@ -17,19 +17,19 @@
 */
 /*.$endhead${.::blinky.c} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 #include "qpn.h"    /* QP-nano framework API */
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h> /* for exit() */
 
 enum { BSP_TICKS_PER_SEC = 100 };
 
 void BSP_init(void)   {
-    printf("Simple Blinky example\n"
+    PRINTF_S("Simple Blinky example\n"
            "QP-nano version: %s\n"
            "Press Ctrl-C to quit...\n",
            QP_VERSION_STR);
 }
-void BSP_ledOff(void) { printf("LED OFF\n"); }
-void BSP_ledOn(void)  { printf("LED ON\n");  }
+void BSP_ledOff(void) { PRINTF_S("%s\n", "LED OFF"); }
+void BSP_ledOn(void)  { PRINTF_S("%s\n", "LED ON");  }
 
 /* callback functions needed by the framework ------------------------------*/
 void QF_onStartup(void) {}
@@ -37,8 +37,8 @@ void QF_onCleanup(void) {}
 void QF_onClockTickISR(void) {
     QF_tickXISR(0U); /* QF-nano clock tick processing for rate 0 */
 }
-void Q_onAssert(char_t const Q_ROM * const module, int_t loc) {
-    fprintf(stderr, "Assertion failed in %s:%d", module, loc);
+Q_NORETURN Q_onAssert(char_t const Q_ROM * const module, int_t loc) {
+    FPRINTF_S(stderr, "Assertion failed in %s:%d", module, loc);
     exit(-1);
 }
 

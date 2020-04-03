@@ -35,7 +35,7 @@
 #include "dpp.h"
 #include "bsp.h"
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
 
 //Q_DEFINE_THIS_FILE
@@ -45,12 +45,12 @@ static uint32_t l_rnd; /* random seed */
 
 /*..........................................................................*/
 void BSP_init(void) {
-    printf("Dining Philosopher Problem example\n"
+    PRINTF_S("Dining Philosopher Problem example\n"
            "QP-nano %s\n"
            "Press 'p' to pause\n"
            "Press 's' to serve\n"
            "Press ESC to quit...\n",
-           QP_versionStr);
+           QP_VERSION_STR);
 
     BSP_randomSeed(1234U);
 }
@@ -61,11 +61,11 @@ void BSP_terminate(int16_t result) {
 }
 /*..........................................................................*/
 void BSP_displayPhilStat(uint8_t n, char_t const *stat) {
-    printf("Philosopher %2d is %s\n", (int)n, stat);
+    PRINTF_S("Philosopher %2d is %s\n", (int)n, stat);
 }
 /*..........................................................................*/
 void BSP_displayPaused(uint8_t paused) {
-    printf("Paused is %s\n", paused ? "ON" : "OFF");
+    PRINTF_S("Paused is %s\n", paused ? "ON" : "OFF");
 }
 /*..........................................................................*/
 uint32_t BSP_random(void) {  /* a very cheap pseudo-random-number generator */
@@ -82,8 +82,8 @@ void BSP_randomSeed(uint32_t seed) {
 
 /****************************************************************************/
 /*..........................................................................*/
-void Q_onAssert(char_t const Q_ROM * const module, int_t id) {
-    fprintf(stderr, "Assertion in %s:%d", module, id);
+Q_NORETURN Q_onAssert(char_t const Q_ROM * const module, int_t id) {
+    FPRINTF_S(stderr, "Assertion in %s:%d", module, id);
     BSP_terminate(-1);
 }
 
@@ -94,7 +94,7 @@ void QF_onStartup(void) {
 }
 /*..........................................................................*/
 void QF_onCleanup(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_consoleCleanup();
 }
 /*..........................................................................*/

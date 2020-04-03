@@ -3,14 +3,14 @@
 * @brief QF-nano port AVR ATmega, QK-nano kernel, IAR-AVR toolset
 * @cond
 ******************************************************************************
-* Last Updated for Version: 5.7.2
-* Date of the Last Update:  2016-09-30
+* Last updated for version 6.8.0
+* Last updated on  2020-03-08
 *
-*                    Q u a n t u m     L e a P s
-*                    ---------------------------
-*                    innovating embedded systems
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
 *
-* Copyright (C) Quantum Leaps, LLC. All rights reserved.
+* Copyright (C) 2005-2020 Quantum Leaps, LLC. All rights reserved.
 *
 * This program is open source software: you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as published
@@ -28,19 +28,22 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
+* along with this program. If not, see <www.gnu.org/licenses>.
 *
 * Contact information:
-* http://www.state-machine.com
-* mailto:info@state-machine.com
+* <www.state-machine.com/licensing>
+* <info@state-machine.com>
 ******************************************************************************
 * @endcond
 */
 #ifndef QFN_PORT_H
 #define QFN_PORT_H
 
+/*! IAR extended keyword __noreturn designates a "no-return" function */
+#define Q_NORETURN  __noreturn void
+
 /* IAR extended keyword '__flash' allocates const objects to ROM */
-#define Q_ROM            __flash
+#define Q_ROM       __flash
 
 /* QF-nano interrupt disable/enable... */
 #define QF_INT_DISABLE() __disable_interrupt()

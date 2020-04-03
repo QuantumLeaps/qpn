@@ -35,7 +35,7 @@
 #include "bsp.h"
 #include "clock.h"
 
-#include <stdio.h>
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 
 Q_DEFINE_THIS_FILE
 
@@ -73,7 +73,7 @@ QState AlarmClock_final(AlarmClock * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("-> final\n");
+            PRINTF_S("%s\n", " -> final");
             QF_stop(); /* terminate the application */
             status = Q_HANDLED();
             break;
@@ -114,7 +114,7 @@ QState AlarmClock_timekeeping(AlarmClock * const me) {
             break;
         }
         case ALARM_SIG: {
-            printf("Wake up!!!\n");
+            PRINTF_S("%s\n", "Wake up!!!");
             status = Q_HANDLED();
             break;
         }
@@ -144,7 +144,7 @@ QState AlarmClock_mode24hr(AlarmClock * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("*** 24-hour mode\n");
+            PRINTF_S("%s\n", "*** 24-hour mode");
             status = Q_HANDLED();
             break;
         }
@@ -153,7 +153,7 @@ QState AlarmClock_mode24hr(AlarmClock * const me) {
             if (++me->current_time == 24U*60U) {
                 me->current_time = 0U;
             }
-            printf("%02d:%02d\n",
+            PRINTF_S("%02d:%02d\n",
                    me->current_time / 60U, me->current_time % 60U);
 
             /* synchronously dispatch to the orthogonal component */
@@ -175,7 +175,7 @@ QState AlarmClock_mode12hr(AlarmClock * const me) {
     QState status;
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
-            printf("*** 12-hour mode\n");
+            PRINTF_S("%s\n", "*** 12-hour mode");
             status = Q_HANDLED();
             break;
         }
@@ -185,7 +185,7 @@ QState AlarmClock_mode12hr(AlarmClock * const me) {
                 me->current_time = 0U;
             }
             h = me->current_time / 60U;
-            printf("%02d:%02d %s\n", (h % 12U) ? (h % 12U) : 12U,
+            PRINTF_S("%02d:%02d %s\n", (h % 12U) ? (h % 12U) : 12U,
                    me->current_time % 60U, (h / 12U) ? "PM" : "AM");
 
             /* synchronously dispatch to the orthogonal component */

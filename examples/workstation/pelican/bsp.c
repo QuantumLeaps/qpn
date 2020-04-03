@@ -35,20 +35,20 @@
 #include "bsp.h"     /* Board Support Package (BSP) */
 #include "pelican.h" /* application interface */
 
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <stdio.h>
 
 //Q_DEFINE_THIS_MODULE("bsp")
 
 /*..........................................................................*/
 void BSP_init(void) {
-    printf("Pedestrian LIght CONtrolled crossing example"
+    PRINTF_S("Pedestrian LIght CONtrolled crossing example"
            "\nQP-nano %s\n"
            "Press 'p' to generate PED_WAITING\n"
            "Press 'f' to generate OFF\n"
            "Press 'o' to generate ON\n"
            "Press ESC to quit...\n",
-           QP_getVersion());
+           QP_VERSION_STR);
 }
 /*..........................................................................*/
 void BSP_terminate(int16_t result) {
@@ -57,25 +57,25 @@ void BSP_terminate(int16_t result) {
 }
 /*..........................................................................*/
 void BSP_showState(char_t const *state) {
-    printf("STATE: %s -----\n", state);
+    PRINTF_S("STATE: %s -----\n", state);
 }
 /*..........................................................................*/
 void BSP_signalCars(enum BSP_CarsSignal sig) {
     switch (sig) {
         case CARS_RED: {
-            printf("cars: RED\n");
+            PRINTF_S("%s\n", "cars: RED");
             break;
         }
         case CARS_YELLOW: {
-            printf("cars: YELLOW\n");
+            PRINTF_S("%s\n", "cars: YELLOW");
             break;
         }
         case CARS_GREEN: {
-            printf("cars: GREEN\n");
+            PRINTF_S("%s\n", "cars: GREEN");
             break;
         }
         case CARS_BLANK: {
-            printf("cars: BLANK\n");
+            PRINTF_S("%s\n", "cars: BLANK");
             break;
         }
     }
@@ -84,15 +84,15 @@ void BSP_signalCars(enum BSP_CarsSignal sig) {
 void BSP_signalPeds(enum BSP_PedsSignal sig) {
     switch (sig) {
         case PEDS_DONT_WALK: {
-            printf("peds: DON'T WALK\n");
+            PRINTF_S("%s\n", "peds: DON'T WALK");
             break;
         }
         case PEDS_BLANK: {
-            printf("peds: BLANK\n");
+            PRINTF_S("%s\n", "peds: BLANK");
             break;
         }
         case PEDS_WALK: {
-            printf("peds: WALK\n");
+            PRINTF_S("%s\n", "peds: WALK");
             break;
         }
     }
@@ -105,7 +105,7 @@ void QF_onStartup(void) {
 }
 /*..........................................................................*/
 void QF_onCleanup(void) {
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_consoleCleanup();
 }
 /*..........................................................................*/
@@ -114,17 +114,17 @@ void QF_onClockTickISR(void) {
 
     switch (QF_consoleGetKey()) {
         case 'p':
-            printf("-----> PEDS_WAITING\n");
+            PRINTF_S("%s\n", "-----> PEDS_WAITING");
             QACTIVE_POST_ISR((QActive *)&AO_Pelican,
                               PEDS_WAITING_SIG, 0U);
             break;
         case 'f':
-            printf("-----> OFF\n");
+            PRINTF_S("%s\n", "-----> OFF");
             QACTIVE_POST_ISR((QActive *)&AO_Pelican,
                              OFF_SIG, 0U);
             break;
         case 'o':
-            printf("-----> ON\n");
+            PRINTF_S("%s\n", "-----> ON");
             QACTIVE_POST_ISR((QActive *)&AO_Pelican,
                              ON_SIG, 0U);
             break;
@@ -137,8 +137,8 @@ void QF_onClockTickISR(void) {
     }
 }
 /*--------------------------------------------------------------------------*/
-void Q_onAssert(char const * const module, int location) {
+Q_NORETURN Q_onAssert(char const * const module, int location) {
     QF_INT_DISABLE(); /* cut-off all interrupts */
-    fprintf(stderr, "Assertion failed in %s:%d", module, location);
+    FPRINTF_S(stderr, "Assertion failed in %s:%d", module, location);
     BSP_terminate(-1);
 }

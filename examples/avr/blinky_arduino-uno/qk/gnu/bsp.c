@@ -106,10 +106,12 @@ void QK_onIdle(void) {
 }
 
 /*..........................................................................*/
-void Q_onAssert(char const Q_ROM * const file, int line) {
+Q_NORETURN Q_onAssert(char const Q_ROM * const file, int line) {
     /* implement the error-handling policy for your application!!! */
     QF_INT_DISABLE(); /* disable all interrupts */
     QF_RESET();  /* reset the CPU */
+    for (;;) {
+    }
 }
 
 /*****************************************************************************

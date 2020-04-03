@@ -35,8 +35,8 @@
 #include "bsp.h"
 #include "qhsmtst.h"
 
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
 #include <stdlib.h>
-#include <stdio.h>
 
 Q_DEFINE_THIS_FILE
 
@@ -52,7 +52,7 @@ static FILE *l_outFile;
 void BSP_init(char const *fname) {
    if (*fname == '\0') {
         l_outFile = stdout;  /* use the stdout as the output file */
-        printf("QHsmTst example, built on %s at %s,\n"
+        PRINTF_S("QHsmTst example, built on %s at %s,\n"
                "QP-nano: %s.\nPress ESC to quit...\n",
                __DATE__, __TIME__, QP_VERSION_STR);
     }
@@ -60,12 +60,12 @@ void BSP_init(char const *fname) {
         l_outFile = fopen(fname, "w");
         Q_ASSERT(l_outFile != (FILE *)0);
 
-        printf("QHsmTst example, built on %s at %s, QP-nano %s\n"
+        PRINTF_S("QHsmTst example, built on %s at %s, QP-nano %s\n"
                "output saved to %s\n",
                __DATE__, __TIME__, QP_VERSION_STR,
                fname);
 
-        fprintf(l_outFile, "QHsmTst example, QP-nano %s\n",
+        FPRINTF_S(l_outFile, "QHsmTst example, QP-nano %s\n",
                QP_VERSION_STR);
     }
 
@@ -74,22 +74,22 @@ void BSP_init(char const *fname) {
 /*..........................................................................*/
 void BSP_exit(void) {
     fclose(l_outFile);
-    printf("\nBye! Bye!\n");
+    PRINTF_S("\n%s\n", "Bye! Bye!");
     QF_onCleanup();
     exit(0);
 }
 /*..........................................................................*/
 void BSP_display(char const *msg) {
-    fprintf(l_outFile, msg);
+    FPRINTF_S(l_outFile, "%s", msg);
 }
 /*..........................................................................*/
 void BSP_dispatch(QSignal sig) {
     if ((A_SIG <= sig) && (sig <= I_SIG)) {
-        fprintf(l_outFile, "%c:", 'A' + sig - A_SIG);
+        FPRINTF_S(l_outFile, "%c:", 'A' + sig - A_SIG);
     }
     Q_SIG(the_hsm) = sig;
     QHSM_DISPATCH(the_hsm); /* dispatch the event */
-    fprintf(l_outFile, "\n");
+    FPRINTF_S(l_outFile, "\n", "");
 }
 
 
@@ -107,8 +107,8 @@ void QF_onClockTickISR(void) {
 
 /*..........................................................................*/
 /* this function is used by the QP embedded systems-friendly assertions */
-void Q_onAssert(char const * const file, int line) {
-    printf("Assertion failed in %s, line %d", file, line);
+Q_NORETURN Q_onAssert(char const * const file, int line) {
+    PRINTF_S("Assertion failed in %s, line %d", file, line);
     exit(-1);
 }
 
