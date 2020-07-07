@@ -1,9 +1,18 @@
 /**
 @page history Revision History
 
+
+@section qpn_6_8_2 Version 6.8.2, 2020-06-30
+
+- Updated 3rd_party/CMSIS to version 5.7.0
+- Updated example projects for ARM Cortex-M with ARM/KEIL to use the startup in the odler ARM assembly (as opposed to ARMCLANG assembly)
+- Updated the doxygen styling
+
+
+
 @section qpn_6_8_1 Version 6.8.1, 2020-04-04
 
-Fixed the following bugs:
+Fixedhe following bugs:
 
 This release updates the QP-nano ports and examples for workstations (Windows and POSIX) by consistently applying the "safe" versions of services from `<stdio.h>` and `<string.h>`. The "portable" versions of these services are defined as macros in the `safe_std.h` header file and include the following services:
 
@@ -17,13 +26,13 @@ This release updates the QP-nano ports and examples for workstations (Windows an
 - `FREAD_S()` -> `fread_s()`
 - `FOPEN_S()` -> `fopen_s()`
 - `LOCALTIME_S()` -> `localtime_s()`
- 
+
 These "safe" functions are mapped to the best approximation of these services available on a given platform. For example, `STRCPY_S()` is mapped to `strcpy_s()` on Windows and `strcpy()` on POSIX (Linux/MacOS/etc.).
 
-Finally, this release consistently applies the #Q_NORETURN macro to the Q_onAssert() implementations in the QP-nano examples.  
+Finally, this release consistently applies the #Q_NORETURN macro to the Q_onAssert() implementations in the QP-nano examples.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_8_0 Version 6.8.0, 2020-03-21
 
 Source code changes:
@@ -43,7 +52,7 @@ Converted most of the examples for ARM-MDK from the no-longer maintained compile
 The older ARM Compiler-5 is still supported, but will be phased out in the future. The only examples for ARM Compiler-5 are for the EK-TM4C123GXL (TivaC LanuchPad) board. These examples are located in the `arm` sub-directories.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_7_0 Version 6.7.0, 2019-12-30
 The main purpose of this release is providing improved compliance with MISRA-C:2012 (including  MISRA-C:2012-Amendment-1) and also to provide support for the [<b>PC-Lint-Plus</b>](https://www.gimpel.com/) static analysis tool (see also feature request [#169](https://sourceforge.net/p/qpc/feature-requests/169/)). Specifically, the QP-nano source code and some examples have been adjusted to comply with MISRA-C:2012-Amendment-1 rules, with all deviations captured in the PC-Lint-Plus configuration files. These PC-Lint-Plus configuration files have been provided in the new "port" to PC-Lint-Plus in the directory qpn/ports/lint-plus/.
 
@@ -76,7 +85,7 @@ Finally, this release fixes the following bugs:
 - [bug#255 "IAR-ARM "Multi-file Compilation" fails for QK and QXK applications"](https://sourceforg/bugs/255/)
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_6_0 Version 6.6.0, 2019-10-31
 The main purpose of this release is the change in distribution of the QP-nano framework, which is now bundled together with the other QP frameworks (QP/C and QP/C++) as well as QM, and the QTools collection into "QP-bundle". This "QP-bundle" provides a single, streamlined and simplified download and installation of all QP frameworks and all the accompanying tools.
 
@@ -89,17 +98,17 @@ This release brings also the following changes:
 - fixed [bug#252 qassert.h used as standalone in qpn](https://sourceforge.net/p/qpc/bugs/252/)
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_5_1 Version 6.5.1, 2019-06-11
 This release adds ports and examples for PIC24/dsPIC 16-bit MCUs with MPLAB-X and XC16 compiler toolchain.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_5_0 Version 6.5.0, 2019-03-30
 This QP-nano release matches the [QM release 4.5.0](https://www.state-machine.com/qm/history.html#qm_4_5_0), which introduced new implementation for QP/C++. Even though this has no impact on the QP-nano state machine implementation with QM, this release is needed for compatibility checking between QP and QM. This release comes with several models for **QM 4.5.0**.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_4_0 Version 6.4.0, 2019-02-10
 This release brings the following changes:
 
@@ -112,7 +121,7 @@ These additional assertions require #Q_DEFINE_THIS_FILE or #Q_DEFINE_THIS_MODULE
 - modified Makefiles for workstations (Windows and POSIX) to use compiler options -std=c99 for C and -std=c++11 for C++ as well as -pedantic option.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_3_8 Version 6.3.8, 2018-12-31
 The main purpose of this release is the update the `Makefiles` that use the [GNU-ARM Embedded Toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) to match the recent update in [QTools for Windows 6.3.8](https://sourceforge.net/projects/qpc/files/QTools/). Specifically, all `Makefiles` in the `examples` directory have been updated to use the GNU-ARM toolchain located in `qtools\gnu_arm-none-eabi` and use the tools prefix **arm-none-eabi-**.
 
@@ -120,12 +129,12 @@ The main purpose of this release is the update the `Makefiles` that use the [GNU
 The `Makefiles` that use the GNU-ARM included in this release require [QTools for Windows version 6.3.8 or newer](https://sourceforge.net/projects/qpc/files/QTools/) and will **NOT** work with the older QTools collection.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_3_7 Version 6.3.7, 2018-12-07
 The main purpose of this release is re-designing of the @ref exa_os "examples for workstations" (previously `win32-qv` and `posix-qv`). All these types of examples have been consolidated in the @ref exa_os "exampes/workstation" folder, where the provided `Makefiles` have been extended to be cross-platform so that they work on Windows, Linux, and MacOS without changes. To facilitate the creation of truly portable, cross-platform examples, the existing @ref ports_os "QP ports to Windows/POSIX" have been augmented with abstractions for portable console access.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_3_3 Version 6.3.3, 2018-06-22
 This release fixes the following bugs:
 
@@ -142,19 +151,19 @@ Also, this release demonstrates the new features of QM 4.3.0 in several example 
 Finally, this release updates `3rd_party/CMSIS/Include` to the latest version from GitHub.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_3_0 Version 6.3.0, 2018-05-10
 This release improves the command-line scripts for flash programming of the supported MCUs. Specifically, the flash.bat batch files for EFM32-SLSTK3401A, EK-TM4C123GXL, and for Arudino UNO have been updated.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_2_0 Version 6.2.0, 2018-03-16
 This release updates the QP-nano ports to win32-qv and posix-qv to allow a "tickless" mode, where the "tickerThread" is not created. This mode is set by configuring the system clock tick rate to 0 (QF_setTickRate(0)).
 
 Additionally, this revision updates the posix-qv port implementation to wait for the condition variable in a customary wile() loop.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_1_1 Version 6.1.1, 2018-02-18
 The main purpose of this release is adding the context-switch callback to the preemptive @ref qkn "QK-nano" kernel. The QK_onContextSw() callback function provides a mechanism to perform additional custom operations when QK switches context from one thread to another. To avoid extra overhead when this functionality is not needed and for backwards-compatiblity with the existing applications, the callback is enabled only when the macro #QK_ON_CONTEXT_SW is defined. The macro can be defined either directly in command-line for the compiler, or in the QK-nano port file (qpn_port.h). Examples for the context-switch callbacks have been provided for the @ref arm-cm_dpp_nucleo-l053r8 "NUCLEO-L053R8" (Cortex-M0+) and the @ref arm-cm_dpp_ek-tm4c123gxl "EK-TM4C123GXL" (Cortex-M4F).
 
@@ -167,21 +176,21 @@ Also, this release adds new project files for the Atollic TRUEstudio for STM32. 
 Finally, this relese updates the CMSIS to version 5.3.0 (see `qpn/3rd_party/CMSIS`
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_0_4 Version 6.0.4, 2018-01-10
 This release replaces assembly with C implementation in the ARM-KEIL ports or the QK-nano kernel to Cortex-M to take advantage of the `__asm` functions. (NOTE: this change has impact on the existing QP-nano applications that use the ARM-KEIL toolchain and the QK kernel.)
 
 Also, this release adds an example of the Dining Philosophers Problem (DPP) re-designed with the ["Orthogonal Component" state pattern](https://www.state-machine.com/doc/Pattern_Orthogonal.pdf). The application uses only one active object (Table), while the Philos are stateful components of Table. The example is located in `qpn\examples\win32-qv\dpp_comp`.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_0_3 Version 6.0.3, 2017-12-12
 This release replaces attributes of ::QActive class and ::QTimeEvtCtr type from type uint_fast8_t to uint8_t. For the ARM Cortex-M port, these changes reduce the memory footprint of each ::QActive instance from 40 to 26 bytes (35% improvement).
 
 Also, the ARM Cortex-M port and examples for the TI-ARM compiler have been removed. (Projects for the TI CCS can use the GNU-ARM toolchain and the existing GNU-ARM ports).
 
 
-------------------------------------------------------------------------------
+
 @section qpn_6_0_1 Version 6.0.1, 2017-11-10
 This release includes a workaround for the GNU-ARM compiler bug for the ARMv6-M architecture (Cortex-M0/M0+/M1), which can lead to generation of incorrect code for the QP-nano critical section at certain gcc optimization levels (such as -O). This bug was first discovered and filed as [bug#184](https://sourceforge.net/p/qpc/bugs/184/). The bug affected the GNU-ARM ports to both built-in kernels @ref qvn "QV-nano" and @ref qkn "QK-nano".
 
@@ -193,7 +202,7 @@ This release no longer contains the directory `qpn/source`, which was scheduled 
 This QP-nano 6.0.1 release is the minimum version required in the upcoming QM 4.1.0.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_9_8 Version 5.9.8, 2017-09-15
 This release implements the feature request
 <a href="https://sourceforge.net/p/qpc/feature-requests/126/" target="_blank" class="extern">#126</a> "Allow non-asserting
@@ -257,13 +266,13 @@ This release consistently changes all example projects (for all toolchains) to u
 Finally, this release adds protection in the IRQ priorities initialization in QK-nano/QV-nano for ARM Cortex-M3/M4/M7, so that the number of IRQs is extracted from bits 0-2 of the ICTR register (INTLINESNUM).
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_9_5 Version 5.9.5, 2017-07-20
 This release fixes the following bug:
 - <a href="https://sourceforge.net/p/qpc/bugs/178/" class="extern">bug#178</a> "GNU-ARM compiler reports "Error: unaligned opcodes..." in startup code for QP/C/C++/nano examples". The bug fix entails modifying the startup code for the GNU-ARM compiler in the `3rd_party` directory. Specifically, the proper alignment directives have been added to the inline assembly in the exception handlers.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_9_3 Version 5.9.3, 2017-07-03
 This release fixes the following bugs:
 
@@ -281,7 +290,7 @@ Collection (v 5.9.1) for Windows.
 This release also upgrades CMSIS to version 5.0.2.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_8_2 Version 5.8.2, 2017-02-08
 This release improves compatibility of assertion numbering between
 QP-nano and QP/C/C++. Specifically, qepn.c file now uses the same
@@ -293,7 +302,7 @@ Finally, this release fixes the following bugs:
 - bug#152 Typo (qpc\ports\arm7-9\qk\gnu\qk_port.s:42) prevents compilation
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_8_1 Version 5.8.1, 2016-12-16
 This release is in response to a recent finding that many QP users of the
 ports to ARM Cortex-M3/M4 forget to explicitly set their interrupt priorities,
@@ -317,7 +326,7 @@ Changes in detail:
  standard distribution.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_8_0 Version 5.8.0, 2016-11-07
 This release simplifies the QP-nano framework by removing the QMsm-style
 state machine implementation strategy introduced in version 5.0.0. Moving
@@ -342,13 +351,13 @@ Finally, this release includes the latest CMSIS-5, which now replaces the
 older CMSIS-4.5.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_7_3 Version 5.7.3, 2016-10-07
 This release fixes the following bugs:
 - bug#140 (PendSV_Handler() exception stacked PC not halfword aligned).
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_7_2 Version 5.7.2, 2016-09-30
 This release changes the internal QK-nano implementation to match the QK
 kernel implementation used in QP/C and QP/C++. (e.g., QK_sched_() has been
@@ -357,14 +366,14 @@ changes fall into the category of refactoring and have no impact on the API
 or performance.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_7_0 Version 5.7.0, 2016-08-31
 This release release changes once more the QK-nano port to ARM Cortex-M, to reduce the interrupt latecy. This has been achieved by shortening the critical section in the PendSV exception. Also, this QK port to Cortex-M no longer uses the NMI exception.
 
 Finally, this release replaces all absolute paths with relative paths in all CCS-Eclipse project files (for TivaC, Hercules, and MSP430).
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_6_5 Version 5.6.5, 2016-06-09
 This release adds support for the new board: EFM32-SLSTK3401A (Pearl Gecko Starter Kit from Silicon Labs). This board replaces the Stellaris EK-LM3S811 board, which has been discontinued. (The Stellaris EK-LM3S811 board had been used in the "Fly 'n' Shoot" game example accompanying the PSiCC2 book).
 
@@ -380,14 +389,14 @@ This release fixes the following bugs:
 - bug#130 (POSIX port stop->start leads to reuse of sestroyed mutex).
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_6_4 Version 5.6.4, 2016-04-25
 This release fixes two serious bugs:
 - Bug #126 (https://sourceforge.net/p/qpc/bugs/126 ) in the QK preemptive scheduler introduced in QP 5.6.2.
 - Bug #128 (https://sourceforge.net/p/qpc/bugs/128 ) in the QK port to ARM Cortex-M introduced back in QP 5.6.1
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_6_2 Version 5.6.2, 2016-04-06
 The main purpose of this release is to eliminate the need to define the QF_MAX_ACTIVE macro (the number of active objects) in qpn_conf.h header file and match it with the dimension of the QF_active[] global array.
 
@@ -414,7 +423,7 @@ Changes in detail:
 8. Updated the 3rd-party files for the EK-TM4C123GXL board (TivaC LaunchPad).
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_6_1 Version 5.6.1, 2016-01-11
 
 This QP-nano release provides a new version of the QK-nano ports to ARM Cortex-M, which do not use the SVC_Handler (Supervisor Call). This is done to make the QK-nano ports compatible with various "hypervisors" (such as mbed uVisor or Nordic SoftDevice), which use the SVC exception. This release contains the updated QK-nano ports to ARM Cortex-M for all supported compilers: ARM-Keil, GNU-ARM, IAR EWARM, and TI-CCS-ARM.
@@ -430,7 +439,7 @@ Changes in detail:
 4. Updated CMSIS from 4.2 to 4.3 in qpn/3rd-party/CMSIS
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_5_1 Version 5.5.1, 2015-10-06
 
 This release adds state machine operations for implementing the shallow history mechanism. The operations are called QMsm_childStateObj() and QHsm_childState(), for QMsm and QHsm classes, respectively, because they compute a child state of a given parent, such that the child belongs to the same state hierarchy as the current state.
@@ -453,7 +462,7 @@ Changes in detail:
 5. Added CCS example projects in `qpn\ports\arm-cm\qk\ti\` and `qpn\ports\arm-cm\qk\ti\
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_4_2 Version 5.4.2, 2015-06-07
 
 The main focus of this release is to improve the support for "dual targeting" of QP-nano applications, which is developing of deeply embedded code as much as possible on the desktop OS, such as Windows. Experience shows that "dual targeting" dramatically improves productivity of embedded systems developers, perhaps more than any other technique.
@@ -483,7 +492,7 @@ Changes in detail:
 9. Updated all Windows examples to the latest QP API by compiling the code with the macro #QP_API_VERSION set to 9999 (latest API without backwards compatibility)
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_4_0 Version 5.4.0, 2015-05-31
 
 This release changes the basic philosophy of packaging and distributing the QP-nano framework by **combining** the "QP-nano Baseline Code" with all currently available "QP-nano Development Kits" (QDK-nano). This is done to eliminate any potential mistakes in downloading and installing separate pieces of code.
@@ -536,7 +545,7 @@ Changes in detail:
 8. Renamed the POSIX port to @ref posix-qv "POSIX-QV" (POSIX with cooperative "Vanilla" scheduler). Modified the port to apply a "fudge factor" in over-sizing QP-nano event queues and event pools, to minimize the risk of overflowing queues/pools due to non-deterministic behavior under POSIX.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_3_0 Version 5.3.0, 2014-04-18
 
 This release adds the "transition to history" (deep history) feature to
@@ -613,7 +622,7 @@ the p argument in QK_sched_() to uint_fast8_t
 12. Added new QDKs-nano/CCS for MSP-EXP420F5529LP LauchPad LaunchPad
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_2_0 Version 5.2.0, 2013-12-30
 
 This release matches the new QM 3.0.0, for which it provides model
@@ -689,7 +698,7 @@ in the Embedded.com article "Are We Shooting Ourselves in the Foot with
 Stack Overflow?".
 
 
-------------------------------------------------------------------------------
+
 @section qpn_5_1_1 Version 5.1.1, 2013-10-15
 
 @note QP-nano 5.1.1 remains backwards-compatible with the existing
@@ -875,7 +884,7 @@ going back to DOS.
     - added search box and tree-view panel to the HTML documentation
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_5_04 Version 4.5.04, 2013-02-09
 
 The main purpose of this release is adding support for the ARM Cortex-M4F
@@ -914,7 +923,7 @@ several typos.
 and all existing QDKs for QP-nano 4.5.xx.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_5_03 Version 4.5.03, 2012-11-29
 
 This release changes the directory structure of QP-nano examples
@@ -923,7 +932,7 @@ Win32 (Windows), Qt, etc. The OS examples are moved from the
 exampels/80x86/ directory one level up to examples/.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_5_02 Version 4.5.02, 2012-08-17
 
 The main purpose of this release is providing QM models in most
@@ -972,7 +981,7 @@ with the actual definition of the active objects, which used
 *hierarchical* state machines, not the "flat" state machines.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_5_01 Version 4.5.01, 2012-06-14
 
 The main purpose of this minor release is providing improved
@@ -1010,7 +1019,7 @@ slot, but instead to allow defining this slot in the BSP of the
 application.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_5_00 Version 4.5.00, 2012-05-30
 
 The main pupose of this relase is to improve host-based development of
@@ -1066,7 +1075,7 @@ applications (DPP and PELICAN crossing).
 P-threads, including QP ports and examples for Linux and Mac OS X.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_4_00 Version 4.4.00, 2012-03-03
 
 The main pupose of this relase is MISRA-C:2004 compliance, strong-type
@@ -1122,7 +1131,7 @@ qpn/doc/, with the following Application notes: "QP-nano MISRA-C:2004
 Compliance Matrix" and "Quantum Leaps Coding Standard",
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_3_00 Version 4.3.00, 2011-10-31
 
 1. This release changes the partitioning of the QK-nano scheduler.
@@ -1162,7 +1171,7 @@ latest IAR EWARM Version 6.30.
 latest Sourcery CodeBench 2011.07-60.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_2_04 Version 4.2.04, 2011-09-24
 
 The main pupose of this relase is to provide a bug fix for the QK port
@@ -1180,7 +1189,7 @@ in every example for QK-nano) and consists of clearing the PENDSVSET
 bit programmatically inside PendSV_Handler.
 
 
-------------------------------------------------------------------------------
+
 @section qpc_4_2_02 Version 4.2.02, 2011-09-08
 
 The main pupose of this relase is to repackage the default QP-nano
@@ -1189,7 +1198,7 @@ archive. That way, unziping the archive will produce only one
 directory (qpn/), which can be then changed by the user.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_2_01 Version 4.2.01, 2011-08-13
 
 1. Modified file qassert.h to add assertion macros #Q_ASSERT_ID,
@@ -1210,7 +1219,7 @@ latest IAR EWARM Version 6.20.
 latest IAR EW430 Version 5.30.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_07 Version 4.1.07, 2011-02-28
 
 The goal of this release is to improve the ease of experimenting with
@@ -1243,7 +1252,7 @@ declaration has been moved to the top of the function.
 latest Sourcery G++ 2011.02-2.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_06 Version 4.1.06, 2011-01-07
 
 1. Made cosmetic improvements to the example QM model of the
@@ -1259,7 +1268,7 @@ IAR EWARM Version 6.10.
 latest Sourcery G++ 2010.09-66.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_05 Version 4.1.05 (Product) Nov 01, 2010
 
 This release is adds examples for the QM (QP Modeler) graphical modeling
@@ -1283,7 +1292,7 @@ Additionally, the QP-nano baseline code has been slighlty modified for
 better conformance to the MISRA C 2004 rules and the latest PC-Lint 9.x.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_04 Version 4.1.04, 2010-03-16
 
 This release is adds compatibility of all examples for DOS with the DOSBox
@@ -1302,7 +1311,7 @@ improvement extends the CMSIS from Sandstorm to Fury, DustDevil, and Tempest
 Stellaris families.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_03 Version 4.1.03, 2010-01-21
 
 This release is concerned with the ARM Cortex ports and examples.
@@ -1331,7 +1340,7 @@ any way, so the release has NO IMPACT on the QP/C applications except for the
 ARM Cortex ports and applications.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_02 Version 4.1.02, 2010-01-14
 
 The purpose of this minor maintenance release is the change in the directory
@@ -1346,7 +1355,7 @@ release has NO IMPACT on the QP-nano applications except for the ARM Cortex
 ports and applications.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_01 Version 4.1.01, 2009-11-05
 
 The main purpose of this release is to replace the Turbo C++ 1.01 toolset
@@ -1365,7 +1374,7 @@ in &lt;qpn&gt;/examples/80x86/watcom/sls/ shows the QP-nano implemenation of the
 new State-Local Storage state design pattern.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_1_00 Version 4.1.00, 2009-10-09
 
 The main purpose of this release is to fix a bug in event posting, which
@@ -1429,7 +1438,7 @@ queues by one event.
 example to fix the aforementioned bug.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_0_04 Version 4.0.04, 2009-04-09
 
 The maintenance release provides a fix for the compile-time assertions,
@@ -1445,7 +1454,7 @@ The main changes in QP v4.0.04 with respect to earlier Version are as follows:
 a negative array dimension when the asserted condition is not TRUE.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_0_03 Version 4.0.03, 2008-08-06
 
 The main purpose of this release is to "future-proof" the QK-nano preemptive
@@ -1468,7 +1477,7 @@ the QK_ceilingPrio_ instead of QK_currPrio_. Also added testing priority
 against the QK_ceilingPrio_, when the macro QK_MUTEX is defined.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_0_02 Version 4.0.02, 2008-08-06
 
 This maintenace release is made to allow posting events from any active object
@@ -1488,7 +1497,7 @@ each others from the initial transitions.
 above.
 
 
-------------------------------------------------------------------------------
+
 @section qpn_4_0_01 Version 4.0.01, 2008-06-08
 
 This maintenace release is made to allow compiling QP-nano with the GNU
@@ -1512,7 +1521,7 @@ contaminating the code with non-portable and non-standard extensions.
 into (s = path[iq]; if (t == s) ...). This was done to accommodate the
 ImageCraft ICCM8C compiler for PSoC.
 
-------------------------------------------------------------------------------
+
 @section qpn_4_0_00 Version 4.0.00, 2008-04-07
 
 This milestone release is made for the book /ref PSiCC2. The book describes in
@@ -1571,4 +1580,4 @@ wrap-around point.
 updated to the latest QP-nano API changes.
 */
 
-Finally, this release improves the comments in the QF_stop() function. The comments now make it very clear that after calling QF_stop()  the application must terminate and cannot continue. In particular, QF_stop() is **not** intended to be followed by a call to QF_init() to "resurrect" the application. The previous comments apparently were confusing and some developers attempted to "restart" a running application, which led to system crashes.  
+Finally, this release improves the comments in the QF_stop() function. The comments now make it very clear that after calling QF_stop()  the application must terminate and cannot continue. In particular, QF_stop() is **not** intended to be followed by a call to QF_init() to "resurrect" the application. The previous comments apparently were confusing and some developers attempted to "restart" a running application, which led to system crashes.

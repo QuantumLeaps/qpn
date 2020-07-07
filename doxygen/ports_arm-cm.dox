@@ -10,7 +10,7 @@
 To focus the discussion, this section references the **GNU-ARM toolchain**. However, the general implementation strategy applies equally to all toolchains for ARM Cortex-M, such as **ARM-KEIL** and **IAR EWARM**, which are all provided as well. The QP code downloads contain also examples for other boards, such as STM32 Nucleo, NXP mbed-1768, SilLabs Gecko and others.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_files Directories and Files
 The QP ports to ARM Cortex-M are available in the standard QP distribution. Specifically, the ARM Cortex-M ports are placed in the following directories:
 
@@ -50,12 +50,12 @@ The QP ports to ARM Cortex-M are available in the standard QP distribution. Spec
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_int Interrupts in the QP-nano Ports to ARM Cortex-M
 The QP-nano framework, like any real-time kernel, needs to disable interrupts in order to access critical sections of code and re-enable interrupts when done. This section describes the general policy that in the ARM Cortex-M ports of all built-in real time kernels in QP, such as QV-nano and QK-nano.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_kernel-aware "Kernel-Aware" and "Kernel-Unaware" Interrupts
 The QP ports to ARM Cortex-M3/M4 **never completely disables interrupts**, even inside the critical sections. On Cortex-M3/M4 (ARMv7-M architecture), the QP port disables interrupts **selectively** using the BASEPRI register. This policy divides interrupts into "kernel-unaware" interrupts, which are never disabled, and "kernel-aware" interrupts, which are disabled in the QP critical sections.
 
@@ -93,7 +93,7 @@ The CMSIS provides the function @c NVIC_SetPriority() which you should use to se
 The priority scheme passed to `NVIC_SetPriority()` is different again than the values stored in the NVIC registers, as shown in the figures above as "CMSIS priorities"
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_int-assign Assigning Interrupt Priorities
 The @ref exa_arm-cm "example projects" included in the QP distribution the recommended way of assigning interrupt priorities in your applications. The initialization consist of two steps: (1) you enumerate the "kernel-unaware" and "kernel-aware" interrupt priorities, and (2) you assign the priorities by calling the @c NVIC_SetPriority() CMSIS function. The following snippet of code illustrates these steps with the explanation section following immediately after the code.
 
@@ -182,7 +182,7 @@ All used IRQ interrupts need to be explicitly enabled by calling the CMSIS funct
    </li>
 </ul>
 
-<div class="separate"></div>
+
 @subsection arm-cm_int-fpu Interrupts and the FPU (Cortex-M4F)
 The QP ports described in this section support also the ARM Cortex-M4F. Compared to all other members of the Cortex-M family, these cores includes the single precision variant of the ARMv7-M Floating-Point Unit (Fpv4-SP). The hardware FPU implementation adds an extra floating-point register bank consisting of S0-S31 and some other FPU registers. This FPU register set represents additional context that need to be preserved across interrupts and thread switching (e.g., in the preemptive QK-nano kernel).
 
@@ -197,7 +197,7 @@ If the interrupt handler has to use the FPU and the interrupted context has also
 All built-in kernels in QP are designed to take advantage of the lazy stacking feature [@ref ARM-AN298].
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_ref References
 
 @anchor ARM-AN298
@@ -223,7 +223,7 @@ All built-in kernels in QP are designed to take advantage of the lazy stacking f
 In the QV-nano port, the only components requiring platform-specific porting are QF-nano and QV-nano itself. The other two components: QEP and QS require merely recompilation and will not be discussed here. With the QV-nano port you're not using the QK-nano kernel. The QV-nano port to ARM Cortex-M is located in the folder <span class="img folder">/ports/arm-cm/qv/</span>.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv-synopsis Synopsis of the QV-nano Port on ARM Cortex-M
 The cooperative QV-nano kernel works essentially as the traditional foreground-background system (a.k.a. "superloop") in that all active objects are executed in the main loop and interrupts always return back to the point of preemption. To avoid race conditions between the main loop and the interrupts, QV briefly disables interrupts.
 
@@ -240,7 +240,7 @@ The cooperative QV-nano kernel works essentially as the traditional foreground-b
 5. The `QF_init()` function calls the function `QV_init()` to set the interrupt priority of all IRQs available in the MCU to the safe value of @ref QF_BASEPRI "QF_BASEPRI" (for ARM-v7 architecture).
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv-qf_port The qf_port.h Header File
 The QF header file for the ARM Cortex-M port is located in <span class="img file_h">`/ports/arm-cm/qv/gnu/qf_port.h`</span>. This file specifies the interrupt disabling policy (QF critical section) as well as the configuration constants for QF (see Chapter 8 in [PSiCC2]).
 
@@ -392,7 +392,7 @@ For ARMv6 architecture, the prototype of the quick, hand-optimized log-base-2 fu
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv_port_h The qv_port.h Header File
 The QV header file for the ARM Cortex-M port is located in <span class="img file_h">/ports/arm-cm/qv/gnu/qv_port.h</span>. This file provides the macro QV_CPU_SLEEP(), which specifies how to enter the CPU sleep mode safely in the cooperative QV kernel (see also Section 4.7) and [Samek 07]).
 
@@ -441,7 +441,7 @@ The macro `QV_INIT()` is defined as a call to the `QV_init()` function, which me
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv_port_c The qv_port.c Implementation File
 The QV implementation file for the ARM Cortex-M port is located in <span class="img file_c">/ports/arm-cm/qv/gnu/qf_port.c</span>. This file defines the function @c QV_init(), which for the ARMv7-M architecture sets the interrupt priorities of all IRQs to the safe value `QF_BASEPRI`.
 
@@ -504,7 +504,7 @@ The interrupt priority of all implemented IRQs is set to the safe value QF_BASEP
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv-isr Writing ISRs for QV
 The ARM Cortex-M CPU is designed to use regular C functions as exception and interrupt service routines (ISRs).
 
@@ -530,7 +530,7 @@ The following listing shows an example of the SysTick_Handler() ISR (from the DP
 The QP port to ARM Cortex-M complies with the CMSIS standard, which dictates the names of all exception handlers and IRQ handlers.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv-fpu Using the FPU in the QV-nano Port (Cortex-M4F)
 If you have the Cortex-M4F CPU and your application uses the hardware FPU, it should be enabled because it is turned off out of reset. The CMSIS-compliant way of turning the FPU on looks as follows:
 
@@ -545,7 +545,7 @@ The FPU must be enabled before executing any floating point instruction. An atte
 Depending on whether or not you use the FPU in your ISRs, the QV port allows you to configure the FPU in various ways, as described in the following sub-sections.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qv-fpu_noisr FPU NOT used in the ISRs
 If you use the FPU only at the thread-level (inside active objects) and none of your ISRs use the FPU, you can setup the FPU not to use the automatic state preservation and not to use the lazy stacking feature as follows:
 
@@ -559,7 +559,7 @@ With this setting, the Cortex-M4F processor handles the ISRs in the exact-same w
 This FPU setting will lead to FPU errors, if any of the ISRs indeed starts to use the FPU
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qv-fpu_isr FPU used in the ISRs
 If you use the FPU both at the thread-level (inside active objects) and in any of your ISRs as well, you should setup the FPU to use the automatic state preservation and the lazy stacking feature as follows:
 
@@ -573,7 +573,7 @@ This will enable the lazy stacking feature of the Cortex-M4F processor [@ref ARM
 As described in the ARM Application Note "Cortex-M4(F) Lazy Stacking and Context Switching" [@ref ARM-AN298], the FPU automatic state saving requires more stack plus additional CPU time to save the FPU registers, but only when the FPU is actually used.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qv-idle QV Idle Processing Customization in QV_onIdle()
 When no events are available, the non-preemptive QV kernel invokes the platform-specific callback function QV_onIdle(), which you can use to save CPU power, or perform any other "idle" processing (such as Quantum Spy software trace output).
 
@@ -655,7 +655,7 @@ When an interrupt posts an event to a higher-priority thread than the interrupte
 A traditional RTOS kernel does not distinguish between the synchronous and asynchronous preemptions and makes all preemptions look like the more stack-intensive asynchronous preemptions. In contrast, a RTC kernel can implement synchronous preemption as a simple function call (to QK_activate_()), which is much more efficient than a full context-switch.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-synopsis Synopsis of the QK-nano Port on ARM Cortex-M
 The ARM Cortex-M architecture is designed primarily for the traditional real-time kernels that use multiple per-thread stacks. This section explains how the run-to-completion preemptive QK-nano kernel works on ARM Cortex-M.
 
@@ -679,7 +679,7 @@ The ARM Cortex-M architecture is designed primarily for the traditional real-tim
 9. The pushing of the 8 registers comprising the ARM Cortex-M interrupt stack frame upon entry to NMI exception is wasteful in a single-stack kernel, but is necessary to perform full interrupt return to the preempted context through the NMI's return.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-preempt Preemption Scenarios in QK-nano on ARM Cortex-M
 
 @anchor arm-cm_qk-arm-cm-fig
@@ -732,12 +732,12 @@ The NMI exception discards its own interrupt stack frame and returns using the i
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-qf_port The qf_port.h Header File
 The QF header file for the ARM Cortex-M port is located in <span class="img file_h">/ports/arm-cm/qk/gnu/qf_port.h</span>. This file is almost identical to the @ref arm-cm_qv-qf_port "QV port", except the header file in the QK-nano port includes `qk_port.h` header file instead of `qv_porth`.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-qk_port The qk_port.h Header File
 You configure and customize QK-nano through the header file qk_port.h, which is located in the QP ports directory <span class="img folder">/ports/arm-cm/qk/gnu/</span>. The most important function of <span class="img file_h">qk_port.h</span> is specifying interrupt entry and exit.
 
@@ -806,7 +806,7 @@ The interrupts are re-enabled after they have been disabled in step [5].
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-qk_impl QK-nano Port Implementation for ARM Cortex-M
 The QK-nano port to ARM Cortex-M requires coding the PendSV and NMI exceptions in assembly. This ARM Cortex-M-specific code, as well as QK-nano initialization (@c QK_init()) is located in the file <span class="img file">­ports/arm-cm/­qk/­gnu/qk_port.c</span>
 
@@ -814,7 +814,7 @@ The QK-nano port to ARM Cortex-M requires coding the PendSV and NMI exceptions i
 The single assembly module `qk_port.s` contains common code for all Cortex-M variants (Architecture v6M and v7M) as well as options with and without the VFP. The CPU variants are distinguished by conditional compilation, when necessary.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk_port-asm_init QK_init() Implementation
 
 <b>Listing: QK_init function in qk_port.s assembly file</b>
@@ -981,7 +981,7 @@ The function QK_init returns to the caller.
 </ul>
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk_port-asm_pendsv PendSV_Handler() Implementation
 
 <b>Listing: PendSV_Handler function in qk_port.s assembly file</b>
@@ -1189,7 +1189,7 @@ This endless loop should not be reached, because the NMI exception should preemp
 </ul>
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk_port-asm_nmi NMI_Handler() Implementation
 
 <b>Listing: NMI_Handler function in qk_port.s assembly file</b>
@@ -1268,7 +1268,7 @@ Otherwise, NMI returns to the preempted thread using the standard EXC_RETURN, wh
 
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-isr Writing ISRs for QK
 The ARM Cortex-M CPU is designed to use regular C functions as exception and interrupt service routines (ISRs).
 
@@ -1307,7 +1307,7 @@ Every ISR for QK-nano must call @c QK_ISR_EXIT() right before exiting to let the
 The QK-nano port to ARM Cortex-M complies with the requirement of the ARM-EABI to preserve stack pointer alignment at **8-byte boundary**. Also, all QP examples for ARM Cortex-M comply with the CMSIS naming convention for all exception handlers and IRQ handlers.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-fpu Using the FPU in the QK-nano Port (Cortex-M4F)
 If you have the Cortex-M4F CPU and your application uses the hardware FPU, it should be enabled because it is turned off out of reset. The CMSIS-compliant way of turning the FPU on looks as follows:
 
@@ -1321,7 +1321,7 @@ The FPU must be enabled before executing any floating point instruction. An atte
 Depending on wheter or not you use the FPU in your ISRs, the "Vanilla" QP port allows you to configure the FPU in various ways, as described in the following sub-sections.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-fpu_1thread FPU used in ONE thread only and not in any ISR
 If you use the FPU only at a single thread (active object) and none of your ISRs use the FPU, you can setup the FPU not to use the automatic state preservation and not to use the lazy stacking feature as follows:
 
@@ -1335,7 +1335,7 @@ With this setting, the Cortex-M4F processor handles the ISRs in the exact-same w
 This FPU setting will lead to FPU errors, if more than one thread or any of the ISRs indeed start to use the FPU
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-fpu_nthreadd FPU used in more than one thread only or the ISR
 If you use the FPU in more than one of the threads (active objects) or in any of your ISRs, you should setup the FPU to use the automatic state preservation and the lazy stacking feature as follows:
 
@@ -1347,7 +1347,7 @@ This is actually the default setting of the hardware FPU and is recommended for 
 As described in the ARM Application Note "Cortex-M4(F) Lazy Stacking and Context Switching" [@ref ARM-AN298], the FPU automatic state saving requires more stack plus additional CPU time to save the FPU registers, but only when the FPU is actually used.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-idle QK-nano Idle Processing Customization in QK_onIdle()
 QK-nano can very easily detect the situation when no events are available, in which case QK-nano calls the `QK_onIdle()` callback. You can use `QK_onIdle()` to suspended the CPU to save power, if your CPU supports such a power-saving mode. Please note that `QK_onIdle()` is called repetitively from an endless loop, which is the QK-nano idle-thread. The `QK_onIdle()` callback is called with interrupts **enabled** (which is in contrast to the @ref arm-cm_qv-idle "QV_onIdle() callback" used in the non-preemptive configuration).
 
@@ -1382,7 +1382,7 @@ The `WFI` instruction is generated using inline assembly.
 </ul>
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_qk-testing Testing QK-nano Preemption Scenarios
 The `bsp.c` file included in the <span class="img folder">examples/arm-cm/dpp_ek-tm4c123gxl/qk</span> directory contains special instrumentation (an ISR designed for testing) for convenient testing of @ref arm-cm_qk-arm-cm-fig "various preemption scenarios in QK".
 
@@ -1407,7 +1407,7 @@ The figure below hows how to trigger the GPIOA interrupt from the CCS debugger. 
 The general testing strategy is to break into the application at an interesting place for preemption, set breakpoints to verify which path through the code is taken, and trigger the GPIO interrupt. Next, you need to free-run the code (don’t use single stepping) so that the NVIC can perform prioritization. You observe the order in which the breakpoints are hit. This procedure will become clearer after a few examples.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-test-isr Interrupt Nesting Test
 The first interesting test is verifying the correct tail-chaining to the PendSV exception after the interrupt nesting occurs, as shown in @ref arm-cm_qk-synch-fig "Synchronous Preemption in QK". To test this scenario, you place a breakpoint inside the `GPIOPortA_IRQHandler()` and also inside the `SysTick_Handler()` ISR. When the breakpoint is hit, you remove the original breakpoint and place another breakpoint at the very next machine instruction (use the Disassembly window) and also another breakpoint on the first instruction of the `QK_PendSV` handler. Next you trigger the PIOINT0 interrupt per the instructions given in the previous section. You hit the Run button.
 
@@ -1420,7 +1420,7 @@ The pass criteria of this test are as follows:
 3. The last breakpoint hit is the one in `PendSV_Handler()` exception handler, which means that the PendSV exception is tail-chained only after all interrupts are processed. You need to remove all breakpoints before proceeding to the next test.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-test-thread Thread Preemption Test
 The next interesting test is verifying that threads can preempt each other. You set a breakpoint anywhere in the Philosopher state machine code. You run the application until the breakpoint is hit. After this happens, you remove the original breakpoint and place another breakpoint at the very next machine instruction (use the Disassembly window). You also place a breakpoint inside the `GPIOPortA_IRQHandler()` interrupt handler and on the first instruction of the `PendSV_Handler()` handler. Next you trigger the GPIOA interrupt per the instructions given in the previous section. You hit the Run button.
 
@@ -1435,7 +1435,7 @@ The pass criteria of this test are as follows:
 4. After this you free-run the application and verify that the next breakpoint hit is the one inside the Philosopher state machine. This validates that the preempted thread continues executing only after the preempting thread (the Table state machine) completes.
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-test-fpu Testing the FPU (Cortex-M4F)
 In order to test the FPU, the Board Support Package (BSP) for the Cortex-M4F EK-TM4C123GXL board uses the FPU in the following contexts:
 
@@ -1452,7 +1452,7 @@ To test the FPU, you could step through the code in the debugger and verify that
 Next, you can selectively comment out the FPU code at various levels of priority and verify that the QK-nano context switching works as expected with both types of exception stak frames (with and without the FPU).
 
 
-<div class="separate"></div>
+
 @subsection arm-cm_qk-test-other Other Tests
 Other interesting tests that you can perform include changing priority of the GPIOA interrupt to be lower than the priority of SysTick to verify that the PendSV is still activated only after all interrupts complete.
 

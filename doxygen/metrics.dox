@@ -42,7 +42,7 @@ NLOC    Avg.NLOC  AvgCCN  Avg.token  function_cnt    file
      56      52.0    14.0      337.0         1     ..\src\qvn\qvn.c
 
 =============================================================================================================
-No thresholds exceeded (cyclomatic_complexity > 20 or nloc > 1000000 or length > 500 or parameter_count > 10)
+No thresholds exceeded (cyclomatic_complexity > 20 or length > 500 or nloc > 1000000 or parameter_count > 10)
 ==========================================================================================
 Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
 ------------------------------------------------------------------------------------------

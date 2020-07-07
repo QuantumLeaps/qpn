@@ -5,7 +5,7 @@
 @section api_qepn QEP-nano (Hierarchical State Machines)
 QEP is a universal, UML-compliant event processor that enables developers to code UML state machines in highly readable ANSI-C, in which every state machine element is mapped to code precisely, unambiguously, and exactly once (traceability). QEP fully supports hierarchical state nesting, which is the fundamental mechanism for reusing behavior across many states instead of repeating the same actions and transitions over and over again.
 
-<div class="separate"></div>
+
 @subsection api_qep_hsm Hierarchical State Machines
 - ::QHsm class
 - QHsm_ctor()
@@ -15,25 +15,23 @@ QEP is a universal, UML-compliant event processor that enables developers to cod
 - QHsm_top()
 
 
-------------------------------------------------------------------------------
 @section api_qfn QF-nano (Active Object Framework)
 QF is a portable, event-driven, real-time framework for execution of active objects (concurrent state machines) specifically designed for real-time embedded (RTE) systems.
 
-<div class="separate"></div>
+
 @subsection api_qfn_act Active Objects
 - ::QActive class
 - QActive_ctor()
 - QACTIVE_POST()
 - QACTIVE_POST_X()
 
-<div class="separate"></div>
+
 @subsection api_qfn_time Time Events
 - QF_tickXISR()
 - QActive_armX()
 - QActive_disarmX()
 
 
-------------------------------------------------------------------------------
 @section api_qvn QV-nano (Cooperative Kernel)
 QV is a simple **cooperative** kernel (previously called "Vanilla" kernel). This kernel executes active objects one at a time, with priority-based scheduling performed before processing of each event. Due to naturally short duration of event processing in state machines, the simple QV kernel is often adequate for many real-time systems.
 
@@ -45,7 +43,7 @@ The QV scheduler can also very easily detect when all event queues are empty, at
 
 Given the simplicity, portability, and low-resource consumption, the QV scheduler is very attractive. It allows you to partition the problem into active objects and execute these active objects orderly. The task-level response of this scheduler is the longest RTC step in the whole system, but because event-driven active objects don’t block, the RTC steps tend to be very short (typically just a few microseconds). Also, often you can break up longer RTC steps into shorter pieces, by posting an event to self and returning (“Reminder” state pattern). The self-posted event then triggers the continuation of longer processing.
 
-<div class="separate"></div>
+
 @subsection api_qv_init Kernel Initialization and Control
 - QV_INIT()
 - <a href="qv_8c.html#a779a1bc9482e2d489dc87751cd100fdb"><b>QF_run()</b></a>
@@ -53,12 +51,11 @@ Given the simplicity, portability, and low-resource consumption, the QV schedule
 - QV_CPU_SLEEP()
 
 
-------------------------------------------------------------------------------
 @section api_qkn QK-nano (Preemptive Run-to-Completion Kernel)
 QK is a tiny **preemptive**, priority-based, non-blocking kernel designed specifically for executing active objects. QK runs active objects in the same way as prioritized interrupt controller (such as NVIC in ARM Cortex-M) runs interrupts using the single stack. Active objects process their events in run-to-completion (RTC) fashion and remove themselves from the call stack, the same way as nested interrupts remove themselves from the stack upon completion. At the same time high-priority active objects can preempt lower-priority active objects, just like interrupts can preempt each other under a prioritized interrupt controller. QK meets all the requirement of the Rate Monotonic Scheduling (a.k.a. Rate Monotonic Analysis RMA) and can be used in hard real-time systems.
 
 
-<div class="separate"></div>
+
 @subsection api_qkn_ctrl Kernel Initialization and Control
 - QK_INIT()
 - <a href="qk_8c.html#a779a1bc9482e2d489dc87751cd100fdb"><b>QF_run()</b></a>
@@ -67,7 +64,7 @@ QK is a tiny **preemptive**, priority-based, non-blocking kernel designed specif
 - QK_schedUnlock()
 
 
-<div class="separate"></div>
+
 @subsection api_qkn_isr Interrupt Management
 - QK_ISR_ENTRY()
 - QK_ISR_EXIT()

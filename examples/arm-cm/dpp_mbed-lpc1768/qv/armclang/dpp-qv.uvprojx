@@ -425,7 +425,7 @@
             <File>
               <FileName>startup_LPC17xx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\3rd_party\mbed-lpc1768\armclang\startup_LPC17xx.s</FilePath>
+              <FilePath>..\..\..\..\..\3rd_party\mbed-lpc1768\arm\startup_LPC17xx.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -885,7 +885,7 @@
             <File>
               <FileName>startup_LPC17xx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\3rd_party\mbed-lpc1768\armclang\startup_LPC17xx.s</FilePath>
+              <FilePath>..\..\..\..\..\3rd_party\mbed-lpc1768\arm\startup_LPC17xx.s</FilePath>
             </File>
           </Files>
         </Group>

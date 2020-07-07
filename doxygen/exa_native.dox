@@ -7,7 +7,7 @@
 - @subpage exa_qv
 - @subpage exa_qk
 
-------------------------------------------------------------------------------
+
 Click on the following links to see examples for the specified CPU architectures:
 
 - @subpage exa_arm-cm
@@ -146,7 +146,7 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
 @endcode
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_blinky_ek-tm4c123gxl_feat Features Demonstrated
 - cooperative QV-nano kernel
   + with ARM-KEIL toolchain
@@ -159,14 +159,14 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
 - Windows emulation (console, single threaded: win32-qv)
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_blinky_ek-tm4c123gxl_run Running the Example
 Once programmed into the board, the example blinks the on-board LED about once a second.
 
 @image html blinky_ek-tm4c123gxl.gif Blinky on EK-TM4C123GLX (TivaC LaunchPad)
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_blinky_ek-tm4c123gxl_win Windows Emulation
 The Windows emulation is a simple console application that produces the following output:
 
@@ -213,7 +213,7 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
 @endcode
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_blinky_efm32-slstk3401a_feat Features Demonstrated
 - cooperative QV-nano kernel
   + with ARM-KEIL toolchain
@@ -226,12 +226,12 @@ The Blinky example is located in the directory <span class="img folder">qpc/exam
 - Windows emulation (console, single threaded: win32-qv)
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_blinky_efm32-slstk3401a_run Running the Example
 Once programmed into the board, the example blinks the on-board LED about once a second.
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_blinky_efm32-slstk3401a_win Windows Emulation
 The Windows emulation is a simple console application that produces the following output:
 
@@ -284,7 +284,7 @@ The DPP example is located in the directory <span class="img folder">qpc/example
 @endcode
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_dpp_ek-tm4c123gxl_feat Features Demonstrated
 - cooperative QV-nano kernel
   + with ARM-KEIL toolchain
@@ -299,7 +299,7 @@ The DPP example is located in the directory <span class="img folder">qpc/example
 - Windows emulation with GUI (single threaded, win32-qv)
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_dpp_ek-tm4c123gxl_run Running the Example
 Once programmed into the board, the example rapidly toggles the Blue LED from the idle loop (blue LED glows) and toggles the Red and Green LEDs as the Philosophers change their state. Additionally, you can depress and hold the SW1 button (left) to PAUSE the application (Table transitions into the "paused" state). Releasing the SW1 button causes transition back to the "serving" state.
 
@@ -345,7 +345,7 @@ The DPP example is located in the directory <span class="img folder">qpc/example
 @endcode
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_dpp_efm32-slstk3401a_feat Features Demonstrated
 - cooperative QV-nano kernel
   + with ARM-KEIL toolchain
@@ -358,7 +358,7 @@ The DPP example is located in the directory <span class="img folder">qpc/example
 - Windows emulation with GUI (single threaded, win32-qv)
 
 
-------------------------------------------------------------------------------
+
 @section arm-cm_dpp_efm32-slstk3401a_run Running the Example
 Once programmed into the board, the example rapidly toggles the LED1 from the idle loop (LED1 glows) and toggles LED0 as the Philosophers change their state. Additionally, you can depress and hold the BTN0 button (left) to PAUSE the application (Table transitions into the "paused" state). Releasing the BTN0 button causes transition back to the "serving" state.
 

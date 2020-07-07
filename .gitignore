@@ -25,6 +25,7 @@
 *.suo
 *.chw
 *.sfr
+*.ewt
 *.user
 *.avrsuo
 *.Debug
@@ -35,24 +36,23 @@ lint*.txt
 *.qlc
 JLink*.*
 version-*
+metrics.dox
 
 html/
 test_priv/
 dbg/
 rel/
 spy/
+build/
+build_rel/
+build_spy/
 settings/
 .settings/
 targetConfigs/
 
 Debug/
 Release/
-Spy/
 
 lib/
 obj/
 output/
-
-doxygen/html/
-lint/*.txt
-lint/MISRA_Exemplar_Suite_test/*.txt

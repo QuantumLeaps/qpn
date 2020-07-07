@@ -9,7 +9,7 @@
 <a class="extern" target="_blank" href="https://www.state-machine.com/#Downloads"><strong>QP-bundle&trade;</strong></a> is the **most recommended** way of downloading and installing QP-nano&trade;. However, if you are allergic to installers and GUIs or don't have administrator privileges you can also **download and install QP-nano&trade; separately** as described in the Application Note: "Getting Started with QP-nano" below.
 
 
-------------------------------------------------------------------------------
+
 @section gs_an Getting Started with QP-nano App Note
 The Quantum Leaps Application Note <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_Getting_Started_with_QP-nano.pdf"><strong>Getting Started with QP-nano</strong></a> provides step-by-step instructions on how to get started with QP-nano quickly.
 
@@ -23,7 +23,7 @@ Application Note: Getting Started with QP-nano
 @endhtmlonly
 
 
-------------------------------------------------------------------------------
+
 @section gs_files Directories and Files
 
 The following annotated directory tree lists the top-level directories provided in the standard QP-nano distribution.
