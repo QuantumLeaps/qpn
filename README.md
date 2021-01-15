@@ -9,7 +9,10 @@ your policy.
 
 ---------------------------------------------------------------------------
 # What's New?
-View QP-nano Revision History at: https://www.state-machine.com/qpn/history.html
+
+**NOTE** QP-nano has been **discontinued** from active development
+and support and is **not recommended** for new designs. This QP-nano
+repository is preserved for the existing user base.
 
 
 ---------------------------------------------------------------------------
