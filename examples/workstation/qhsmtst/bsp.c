@@ -1,0 +1,117 @@
+/*****************************************************************************
+* Product: BSP for QHsmTst example, Win32
+* Last updated for version 6.4.0
+* Last updated on  2019-02-10
+*
+*                    Q u a n t u m  L e a P s
+*                    ------------------------
+*                    Modern Embedded Software
+*
+* Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+*
+* This program is open source software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as published
+* by the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Alternatively, this program may be distributed and modified under the
+* terms of Quantum Leaps commercial licenses, which expressly supersede
+* the GNU General Public License and are specifically designed for
+* licensees interested in retaining the proprietary status of their code.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <www.gnu.org/licenses/>.
+*
+* Contact information:
+* <www.state-machine.com/licensing>
+* <info@state-machine.com>
+*****************************************************************************/
+#include "qpn.h"
+#include "bsp.h"
+#include "qhsmtst.h"
+
+#include "safe_std.h" /* portable "safe" <stdio.h>/<string.h> facilities */
+#include <stdlib.h>
+
+Q_DEFINE_THIS_FILE
+
+/*..........................................................................*/
+/* dummy definition of the QF_active[] array (not used in this example) */
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,  (QEvt *)0, 0U }
+};
+
+static FILE *l_outFile;
+
+/*..........................................................................*/
+void BSP_init(char const *fname) {
+   if (*fname == '\0') {
+        l_outFile = stdout;  /* use the stdout as the output file */
+        PRINTF_S("QHsmTst example, built on %s at %s,\n"
+               "QP-nano: %s.\nPress ESC to quit...\n",
+               __DATE__, __TIME__, QP_VERSION_STR);
+    }
+    else {
+        l_outFile = fopen(fname, "w");
+        Q_ASSERT(l_outFile != (FILE *)0);
+
+        PRINTF_S("QHsmTst example, built on %s at %s, QP-nano %s\n"
+               "output saved to %s\n",
+               __DATE__, __TIME__, QP_VERSION_STR,
+               fname);
+
+        FPRINTF_S(l_outFile, "QHsmTst example, QP-nano %s\n",
+               QP_VERSION_STR);
+    }
+
+    QHSM_INIT(the_hsm); /* the top-most initial tran. */
+}
+/*..........................................................................*/
+void BSP_exit(void) {
+    fclose(l_outFile);
+    PRINTF_S("\n%s\n", "Bye! Bye!");
+    QF_onCleanup();
+    exit(0);
+}
+/*..........................................................................*/
+void BSP_display(char const *msg) {
+    FPRINTF_S(l_outFile, "%s", msg);
+}
+/*..........................................................................*/
+void BSP_dispatch(QSignal sig) {
+    if ((A_SIG <= sig) && (sig <= I_SIG)) {
+        FPRINTF_S(l_outFile, "%c:", 'A' + sig - A_SIG);
+    }
+    Q_SIG(the_hsm) = sig;
+    QHSM_DISPATCH(the_hsm); /* dispatch the event */
+    FPRINTF_S(l_outFile, "\n", "");
+}
+
+
+/*--------------------------------------------------------------------------*/
+void QF_onStartup(void) {
+    QF_consoleSetup();
+}
+/*..........................................................................*/
+void QF_onCleanup(void) {
+    QF_consoleCleanup();
+}
+/*..........................................................................*/
+void QF_onClockTickISR(void) {
+}
+
+/*..........................................................................*/
+/* this function is used by the QP embedded systems-friendly assertions */
+Q_NORETURN Q_onAssert(char const * const file, int line) {
+    PRINTF_S("Assertion failed in %s, line %d", file, line);
+    exit(-1);
+}
+
+
+
+

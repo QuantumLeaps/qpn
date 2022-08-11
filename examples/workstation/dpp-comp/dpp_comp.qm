@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="4.6.0" links="1">
+ <documentation>Dining Philosopher Problem (DPP) example with the &quot;Orthogonal Component&quot; state pattern. In this implemetnation, the Philosophers (Philos) are not active objects, but rather state-machine components of the Table active object.</documentation>
+ <!--${qpn}-->
+ <framework name="qpn"/>
+ <!--${AOs}-->
+ <package name="AOs" stereotype="0x02">
+  <!--${AOs::Philo}-->
+  <class name="Philo" superclass="qpn::QHsm">
+   <!--${AOs::Philo::tickCtr}-->
+   <attribute name="tickCtr" type="uint16_t" visibility="0x00" properties="0x00"/>
+   <!--${AOs::Philo::num}-->
+   <attribute name="num" type="uint8_t" visibility="0x00" properties="0x00"/>
+   <!--${AOs::Philo::ctor}-->
+   <operation name="ctor" type="void" visibility="0x00" properties="0x00">
+    <!--${AOs::Philo::ctor::num}-->
+    <parameter name="num" type="uint8_t"/>
+    <code>QHsm_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Philo_initial));
+me-&gt;num = num;</code>
+   </operation>
+   <!--${AOs::Philo::SM}-->
+   <statechart properties="0x01">
+    <!--${AOs::Philo::SM::initial}-->
+    <initial target="../1">
+     <action>me-&gt;tickCtr = 0U;</action>
+     <initial_glyph conn="2,3,5,1,20,5,-4">
+      <action box="0,-2,6,2"/>
+     </initial_glyph>
+    </initial>
+    <!--${AOs::Philo::SM::thinking}-->
+    <state name="thinking">
+     <entry>me-&gt;tickCtr = THINK_TIME;</entry>
+     <exit>me-&gt;tickCtr = 0U;</exit>
+     <!--${AOs::Philo::SM::thinking::Q_TIMEOUT}-->
+     <tran trig="Q_TIMEOUT" target="../../2">
+      <tran_glyph conn="2,14,3,1,20,11,-4">
+       <action box="0,-2,10,2"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::Philo::SM::thinking::EAT, DONE}-->
+     <tran trig="EAT, DONE">
+      <action>Q_ERROR(); /* these events should never arrive in this state */</action>
+      <tran_glyph conn="2,17,3,-1,13">
+       <action box="0,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,5,16,16">
+      <entry box="1,2,5,2"/>
+      <exit box="1,4,6,2"/>
+     </state_glyph>
+    </state>
+    <!--${AOs::Philo::SM::hungry}-->
+    <state name="hungry">
+     <entry>QACTIVE_POST(&amp;AO_Table, HUNGRY_SIG, me-&gt;num);</entry>
+     <!--${AOs::Philo::SM::hungry::EAT}-->
+     <tran trig="EAT" target="../../3">
+      <tran_glyph conn="2,32,3,1,20,11,-4">
+       <action box="0,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::Philo::SM::hungry::DONE}-->
+     <tran trig="DONE">
+      <action>Q_ERROR(); /* this event should never arrive in this state */</action>
+      <tran_glyph conn="2,36,3,-1,14">
+       <action box="0,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,23,16,16">
+      <entry box="1,2,5,2"/>
+     </state_glyph>
+    </state>
+    <!--${AOs::Philo::SM::eating}-->
+    <state name="eating">
+     <entry>me-&gt;tickCtr = EAT_TIME;</entry>
+     <exit>me-&gt;tickCtr = 0U;
+QACTIVE_POST(QF_ACTIVE_CAST(&amp;AO_Table), DONE_SIG, me-&gt;num);</exit>
+     <!--${AOs::Philo::SM::eating::Q_TIMEOUT}-->
+     <tran trig="Q_TIMEOUT" target="../../1">
+      <tran_glyph conn="2,51,3,1,22,-41,-6">
+       <action box="0,-2,6,2"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::Philo::SM::eating::EAT, DONE}-->
+     <tran trig="EAT, DONE">
+      <action>Q_ERROR(); /* these events should never arrive in this state */</action>
+      <tran_glyph conn="2,55,3,-1,13">
+       <action box="0,-2,14,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,41,16,18">
+      <entry box="1,2,5,2"/>
+      <exit box="1,4,5,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="28,62"/>
+   </statechart>
+  </class>
+  <!--${AOs::Table}-->
+  <class name="Table" superclass="qpn::QActive">
+   <!--${AOs::Table::philo_pool[N_PHILO]}-->
+   <attribute name="philo_pool[N_PHILO]" type="Philo" visibility="0x02" properties="0x00"/>
+   <!--${AOs::Table::fork[N_PHILO]}-->
+   <attribute name="fork[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <!--${AOs::Table::isHungry[N_PHILO]}-->
+   <attribute name="isHungry[N_PHILO]" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <!--${AOs::Table::SM}-->
+   <statechart properties="0x01">
+    <!--${AOs::Table::SM::initial}-->
+    <initial target="../1/2">
+     <action>uint8_t n;
+for (n = 0U; n &lt; N_PHILO; ++n) {
+    QHSM_INIT(&amp;me-&gt;philo_pool[n].super);
+    me-&gt;fork[n] = FREE;
+    me-&gt;isHungry[n] = 0U;
+    BSP_displayPhilStat(n, &quot;thinking&quot;);
+}</action>
+     <initial_glyph conn="4,4,5,1,42,18,-8">
+      <action box="0,-2,6,2"/>
+     </initial_glyph>
+    </initial>
+    <!--${AOs::Table::SM::active}-->
+    <state name="active">
+     <entry>// request periodic timeout in 1 clock tick and every 1 tick
+QActive_armX(&amp;me-&gt;super, 0U, 1U, 1U);</entry>
+     <!--${AOs::Table::SM::active::EAT}-->
+     <tran trig="EAT">
+      <action>Q_ERROR();</action>
+      <tran_glyph conn="2,13,3,-1,14">
+       <action box="0,-2,13,4"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::Table::SM::active::Q_TIMEOUT}-->
+     <tran trig="Q_TIMEOUT">
+      <action>uint8_t n;
+for (n = 0U; n &lt; N_PHILO; ++n) { // for all &quot;Philo&quot; components...
+    Philo *philo = &amp;me-&gt;philo_pool[n];
+    if (philo-&gt;tickCtr != 0U) { // is the &quot;Philo&quot; tick counter runnning?
+        if (--philo-&gt;tickCtr == 0U) { // is the &quot;Philo&quot; tick expiring?
+            // synchronously dispatch to component
+            Q_SIG(philo) = Q_TIMEOUT_SIG;
+            Q_PAR(philo) = n;
+            QHSM_DISPATCH(&amp;philo-&gt;super);
+        }
+    }
+}</action>
+      <tran_glyph conn="2,18,3,-1,14">
+       <action box="0,-2,12,2"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::Table::SM::active::serving}-->
+     <state name="serving">
+      <entry brief="give pending permitions to eat">uint8_t n;
+for (n = 0U; n &lt; N_PHILO; ++n) { /* give permissions to eat... */
+    if ((me-&gt;isHungry[n] != 0U)
+        &amp;&amp; (me-&gt;fork[LEFT(n)] == FREE)
+        &amp;&amp; (me-&gt;fork[n] == FREE))
+    {
+        me-&gt;fork[LEFT(n)] = USED;
+        me-&gt;fork[n] = USED;
+
+        /* synchronously dispatch to philo_pool[n] */
+        Q_SIG(&amp;me-&gt;philo_pool[n]) = EAT_SIG;
+        Q_PAR(&amp;me-&gt;philo_pool[n]) = n;
+        QHSM_DISPATCH(&amp;me-&gt;philo_pool[n].super);
+
+        me-&gt;isHungry[n] = 0U;
+        BSP_displayPhilStat(n, &quot;eating  &quot;);
+    }
+}</entry>
+      <!--${AOs::Table::SM::active::serving::HUNGRY}-->
+      <tran trig="HUNGRY">
+       <action>uint8_t n, m;
+
+n = (uint8_t)Q_PAR(me);
+/* philo ID must be in range and he must be not hungry */
+Q_ASSERT((n &lt; N_PHILO) &amp;&amp; (me-&gt;isHungry[n] == 0U));
+
+BSP_displayPhilStat(n, &quot;hungry  &quot;);
+m = LEFT(n);</action>
+       <!--${AOs::Table::SM::active::serving::HUNGRY::[bothfree]}-->
+       <choice>
+        <guard brief="both free">(me-&gt;fork[m] == FREE) &amp;&amp; (me-&gt;fork[n] == FREE)</guard>
+        <action>me-&gt;fork[m] = USED;
+me-&gt;fork[n] = USED;
+
+/* synchronously dispatch to philo_pool[n] */
+Q_SIG(&amp;me-&gt;philo_pool[n]) = EAT_SIG;
+Q_PAR(&amp;me-&gt;philo_pool[n]) = n;
+QHSM_DISPATCH(&amp;me-&gt;philo_pool[n].super);
+
+BSP_displayPhilStat(n, &quot;eating  &quot;);</action>
+        <choice_glyph conn="19,27,5,-1,10">
+         <action box="1,0,10,2"/>
+        </choice_glyph>
+       </choice>
+       <!--${AOs::Table::SM::active::serving::HUNGRY::[else]}-->
+       <choice>
+        <guard>else</guard>
+        <action>me-&gt;isHungry[n] = 1U;</action>
+        <choice_glyph conn="19,27,4,-1,5,10">
+         <action box="1,5,6,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="4,27,3,-1,15">
+        <action box="0,-2,8,2"/>
+       </tran_glyph>
+      </tran>
+      <!--${AOs::Table::SM::active::serving::DONE}-->
+      <tran trig="DONE">
+       <action>uint8_t n, m;
+
+n = (uint8_t)Q_PAR(me);
+
+/* phil ID must be in range and he must be not hungry */
+Q_ASSERT((n &lt; N_PHILO) &amp;&amp; (me-&gt;isHungry[n] == 0U));
+
+BSP_displayPhilStat(n, &quot;thinking&quot;);
+m = LEFT(n);
+/* both forks of Philo[n] must be used */
+Q_ASSERT((me-&gt;fork[n] == USED) &amp;&amp; (me-&gt;fork[m] == USED));
+
+me-&gt;fork[m] = FREE;
+me-&gt;fork[n] = FREE;
+m = RIGHT(n); /* check the right neighbor */
+
+if ((me-&gt;isHungry[m] != 0U) &amp;&amp; (me-&gt;fork[m] == FREE)) {
+    me-&gt;fork[n] = USED;
+    me-&gt;fork[m] = USED;
+    me-&gt;isHungry[m] = 0U;
+
+    /* synchronously dispatch to philo_pool[m] */
+    Q_SIG(&amp;me-&gt;philo_pool[m]) = EAT_SIG;
+    Q_PAR(&amp;me-&gt;philo_pool[m]) = m;
+    QHSM_DISPATCH(&amp;me-&gt;philo_pool[m].super);
+
+    BSP_displayPhilStat(m, &quot;eating  &quot;);
+}
+m = LEFT(n); /* check the left neighbor */
+n = LEFT(m); /* left fork of the left neighbor */
+if ((me-&gt;isHungry[m] != 0U) &amp;&amp; (me-&gt;fork[n] == FREE)) {
+    me-&gt;fork[m] = USED;
+    me-&gt;fork[n] = USED;
+    me-&gt;isHungry[m] = 0U;
+
+    /* synchronously dispatch to philo_pool[m] */
+    Q_SIG(&amp;me-&gt;philo_pool[m]) = EAT_SIG;
+    Q_PAR(&amp;me-&gt;philo_pool[m]) = m;
+    QHSM_DISPATCH(&amp;me-&gt;philo_pool[m].super);
+
+    BSP_displayPhilStat(m, &quot;eating  &quot;);
+}</action>
+       <tran_glyph conn="4,35,3,-1,15">
+        <action box="0,-2,6,2"/>
+       </tran_glyph>
+      </tran>
+      <!--${AOs::Table::SM::active::serving::EAT}-->
+      <tran trig="EAT">
+       <action>Q_ERROR();</action>
+       <tran_glyph conn="4,38,3,-1,15">
+        <action box="0,-2,12,4"/>
+       </tran_glyph>
+      </tran>
+      <!--${AOs::Table::SM::active::serving::PAUSE}-->
+      <tran trig="PAUSE" target="../../3">
+       <tran_glyph conn="4,42,3,1,36,6,-2">
+        <action box="0,-2,7,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,20,34,24">
+       <entry box="1,2,27,2"/>
+      </state_glyph>
+     </state>
+     <!--${AOs::Table::SM::active::paused}-->
+     <state name="paused">
+      <entry>BSP_displayPaused(1U);</entry>
+      <exit>BSP_displayPaused(0U);</exit>
+      <!--${AOs::Table::SM::active::paused::SERVE}-->
+      <tran trig="SERVE" target="../../2">
+       <tran_glyph conn="4,58,3,1,38,-20,-4">
+        <action box="0,-2,7,2"/>
+       </tran_glyph>
+      </tran>
+      <!--${AOs::Table::SM::active::paused::HUNGRY}-->
+      <tran trig="HUNGRY">
+       <action>uint8_t n = (uint8_t)Q_PAR(me);
+
+/* philo ID must be in range and he must be not hungry */
+Q_ASSERT((n &lt; N_PHILO) &amp;&amp; (me-&gt;isHungry[n] == 0U));
+me-&gt;isHungry[n] = 1U;
+BSP_displayPhilStat(n, &quot;hungry  &quot;);</action>
+       <tran_glyph conn="4,61,3,-1,15">
+        <action box="0,-2,6,2"/>
+       </tran_glyph>
+      </tran>
+      <!--${AOs::Table::SM::active::paused::DONE}-->
+      <tran trig="DONE">
+       <action>uint8_t n, m;
+
+n = (uint8_t)Q_PAR(me);
+/* philo ID must be in range and he must be not hungry */
+Q_ASSERT((n &lt; N_PHILO) &amp;&amp; (me-&gt;isHungry[n] == 0U));
+
+BSP_displayPhilStat(n, &quot;thinking&quot;);
+m = LEFT(n);
+/* both forks of Phil[n] must be used */
+Q_ASSERT((me-&gt;fork[n] == USED) &amp;&amp; (me-&gt;fork[m] == USED));
+
+me-&gt;fork[m] = FREE;
+me-&gt;fork[n] = FREE;</action>
+       <tran_glyph conn="4,64,3,-1,15">
+        <action box="0,-2,6,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,46,34,20">
+       <entry box="1,2,18,4"/>
+       <exit box="1,6,18,4"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="2,6,42,62">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="50,71"/>
+   </statechart>
+  </class>
+  <!--${AOs::AO_Table}-->
+  <attribute name="AO_Table" type="struct Table" visibility="0x00" properties="0x00"/>
+  <!--${AOs::Table_ctor}-->
+  <operation name="Table_ctor" type="void" visibility="0x00" properties="0x01">
+   <code>uint8_t n;
+Table *me = &amp;AO_Table;
+
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Table_initial));
+for (n = 0U; n &lt; N_PHILO; ++n) {
+    Philo_ctor(&amp;me-&gt;philo_pool[n], n);
+    me-&gt;fork[n] = FREE;
+    me-&gt;isHungry[n] = 0U;
+}</code>
+  </operation>
+ </package>
+ <!--${.}-->
+ <directory name=".">
+  <!--${.::dpp.h}-->
+  <file name="dpp.h">
+   <text>#ifndef DPP_H
+#define DPP_H
+
+enum DPPSignals {
+    EAT_SIG = Q_USER_SIG, /* published by Table to let a philosopher eat */
+    DONE_SIG,             /* published by Philosopher when done eating */
+    PAUSE_SIG,            /* published by BSP to pause the application */
+    SERVE_SIG,            /* published by BSP to pause the application */
+    TERMINATE_SIG,        /* published by BSP to terminate the application */
+    HUNGRY_SIG,           /* posted direclty to Table from hungry Philo */
+    MAX_SIG               /* the last signal */
+};
+
+/* number of philosophers */
+#define N_PHILO ((uint8_t)10)
+
+$declare${AOs::Philo}
+$declare${AOs::AO_Table}
+$declare${AOs::Table_ctor}
+
+#endif /* DPP_H */
+</text>
+  </file>
+  <!--${.::philo.c}-->
+  <file name="philo.c">
+   <text>#include &quot;qpn.h&quot;  /* QP-nano port */
+#include &quot;bsp.h&quot;  /* Board Support Package */
+#include &quot;dpp.h&quot;  /* Application interface */
+
+Q_DEFINE_THIS_MODULE(&quot;philo&quot;)
+
+/* Active object class -----------------------------------------------------*/
+
+/* Local objects -----------------------------------------------------------*/
+#define THINK_TIME  \
+    (QTimeEvtCtr)((BSP_random() % BSP_TICKS_PER_SEC) + (BSP_TICKS_PER_SEC/2U))
+#define EAT_TIME    \
+    (QTimeEvtCtr)((BSP_random() % BSP_TICKS_PER_SEC) + BSP_TICKS_PER_SEC)
+
+/* Philo definition --------------------------------------------------------*/
+$define${AOs::Philo}</text>
+  </file>
+  <!--${.::table.c}-->
+  <file name="table.c">
+   <text>#include &quot;qpn.h&quot;  /* QP-nano port */
+#include &quot;bsp.h&quot;  /* Board Support Package */
+#include &quot;dpp.h&quot;  /* Application interface */
+
+Q_DEFINE_THIS_MODULE(&quot;table&quot;)
+
+/* Active object class -----------------------------------------------------*/
+$declare${AOs::Table}
+
+/* Global objects ----------------------------------------------------------*/
+$define${AOs::AO_Table}
+
+#define RIGHT(n_) ((uint8_t)(((n_) + (N_PHILO - 1U)) % N_PHILO))
+#define LEFT(n_)  ((uint8_t)(((n_) + 1U) % N_PHILO))
+#define FREE      ((uint8_t)0)
+#define USED      ((uint8_t)1)
+
+/*..........................................................................*/
+$define${AOs::Table_ctor}
+$define${AOs::Table}
+</text>
+  </file>
+ </directory>
+</model>

@@ -1,0 +1,489 @@
+/*##########################################################################*/
+/*! @page exa_native Native Examples (Built-in Kernels)
+
+<p>The QP-nano framework contains real-time kernels (@ref comp_qv and @ref comp_qk), so it can run natively ("bare-metal") on single-chip microcontrollers, completely replacing a traditional RTOS. Click on the following links to see examples for the specified built-in kernels:
+</p>
+
+- @subpage exa_qv
+- @subpage exa_qk
+
+
+Click on the following links to see examples for the specified CPU architectures:
+
+- @subpage exa_arm-cm
+- @subpage exa_arm7-9
+- @subpage exa_msp430
+- @subpage exa_avr
+
+*/
+/*##########################################################################*/
+/*! @page exa_qv QV-nano Kernel (Non-Preemptive, Priority-Based, Non-Blocking)
+
+@note
+You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; icon in the list below to see the picture of the board.
+
+- @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+- @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+- @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @ref arm-cm_dpp_nucleo-l053r8 <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
+- @ref arm-cm_dpp_nucleo-l152re <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
+- @ref arm-cm_game_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @ref arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
+- @ref msp430_blinky_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+- @ref msp430_blinky_msp-exp430f5529lp <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP"></a>
+- @ref msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+*/
+/*##########################################################################*/
+/*! @page exa_qk QK-nano Kernel (Preemptive, Priority-Based, Non-Blocking)
+
+@note
+You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; icon in the list below to see the picture of the board.
+
+- @ref arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+- @ref arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @ref arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+- @ref arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @ref arm-cm_dpp_nucleo-l053r8 <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
+- @ref arm-cm_dpp_nucleo-l152re <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
+- @ref arm-cm_game_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @ref arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
+- @ref msp430_blinky_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+- @ref msp430_blinky_msp-exp430f5529lp <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP"></a>
+- @ref msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+*/
+/*##########################################################################*/
+/*! @page exa_arm-cm ARM Cortex-M (Cortex-M0/M0+/M3/M4F)
+
+@note
+You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; icon in the list below to see the picture of the board.
+
+- @subpage arm-cm_blinky_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+- @subpage arm-cm_blinky_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @subpage arm-cm_dpp_ek-tm4c123gxl <a class="preview board" href="bd_EK-TM4C123GXL.jpg" title="EK-TM4C123GXL"></a>
+- @subpage arm-cm_dpp_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+- @subpage arm-cm_dpp_mbed-lpc1768  <a class="preview board" href="bd_mbed-LPC1768.jpg" title="mbed-LPC1768"></a>
+- @subpage arm-cm_dpp_nucleo-l053r8  <a class="preview board" href="bd_nucleo-l053r8.jpg" title="NUCLEO-L053R8"></a>
+- @subpage arm-cm_dpp_nucleo-l152re  <a class="preview board" href="bd_nucleo-l152re.jpg" title="NUCLEO-L152RE"></a>
+- @subpage arm-cm_game_efm32-slstk3401a <a class="preview board" href="bd_EFM32-SLSTK3401A.jpg" title="EFM32-SLSTK3401A"></a>
+*/
+/*##########################################################################*/
+/*! @page exa_arm7-9 ARM7/ARM9 ("classic" ARM)
+
+@note
+You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; icon in the list below to see the picture of the board.
+
+- @subpage arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
+*/
+/*##########################################################################*/
+/*! @page exa_msp430 MSP430 ("classic" MSP430 and "extended" MSP430x)
+
+@note
+You can hover the mouse cursor over the <span class="board"></span>&nbsp;&nbsp; icon in the list below to see the picture of the board.
+
+- @subpage msp430_blinky_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+- @subpage msp430_blinky_msp-exp430f5529lp <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP"></a>
+- @subpage msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+*/
+
+/*##########################################################################*/
+/*! @page arm-cm_blinky_ek-tm4c123gxl Blinky on EK-TM4C123GXL
+
+@tableofcontents
+
+<p>This example implements the @ref blinky "Blinky sample application" on the EK-TM4C123GLX board (ARM Cortex-M4F).
+</p>
+
+@image html bd_EK-TM4C123GXL.jpg EK-TM4C123GXL board
+
+
+The Blinky example is located in the directory <span class="img folder">qpc/examples/arm-cm/blinky_ek-tm4c123gxl</span>, which is organized as follows:
+
+@code{.x}
+ qpn/                - QP-nano installation directory
+  +-examples/        - QP-nano examples directory (application)
+  | +-arm-cm/        - QP-nano examples for ARM Cortex-M
+  | | +-blinky_ek-tm4c123gxl/ - Blinky example on the EK-TM4C123GLX board
+  | | | +-qk/        - QK version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-blinky-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
+  | | | +-qv/        - QV version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-blinky-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | +-win32-qv/  - Windows emulation (single thread)
+  | | | | +-Makefile          - Makefile for building the project with MinGW
+  | | | | +-bsp.c    - BSP for the Win32-QV
+@endcode
+
+
+
+@section arm-cm_blinky_ek-tm4c123gxl_feat Features Demonstrated
+- cooperative QV-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+- preemptive run-to-completion QK-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+- Windows emulation (console, single threaded: win32-qv)
+
+
+
+@section arm-cm_blinky_ek-tm4c123gxl_run Running the Example
+Once programmed into the board, the example blinks the on-board LED about once a second.
+
+@image html blinky_ek-tm4c123gxl.gif Blinky on EK-TM4C123GLX (TivaC LaunchPad)
+
+
+
+@section arm-cm_blinky_ek-tm4c123gxl_win Windows Emulation
+The Windows emulation is a simple console application that produces the following output:
+
+@image html blinky_win32.png Blinky emulation running in a Windows console
+
+@next{arm-cm_blinky_efm32-slstk3401a}
+*/
+/*##########################################################################*/
+/*! @page arm-cm_blinky_efm32-slstk3401a Blinky on EFM32-SLSTK3401A
+
+@tableofcontents
+
+<p>This example implements the @ref blinky "Blinky sample application" on the EFM32-SLSTK3401A board (ARM Cortex-M4F).
+</p>
+
+@image html bd_EFM32-SLSTK3401A.jpg EFM32-SLSTK3401A board
+
+The Blinky example is located in the directory <span class="img folder">qpc/examples/arm-cm/blinky_efm32-slstk3401a</span>, which is organized as follows:
+
+@code{.x}
+ qpn/                - QP-nano installation directory
+  +-examples/        - QP-nano examples directory (application)
+  | +-arm-cm/        - QP-nano examples for ARM Cortex-M
+  | | +-blinky_efm32-slstk3401a/ - Blinky example on the EFM32-SLSTK3401A board
+  | | | +-qk/        - QK version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-blinky-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
+  | | | +-qv/        - QV version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-blinky-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | +-workstation/ - Examples for workstations (Windows, Linux, MacOS)
+  | | | | +-Makefile   - Makefile for building the project with MinGW
+  | | | | +-bsp.c    - BSP for workstations
+@endcode
+
+
+
+@section arm-cm_blinky_efm32-slstk3401a_feat Features Demonstrated
+- cooperative QV-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+- preemptive run-to-completion QK-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+- Windows emulation (console, single threaded: win32-qv)
+
+
+
+@section arm-cm_blinky_efm32-slstk3401a_run Running the Example
+Once programmed into the board, the example blinks the on-board LED about once a second.
+
+
+
+@section arm-cm_blinky_efm32-slstk3401a_win Windows Emulation
+The Windows emulation is a simple console application that produces the following output:
+
+@image html blinky_win32.png Blinky emulation running in a Windows console
+
+@next{arm-cm_dpp_ek-tm4c123gxl}
+*/
+/*##########################################################################*/
+/*! @page arm-cm_dpp_ek-tm4c123gxl DPP on EK-TM4C123GXL
+
+@tableofcontents
+
+<p>This example implements the @ref dpp "Dining Philosophers Problem" sample application on the EK-TM4C123GLX board (ARM Cortex-M4F).
+</p>
+
+@image html bd_EK-TM4C123GXL.jpg EK-TM4C123GXL board
+
+The DPP example is located in the directory <span class="img folder">qpc/examples/arm-cm/dpp_ek-tm4c123gxl</span>, which is organized as follows:
+
+@code{.x}
+ qpn/                - QP-nano installation directory
+  +-examples/        - QP-nano examples directory (applications)
+  | +-arm-cm/        - QP-nano examples for ARM Cortex-M
+  | | +-dpp_ek-tm4c123gxl/ - DPP example on the EK-TM4C123GLX board
+  | | | +-lint/      - PC-Lint version (static analysis of the application code)
+  | | | | +-lin.bat  - batch file for running the PC-Lint
+  | | | | +-options.lnt - PC-Lint options file for the DPP application code
+  | | | +-qk/        - QK version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-dpp-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-dpp-qk.eww     - IAR EW-ARM workspace
+  | | | | +-ti/      - TI-ARM toolchain (CCS)
+  | | | | | +-.ccsproject  - CCS project
+  | | | | | +-.cproject    - C Eclipse project
+  | | | | | +-.project     - Eclipse project
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
+  | | | | +-main.c   - main() for the QK-nano kernel
+  | | | +-qv/        - QV version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-dpp-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | | +-main.c   - main() for the QV-nano kernel
+@endcode
+
+
+
+@section arm-cm_dpp_ek-tm4c123gxl_feat Features Demonstrated
+- cooperative QV-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+  + with TI-ARM toolchain (CCS)
+- preemptive run-to-completion QK-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+  + with TI-ARM toolchain (CCS)
+- Windows emulation with GUI (single threaded, win32-qv)
+
+
+
+@section arm-cm_dpp_ek-tm4c123gxl_run Running the Example
+Once programmed into the board, the example rapidly toggles the Blue LED from the idle loop (blue LED glows) and toggles the Red and Green LEDs as the Philosophers change their state. Additionally, you can depress and hold the SW1 button (left) to PAUSE the application (Table transitions into the "paused" state). Releasing the SW1 button causes transition back to the "serving" state.
+
+*/
+/*##########################################################################*/
+/*! @page arm-cm_dpp_efm32-slstk3401a DPP on EFM32-SLSTK3401A
+
+@tableofcontents
+
+<p>This example implements the @ref dpp "Dining Philosophers Problem" sample application on the EFM32-SLSTK3401A board (ARM Cortex-M4F).
+</p>
+
+@image html bd_EFM32-SLSTK3401A.jpg EFM32-SLSTK3401A board
+
+The DPP example is located in the directory <span class="img folder">qpc/examples/arm-cm/dpp_efm32-slstk3401a</span> and includes versions for @ref qv "cooperative QV-nano kernel", the  @ref qk "preemptive QK-nano kernel", and the @ref qxk "preemptive dual mode QXK RTOS kernel"  each provided for the ARM-KEIL, GNU-ARM, and IAR-ARM. The following annotated directory listing describes the contents of the example folder:
+
+@code{.x}
+ qpn/                - QP-nano installation directory
+  +-examples/        - QP-nano examples directory (application)
+  | +-arm-cm/        - QP-nano examples for ARM Cortex-M
+  | | +-dpp_efm32-slstk3401a/ - DPP example on the EK-TM4C123GLX board
+  | | | +-lint/      - PC-Lint version (static analysis of the application code)
+  | | | | +-lin.bat  - batch file for running the PC-Lint
+  | | | | +-options.lnt - PC-Lint options file for the DPP application code
+  | | | +-qk/        - QK version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-dpp-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-dpp-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QK-nano kernel
+  | | | | +-main.c   - main() for the QK-nano kernel
+  | | | +-qv/        - QV version
+  | | | | +-arm/     - ARM-KEIL toolchain
+  | | | | | +-dpp-qk.uvprojx - uVision project
+  | | | | +-gnu/     - GNU-ARM toolchain
+  | | | | | +-Makefile          - Makefile for building the project with GNU-ARM
+  | | | | +-iar/     - IAR-ARM toolchain
+  | | | | | +-blinky-qk.eww     - IAR EW-ARM workspace
+  | | | | +-bsp.c    - BSP for the QV-nano kernel
+  | | | | +-main.c   - main() for the QV-nano kernel
+@endcode
+
+
+
+@section arm-cm_dpp_efm32-slstk3401a_feat Features Demonstrated
+- cooperative QV-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+- preemptive run-to-completion QK-nano kernel
+  + with ARM-KEIL toolchain
+  + with GNU-ARM toolchain
+  + with IAR-ARM toolchain
+- Windows emulation with GUI (single threaded, win32-qv)
+
+
+
+@section arm-cm_dpp_efm32-slstk3401a_run Running the Example
+Once programmed into the board, the example rapidly toggles the LED1 from the idle loop (LED1 glows) and toggles LED0 as the Philosophers change their state. Additionally, you can depress and hold the BTN0 button (left) to PAUSE the application (Table transitions into the "paused" state). Releasing the BTN0 button causes transition back to the "serving" state.
+
+*/
+/*##########################################################################*/
+/*! @page arm-cm_dpp_mbed-lpc1768 DPP on mbed-LPC1768
+
+@image html bd_mbed-LPC1768.jpg mbed-LPC1768 board
+
+Dining Philosophers Problem (DPP) example for  NXP LPC1768 MCU (Cortex-M3) with GNU-ARM toolchain.
+
+@image html mbed-LPC1768_button.jpg Adding External Button to mbed-LPC1768
+@n
+@n
+@image html under_construction.jpg
+*/
+/*##########################################################################*/
+/*! @page arm-cm_dpp_nucleo-l053r8 DPP on NUCLEO-L053R8
+
+@image html bd_nucleo-l053r8.jpg NUCLEO-L053R8 board
+
+@ref dpp "Dining Philosophers Problem (DPP)" example for NUCLEO-L053R8 MCU (Cortex-M0+).
+
+Demonstrated built-in kernels:
+- cooperative @ref qv with ARM-Clang, ARM-Keil, GNU-ARM (Makefile and Atollic TRUEstudio), and IAR-ARM toolchains
+- preemptive, run-to-completion @ref qk with ARM-Clang, ARM-Keil, GNU-ARM, and IAR-ARM toolchains
+
+
+Features:
+- multiple active objects, including 5 instances of the same AO class (Philo)
+- QK_onContextSw() callback function
+
+*/
+/*##########################################################################*/
+/*! @page arm-cm_dpp_nucleo-l152re DPP on NUCLEO-L152RE
+
+@image html bd_nucleo-l152re.jpg NUCLEO-L152RE board
+
+@ref dpp "Dining Philosophers Problem (DPP)" example for NUCLEO-L152RE MCU (Cortex-M3).
+
+Demonstrated built-in kernels:
+- cooperative @ref qv with ARM-Clang, ARM-Keil, GNU-ARM, and IAR-ARM toolchains
+- preemptive, run-to-completion @ref qk with ARM-Clang, ARM-Keil, GNU-ARM, and IAR-ARM toolchains
+
+
+Features:
+- multiple active objects, including 5 instances of the same AO class (Philo)
+
+*/
+/*##########################################################################*/
+/*! @page arm-cm_game_efm32-slstk3401a "Fly 'n' Shoot" Game on EFM32-SLSTK3401A
+
+@image html bd_EFM32-SLSTK3401A.jpg EFM32-SLSTK3401A board
+
+"Fly 'n' Shoot" game example for Silicon Labs Pearl Gecko MCU (Cortex-M4F), ARM (MDK-ARM), GNU-ARM, IAR EWARM toolsets.
+
+@image html game_win32.png Game emulation running in Windows GUI
+@n
+@n
+@image html under_construction.jpg
+*/
+
+/*##########################################################################*/
+/*! @page exa_arm7-9 ARM7 / ARM9
+
+The native (bare-metal) QP-nano examples for the "classic" ARM7/ARM9 are as follows:
+
+- @subpage arm7-9_dpp_at91sam7s-ek <a class="preview board" href="bd_AT91SAM7S-EK.jpg" title="AT91SAM7S-EK"></a>
+*/
+/*##########################################################################*/
+/*! @page arm7-9_dpp_at91sam7s-ek DPP on AT91SAM7S-EK
+
+@image html bd_AT91SAM7S-EK.jpg AT91SAM7S-EK board
+
+Dining Philosophers Problem (DPP) example for Atmel AT91SAM7S MCU (ARM7) with GNU-ARM toolset.
+
+@image html under_construction.jpg
+*/
+
+/*##########################################################################*/
+/*! @page exa_avr AVR (AVRmega)
+
+The native (bare-metal) QP-nano examples for the 8-bit AVRmega are as follows:
+
+- @subpage avr_blinky_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+- @subpage avr_dpp_arduino-uno <a class="preview board" href="bd_Arduino-UNO.jpg" title="Arduino-UNO"></a>
+*/
+/*##########################################################################*/
+/*! @page avr_blinky_arduino-uno Blinky on Arduino-UNO
+
+@image html bd_Arduino-UNO.jpg Arduino-UNO board
+
+Simple Blinky example for Arduino-UNO with GNU-AVR and IAR-AVR toolsets.
+
+@image html under_construction.jpg
+*/
+/*##########################################################################*/
+/*! @page avr_dpp_arduino-uno DPP on Arduino-UNO
+
+@image html bd_Arduino-UNO.jpg Arduino-UNO board
+
+Dining Philosophers Problem (DPP) example for Arduino-UNO with GNU-AVR and IAR-AVR toolsets.
+
+@image html Arduino-UNO_button.jpg Adding External Button to Arduino-UNO
+@n
+@n
+@image html Arduino-UNO_button_schem.jpg External Button Schematics
+@n
+@n
+@image html under_construction.jpg
+*/
+
+/*##########################################################################*/
+/*! @page exa_msp430 MSP430
+
+The native (bare-metal) QP-nano examples for MSP430 are as follows:
+
+- @subpage msp430_blinky_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+- @subpage msp430_blinky_msp-exp430f5529lp <a class="preview board" href="bd_MSP-EXP430F5529LP.jpg" title="MSP-EXP430F5529LP"></a>
+- @subpage msp430_dpp_msp-exp430g2 <a class="preview board" href="bd_MSP-EXP430G2.jpg" title="MSP-EXP430G2"></a>
+*/
+/*##########################################################################*/
+/*! @page msp430_blinky_msp-exp430g2 Blinky on MSP-EXP430G2
+
+@image html bd_MSP-EXP430G2.jpg MSP-EXP430G2 board
+
+Simple Blinky example for MSP-EXP430G2 with CCS-430 and IAR-430 toolsets.
+
+@image html under_construction.jpg
+*/
+/*##########################################################################*/
+/*! @page msp430_blinky_msp-exp430f5529lp Blinky on MSP-EXP430F5529LP
+
+@image html bd_MSP-EXP430F5529LP.jpg MSP-EXP430F5529LP board
+
+Simple Blinky example for MSP-EXP430F5529LP with CCS-430 and IAR-430 toolsets.
+
+@image html under_construction.jpg
+*/
+/*##########################################################################*/
+/*! @page msp430_dpp_msp-exp430g2 DPP on MSP-EXP430G2
+
+@image html bd_MSP-EXP430G2.jpg MSP-EXP430G2 board
+
+DPP example for MSP-EXP430G2 with CCS-430 and IAR-430 toolsets.
+
+@image html under_construction.jpg
+*/

@@ -1,0 +1,163 @@
+/// @file
+/// @brief PC-Lint-Plus configuration file for linting QP-nano applications
+/// @cond
+///===========================================================================
+/// Product: QP-nano
+/// Last updated for version 6.7.0
+/// Last updated on  2019-12-30
+///
+///                    Q u a n t u m  L e a P s
+///                    ------------------------
+///                    Modern Embedded Software
+///
+/// Copyright (C) 2005-2019 Quantum Leaps, LLC. All rights reserved.
+///
+/// This program is open source software: you can redistribute it and/or
+/// modify it under the terms of the GNU General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// Alternatively, this program may be distributed and modified under the
+/// terms of Quantum Leaps commercial licenses, which expressly supersede
+/// the GNU General Public License and are specifically designed for
+/// licensees interested in retaining the proprietary status of their code.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program. If not, see <www.gnu.org/licenses>.
+///
+/// Contact information:
+/// <www.state-machine.com/licensing>
+/// <info@state-machine.com>
+///============================================================================
+/// @endcond
+
+// M3-D4.8(a) complete definition is unnecessary in this translation unit
+-efile(9045,
+ -qepn.h,
+ -qfn.h,
+ -qvn.h,
+ -qkn.h,
+)
+
+// Assertions ----------------------------------------------------------------
+
+// give Q_onAssert() the semantics of "exit"
+-function(exit,
+ Q_onAssert)
+
+// M3-D4.9(a) function-like macro
+-esym(9026,
+ Q_ASSERT,
+ Q_ASSERT_ID,
+ Q_ALLEGE,
+ Q_ALLEGE_ID,
+ Q_ERROR,
+ Q_ERROR_ID,
+ Q_REQUIRE,
+ Q_REQUIRE_ID,
+ Q_ENSURE,
+ Q_ENSURE_ID,
+ Q_INVARIANT,
+ Q_INVARIANT_ID,
+ Q_ASSERT_STATIC,
+ Q_ASSERT_COMPILE,
+ Q_DEFINE_THIS_MODULE)
+
+// definition of macro ends in semi-colon
+-esym(823,
+ Q_DEFINE_THIS_FILE,
+ Q_DEFINE_THIS_MODULE)
+
+// M3-D4.9(adv) function-like macro
+-esym(9026,
+ Q_DIM,
+ Q_UINT2PTR_CAST)
+
+// QEP-nano ------------------------------------------------------------------
+// M3-D4.9(adv) function-like macro
+-esym(9026,
+ QHSM_INIT,
+ QHSM_DISPATCH,
+ Q_STATE_CAST,
+ Q_TRAN,
+ Q_TRAN_HIST,
+ Q_SUPER,
+ Q_HANDLED,
+ Q_UNHANDLED,
+ Q_SIG,
+ Q_PAR,
+ Q_HSM_UPCAST,
+ QHsm_state,
+ QHsm_childState,
+ QP_getVersion)
+
+// M3-R11.1(req) conversion between pointer to function type and differing type
+-emacro(9074,
+ Q_STATE_CAST)
+
+// M3-R13.4(a) result of assignment used in left operand to ',' operator
+-emacro(9084,
+ Q_TRAN,
+ Q_SUPER)
+
+// M3-R12.3(a) comma operator used
+-emacro(9008,
+ Q_TRAN,
+ Q_SUPER)
+
+// M3-R11.3(r) cast from pointer to pointer (upcast)
+-emacro(9087,
+ Q_HSM_UPCAST)
+
+// M3-R11.2(req) cast from pointer to pointer involves a pointer to an incomplete type other than void
+-emacro(9076,
+ QACTIVE_POST,
+ QF_ACTIVE_CAST)
+
+// QF-nano -------------------------------------------------------------------
+// M3-D4.9(adv) function-like macro
+-esym(9026,
+ QF_INT_DISABLE,
+ QF_INT_ENABLE,
+ QF_LOG2,
+ Q_ROM,
+ Q_ROM_BYTE,
+ Q_ROM_PTR,
+ QF_ACTIVE_CAST,
+ QF_ROM_QUEUE_AT_,
+ QF_ROM_ACTIVE_GET_,
+ QACTIVE_POST,
+ QACTIVE_POST_X,
+ QACTIVE_POST_ISR,
+ QACTIVE_POST_X_ISR)
+
+// M3-R11.3(req) cast from pointer to object type to pointer to different object type
+-emacro(9087,
+ Q_SIG,
+ Q_PAR,
+ QACTIVE_POST,
+ QACTIVE_POST_ISR)
+
+// suspicious pointer-to-pointer conversion (area too small)
+-emacro(826,
+ QACTIVE_POST,
+ QACTIVE_POST_ISR)
+
+// QV-nano -------------------------------------------------------------------
+// M3-D4.9(adv) function-like macro
+-esym(9026,
+ QV_INIT,
+ QV_CPU_SLEEP)
+
+// QK-nano -------------------------------------------------------------------
+// M3-D4.9(a) function-like macro
+-esym(9026,
+ QK_INIT,
+ QK_ISR_ENTRY,
+ QK_ISR_EXIT,
+ QK_SCHEDULE_)
