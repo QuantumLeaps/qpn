@@ -1,0 +1,135 @@
+/*! @mainpage About QP-nano&trade;
+
+@image html qpn_banner.jpg
+
+@section ab_new What's new?
+To check what's new in QP-nano, please see @ref history "QP-nano Revision History".
+
+@attention
+The QP-nano framework is being __phased out__ and is not recommended for new product development.
+
+
+@section ab_about What is it?
+<a class="extern" target="_blank" href="https://www.state-machine.com/products/"><strong>QP-nano&trade; (Quantum Platform Nano)</strong></a> is an ultra-lightweight  <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#RTEF"><strong>Real-Time Embedded Framework (RTEF)</strong></a> for building responsive and modular real-time embedded applications as systems of asynchronous event-driven <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Active"><strong>active objects</strong></a> (concurrent @ref sm "state machines"). The QP-nano&trade; RTEF is a member of a larger family consisting of QP-nano, <a href="https://www.state-machine.com/qpc" target="_blank" class="extern">QP/C</a>, and <a href="https://www.state-machine.com/qpcpp" target="_blank" class="extern">QP/C++</a> frameworks, which are all strictly quality controlled, thoroughly documented, and available under @ref licensing "dual licensing model".
+
+@note
+The QP-nano&trade; framework is intended for **low-end** 8- and 16-bit microcontrollers such as AVRmega, MSP430, or 8051 with very limited RAM on board (less then 1KB). If your MCU has more than 1KB of RAM, you should consider the <a href="https://www.state-machine.com/qpc" target="_blank" class="extern">QP/C&trade;</a> framework instead of QP-nano&trade;.
+
+@attention
+To use QP-nano&trade; effectively, you need to understand the <a href="https://www.state-machine.com/doc/concepts" target="_blank" class="extern"><strong>key concepts</strong></a> that underline the architecture of the framework and your applications based on the framework.
+
+
+<div style="clear:both"></div>
+
+
+@htmlonly
+<img style="float:right; margin:10px 8px 8px 15px; clear:right;" src="img/logo_qpn.jpg" title="QP">
+@endhtmlonly
+
+@section ab_goals What does it do?
+The main goals of the QP-nano&trade; framework are:
+- to provide a reusable **architecture** based on <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Framework">active objects (actors)</a>, which is _safer_ and more extensible than the venerable "superloop" commonly used on low-end 8- and 16-bit microcontrollers.
+- to provide a simple-to-use coding techniques for @ref sm "hierarchical state machines", with which to implement the behavior of active objects.
+- to provide efficient and thread-safe event-driven mechanisms for active objects to communicate, such as direct event passing.
+- to provide event-driven timing services (time events).
+- to provide a selection of built-in real-time kernels to run the QP applications, such as the cooperative @ref qvn "QV-nano kernel" and the preemptive non-blocking @ref qkn "QK-nano kernel".
+- to provide portability layer and ready-to-use emulations on the desktop operating systems such as @ref posix-qv "Linux" and @ref win32-qv "Windows".
+- to provide a target for modeling and automatic code generation from the <a href="https://www.state-machine.com/qm" target="_blank" class="extern">QM modeling tool</a>.
+
+
+@section ab_special What's special about it?
+
+The QP-nano&trade; Real-Time Embedded Framework (RTEF) is a unique offering on the embedded software market. It provides a modern, reusable **architecture** of embedded applications, which combines object-orientation with the particular model of concurrency, known as <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Active"><strong>active objects</strong></a> (concurrent @ref sm "state machines"). This architecture is generally **safer** and better structured than the venerable "superloop + spaghetti-code" commonly used on low-end 8- and 16-bit microcontrollers.
+
+
+@subsection lightweight Ultra-Lightweight
+The most unique characteristic of the QP-nano&trade; framework is its **tiny footprint**, especially in RAM. In this respect, QP-nano&trade; requires far less resources than even the smallest conventional Real-Time Operating System (RTOS) kernel. In fact, it has been designed to run on microcontrollers, where you cannot fit any traditional kernel. At the same time, QP-nano&trade; gives you a much higher level of abstraction than a conventional RTOS. With QP-nano&trade;, you work at the level of active objects, state machines and events, as opposed to "superloop" commonly used on low-end 8- and 16-bit microcontrollers.
+
+@note
+If you can program your MCU in ANSI-C, you probably can fit in QP-nano&trade;. For example, the article <a href="https://www.state-machine.com/doc/Samek0605.pdf" target="_blank" class="extern"><em>UML Statecharts at $10.99</em></a> describes a complete QP-nano&trade; application (PEdestrian LIght CONtroled (PELICAN) crossing) implemented in a 8051 MCU with 256 bytes of RAM.
+
+
+@subsection oop Object Orientation
+Even though it is written in @ref misra "MISRA-compliant" ANSI-C, QP-nano&trade; is fundamentally an **object-oriented** framework, which means that the framework itself and your applications derived from the framework are fundamentally composed of <a href="https://en.wikipedia.org/wiki/Class_(computer_programming)" target="_blank" class="extern">classes</a> and only classes can have @ref sm "state machines" associated with them.<br>
+
+@note
+If you program in C and object-oriented programming is new to you, please refer to the Application Note <a class="pdf" target="_blank" href="https://www.state-machine.com/doc/AN_OOP_in_C.pdf">"Object-Oriented Programming in C"</a>, which describes how you can implement the concepts of _classes_, _inheritance_, and _polymorphism_ to portable ANSI-C.
+<br>
+@htmlonly
+<div class="image">
+<a target="_blank" href="https://www.state-machine.com/doc/AN_OOP_in_C.pdf"><img border="0" src="img/AN_OOP_in_C.gif" title="Download PDF"></a>
+<div class="caption">
+Application Note: Object-Oriented Programming in C
+</div>
+</div>
+@endhtmlonly
+
+
+@subsection hsms Hierarchical State Machines
+The behavior of active objects is specified in QP-nano&trade; by means of
+<a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#HSM"><strong>hierarchical state machines</strong> (UML statecharts)</a>. The frameworks support manual coding of UML state machines in C or C++ as well as fully automatic code generation by means of the free graphical <a class="extern" target="_blank" href="https://www.state-machine.com/qm">QM&trade; modeling tool</a>.
+
+@remarks
+State machines can be an incredibly powerful technique, but they require an event-driven **infrastructure** (framework) that provides, at a minimum: a run-to-completion (RTC) execution context for each state machine, queuing of events, and event-based timing services. This is really the pivotal point. Without an event-driven framewok (like QP-nano), state machines are like <a class="extern" target="_blank" href="https://www.state-machine.com/doc/concepts#Infrastructure">cars without an infrastructure of roads</a>.
+
+
+@subsection kernels Built-in Kernels
+All QP-nano&trade; framework is designed to run on @ref exa_native "low-end 8- and 16-bit single-chip microcontrollers", replacing the venerable "superloop". The framework contains two built-in real-time kernels: the cooperative @ref qvn "QV-nano kernel" and the _preemptive_ non-blocking @ref qkn "QK-nano kernel". @ref ports_native "Native QP ports" and ready-to-use @ref exa_native "examples" are provided for selected @ref exa_ref_mcu "CPU families".
+
+
+@subsection emul Windows/Linux Emulation
+QP-nano&trade; can also be emulated on @ref ports_os "desktop OSes" (such as Windows and Linux), which allows you to develop and test large portions of your deeply embedded code on the desktop.
+
+
+@subsection popular Popularity &amp; Maturity
+With over 15 years of continuous development and <a class="extern" target="_blank" href="https://sourceforge.net/projects/qpc/files/stats/timeline?dates=2016-01-01+to+2016-12-31">60,000 downloads a year</a>, the QP&trade; RTEF family is the most mature and popular such solution on the embedded software market.
+
+The QP&trade; frameworks are used in <a href="https://www.state-machine.com/about/customers" target="_blank" class="extern">millions of products worldwide</a> in aerospace, medical devices, consumer electronics, wired and wireless telecommunications, industrial automation, transportation, robotics, and many more.
+
+
+@subsection psicc2 Book
+The book, <a class="extern" target="_blank" href="https://www.state-machine.com/psicc2" ><strong>Practical UML Statecharts in C/C++, 2nd Edition</strong></a> provides a detailed design study of the QP frameworks and explains all the related concepts.
+
+@image html PSiCC2-3D.jpg "Practical UML Statecharts in C/C++, 2nd Edition"
+
+
+@section licensing How is it licensed?
+
+QP-nano&trade; is licensed under the increasingly popular <a class="extern" target="_blank" href="https://www.state-machine.com/licensing">dual licensing model</a>, in which both the open source software distribution mechanism and traditional closed source software distribution models are combined.
+
+@note If your company has a policy forbidding open source in your product, all QP frameworks can be licensed commercially, in which case you don't use any open source license and you do not violate your policy.
+
+
+@subsection open-source Open Source Projects
+If you are developing and distributing open source applications under the GNU General Public License (GPL), as published by the Free Software Foundation, then you are free to use the Quantum Leaps software under the <a class="extern" target="_blank" href="http://www.gnu.org/copyleft/gpl.html">GPL version 3</a> of the License, or (at your option) any later version. Please note that GPL requires that all modifications to the original code as well as your application code (Derivative Works as defined in the Copyright Law) must also be released under the terms of the GPL open source license.
+
+
+@subsection closed-source Closed Source Projects
+If you are developing and distributing traditional closed source applications, you can purchase one of <a class="extern" target="_blank" href="https://www.state-machine.com/licensing/#Commercial">Quantum Leaps commercial licenses</a>, which are specifically designed for users interested in retaining the proprietary status of their code. All Quantum Leaps commercial licenses expressly supersede the GPL open source license. This means that when you license Quantum Leaps software under a commercial license, you specifically do not use the software under the open source license and therefore you are not subject to any of its terms.
+
+
+@section support How to get help?
+Please post any **technical questions** to the <a class="extern" target="_blank" href="http://sourceforge.net/p/qpc/discussion/668726"><strong>Free Support Forum</strong></a> hosted on SourceForge.net. Posts to this forum benefit the whole community and are typically answered the same day.
+
+Direct **Commercial Support** is available to the commercial licensees. Every commercial license includes one year of Technical Support for the licensed software. The support term can be extended annually.
+
+Training and consulting services are also available from Quantum Leaps. Please refer to the <a class="extern" target="_blank" href="https://www.state-machine.com/contact">Contact web-page</a> for more information.
+
+
+@section contact Contact Information
+
+- Quantum Leaps Web site:   <a class="extern" target="_blank" href="https://www.state-machine.com">state-machine.com</a>
+
+- Quantum Leaps licensing:  <a class="extern" target="_blank" href="https://www.state-machine.com">state-machine.com/licensing</a>
+
+- QP/QM on SourceForge.net: <a class="extern" target="_blank" href="https://sourceforge.net/projects/qpc">sourceforge.net/projects/qpc</a>
+
+- QP/QM on GitHub: <a class="extern" target="_blank" href="https://github.com/QuantumLeaps">github.com/QuantumLeaps</a>
+
+- e-mail: <a class="extern" target="_blank" href="mailto:info@state-machine.com">info@state-machine.com</a>
+
+@image html logo_ql_TM.jpg
+
+
+@next{gs}
+*/

@@ -1,0 +1,52 @@
+/*! @page gs Getting Started
+
+@section gs_obtain Downloading &amp; Installing QP-nano&trade;
+@tableofcontents
+
+<p>The most recommended way of obtaining QP-nano&trade; is by downloading the <a class="extern" target="_blank" href="https://www.state-machine.com/#Downloads"><b>QP-bundle&trade;</b></a>, which includes QP-nano&trade; as well as other QP frameworks and also the <a class="extern" target="_blank" href="https://www.state-machine.com/qm/">QM&trade; modeling tool</a> and the <a class="extern" target="_blank" href="https://www.state-machine.com/products/">QTools&trade; collection</a>. The main advantage of obtaining QP-nano&trade; bundled together like that is that you get all components, tools and examples ready to go.
+
+@note
+<a class="extern" target="_blank" href="https://www.state-machine.com/#Downloads"><strong>QP-bundle&trade;</strong></a> is the **most recommended** way of downloading and installing QP-nano&trade;. However, if you are allergic to installers and GUIs or don't have administrator privileges you can also **download and install QP-nano&trade; separately** as described in the Application Note: "Getting Started with QP-nano" below.
+
+
+
+@section gs_an Getting Started with QP-nano App Note
+The Quantum Leaps Application Note <a class="extern" target="_blank" href="https://www.state-machine.com/doc/AN_Getting_Started_with_QP-nano.pdf"><strong>Getting Started with QP-nano</strong></a> provides step-by-step instructions on how to get started with QP-nano quickly.
+
+@htmlonly
+<div class="image">
+<a target="_blank" href="https://www.state-machine.com/doc/AN_Getting_Started_with_QP-nano.pdf"><img border="0" src="img/AN_Getting_Started_with_QP-nano.jpg" title="Download PDF"></a>
+<div class="caption">
+Application Note: Getting Started with QP-nano
+</div>
+</div>
+@endhtmlonly
+
+
+
+@section gs_files Directories and Files
+
+The following annotated directory tree lists the top-level directories provided in the standard QP-nano distribution.
+
+<ul class="tag">
+  <li><span class="img folder">qpn</span>
+  </li>
+  <ul class="tag">
+    <li><span class="img folder">3rd_party</span> &mdash; Third-Party code used in the QP-nano @ref ports "ports" and @ref exa "examples"
+    </li>
+    <li><span class="img folder">examples</span> &mdash; @ref exa "QP-nano Examples"
+    </li>
+    <li><span class="img folder">ports</span> &mdash; @ref ports "QP-nano Ports"
+    </li>
+    <li><span class="img folder">include</span> &mdash; Platform-independent QP-nano API (see <a href="dir_d44c64559bbebec7f509842c48db8b23.html"><strong>include</strong></a>)
+    </li>
+    <li><span class="img folder">source</span> &mdash; Platform-independent QP-nano source code (see @ref <a href="dir_b2f33c71d4aa5e7af42a1ca61ff5af1b.html"><strong>source</strong></a>)
+    </li>
+  </ul>
+</ul>
+
+@note
+The standard QP-nano distribution contains many @ref exa "Example Projects", which are specifically designed to help you learn to use QP-nano and to serve you as starting points for your own projects.
+
+@next{struct}
+*/

@@ -1,0 +1,161 @@
+/*##########################################################################*/
+/*! @page ports_native Native (Bare-Metal) Ports
+
+- @subpage lint (generic C compiler)
+- @subpage arm-cm (Cortex-M0/M0+/M3/M4/M4F)
+    - @ref arm-cm_qv  (ARM-KEIL, GNU-ARM, IAR-ARM, TI-CCS toolsets)
+    - @ref arm-cm_qk  (ARM-KEIL, GNU-ARM, IAR-ARM, TI-CCS toolsets)
+- @subpage arm7-9 ("classic" ARM)
+    - @ref arm7-9_qk (GNU-ARM, IAR-ARM toolsets)
+    - @ref arm7-9_qv (GNU-ARM, IAR-ARM toolsets)
+- @subpage avr (megaAVR)
+    - @ref avr_qk (GNU-AVR, IAR-AVR toolsets)
+    - @ref avr_qv (GNU-AVR, IAR-AVR toolsets)
+- @subpage msp430 ("classic" MSP430 and "extended" MSP430X)
+    - @ref msp430_qv (CCS, IAR toolsets)
+    - @ref msp430_qk (CCS, IAR toolsets)
+
+*/
+/*##########################################################################*/
+/*! @page lint PC-Lint-Plus
+
+@tableofcontents
+
+<p>The QP-nano distribution contains a "port" to <a href="https://www.gimpel.com" target="_blank" class="extern"><b>PC-Lint-Plus</b></a> static analysis tool from <a href="https://www.gimpel.com" target="_blank" class="extern">Gimpel Software</a>, which is a static analysis tool for C and C++ with one of the longest track records and best value of the money in the industry. The "PC-Lint-Plus port" allows you to statically analyze the QP-nano source code and facilitates static analysis of your **application code** based on QP-nano.
+</p>
+The QP-nano "port" to PC-Lint-Plus is located in the directory <span class="img folder">qpn/ports/lint-plus</span> and includes also lint configuration files, as well as an example of "linting" application code in the directory <span class="img folder">qpn/examples/arm-cm/dpp_ek-tm4c123gxl/lint-plus</span>. The following listing describes the most important files in these three directories.
+
+@code{.x}
+ qpn\                  - QP-nano installation directory
+  |
+  | +-ports/           - QP-nano ports directory
+  | | +-lint-plus/     - QP-nano "port" to PC-Lint-Plus
+  | | | +-qkn/         - QP-nano port with the QK-nano kernel
+  | | | +-qvn/         - QP-nano port with the QV-nano kernel
+  | | | +-au-ds.lnt    - Dan Saks recommendations
+  | | | +-au-misra3.lnt      - MISRA-C:2012 compliance checks
+  | | | +-au-misra3-amd1.lnt - MISRA-C:2012-Amendment-1 additional checks
+  | | | +-qpn.lnt      - PC-Lint-Plus options for QP-nano applications
+  | | | +-std.lnt      - Standard PC-Lint-Plus settings recommended by Quantum Leaps
+  | | | +-lin.bat      - Batch file to invoke PC-Lint-Plus to run analysis of QP-nano code
+  | | | +-options.lnt  - PC/Lint-Plus options for "linting" QP-nano source code
+  | | | +-lint_qfn.log - PC/Lint-Plus output for the QEP/QF-nano components of QP-nano
+  | | | +-lint_qvn.log - PC/Lint-Plus output for the QV-nano  component of QP-nano
+  | | | +-lint_qkn.log - PC/Lint-Plus output for the QK-nano  component of QP-nano
+  | | | +-qpn_conf.h   - QP-nano config file for a "generic C compiler"
+  | | | +-stdbool.h    - Standard Boolean type and constants for a "generic C compiler"
+  | | | +-stdint.h     - Standard exact-width integers for a "generic C compiler"
+  | |
+  | +-examples\        - QP-nano examples directory (application)
+  | | +-arm-cm\        - QP-nano examples for ARM Cortex-M
+  | | | +-dpp_ek-tm4c123gxl\ - DPP example on the EK-TM4C123GLX board
+  | | | | +-lint-plus\ - directory for linting the application
+  | | | | | +-lin.bat  - Batch to run PC-Lint-Plus analysis of application code
+  | | | | | +-options.lnt - PC-Lint-Plus options for "linting" of application code
+@endcode
+
+
+
+@section lint_qpn Linting the QP-nano Source Code
+The directory <span class="img folder">qpn/ports/lint-plus</span> (see listing above) contains also the **lin.bat** batch file for "linting" the QP-nano source code. The `lin.bat` batch file invokes PC-Lint-Plus and generates the lint output files. As shown in the listing above, the lint output is collected into four text files `lint_qfn.log`, lint_qkn.log`, and `lint_qvn.log`, for QEP/QF-nano, QK-nano, and QV-nano components of the QP-nano framework, respectively.
+
+@note
+In order to execute the `lin.bat` file on your system, you might need to adjust the symbol  `PCLP_DIR` at the top of the batch file, to the PC-Lint-Plus installation directory on your computer.
+
+According to the PC-Lint-Plus guidelines, the `lin.bat` uses two option files: the `qpn.lnt` configuration file discussed before and the `options.lnt` configuration file that covers all deviations from the MISRA-C rules **within the QP-nano source code**. These deviations are intentionally localized to QP-nano code and are independent from your **application-level** code. In other words, a MISRA-C deviation present in the QP-nano code does **not** mean that such deviation is somehow allowed or its detection is somehow suppressed in the **application-level** code. This is because the the `options.lnt` configuration file for internals of QP-nano is **not** used to "lint" the application-level code.
+
+
+
+@section lint_app Linting QP-nano Application Code
+The QP-nano baseline code contains an example of MISRA-C compliance checking with PC-Lint-Plus: the DPP example for the EK-TM4C123GLX Cortex-M4F board, located in the directory <span class="img folder">qpn/examples/arm-cm/dpp_ek-tm4c123gxl/lint-plus</span>. The PC-Lint-Plus analysis is very simple and requires invoking the **lin.bat** file.
+
+@note
+In order to execute the **lin.bat** file on your system, you might need to adjust the symbol  `PCLP_DIR` at the top of the batch file, to the PC-Lint-Plus installation directory on your computer. You
+
+
+The `lint-plus` subdirectory contains also the `options.lnt` with the PC-Lint-Plus options specific to linting the application. Here, you might include linting options for your specific compiler, as described in the "PC-Lint-Plus Manual", Chapter 2 "Installation and Configuration".
+
+
+
+@section lint_options Structure of PC-Lint-Plus Options for QP-nano
+PC-Lint-Plus has several places where it reads its currently valid options:
+- From special PC-Lint-Plus option files (usually called `*.lnt`)
+- From the command line
+- From within the special lint-comments in the source code modules (not recommended)
+
+The QP-nano source code and example application code has been "linted" only by means of the first alternative (option files) with possibility of adding options via command line. The third alternative--lint comments--is not used and Quantum Leaps does not recommend this alternative.
+
+@note
+The QP-nano source code is completely free of lint comments, which are viewed as a contamination of the source code.
+
+The structure of the PC-Lint-Plus option files used for "linting" QP-nano follows exactly the <a href="http://www.gimpel.com" target="_blank" class="extern">Gimpel Software</a> guidelines for configuring PC-Lint-Plus (See Section 2 "Configuration" in the *PC-Lint-Plus Manual*). The design and grouping of the lint options also reflects the fact that static code analysis of a software framework, such as QP-nano, has really two major aspects. First, the source code of the framework itself has to be analyzed. But even more important and helpful to the users of the framework is providing the infrastructure to effectively analyze the application-level code based on the framework. With this in mind, the PC-Lint-Plus options for static analysis of QP-nano are divided into two groups, located in directories <span class="img folder">qpn/include</span> and <span class="img folder">qpn/ports/lint</span>. These two groups are for analyzing QP-nano **applications** and QP-nano **source code**, respectively.
+
+As shown in the PC-Lint-Plus "port" files description, the directory <span class="img folder">qpn/include</span>, contains the PC-Lint-Plus options for "linting" the application code along with all platform-independent QP-nano header files required by the applications. This collocation of lint options with header files simplifies "linting", because specifying just `-iqpn/include` include directory to PC-Lint-Plus accomplishes both inclusion of QP-nano header files and PC-Lint-Plus options.
+Note that the `qpn/include` directory contains all PC-Lint-Plus option files used in "linting" the code, including the standard MISRA-C:2012 `au-misr3.lnt` option file as well as Dan Saks' recommendations `au-ds.lnt`, which are copied from the PC-Lint-Plus distribution. This design freezes the lint options for which the compliance has been checked.
+
+
+
+@subsection lint_std_lnt The std.lnt option file
+According to the Gimpel Software *PC-Lint-Plus Configuration Guidelines*, the file `qpn/ports/lint-plus/std.lnt` file, contains the top-level options, which Quantum Leaps recommends for all projects. These options include the formatting of the PC-Lint-Plus messages and making two passes to perform better cross-module analysis. However, the most important option is `-restore_at_end`, which has the effect of surrounding each source file with options `-save` and `-restore`. This precaution prevents options from "bleeding" from one file to another.
+
+<b>Top-level option file std.lnt</b>
+@include std.lnt
+
+
+
+@subsection lint_qpn_lnt  The qpn.lnt option file
+The most important file for "linting" QP-nano applications is the **qpn.lnt** option file. This file handles all deviations from the MISRA-C:2012 rules, which might arise at the application-level code from the use of the QP-nano framework. In other words, the **qpn.lnt** option file allows completely clean "linting" of the application-level code, as long as the application code does not violate any of the MISRA-C:2012 rules.
+
+At the same time, the **qpn.lnt** option file has been very carefully designed not to suppress any MISRA-C:2012 rule checking outside the very specific context of the QP-nano API. In other words, the qpn.lnt option file still supports 100% of the MISRA-C:2012 rule checks that PC-Lint-Plus is capable of performing.
+
+@remarks
+For example, for reasons explained in Section 5.10 of the <a href="https://www.state-machine.com/doc/AN_QP-nano_MISRA.pdf" target="_blank" class="extern">"QP-nano MISRA Compliance Matrix"</a>, QP-nano extensively uses function-like macros, which deviates from the MISRA-C:2012 advisory Rule 4.9 and which PC-Lint-Plus checks with the warning 9026. However, instead of suppressing this warning globally (with the -e9096 directive), the qpn.lnt option file suppresses warning 9096 only for the specific QP function-like macros that are visible to the application level. So specifically, the qpn.lnt file contains directives `-esym(9026, Q_TRAN, Q_SUPER, ...)`, which suppresses the warning only for the specified macros, but does not disable checking of any other macros in the application-level code.
+
+@next{arm-cm}
+*/
+/*##########################################################################*/
+/*! @page arm-cm ARM Cortex-M
+
+@image html under_construction.jpg
+
+@section arm7-9_qk Preemptive QK Kernel
+
+@includelineno ports/arm-sm/qk/iar/qkn_port.s
+
+
+@next{arm7-9}
+*/
+/*##########################################################################*/
+/*! @page arm7-9 ARM7/ARM9
+
+@image html under_construction.jpg
+
+@section arm7-9_qk Preemptive QK Kernel
+
+@includelineno ports/arm7-9/qk/iar/qkn_port.s
+
+@section arm7-9_qv Cooperative QV Kernel
+
+@next{msp430}
+*/
+/*##########################################################################*/
+/*! @page msp430 MSP430
+
+@image html under_construction.jpg
+
+@section msp430_qk Preemptive QK Kernel
+
+@section msp430_qv Cooperative QV Kernel
+
+@next{avr}
+*/
+/*##########################################################################*/
+/*! @page avr AVR
+
+@image html under_construction.jpg
+
+@section avr_qk Preemptive QK Kernel
+
+@section avr_qv Cooperative QV Kernel
+
+*/

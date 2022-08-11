@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="4.6.0" links="1">
+ <documentation>Simple Blinky example for QP-nano, which demonstrates:
+- Active object (Blinky) with state machine
+- Board Support Package abstraction for portability
+- BSP implementation for desktop OS (Windows, Linux, Mac)
+- Platform-independent main() function
+- make.bat batch file for Windows</documentation>
+ <!--${qpn}-->
+ <framework name="qpn"/>
+ <!--${AOs}-->
+ <package name="AOs" stereotype="0x02">
+  <!--${AOs::Blinky}-->
+  <class name="Blinky" superclass="qpn::QActive">
+   <!--${AOs::Blinky::SM}-->
+   <statechart properties="0x01">
+    <!--${AOs::Blinky::SM::initial}-->
+    <initial target="../1">
+     <action>/* arm the private time event for tick rate 0
+* to expire in 1/2s and periodically every 1/2 second
+*/
+QActive_armX(&amp;me-&gt;super,
+             0U,
+             BSP_TICKS_PER_SEC/2U,
+             BSP_TICKS_PER_SEC/2U);</action>
+     <initial_glyph conn="2,3,5,1,20,4,-4">
+      <action box="0,-2,6,2"/>
+     </initial_glyph>
+    </initial>
+    <!--${AOs::Blinky::SM::off}-->
+    <state name="off">
+     <entry>BSP_ledOff();</entry>
+     <!--${AOs::Blinky::SM::off::Q_TIMEOUT}-->
+     <tran trig="Q_TIMEOUT" target="../../2">
+      <tran_glyph conn="2,13,3,1,18,6,-2">
+       <action box="0,-2,8,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,5,16,10">
+      <entry box="1,2,12,4"/>
+     </state_glyph>
+    </state>
+    <!--${AOs::Blinky::SM::on}-->
+    <state name="on">
+     <entry>BSP_ledOn();</entry>
+     <!--${AOs::Blinky::SM::on::Q_TIMEOUT}-->
+     <tran trig="Q_TIMEOUT" target="../../1">
+      <tran_glyph conn="2,25,3,1,20,-15,-4">
+       <action box="0,-2,8,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,17,16,10">
+      <entry box="1,2,12,4"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="30,29"/>
+   </statechart>
+  </class>
+  <!--${AOs::Blinky_ctor}-->
+  <operation name="Blinky_ctor" type="void" visibility="0x00" properties="0x01">
+   <documentation>The Blinky &quot;constructor&quot; is provided outside of the Blinky class, so that it can be used independently from the class. This is part of the &quot;opaque pointer&quot; design idiom.</documentation>
+   <code>Blinky * const me = &amp;AO_Blinky;
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Blinky_initial));</code>
+  </operation>
+ </package>
+ <!--${.}-->
+ <directory name=".">
+  <!--${.::blinky.c}-->
+  <file name="blinky.c">
+   <text>#include &quot;qpn.h&quot;    /* QP-nano framework API */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; /* for exit() */
+
+enum { BSP_TICKS_PER_SEC = 100 };
+
+void BSP_init(void)   {
+    printf(&quot;Simple Blinky example\n&quot;
+           &quot;QP-nano version: %s\n&quot;
+           &quot;Press Ctrl-C to quit...\n&quot;,
+           QP_VERSION_STR);
+}
+void BSP_ledOff(void) { printf(&quot;LED OFF\n&quot;); }
+void BSP_ledOn(void)  { printf(&quot;LED ON\n&quot;);  }
+
+/* callback functions needed by the framework ------------------------------*/
+void QF_onStartup(void) {}
+void QF_onCleanup(void) {}
+void QF_onClockTickISR(void) {
+    QF_tickXISR(0U); /* QF-nano clock tick processing for rate 0 */
+}
+void Q_onAssert(char_t const Q_ROM * const module, int_t loc) {
+    fprintf(stderr, &quot;Assertion failed in %s:%d&quot;, module, loc);
+    exit(-1);
+}
+
+/* ask QM to declare the Blinky class --------------------------------------*/
+$declare${AOs::Blinky_ctor}
+$declare${AOs::Blinky}
+
+/* the single instance of the Blinky active object -------------------------*/
+Blinky AO_Blinky;
+
+/* Local-scope objects -----------------------------------------------------*/
+static QEvt l_blinkyQSto[10]; /* Event queue storage for Blinky */
+
+/* QF_active[] array defines all active object control blocks --------------*/
+QActiveCB const Q_ROM QF_active[] = {
+    { (QActive *)0,           (QEvt *)0,        0U                      },
+    { (QActive *)&amp;AO_Blinky,  l_blinkyQSto,     Q_DIM(l_blinkyQSto)     }
+};
+
+/* the main function -------------------------------------------------------*/
+int main(void) {
+    QF_init(Q_DIM(QF_active)); /* initialize the QF-nano framework */
+    BSP_init(); /* initialize the Board Support Package */
+
+    Blinky_ctor(); /* in C you must explicitly call the Blinky constructor */
+    return QF_run(); /* transfer control to QF-nano */
+}
+
+/* ask QM to define the Blinky class ---------------------------------------*/
+$define${AOs::Blinky_ctor}
+$define${AOs::Blinky}</text>
+  </file>
+  <!--${.::qpn_conf.h}-->
+  <file name="qpn_conf.h">
+   <text>#ifndef QPN_CONF_H
+#define QPN_CONF_H
+
+#define Q_PARAM_SIZE            4
+#define QF_MAX_TICK_RATE        1
+#define QF_TIMEEVT_CTR_SIZE     2
+#define QF_TIMEEVT_PERIODIC
+
+#endif  /* QPN_CONF_H */</text>
+  </file>
+ </directory>
+</model>
