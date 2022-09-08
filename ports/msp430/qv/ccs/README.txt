@@ -8,33 +8,27 @@ Using the Port in CCS
 =====================
 The recommended CCS project setup procedure is illustrated in the provided
 CCS example projects in the qpn/examples/msp430/ directory, is to create a
-folder for QP-nano source. To do so, right-click on your project and choose 
-the New->Folder option.
+folders for QP-nano source. These folders are "qfn" and "qkn" or "qvn",
+depending on which kernel you choose
 
-It is important to create the QP folder as "Linked folder", by expanding
-the "Advanced" folder option and selecting the "Linked to alternate
-location (Linked Folder)" radio button.
+It is important to create the "qfn" and "qkn" or "qvn" folders as
+"Linked folders", by expanding the "Advanced" folder option and selecting
+the "Linked to alternate location (Linked Folder)" radio button.
 
-The QP folder should be linked to qpn/source
+The "qfn" folder should be linked to "qpn\src\qfn"
 
-Once the folders are added to your project, it is very important to exclude
-specific source files in the QP folder from the specific build configurations.
+If you choose the QK-nano kernel, the "qkn" folder should be linked to
+"qpn\src\qkn"
 
-Here is the list of QP-nano source files that need to be EXCLUDED from the
-bulid configurations:
-
-QK-nano kernel, you need to exclude:
-qvn.c
-
-QV-nano kernel, you need to exclude:
-qvn.c
+If you choose the QV-nano kernel, the "qvn" folder should be linked to
+"qpn\src\qvn"
 
 Finally, to build QP-nano framework from sources, the following directories
 should be present in the compiler "Include Options":
  
 <qpn>\include
-<qpn>\source
-<qpn>\ports\msp430\qk\ccs
+<qpn>\ports\msp430\qk\ccs - If you choose the QK-nano kernel,
+<qpn>\ports\msp430\qv\ccs - If you choose the QV-nano kernel,
 
 Where, <qpn> is either relative or absolute path to the QP-nano framework
 folder on your machine.
